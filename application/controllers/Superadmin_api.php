@@ -678,9 +678,10 @@ class Superadmin_api extends REST_Controller {
                             $this->load->model('superadmin_model');
                             $count = $this->superadmin_model->get_count_slot_name($sortname['prefix']);
                             if($count['total']==0){
-
-                            }else{
                                 $slot_name = $prfix . "-AA000";
+                            }else{
+                                $slot_name = $this->model->selectWhereData('tbl_slot_info',array('del_status'=>1),array('slot_name'));
+                                
                             }
                         }
 
