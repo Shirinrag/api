@@ -31,5 +31,14 @@ class Superadmin_model extends CI_Model {
         $result = $query->result_array();
         return $result;
 	}
+
+	public function get_count_slot_name($prefix='')
+	{
+		$this->db->select('count(fk_place_id) as total');
+        $this->db->from('tbl_slot_info');
+        $this->db->like('slot_name', $prefix);
+        $query = $this->db->get();
+        return $query->row_array();
+	}
 }
 	

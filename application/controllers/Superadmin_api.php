@@ -440,7 +440,7 @@ class Superadmin_api extends REST_Controller {
                             'firstName' =>$first_name,
                             'lastName' =>$last_name,
                             'email' =>$email,
-                            'phoneNo' =>$phone_no,
+                            'phoneNo' =>$mobile_no,
                             'password' =>dec_enc('encrypt',$password),
                             'user_type' =>$user_type['id'],
                             'username' =>$username,
@@ -539,7 +539,7 @@ class Superadmin_api extends REST_Controller {
                         $curl_data = array(
                             'firstName' =>$first_name,
                             'lastName' =>$last_name,
-                            'phoneNo' =>$phone_no,
+                            'phoneNo' =>$mobile_no,
                             'user_type' =>$user_type,
                             'username' =>$username,
                         );
@@ -605,4 +605,201 @@ class Superadmin_api extends REST_Controller {
         echo json_encode($response);
     }
 
+    public function add_place_post()
+    {
+        $response = array('code' => - 1, 'status' => false, 'message' => '');
+        $validate = validateToken();
+        if ($validate) {
+                $fk_vendor_id = $this->input->post('fk_vendor_id');
+                $fk_country_id = $this->input->post('fk_country_id');
+                $fk_state_id = $this->input->post('fk_state_id');
+                $fk_city_id = $this->input->post('fk_city_id');
+                $place_name = $this->input->post('place_name');
+                $address = $this->input->post('address');
+                $pincode = $this->input->post('pincode');
+                $latitude = $this->input->post('latitude');
+                $longitude = $this->input->post('longitude');
+                $pincode = $this->input->post('pincode');
+                $slots = $this->input->post('slots');
+                if(empty($fk_vendor_id)){
+                    $response['message'] = "First Name is required";
+                    $response['code'] = 201;
+                }else if(empty($fk_country_id)){
+                    $response['message'] = "Last Name is required";
+                    $response['code'] = 201;
+                }else if(empty($fk_state_id)){
+                    $response['message'] = "fk_state_id is required";
+                    $response['code'] = 201;
+                }else if(empty($fk_city_id)){
+                    $response['message'] = "Mobile No is required";
+                    $response['code'] = 201;
+                }else if(empty($place_name)){
+                    $response['message'] = "place_name is required";
+                    $response['code'] = 201;
+                }else if(empty($address)){
+                    $response['message'] = "User Name is required";
+                    $response['code'] = 201;
+                }else if(empty($pincode)){
+                    $response['message'] = "Pincode is required";
+                    $response['code'] = 201;
+                }else if(empty($latitude)){
+                    $response['message'] = "Latitude is required";
+                    $response['code'] = 201;
+                }else if(empty($longitude)){
+                    $response['message'] = "Longitude is required";
+                    $response['code'] = 201;
+                }else if(empty($slots)){
+                    $response['message'] = "Slots is required";
+                    $response['code'] = 201;
+                }else{
+                    $check_place_count = $this->model->CountWhereRecord('tbl_parking_place', array('place_name'=>$place_name,'status'=>1));
+                   
+                    if($check_place_count > 0){
+                        $response['code'] = 201;
+                        $response['status'] = false;
+                        $response['message'] = 'Place Name Already exist.';                              
+                    }else{
+                        $user_type = $this->model->selectWhereData('tbl_user_type',array('user_type'=>"User"),array('id'));
+                        $curl_data = array(
+                            'fk_vendor_id' =>$fk_vendor_id,
+                            'fk_country_id' =>$fk_country_id,
+                            'fk_state_id' =>$fk_state_id,
+                            'fk_city_id' =>$fk_city_id,
+                            'place_name' =>$place_name,
+                            'address' =>$address,
+                            'pincode' =>$pincode,
+                            'latitude' =>$latitude,
+                            'longitude' =>$longitude,
+                            'slots' =>$slots,
+                        );
+                        $this->model->insertData('tbl_parking_place',$curl_data);
+                        $sortname = $this->model->selectWhereData('tbl_states',array('id'=>$fk_state_id),array('prefix'));
+                        for ($i=0; $i < $slots; $i++) { 
+                            $this->load->model('superadmin_model');
+                            $count = $this->superadmin_model->get_count_slot_name($sortname['prefix']);
+                            if($count['total']==0){
+
+                            }else{
+                                $slot_name = $prfix . "-AA000";
+                            }
+                        }
+
+                        $response['code'] = REST_Controller::HTTP_OK;
+                        $response['status'] = true;
+                        $response['message'] = 'Parking Places Inserted Successfully';
+                    }
+                }
+        }else {
+            $response['code'] = REST_Controller::HTTP_UNAUTHORIZED;
+            $response['message'] = 'Unauthorised';
+        }
+        echo json_encode($response);
+    }
+    public function display_all_parking_place_data_post()
+    {
+            $response = array('code' => - 1, 'status' => false, 'message' => '');
+            $validate = validateToken();
+            if ($validate) {
+                $this->load->model('parking_place_model');
+                $parking_place_data` = $this->parking_place_model->get_datatables();
+                $count = $this->parking_place_model->count_all();
+                $count_filtered = $this->parking_place_model->count_filtered();
+                $response['code'] = REST_Controller::HTTP_OK;
+                $response['status'] = true;
+                $response['message'] = 'success';
+                $response['parking_place_data`'] = $parking_place_data`;
+                $response['count'] = $count;
+                $response['count_filtered'] = $count_filtered;
+            } else {
+                $response['code'] = REST_Controller::HTTP_UNAUTHORIZED;
+                $response['message'] = 'Unauthorised';
+            }
+            echo json_encode($response);
+    }
+    public function get_parking_place_details_on_id_post()
+    {
+        $response = array('code' => - 1, 'status' => false, 'message' => '');
+        $validate = validateToken();
+        if ($validate) {
+                $id = $this->input->post('id');
+                if(empty($id)){
+                    $response['message'] = "Id is required";
+                    $response['code'] = 201;
+                }else{
+                    $parking_place = $this->model->selectWhereData('tbl_parking_place',array('id'=>$id),array('*'));
+
+                    $response['code'] = REST_Controller::HTTP_OK;
+                    $response['status'] = true;
+                    $response['message'] = 'success';
+                    $response['parking_place_data'] = $parking_place;
+                }
+        }else {
+            $response['code'] = REST_Controller::HTTP_UNAUTHORIZED;
+            $response['message'] = 'Unauthorised';
+        }
+        echo json_encode($response);
+    }
+    public function delete_parking_place_post()
+    {
+        $response = array('code' => - 1, 'status' => false, 'message' => '');
+        $validate = validateToken();
+        if ($validate) {
+                $id = $this->input->post('id');
+                if(empty($id)){
+                    $response['message'] = "Id is required";
+                    $response['code'] = 201;
+                }else{
+                        $curl_data = array(
+                            'status' =>0,
+                        );
+                        $this->model->updateData('tbl_parking_place',$curl_data,array('id'=>$id));
+                        $response['code'] = REST_Controller::HTTP_OK;
+                        $response['status'] = true;
+                        $response['message'] = 'Place Deleted Successfully';
+                }
+        }else {
+            $response['code'] = REST_Controller::HTTP_UNAUTHORIZED;
+            $response['message'] = 'Unauthorised';
+        }
+        echo json_encode($response);
+    }
+    public function add_device_post()
+    {
+        $response = array('code' => - 1, 'status' => false, 'message' => '');
+        $validate = validateToken();
+        if ($validate) {
+                $device_id = $this->input->post('device_id');
+                $device_id = json_decode($device_id,true);
+                if(empty($device_id)){
+                    $response['message'] = "Device Id is required";
+                    $response['code'] = 201;
+                }else{
+                    foreach ($device_id as $device_id_key => $device_id_row) {
+                        $check_user_car_count = $this->model->CountWhereRecord('tbl_device', array('device_id'=>$device_id_row,'status'=>1));
+                        if($check_user_car_count > 0){
+                            $response['code'] = 201;
+                            $response['status'] = false;
+                            $response['message'] = 'Device Already exist.';                              
+                        }else{
+                            $curl_data = array(
+                                'device_id' =>$device_id_row,
+                            );
+                            $this->model->insertData('tbl_device',$curl_data);
+                            $response['code'] = REST_Controller::HTTP_OK;
+                            $response['status'] = true;
+                            $response['message'] = 'Device Inserted Successfully';
+                        }
+                    }
+                    
+                }
+        }else {
+            $response['code'] = REST_Controller::HTTP_UNAUTHORIZED;
+            $response['message'] = 'Unauthorised';
+        }
+        echo json_encode($response);
+    }
+    public function FunctionName($value='')
+    {
+        // code...
+    }
 }

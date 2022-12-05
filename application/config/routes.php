@@ -84,5 +84,11 @@ $route['get-user-data-on-id'] = 'superadmin_api/get_user_data_on_id';
 $route['update-user'] = 'superadmin_api/update_user';
 $route['delete-user'] = 'superadmin_api/delete_user';
 $route['booking-history-data'] = 'superadmin_api/booking_history_data';
+$route['add-place'] = 'superadmin_api/add_place';
+$route['display-all-parking-place-data'] = 'superadmin_api/display_all_parking_place_data';
+$route['get-parking-place-details-on-id'] = 'superadmin_api/get_parking_place_details_on_id';
+$route['delete-parking-place'] = 'superadmin_api/delete_parking_place';
+$route['add-device'] = 'superadmin_api/add_device';
+$route['display-all-device-data'] = 'superadmin_api/display_all_device_data';
 
 

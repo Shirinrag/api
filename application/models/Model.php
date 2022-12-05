@@ -464,22 +464,5 @@ class Model extends CI_Model {
 		$this->db->delete($table_name,$where); 
         return TRUE;
 	}
-	
-	public function changeCmsStatus($tableName,$where)
-	{
-		$status=$this->getValue($tableName,'cms_admin_status',$where);
-		if ($status==1) {
-			$update_status=0;
-		} else {
-			$update_status=1;
-		}
-		$updateData=array('cms_admin_status'=>$update_status);
-		$this->db->trans_start();	
-		$query = $this->db->update($tableName, $updateData, $where);
-		$this->db->trans_complete();
-
-		$result = $query ? 1 : 0;
-		return $result;
-	}
 
 }//class ends here	
