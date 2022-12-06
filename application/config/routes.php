@@ -90,5 +90,8 @@ $route['get-parking-place-details-on-id'] = 'superadmin_api/get_parking_place_de
 $route['delete-parking-place'] = 'superadmin_api/delete_parking_place';
 $route['add-device'] = 'superadmin_api/add_device';
 $route['display-all-device-data'] = 'superadmin_api/display_all_device_data';
+$route['add-bonus-amount'] = 'superadmin_api/add_bonus_amount';
+$route['display-all-bonus-data'] = 'superadmin_api/display_all_bonus_data';
+$route['update-bonus'] = 'superadmin_api/update_bonus';
 
 

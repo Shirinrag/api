@@ -799,8 +799,84 @@ class Superadmin_api extends REST_Controller {
         }
         echo json_encode($response);
     }
-    public function FunctionName($value='')
+    public function display_all_device_data_post()
     {
-        // code...
+    }
+    public function add_bonus_amount_post()
+    {
+         $response = array('code' => - 1, 'status' => false, 'message' => '');
+        $validate = validateToken();
+        if ($validate) {
+                $bonus_amount = $this->input->post('bonus_amount');
+                if(empty($bonus_amount)){
+                    $response['message'] = "User Id is required";
+                    $response['code'] = 201;
+                }else{
+                    $check_user_car_count = $this->model->CountWhereRecord('tbl_bonus', array('bonus_amount'=>$bonus_amount,'status'=>1));
+                    if($check_user_car_count > 0){
+                        $response['code'] = 201;
+                        $response['status'] = false;
+                        $response['message'] = 'Role Already exist.';                              
+                    }else{
+                        $curl_data = array(
+                            'bonus_amount' =>$bonus_amount,
+                        );
+                        $this->model->insertData('tbl_bonus',$curl_data);
+                        $response['code'] = REST_Controller::HTTP_OK;
+                        $response['status'] = true;
+                        $response['message'] = 'Role Inserted Successfully';
+                    }
+                }
+        }else {
+            $response['code'] = REST_Controller::HTTP_UNAUTHORIZED;
+            $response['message'] = 'Unauthorised';
+        }
+        echo json_encode($response);
+    }       
+    public function display_all_bonus_data_post()
+    {
+        $response = array('code' => - 1, 'status' => false, 'message' => '');
+        $validate = validateToken();
+        if ($validate) {
+                $bonus_data = $this->model->selectWhereData('tbl_bonus'array(),array('*'),false);
+                $response['code'] = REST_Controller::HTTP_OK;
+                $response['status'] = true;
+                $response['message'] = 'success';
+                $response['bonus_data'] = $bonus_data;
+        } else {
+            $response['code'] = REST_Controller::HTTP_UNAUTHORIZED;
+            $response['message'] = 'Unauthorised';
+        }
+        echo json_encode($response);
+    }
+    public function update_bonus_status()
+    {
+        $response = array('code' => - 1, 'status' => false, 'message' => '');
+        $validate = validateToken();
+        if ($validate) {
+                $status = $this->input->post('status');
+                $id = $this->input->post('id');
+                if(empty($status)){
+                    $response['message'] = "User Id is required";
+                    $response['code'] = 201;
+                }else if(empty($id)){
+                    $response['message'] = "Id is required";
+                    $response['code'] = 201;
+                }else{
+                    
+                        $update_data = array('status' => $status);
+                    $this->api_model->comman_update('tbl_bonus', $id, $update_data);
+                    $update_status = array('status' => "0");
+                    $this->db->where('id!=', $id);
+                    $this->db->update('tbl_bonus', $update_status);
+                        $response['code'] = REST_Controller::HTTP_OK;
+                        $response['status'] = true;
+                        $response['message'] = 'Role Updated Successfully';
+                }
+        }else {
+            $response['code'] = REST_Controller::HTTP_UNAUTHORIZED;
+            $response['message'] = 'Unauthorised';
+        }
+        echo json_encode($response);
     }
 }
