@@ -39,4 +39,56 @@ class User_model extends CI_Model {
         $result = $query->row_array();
         return $result;
 	}
+	public function active_place_data()
+	{
+		$this->db->select('tbl_parking_place.*,tbl_parking_place_status.place_status,tbl_countries.name as country_name,tbl_states.name as state_name,tbl_cities.name as city_name');
+		$this->db->from('tbl_parking_place');
+		$this->db->join('tbl_parking_place_status','tbl_parking_place.fk_place_status_id=tbl_parking_place_status.id','left');
+		$this->db->join('tbl_countries','tbl_parking_place.fk_country_id=tbl_countries.id','left');
+		$this->db->join('tbl_states','tbl_parking_place.fk_state_id=tbl_states.id','left');
+		$this->db->join('tbl_cities','tbl_parking_place.fk_city_id=tbl_cities.id','left');
+		$this->db->where('tbl_parking_place.fk_place_status_id',1);
+		$query = $this->db->get();
+        $result = $query->result_array();
+        return $result;
+	}
+	public function inactive_place_data()
+	{
+		$this->db->select('tbl_parking_place.*,tbl_parking_place_status.place_status,tbl_countries.name as country_name,tbl_states.name as state_name,tbl_cities.name as city_name');
+		$this->db->from('tbl_parking_place');
+		$this->db->join('tbl_parking_place_status','tbl_parking_place.fk_place_status_id=tbl_parking_place_status.id','left');
+		$this->db->join('tbl_countries','tbl_parking_place.fk_country_id=tbl_countries.id','left');
+		$this->db->join('tbl_states','tbl_parking_place.fk_state_id=tbl_states.id','left');
+		$this->db->join('tbl_cities','tbl_parking_place.fk_city_id=tbl_cities.id','left');
+		$this->db->where('tbl_parking_place.fk_place_status_id',2);
+		$query = $this->db->get();
+        $result = $query->result_array();
+        return $result;
+	}
+	public function upcoming_place_data()
+	{
+		$this->db->select('tbl_parking_place.*,tbl_parking_place_status.place_status,tbl_countries.name as country_name,tbl_states.name as state_name,tbl_cities.name as city_name');
+		$this->db->from('tbl_parking_place');
+		$this->db->join('tbl_parking_place_status','tbl_parking_place.fk_place_status_id=tbl_parking_place_status.id','left');
+		$this->db->join('tbl_countries','tbl_parking_place.fk_country_id=tbl_countries.id','left');
+		$this->db->join('tbl_states','tbl_parking_place.fk_state_id=tbl_states.id','left');
+		$this->db->join('tbl_cities','tbl_parking_place.fk_city_id=tbl_cities.id','left');
+		$this->db->where('tbl_parking_place.fk_place_status_id',3);
+		$query = $this->db->get();
+        $result = $query->result_array();
+        return $result;
+	}
+	public function other_place_data()
+	{
+		$this->db->select('tbl_parking_place.*,tbl_parking_place_status.place_status,tbl_countries.name as country_name,tbl_states.name as state_name,tbl_cities.name as city_name');
+		$this->db->from('tbl_parking_place');
+		$this->db->join('tbl_parking_place_status','tbl_parking_place.fk_place_status_id=tbl_parking_place_status.id','left');
+		$this->db->join('tbl_countries','tbl_parking_place.fk_country_id=tbl_countries.id','left');
+		$this->db->join('tbl_states','tbl_parking_place.fk_state_id=tbl_states.id','left');
+		$this->db->join('tbl_cities','tbl_parking_place.fk_city_id=tbl_cities.id','left');
+		$this->db->where('tbl_parking_place.fk_place_status_id',4);
+		$query = $this->db->get();
+        $result = $query->result_array();
+        return $result;
+	}
 }

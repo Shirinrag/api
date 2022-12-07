@@ -105,10 +105,10 @@ class UserApp_api extends REST_Controller {
 	            					);
             						$this->model->insertData('tbl_user_car_details',$insert_car_data);
             					}         					
-
+            					$bonus_amount = $this->model->selectWhereData('tbl_bonus',array('status'=>'1'),array('bonus_amount'));
             					$user_wallet_data = array(
             						'fk_user_id'=>$inserted_id,
-            						'amount'=>25
+            						'amount'=>$bonus_amount['bonus_amount']
             					);
             					$this->model->insertData('tbl_user_wallet',$user_wallet_data);
             					$user_data = $this->model->selectWhereData('pa_users',array('id'=>$inserted_id),array('*'));
@@ -396,6 +396,30 @@ class UserApp_api extends REST_Controller {
     					$response['message'] = 'success';
     					$response['user_wallet_data'] = $user_wallet;
     				}
+		}else {
+            $response['code'] = REST_Controller::HTTP_UNAUTHORIZED;
+            $response['message'] = 'Unauthorised';
+        }
+        echo json_encode($response);
+    }
+    public function place_list_post()
+    {
+    	$response = array('code' => - 1, 'status' => false, 'message' => '');
+    	$validate = validateToken();
+        if ($validate) {
+        	$this->load->model('user_model');
+		    $active_place = $this->user_model->active_place_data();
+		    $inactive_place = $this->user_model->inactive_place_data();
+		    $upcoming_place = $this->user_model->upcoming_place_data();
+		    $other_place = $this->user_model->other_place_data();
+
+			$response['code'] = REST_Controller::HTTP_OK;
+            $response['status'] = true;
+			$response['message'] = 'success';
+			$response['active_place'] = $active_place;
+			$response['inactive_place'] = $inactive_place;
+			$response['upcoming_place'] = $upcoming_place;
+			$response['other_place'] = $other_place;
 		}else {
             $response['code'] = REST_Controller::HTTP_UNAUTHORIZED;
             $response['message'] = 'Unauthorised';

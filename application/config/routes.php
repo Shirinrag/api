@@ -62,10 +62,10 @@ $route['user-cars-list-data'] = 'userapp_api/user_cars_list_data';
 $route['booking-history'] = 'userapp_api/booking_history';
 $route['booking-deatils-on-id'] = 'userapp_api/booking_details_on_id';
 $route['user-wallet'] = 'userapp_api/user_wallet';
+$route['user-wallet'] = 'userapp_api/place_list';
 
 
-
-// =========================Super Admin API=============================
+// =============Super Admin API=============================
 $route['loggedin-data'] = 'common/login_data';
 $route['add-role'] = 'superadmin_api/add_role';
 $route['display-all-role-data'] = 'superadmin_api/display_all_role_data';
@@ -92,6 +92,6 @@ $route['add-device'] = 'superadmin_api/add_device';
 $route['display-all-device-data'] = 'superadmin_api/display_all_device_data';
 $route['add-bonus-amount'] = 'superadmin_api/add_bonus_amount';
 $route['display-all-bonus-data'] = 'superadmin_api/display_all_bonus_data';
-$route['update-bonus'] = 'superadmin_api/update_bonus';
+$route['update-bonus-status'] = 'superadmin_api/update_bonus_status';
 
 

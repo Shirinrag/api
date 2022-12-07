@@ -849,7 +849,7 @@ class Superadmin_api extends REST_Controller {
         }
         echo json_encode($response);
     }
-    public function update_bonus_status()
+    public function update_bonus_status_post()
     {
         $response = array('code' => - 1, 'status' => false, 'message' => '');
         $validate = validateToken();
