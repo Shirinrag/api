@@ -62,7 +62,8 @@ $route['user-cars-list-data'] = 'userapp_api/user_cars_list_data';
 $route['booking-history'] = 'userapp_api/booking_history';
 $route['booking-deatils-on-id'] = 'userapp_api/booking_details_on_id';
 $route['user-wallet'] = 'userapp_api/user_wallet';
-$route['user-wallet'] = 'userapp_api/place_list';
+$route['place-list'] = 'userapp_api/place_list';
+$route['place-details-on-id'] = 'userapp_api/place_details_on_id';
 
 
 // =============Super Admin API=============================

@@ -426,4 +426,27 @@ class UserApp_api extends REST_Controller {
         }
         echo json_encode($response);
     }
+    public function place_details_on_id_post()
+    {
+    	$response = array('code' => - 1, 'status' => false, 'message' => '');
+    	$validate = validateToken();
+        if ($validate) {
+        	$id = $this->input->post('id');
+        	if(empty($id)){
+        		$response['message'] = "User Id is required";
+		    	$response['code'] = 201;
+        	}else{
+        		$this->load->model('user_model');
+			    $place_details = $this->user_model->place_details_on_id();
+				$response['code'] = REST_Controller::HTTP_OK;
+	            $response['status'] = true;
+				$response['message'] = 'success';
+				$response['place_details'] = $place_details;
+        	}        	
+		}else {
+            $response['code'] = REST_Controller::HTTP_UNAUTHORIZED;
+            $response['message'] = 'Unauthorised';
+        }
+        echo json_encode($response);
+    }
 }
