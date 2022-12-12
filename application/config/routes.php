@@ -68,6 +68,7 @@ $route['place-details-on-id'] = 'userapp_api/place_details_on_id';
 
 // =============Super Admin API=============================
 $route['loggedin-data'] = 'common/login_data';
+$route['get-all-user-type'] = 'common/get_all_user_type';
 $route['add-role'] = 'superadmin_api/add_role';
 $route['display-all-role-data'] = 'superadmin_api/display_all_role_data';
 $route['get-all-role-on-id'] = 'superadmin_api/get_all_role_on_id';

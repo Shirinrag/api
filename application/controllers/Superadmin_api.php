@@ -457,11 +457,12 @@ class Superadmin_api extends REST_Controller {
         }
         echo json_encode($response);
     }
-    public function display_all_user_data_post()
+    public function display_all_user_data_get()
     {
         $response = array('code' => - 1, 'status' => false, 'message' => '');
         $validate = validateToken();
         if ($validate) {
+                $this->load->model('superadmin_model');
                 $user_data = $this->superadmin_model->display_all_user_data();
                 $response['code'] = REST_Controller::HTTP_OK;
                 $response['status'] = true;
@@ -702,13 +703,13 @@ class Superadmin_api extends REST_Controller {
             $validate = validateToken();
             if ($validate) {
                 $this->load->model('parking_place_model');
-                $parking_place_data` = $this->parking_place_model->get_datatables();
+                $parking_place_data = $this->parking_place_model->get_datatables();
                 $count = $this->parking_place_model->count_all();
                 $count_filtered = $this->parking_place_model->count_filtered();
                 $response['code'] = REST_Controller::HTTP_OK;
                 $response['status'] = true;
                 $response['message'] = 'success';
-                $response['parking_place_data`'] = $parking_place_data`;
+                $response['parking_place_data'] = $parking_place_data;
                 $response['count'] = $count;
                 $response['count_filtered'] = $count_filtered;
             } else {
@@ -838,7 +839,7 @@ class Superadmin_api extends REST_Controller {
         $response = array('code' => - 1, 'status' => false, 'message' => '');
         $validate = validateToken();
         if ($validate) {
-                $bonus_data = $this->model->selectWhereData('tbl_bonus'array(),array('*'),false);
+                $bonus_data = $this->model->selectWhereData('tbl_bonus',array(),array('*'),false);
                 $response['code'] = REST_Controller::HTTP_OK;
                 $response['status'] = true;
                 $response['message'] = 'success';

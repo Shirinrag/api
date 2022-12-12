@@ -44,6 +44,7 @@ class UserApp_api extends REST_Controller {
 		    	$car_no = $this->input->post('car_no');
 		    	$referral_code = $this->input->post('referral_code');
 		    	$device_type = $this->input->post('device_type');
+		    	$password = $this->input->post('password');
 
 		    	if(empty($first_name)){
 		    		$response['message'] = "First Name is required";
@@ -95,7 +96,8 @@ class UserApp_api extends REST_Controller {
             						'userName' => $first_name.$last_name,
             						'device_type' =>$device_type,
             						'notifn_topic' => $phone_no."PAUser",
-            						'user_type'=>$user_type['id']
+            						'user_type'=>$user_type['id'],
+            						
             					);
             					$inserted_id = $this->model->insertData('pa_users',$curl_data);
             					if(!empty($car_no)){

@@ -57,12 +57,11 @@ class Common extends REST_Controller {
                 }else{
                             $check_user_count = $this->model->CountWhereRecord('pa_users', array('phoneNo'=>$phone_no,'isActive'=>1));
                             if($check_user_count > 0){
-
                                 $response['code'] = 201;
                                 $response['status'] = false;
-                                $response['message'] = 'Contact No is Already exist.';                              
+                                $response['message'] = 'Contact No is Already exist.';                     
                             }else{
-                                $user_type = $this->model->selectWhereData('tbl_user_type',array('user_type'=>"User"),array('id'));
+                                $user_type = $this->model->selectWhereData('tbl_user_type',array('user_type'=>"Super Admin"),array('id'));
                                 $curl_data =  array(
                                     'firstName' => $first_name,
                                     'lastName' =>  $last_name,
@@ -105,7 +104,7 @@ class Common extends REST_Controller {
         echo json_encode($response);
     }
 
-    public function login_data_post($value='')
+    public function login_data_post()
     {
         $response = array('code' => - 1, 'status' => false, 'message' => '');
             $username = $this->input->post('username');           
@@ -130,7 +129,6 @@ class Common extends REST_Controller {
                             $response['status'] = true;
                             $response['message'] = 'success';
                             $response['data'] = $login_info;
-                            $response['session_token'] = token_get();
                     } else {
                         $response['code'] = 201;
                         $response['status'] = "wrong_password";
@@ -142,6 +140,24 @@ class Common extends REST_Controller {
                     $response['status'] = "wrong_username";
                 }          
             } 
+        echo json_encode($response);
+    }
+
+    public function get_all_user_type_get()
+    {
+        $response = array('code' => - 1, 'status' => false, 'message' => '');
+        $validate = validateToken();
+        if ($validate) {
+            $user_type = $this->model->selectWhereData('tbl_user_type',array('status'=>1),array('id','user_type'),false);
+
+            $response['code'] = REST_Controller::HTTP_OK;
+            $response['status'] = true;
+            $response['message'] = 'success';
+            $response['user_type_data'] = $user_type;
+        }else {
+            $response['code'] = REST_Controller::HTTP_UNAUTHORIZED;
+            $response['message'] = 'Unauthorised';
+        }
         echo json_encode($response);
     }
 
