@@ -7,11 +7,11 @@ class Superadmin_model extends CI_Model {
 
 	public function display_all_user_data()
 	{
-		$this->db->select('pa_users.*,tbl_user_car_details.car_number');
+		$this->db->select('pa_users.*,tbl_user_car_details.car_number,CONCAT(pa_users.isActive,",",pa_users.id) AS statusdata');
 		$this->db->from('pa_users');
 		$this->db->join('tbl_user_car_details','tbl_user_car_details.fk_user_id=pa_users.id','left');
 		$this->db->where('pa_users.user_type',10);
-		$this->db->where('pa_users.isActive',1);
+		$this->db->where('pa_users.del_status',1);
 		$this->db->order_by('pa_users.id','DESC');
 		$query = $this->db->get();
         $result = $query->result_array();
@@ -41,6 +41,18 @@ class Superadmin_model extends CI_Model {
         $this->db->like('slot_name', $prefix);
         $query = $this->db->get();
         return $query->row_array();
+	}
+	public function display_all_admin_data()
+	{
+		$this->db->select('pa_users.*,tbl_user_type.user_type as user_type_name,CONCAT(pa_users.isActive,",",pa_users.id) AS statusdata');
+		$this->db->from('pa_users');
+		$this->db->join('tbl_user_type','pa_users.user_type=tbl_user_type.id','left');
+		$this->db->where('pa_users.user_type !=',10);
+		$this->db->where('pa_users.del_status',1);
+		$this->db->order_by('pa_users.id','DESC');
+		$query = $this->db->get();
+        $result = $query->result_array();
+        return $result;
 	}
 }
 	

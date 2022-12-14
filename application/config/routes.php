@@ -85,6 +85,7 @@ $route['display-all-user-data'] = 'superadmin_api/display_all_user_data';
 $route['get-user-data-on-id'] = 'superadmin_api/get_user_data_on_id';
 $route['update-user'] = 'superadmin_api/update_user';
 $route['delete-user'] = 'superadmin_api/delete_user';
+$route['update-user-status'] = 'superadmin_api/update_user_status';
 $route['booking-history-data'] = 'superadmin_api/booking_history_data';
 $route['add-place'] = 'superadmin_api/add_place';
 $route['display-all-parking-place-data'] = 'superadmin_api/display_all_parking_place_data';

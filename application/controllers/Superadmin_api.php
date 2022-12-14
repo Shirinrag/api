@@ -225,21 +225,25 @@ class Superadmin_api extends REST_Controller {
                     $response['message'] = "User Name is required";
                     $response['code'] = 201;
                 }else{
-                    $check_email_count = $this->model->CountWhereRecord('pa_users', array('email'=>$email,'status'=>1));
-                    $check_mobile_no_count = $this->model->CountWhereRecord('pa_users', array('mobile_no'=>$mobile_no,'status'=>1));
-                    $check_user_name_count = $this->model->CountWhereRecord('pa_users', array('username'=>$username,'status'=>1));
+                    $check_email_count = $this->model->CountWhereRecord('pa_users', array('email'=>$email,'isActive'=>1,'user_type'=>$user_type));
+                    $check_mobile_no_count = $this->model->CountWhereRecord('pa_users', array('phoneNo'=>$mobile_no,'isActive'=>1,'user_type'=>$user_type));
+                    $check_user_name_count = $this->model->CountWhereRecord('pa_users', array('username'=>$username,'isActive'=>1,'user_type'=>$user_type));
                     if($check_email_count > 0){
                         $response['code'] = 201;
                         $response['status'] = false;
-                        $response['message'] = 'Email Already exist.';                              
+                        $response['message'] = 'Email Already exist.';
+                        $response['error_status'] = 'email';            
                     }else if($check_mobile_no_count > 0){
                         $response['code'] = 201;
                         $response['status'] = false;
-                        $response['message'] = 'Mobile No Already exist.';                              
+                        $response['message'] = 'Mobile No Already exist.';                       
+                        $response['error_status'] = 'contact_no';       
                     }else if($check_user_name_count > 0){
                         $response['code'] = 201;
                         $response['status'] = false;
-                        $response['message'] = 'Username Already exist.';                              
+                        $response['message'] = 'Username Already exist.'; 
+                        $response['error_status'] = 'username';       
+
                     }else{
                         $curl_data = array(
                             'firstName' =>$first_name,
@@ -262,20 +266,17 @@ class Superadmin_api extends REST_Controller {
         }
         echo json_encode($response);
     }
-    public function display_all_admin_data_post()
+    public function display_all_admin_data_get()
     {
         $response = array('code' => - 1, 'status' => false, 'message' => '');
         $validate = validateToken();
         if ($validate) {
-            $admin_data = $this->crud_model->get_datatables('pa_users', array('id', 'firstName', 'lastName',"email","mobile_no","username"), array('isActive' => 1), array(null, 'id',"firstName","lastName","email","mobile_no","username"), array('id' => 'DESC'));
-                $count = $this->crud_model->count_all('pa_users', array('id', 'firstName', 'lastName',"email","mobile_no","username"), array('isActive' => 1), array(null, 'id',"firstName","lastName","email","mobile_no","username"), array('id' => 'DESC'));
-                $count_filtered = $this->crud_model->count_filtered('pa_users', array('id', 'firstName', 'lastName',"email","mobile_no","username"), array('del_status' => 1), array(null, 'id',"firstName","lastName","email","mobile_no","username"), array('id' => 'DESC'));
+               $this->load->model('superadmin_model');
+                $admin_data = $this->superadmin_model->display_all_admin_data();
                 $response['code'] = REST_Controller::HTTP_OK;
                 $response['status'] = true;
                 $response['message'] = 'success';
                 $response['admin_data'] = $admin_data;
-                $response['count'] = $count;
-                $response['count_filtered'] = $count_filtered;
         } else {
             $response['code'] = REST_Controller::HTTP_UNAUTHORIZED;
             $response['message'] = 'Unauthorised';
@@ -314,10 +315,10 @@ class Superadmin_api extends REST_Controller {
                 $user_type = $this->input->post('user_type');
                 $first_name = $this->input->post('first_name');
                 $last_name = $this->input->post('last_name');
-                // $email = $this->input->post('email');
+                $email = $this->input->post('email');
                 $mobile_no = $this->input->post('mobile_no');
-                // $password = $this->input->post('password');
-                $username = $this->input->post('username');
+                $password = $this->input->post('password');
+                // $username = $this->input->post('username');
                 $id = $this->input->post('id');
                 if(empty($first_name)){
                     $response['message'] = "First Name is required";
@@ -331,27 +332,30 @@ class Superadmin_api extends REST_Controller {
                 }else if(empty($user_type)){
                     $response['message'] = "User Type is required";
                     $response['code'] = 201;
-                }else if(empty($username)){
-                    $response['message'] = "User Name is required";
+                }else if(empty($email)){
+                    $response['message'] = "Email is required";
                     $response['code'] = 201;
                 }else{
-                    $check_mobile_no_count = $this->model->CountWhereRecord('pa_users', array('mobile_no'=>$mobile_no,'status'=>1));
-                    $check_user_name_count = $this->model->CountWhereRecord('pa_users', array('username'=>$username,'status'=>1));
+                    $check_mobile_no_count = $this->model->CountWhereRecord('pa_users', array('phoneNo'=>$mobile_no,'del_status'=>1,'id !=' => $id));
+                    $check_email_count = $this->model->CountWhereRecord('pa_users', array('email'=>$email,'del_status'=>1,'id !=' => $id));
                    if($check_mobile_no_count > 0){
                         $response['code'] = 201;
                         $response['status'] = false;
-                        $response['message'] = 'Mobile No Already exist.';                              
-                    }else if($check_user_name_count > 0){
+                        $response['message'] = 'Mobile No Already exist.';         
+                        $response['error_status'] = 'contact_no';                     
+                    }else if($check_email_count > 0){
                         $response['code'] = 201;
                         $response['status'] = false;
-                        $response['message'] = 'Username Already exist.';                              
+                        $response['message'] = 'Email Already exist.';
+                        $response['error_status'] = 'email';                              
                     }else{
                         $curl_data = array(
                             'firstName' =>$first_name,
                             'lastName' =>$last_name,
-                            'phoneNo' =>$phone_no,
+                            'phoneNo' =>$mobile_no,
                             'user_type' =>$user_type,
-                            'username' =>$username,
+                            'email' =>$email
+                            // 'username' =>$username,
                         );
                         $this->model->updateData('pa_users',$curl_data,array('id'=>$id));
                         $response['code'] = REST_Controller::HTTP_OK;
@@ -577,6 +581,30 @@ class Superadmin_api extends REST_Controller {
         }else {
             $response['code'] = REST_Controller::HTTP_UNAUTHORIZED;
             $response['message'] = 'Unauthorised';
+        }
+        echo json_encode($response);
+    }
+    function update_user_status_post() {
+        $response = array('code' => - 1, 'status' => false, 'message' => '');
+        $validate = validateToken();
+        if($validate){
+            $id = $this->input->post('id');
+            $status=$this->input->post('status');
+            if (empty($id)) {
+                $response['message'] = 'id is required';
+                $response['code'] = 201;
+            } else {
+                $update_data = array(
+                    'isActive'=>$status,
+                );
+                $this->model->updateData('pa_users',$update_data, array('id'=>$id));
+                $response['message'] = 'success';
+                $response['code'] = 200;
+                $response['status'] = true;
+            }
+        } else {
+            $response['message'] = 'Invalid Request';
+            $response['code'] = 204;
         }
         echo json_encode($response);
     }
