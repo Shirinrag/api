@@ -161,4 +161,64 @@ class Common extends REST_Controller {
         echo json_encode($response);
     }
 
+    public function get_all_parking_data_get()
+    {
+        $response = array('code' => - 1, 'status' => false, 'message' => '');
+        $validate = validateToken();
+        if ($validate) {
+            $countries = $this->model->selectWhereData('tbl_countries',array('status'=>1),array('id','name'),false);
+            $place_status = $this->model->selectWhereData('tbl_parking_place_status',array('status'=>1),array('id','place_status'),false);
+            $price_type = $this->model->selectWhereData('tbl_parking_price_type',array('status'=>1),array('id','price_type'),false);
+            $vendor = $this->model->selectWhereData('pa_users',array('isActive'=>1,'del_status'=>1,'user_type'=>5),array('id','firstName','lastName'),false);
+
+            $response['code'] = REST_Controller::HTTP_OK;
+            $response['status'] = true;
+            $response['message'] = 'success';
+            $response['countries_data'] = $countries;
+            $response['place_status'] = $place_status;
+            $response['price_type'] = $price_type;
+            $response['vendor'] = $vendor;
+        }else {
+            $response['code'] = REST_Controller::HTTP_UNAUTHORIZED;
+            $response['message'] = 'Unauthorised';
+        }
+        echo json_encode($response);
+    }
+    public function get_state_data_on_country_id_post()
+    {
+        $response = array('code' => - 1, 'status' => false, 'message' => '');
+        $validate = validateToken();
+        if ($validate) {
+            $country_id = $this->input->post('country_id');
+            $state = $this->model->selectWhereData('tbl_states',array('status'=>1,'country_id'=>$country_id),array('id','name'),false);
+
+            $response['code'] = REST_Controller::HTTP_OK;
+            $response['status'] = true;
+            $response['message'] = 'success';
+            $response['state_data'] = $state;
+        }else {
+            $response['code'] = REST_Controller::HTTP_UNAUTHORIZED;
+            $response['message'] = 'Unauthorised';
+        }
+        echo json_encode($response);
+    }
+    public function get_city_data_on_state_id_post()
+    {
+        $response = array('code' => - 1, 'status' => false, 'message' => '');
+        $validate = validateToken();
+        if ($validate) {
+            $state_id = $this->input->post('state_id');
+            $city_data = $this->model->selectWhereData('tbl_cities',array('status'=>1,'state_id'=>$state_id),array('id','name'),false);
+
+            $response['code'] = REST_Controller::HTTP_OK;
+            $response['status'] = true;
+            $response['message'] = 'success';
+            $response['city_data'] = $city_data;
+        }else {
+            $response['code'] = REST_Controller::HTTP_UNAUTHORIZED;
+            $response['message'] = 'Unauthorised';
+        }
+        echo json_encode($response);
+    }
+
 }

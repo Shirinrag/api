@@ -17,7 +17,7 @@ class Parking_place_model extends CI_Model {
             $this->db->select('tbl_parking_place.*,tbl_cities.name as city_name,tbl_states.name as state_name,tbl_countries.name as country_name,pa_users.firstName,pa_users.lastName');
             $this->db->from('tbl_parking_place');
             $this->db->join('tbl_countries','tbl_parking_place.fk_country_id=tbl_countries.id','left');
-            $this->db->join('tbl_states','tbl_cities.state_id=tbl_states.id','left');
+            $this->db->join('tbl_states','tbl_parking_place.fk_state_id=tbl_states.id','left');
             $this->db->join('tbl_cities','tbl_parking_place.fk_city_id=tbl_cities.id','left');
             $this->db->join('pa_users','tbl_parking_place.fk_vendor_id=pa_users.id','left');
             $this->db->where('tbl_parking_place.del_status',1);
@@ -83,7 +83,7 @@ class Parking_place_model extends CI_Model {
          $this->db->select('tbl_parking_place.*,tbl_cities.name as city_name,tbl_states.name as state_name,tbl_countries.name as country_name,pa_users.firstName,pa_users.lastName');
         $this->db->from('tbl_parking_place');
         $this->db->join('tbl_countries','tbl_parking_place.fk_country_id=tbl_countries.id','left');
-        $this->db->join('tbl_states','tbl_cities.state_id=tbl_states.id','left');
+        $this->db->join('tbl_states','tbl_parking_place.fk_state_id=tbl_states.id','left');
         $this->db->join('tbl_cities','tbl_parking_place.fk_city_id=tbl_cities.id','left');
         $this->db->join('pa_users','tbl_parking_place.fk_vendor_id=pa_users.id','left');
         $this->db->where('tbl_parking_place.del_status',1);

@@ -54,5 +54,48 @@ class Superadmin_model extends CI_Model {
         $result = $query->result_array();
         return $result;
 	}
+	public function uniqueSlotName($variable) {
+        $var1 = explode('-', $variable);
+        if ($var1[1] == 'ZZ999') {
+            print ("Sorry we cannot go beyond this ");
+        } else if ($var1[1][2] == 9 && $var1[1][3] == 9 && $var1[1][4] == 9) {
+            if ($var1[1][1] == 'Z') {
+                $var1[1][0] = chr(ord($var1[1][0]) + 1);
+                $var1[1][1] = 'A';
+                $var1[1][2] = 0;
+                $var1[1][3] = 0;
+                $var1[1][4] = 1;
+            } else {
+                $var1[1][1] = chr(ord($var1[1][1]) + 1);
+                $var1[1][2] = 0;
+                $var1[1][3] = 0;
+                $var1[1][4] = 1;
+            }
+        } else if ($var1[1][3] == 9 && $var1[1][4] == 9) {
+            $var1[1][2] = $var1[1][2] + 1;
+            $var1[1][3] = 0;
+            $var1[1][4] = 0;
+        } else {
+            if ($var1[1][4] == 9) {
+                $var1[1][3] = $var1[1][3] + 1;
+                $var1[1][4] = 0;
+            } else {
+                $var1[1][3] = $var1[1][3];
+                $var1[1][4] = $var1[1][4] + 1;
+            }
+        }
+        return $var1[1];
+    }
+    public function parking_place_data_on_id($id='')
+    {
+    	$this->db->select('tbl_parking_place.*,tbl_hours_price_slab.*, tbl_hours_price_slab.id as price_slab_id,tbl_slot_info.*,tbl_slot_info.id as slot_info_id');
+    	$this->db->from('tbl_parking_place');
+    	$this->db->join('tbl_hours_price_slab','tbl_hours_price_slab.fk_place_id=tbl_parking_place.id','left');
+    	$this->db->join('tbl_slot_info','tbl_slot_info.fk_place_id=tbl_slot_info.id','left');
+    	$this->db->where('tbl_parking_place.id',$id);
+    	$query = $this->db->get();
+        $result = $query->result_array();
+        return $result;
+    }
 }
 	

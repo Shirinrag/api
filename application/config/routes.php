@@ -69,32 +69,52 @@ $route['place-details-on-id'] = 'userapp_api/place_details_on_id';
 // =============Super Admin API=============================
 $route['loggedin-data'] = 'common/login_data';
 $route['get-all-user-type'] = 'common/get_all_user_type';
+$route['get-all-parking-data'] = 'common/get_all_parking_data';
+$route['get-state-data-on-country-id'] = 'common/get_state_data_on_country_id';
+$route['get-city-data-on-state-id'] = 'common/get_city_data_on_state_id';
+
 $route['add-role'] = 'superadmin_api/add_role';
 $route['display-all-role-data'] = 'superadmin_api/display_all_role_data';
 $route['get-all-role-on-id'] = 'superadmin_api/get_all_role_on_id';
 $route['update-role'] = 'superadmin_api/update_role';
 $route['delete-role'] = 'superadmin_api/delete_role';
+
 $route['change-password'] = 'superadmin_api/change_password';
+
 $route['add-admin'] = 'superadmin_api/add_admin';
 $route['display-all-admin-data'] = 'superadmin_api/display_all_admin_data';
 $route['get-admin-data-on-id'] = 'superadmin_api/get_admin_data_on_id';
 $route['update-admin'] = 'superadmin_api/update_admin';
 $route['delete-admin'] = 'superadmin_api/delete_admin';
+
 $route['add-user'] = 'superadmin_api/add_user';
 $route['display-all-user-data'] = 'superadmin_api/display_all_user_data';
 $route['get-user-data-on-id'] = 'superadmin_api/get_user_data_on_id';
 $route['update-user'] = 'superadmin_api/update_user';
 $route['delete-user'] = 'superadmin_api/delete_user';
 $route['update-user-status'] = 'superadmin_api/update_user_status';
+
 $route['booking-history-data'] = 'superadmin_api/booking_history_data';
+
 $route['add-place'] = 'superadmin_api/add_place';
 $route['display-all-parking-place-data'] = 'superadmin_api/display_all_parking_place_data';
 $route['get-parking-place-details-on-id'] = 'superadmin_api/get_parking_place_details_on_id';
 $route['delete-parking-place'] = 'superadmin_api/delete_parking_place';
+
 $route['add-device'] = 'superadmin_api/add_device';
 $route['display-all-device-data'] = 'superadmin_api/display_all_device_data';
+
 $route['add-bonus-amount'] = 'superadmin_api/add_bonus_amount';
 $route['display-all-bonus-data'] = 'superadmin_api/display_all_bonus_data';
 $route['update-bonus-status'] = 'superadmin_api/update_bonus_status';
+$route['add-place-status'] = 'superadmin_api/add_place_status';
+$route['display-all-place-status-data'] = 'superadmin_api/display_all_place_status_data';
+$route['update-place-status'] = 'superadmin_api/update_place_status';
+$route['update-place-status-data'] = 'superadmin_api/update_place_status_data';
+
+$route['add-price-type'] = 'superadmin_api/add_price_type';
+$route['display-all-price-type-data'] = 'superadmin_api/display_all_price_type_data';
+$route['update-price-type'] = 'superadmin_api/update_price_type';
+$route['update-price-type-data'] = 'superadmin_api/update_price_type_data';
 
 
