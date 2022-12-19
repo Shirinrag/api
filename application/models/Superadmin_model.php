@@ -88,13 +88,14 @@ class Superadmin_model extends CI_Model {
     }
     public function parking_place_data_on_id($id='')
     {
-    	$this->db->select('tbl_parking_place.*,tbl_hours_price_slab.*, tbl_hours_price_slab.id as price_slab_id,tbl_slot_info.*,tbl_slot_info.id as slot_info_id');
+    	// ,tbl_hours_price_slab.*, tbl_hours_price_slab.id as price_slab_id,tbl_slot_info.*,tbl_slot_info.id as slot_info_id
+    	$this->db->select('tbl_parking_place.*');
     	$this->db->from('tbl_parking_place');
-    	$this->db->join('tbl_hours_price_slab','tbl_hours_price_slab.fk_place_id=tbl_parking_place.id','left');
-    	$this->db->join('tbl_slot_info','tbl_slot_info.fk_place_id=tbl_slot_info.id','left');
+    	// $this->db->join('tbl_hours_price_slab','tbl_hours_price_slab.fk_place_id=tbl_parking_place.id','left');
+    	// $this->db->join('tbl_slot_info','tbl_slot_info.fk_place_id=tbl_slot_info.id','left');
     	$this->db->where('tbl_parking_place.id',$id);
     	$query = $this->db->get();
-        $result = $query->result_array();
+        $result = $query->row_array();
         return $result;
     }
 }

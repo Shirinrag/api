@@ -774,6 +774,7 @@ class Superadmin_api extends REST_Controller {
                 $slots = $this->input->post('slots');
                 $fk_place_status_id = $this->input->post('fk_place_status_id');
                 $fk_parking_price_type = $this->input->post('fk_parking_price_type');
+                $ext_price = $this->input->post('ext_price');
                 $from_hours = $this->input->post('from_hours');
                 $from_hours = json_decode($from_hours,true);
                 $to_hours = $this->input->post('to_hours');
@@ -811,6 +812,9 @@ class Superadmin_api extends REST_Controller {
                 }else if(empty($slots)){
                     $response['message'] = "Slots is required";
                     $response['code'] = 201;
+                }else if(empty($ext_price)){
+                    $response['message'] = "Extension Price is required";
+                    $response['code'] = 201;
                 }else{
                     $check_place_count = $this->model->CountWhereRecord('tbl_parking_place', array('place_name'=>$place_name,'status'=>1));
                    
@@ -832,6 +836,7 @@ class Superadmin_api extends REST_Controller {
                             'slots'=>$slots,
                             'fk_place_status_id'=>$fk_place_status_id,
                             'fk_parking_price_type'=>$fk_parking_price_type,
+                            'ext_price'=>$ext_price,
                         );
                         $last_inserted_id = $this->model->insertData('tbl_parking_place',$curl_data);
                         if($from_hours!= "" && $to_hours !="" && !empty($price)){
@@ -914,12 +919,149 @@ class Superadmin_api extends REST_Controller {
                     $response['code'] = 201;
                 }else{
                     $this->load->model('superadmin_model');
-                    $parking_place = $this->superadmin_model->parking_place_data_on_id($id);
+                    $parking_place = $this->model->selectWhereData('tbl_parking_place',array('id'=>$id),array('*'));
+                    $state_details = $this->model->selectWhereData('tbl_states',array('country_id'=>$parking_place['fk_country_id']),array('id','name'),false);
+                    $city_details = $this->model->selectWhereData('tbl_cities',array('state_id'=>$parking_place['fk_state_id']),array('id','name'),false);
+                    $hour_price_slab_on_place_id = $this->model->selectWhereData('tbl_hours_price_slab',array('fk_place_id'=>$id),array('*',"id as hour_price_slab_id"),false);
+                    $slot_info_on_place_id = $this->model->selectWhereData('tbl_slot_info',array('fk_place_id'=>$id),array('*',"id as slot_info_id"),false);
 
                     $response['code'] = REST_Controller::HTTP_OK;
                     $response['status'] = true;
                     $response['message'] = 'success';
                     $response['parking_place_data'] = $parking_place;
+                    $response['hour_price_slab'] = $hour_price_slab_on_place_id;
+                    $response['slot_info'] = $slot_info_on_place_id;
+                    $response['state_details'] = $state_details;
+                    $response['city_details'] = $city_details;
+                }
+        }else {
+            $response['code'] = REST_Controller::HTTP_UNAUTHORIZED;
+            $response['message'] = 'Unauthorised';
+        }
+        echo json_encode($response);
+    }
+    public function update_place_post()
+    {
+        $response = array('code' => - 1, 'status' => false, 'message' => '');
+        $validate = validateToken();
+        if ($validate) {
+                $id = $this->input->post('id');
+                $fk_vendor_id = $this->input->post('fk_vendor_id');
+                $fk_country_id = $this->input->post('fk_country_id');
+                $fk_state_id = $this->input->post('fk_state_id');
+                $fk_city_id = $this->input->post('fk_city_id');
+                $place_name = $this->input->post('place_name');
+                $address = $this->input->post('address');
+                $pincode = $this->input->post('pincode');
+                $latitude = $this->input->post('latitude');
+                $longitude = $this->input->post('longitude');
+                $pincode = $this->input->post('pincode');
+                $slots = $this->input->post('slots');
+                $fk_place_status_id = $this->input->post('fk_place_status_id');
+                $fk_parking_price_type = $this->input->post('fk_parking_price_type');
+                $ext_price = $this->input->post('ext_price');
+                $from_hours = $this->input->post('from_hours');
+                $from_hours = json_decode($from_hours,true);
+                $to_hours = $this->input->post('to_hours');
+                $to_hours = json_decode($to_hours,true);                
+                $price = $this->input->post('price');
+                $price = json_decode($price,true);                
+
+                if(empty($fk_vendor_id)){
+                    $response['message'] = "First Name is required";
+                    $response['code'] = 201;
+                }else if(empty($fk_country_id)){
+                    $response['message'] = "Last Name is required";
+                    $response['code'] = 201;
+                }else if(empty($fk_state_id)){
+                    $response['message'] = "fk_state_id is required";
+                    $response['code'] = 201;
+                }else if(empty($fk_city_id)){
+                    $response['message'] = "Mobile No is required";
+                    $response['code'] = 201;
+                }else if(empty($place_name)){
+                    $response['message'] = "place_name is required";
+                    $response['code'] = 201;
+                }else if(empty($address)){
+                    $response['message'] = "User Name is required";
+                    $response['code'] = 201;
+                }else if(empty($pincode)){
+                    $response['message'] = "Pincode is required";
+                    $response['code'] = 201;
+                }else if(empty($latitude)){
+                    $response['message'] = "Latitude is required";
+                    $response['code'] = 201;
+                }else if(empty($longitude)){
+                    $response['message'] = "Longitude is required";
+                    $response['code'] = 201;
+                }else if(empty($slots)){
+                    $response['message'] = "Slots is required";
+                    $response['code'] = 201;
+                }else if(empty($ext_price)){
+                    $response['message'] = "Extension Price is required";
+                    $response['code'] = 201;
+                }else{
+                    $check_place_count = $this->model->CountWhereRecord('tbl_parking_place', array('place_name'=>$place_name,'status'=>1,'id !='=>$id));
+                   
+                    if($check_place_count > 0){
+                        $response['code'] = 201;
+                        $response['status'] = false;
+                        $response['message'] = 'Place Name Already exist.';                              
+                    }else{
+                        $curl_data = array(
+                            'fk_vendor_id'=>$fk_vendor_id,
+                            'fk_country_id'=>$fk_country_id,
+                            'fk_state_id'=>$fk_state_id,
+                            'fk_city_id'=>$fk_city_id,
+                            'place_name'=>$place_name,
+                            'address'=>$address,
+                            'pincode'=>$pincode,
+                            'latitude'=>$latitude,
+                            'longitude'=>$longitude,
+                            'slots'=>$slots,
+                            'fk_place_status_id'=>$fk_place_status_id,
+                            'fk_parking_price_type'=>$fk_parking_price_type,
+                            'ext_price'=>$ext_price,
+                        );
+                        $last_inserted_id = $this->model->updateData('tbl_parking_place',$curl_data,array('id'=>$id));
+                        // if($from_hours!= "" && $to_hours !="" && !empty($price)){
+                        //     foreach ($from_hours as $from_hours_key => $from_hours_rows) {
+                        //         $insert_price_data = array(
+                        //             'fk_place_id' =>$last_inserted_id,
+                        //             'from_hours' =>$from_hours_rows,
+                        //             'to_hours' =>$to_hours[$from_hours_key],
+                        //             'cost' =>$price[$from_hours_key],
+                        //         );
+                        //         $this->model->insertData('tbl_hours_price_slab',$insert_price_data);  
+                        //     }
+                        // }
+                        // $prefix = $this->model->selectWhereData('tbl_states',array('id'=>$fk_state_id),array('prefix'));
+                        // for ($i=0; $i < $slots; $i++) { 
+                        //     $this->load->model('superadmin_model');
+                        //     $count = $this->superadmin_model->get_count_slot_name($prefix['prefix']);
+                        //     if($count['total']==0){
+                        //         $slot_name = $prefix['prefix'] . "-AA000";
+                        //     }else{
+                        //         $slot_name = $this->model->selectWhereData('tbl_slot_info',array('del_status'=>1),array('slot_name'),true,array('id','DESC'));
+                        //         $slot_name = $slot_name['slot_name'];
+                        //     }  
+
+                        //     $this->load->model('superadmin_model');
+                        //     $slot_name1 = $prefix['prefix'] . "-" . $this->superadmin_model->uniqueSlotName($slot_name);
+                            
+                        //         $display_id = "P-" . ($i + 1);
+
+                        //         $insert_slot_info_data=array(
+                        //             'fk_place_id' =>$last_inserted_id,
+                        //             'slot_name' =>$slot_name1,
+                        //             'display_id' =>$display_id
+                        //         );
+                        //         $this->model->insertData('tbl_slot_info',$insert_slot_info_data);  
+                        // }
+                        $response['code'] = REST_Controller::HTTP_OK;
+                        $response['status'] = true;
+                        $response['message'] = 'Parking Places Inserted Successfully';
+                    }
                 }
         }else {
             $response['code'] = REST_Controller::HTTP_UNAUTHORIZED;

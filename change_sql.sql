@@ -10,3 +10,4 @@ ALTER TABLE `pa_users` ADD INDEX(`userName`);
 ALTER TABLE `pa_users` ADD `del_status` INT NOT NULL DEFAULT '1' AFTER `app_build_no`;
 ALTER TABLE `tbl_parking_place_status` ADD `del_status` INT NOT NULL DEFAULT '1' AFTER `status`;
 ALTER TABLE `tbl_parking_place` ADD `fk_parking_price_type` INT NULL DEFAULT NULL AFTER `fk_place_status_id`;
+ALTER TABLE `tbl_parking_place` ADD `ext_price` INT NULL DEFAULT NULL AFTER `fk_parking_price_type`;

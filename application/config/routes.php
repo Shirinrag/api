@@ -99,6 +99,8 @@ $route['booking-history-data'] = 'superadmin_api/booking_history_data';
 $route['add-place'] = 'superadmin_api/add_place';
 $route['display-all-parking-place-data'] = 'superadmin_api/display_all_parking_place_data';
 $route['get-parking-place-details-on-id'] = 'superadmin_api/get_parking_place_details_on_id';
+$route['update-place'] = 'superadmin_api/update_place';
+
 $route['delete-parking-place'] = 'superadmin_api/delete_parking_place';
 
 $route['add-device'] = 'superadmin_api/add_device';
