@@ -64,6 +64,7 @@ $route['booking-deatils-on-id'] = 'user_api/booking_details_on_id';
 $route['user-wallet'] = 'user_api/user_wallet';
 $route['place-list'] = 'user_api/place_list';
 $route['place-details-on-id'] = 'user_api/place_details_on_id';
+$route['place-traffic'] = 'user_api/place_traffic';
 
 
 // =============Super Admin API=============================
@@ -120,6 +121,7 @@ $route['display-all-price-type-data'] = 'superadmin_api/display_all_price_type_d
 $route['update-price-type'] = 'superadmin_api/update_price_type';
 $route['update-price-type-data'] = 'superadmin_api/update_price_type_data';
 $route['save-mapped-device'] = 'superadmin_api/save_mapped_device';
-
+$route['update-machine-device-status'] = 'superadmin_api/update_machine_device_status';
+$route['dashboard-data'] = 'superadmin_api/dashboard';
 
 // 

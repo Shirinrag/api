@@ -13,6 +13,7 @@ class Superadmin_model extends CI_Model {
 		$this->db->where('pa_users.user_type',10);
 		$this->db->where('pa_users.del_status',1);
 		$this->db->order_by('pa_users.id','DESC');
+		$this->db->group_by('pa_users.id');
 		$query = $this->db->get();
         $result = $query->result_array();
         return $result;

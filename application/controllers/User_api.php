@@ -457,4 +457,38 @@ class User_api extends REST_Controller {
         }
         echo json_encode($response);
     }
+    public function place_traffic_post()
+    {
+    	$response = array('code' => - 1, 'status' => false, 'message' => '');
+    	$validate = validateToken();
+        if ($validate) {
+        	$id = $this->input->post('id');
+        	$place_id = $this->input->post('place_id');
+        	if(empty($id)){
+        		$response['message'] = "User Id is required";
+		    	$response['code'] = 201;
+        	}else if(empty($place_id)){
+        		$response['message'] = "Place Id is required";
+		    	$response['code'] = 201;
+        	}else{
+        		$curl_data = array(
+    						'fk_user_id' =>$id,
+    						'fk_place_id' =>$place_id
+    					);
+    			$this->model->insertData('tbl_place_traffic',$curl_data);
+				$response['code'] = REST_Controller::HTTP_OK;
+	            $response['status'] = true;
+				$response['message'] = 'success';
+				$response['place_details'] = $place_details;
+        	}        	
+		}else {
+            $response['code'] = REST_Controller::HTTP_UNAUTHORIZED;
+            $response['message'] = 'Unauthorised';
+        }
+        echo json_encode($response);
+    }
+    public function add_amount_to_wallet()
+    {
+    	
+    }
 }
