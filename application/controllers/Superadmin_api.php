@@ -919,11 +919,17 @@ class Superadmin_api extends REST_Controller {
                     $response['code'] = 201;
                 }else{
                     $this->load->model('superadmin_model');
-                    $parking_place = $this->model->selectWhereData('tbl_parking_place',array('id'=>$id),array('*'));
+                    $parking_place = $this->superadmin_model->get_parking_place_details_on_id($id);
                     $state_details = $this->model->selectWhereData('tbl_states',array('country_id'=>$parking_place['fk_country_id']),array('id','name'),false);
                     $city_details = $this->model->selectWhereData('tbl_cities',array('state_id'=>$parking_place['fk_state_id']),array('id','name'),false);
                     $hour_price_slab_on_place_id = $this->model->selectWhereData('tbl_hours_price_slab',array('fk_place_id'=>$id),array('*',"id as hour_price_slab_id"),false);
-                    $slot_info_on_place_id = $this->model->selectWhereData('tbl_slot_info',array('fk_place_id'=>$id),array('*',"id as slot_info_id"),false);
+                    $slot_info_on_place_id = $this->model->selectWhereData('tbl_slot_info',array('fk_place_id'=>$id,'del_status'=>1),array('*',"id as slot_info_id"),false);
+                    foreach ($slot_info_on_place_id as $slot_info_on_place_id_key => $slot_info_on_place_id_row) {
+                        $device_data = $this->model->selectWhereData('tbl_device',array(),array('id','device_id'),false,array('id',"ASC"));
+
+                        $device_id = $this->model->selectWhereData('tbl_device',array('id'=>$slot_info_on_place_id_row['fk_machine_id']),array('device_id'));
+                        $slot_info_on_place_id[$slot_info_on_place_id_key]['device_id'] = $device_id['device_id'];
+                    }
 
                     $response['code'] = REST_Controller::HTTP_OK;
                     $response['status'] = true;
@@ -933,6 +939,7 @@ class Superadmin_api extends REST_Controller {
                     $response['slot_info'] = $slot_info_on_place_id;
                     $response['state_details'] = $state_details;
                     $response['city_details'] = $city_details;
+                    $response['device_data'] = $device_data;
                 }
         }else {
             $response['code'] = REST_Controller::HTTP_UNAUTHORIZED;
@@ -1001,13 +1008,13 @@ class Superadmin_api extends REST_Controller {
                     $response['message'] = "Extension Price is required";
                     $response['code'] = 201;
                 }else{
-                    $check_place_count = $this->model->CountWhereRecord('tbl_parking_place', array('place_name'=>$place_name,'status'=>1,'id !='=>$id));
-                   
+                    $check_place_count = $this->model->CountWhereRecord('tbl_parking_place', array('place_name'=>$place_name,'id !='=> $id));                   
                     if($check_place_count > 0){
                         $response['code'] = 201;
                         $response['status'] = false;
-                        $response['message'] = 'Place Name Already exist.';                              
+                        $response['message'] = 'Place Name Already exist.';
                     }else{
+                        $slots_data = $this->model->selectWhereData('tbl_parking_place',array('id'=>$id),array('slots')); 
                         $curl_data = array(
                             'fk_vendor_id'=>$fk_vendor_id,
                             'fk_country_id'=>$fk_country_id,
@@ -1023,7 +1030,7 @@ class Superadmin_api extends REST_Controller {
                             'fk_parking_price_type'=>$fk_parking_price_type,
                             'ext_price'=>$ext_price,
                         );
-                        $last_inserted_id = $this->model->updateData('tbl_parking_place',$curl_data,array('id'=>$id));
+                        $this->model->updateData('tbl_parking_place',$curl_data,array('id'=>$id));
                         // if($from_hours!= "" && $to_hours !="" && !empty($price)){
                         //     foreach ($from_hours as $from_hours_key => $from_hours_rows) {
                         //         $insert_price_data = array(
@@ -1035,32 +1042,50 @@ class Superadmin_api extends REST_Controller {
                         //         $this->model->insertData('tbl_hours_price_slab',$insert_price_data);  
                         //     }
                         // }
-                        // $prefix = $this->model->selectWhereData('tbl_states',array('id'=>$fk_state_id),array('prefix'));
-                        // for ($i=0; $i < $slots; $i++) { 
-                        //     $this->load->model('superadmin_model');
-                        //     $count = $this->superadmin_model->get_count_slot_name($prefix['prefix']);
-                        //     if($count['total']==0){
-                        //         $slot_name = $prefix['prefix'] . "-AA000";
-                        //     }else{
-                        //         $slot_name = $this->model->selectWhereData('tbl_slot_info',array('del_status'=>1),array('slot_name'),true,array('id','DESC'));
-                        //         $slot_name = $slot_name['slot_name'];
-                        //     }  
+                        $prefix = $this->model->selectWhereData('tbl_states',array('id'=>$fk_state_id),array('prefix'));
+                       
+                        if($slots_data['slots'] < $slots){                           
+                                for ($i=$slots_data['slots']; $i < $slots; $i++) {
+                                    $this->load->model('superadmin_model');
+                                    $count = $this->superadmin_model->get_count_slot_name($prefix['prefix']);
+                                    if($count['total']==0){
+                                        $slot_name = $prefix['prefix'] . "-AA000";
+                                    }else{
+                                        $slot_name = $this->model->selectWhereData('tbl_slot_info',array('del_status'=>1),array('slot_name'),true,array('id','DESC'));
+                                        $slot_name = $slot_name['slot_name'];
+                                    }  
 
-                        //     $this->load->model('superadmin_model');
-                        //     $slot_name1 = $prefix['prefix'] . "-" . $this->superadmin_model->uniqueSlotName($slot_name);
-                            
-                        //         $display_id = "P-" . ($i + 1);
-
-                        //         $insert_slot_info_data=array(
-                        //             'fk_place_id' =>$last_inserted_id,
-                        //             'slot_name' =>$slot_name1,
-                        //             'display_id' =>$display_id
-                        //         );
-                        //         $this->model->insertData('tbl_slot_info',$insert_slot_info_data);  
-                        // }
+                                    $this->load->model('superadmin_model');
+                                    $slot_name1 = $prefix['prefix'] . "-" . $this->superadmin_model->uniqueSlotName($slot_name);
+                                    
+                                        $display_id = "P-" . ($i + 1);
+                                        $insert_slot_info_data=array(
+                                            'fk_place_id' =>$id,
+                                            'slot_name' =>$slot_name1,
+                                            'display_id' =>$display_id
+                                        );
+                                        $this->model->insertData('tbl_slot_info',$insert_slot_info_data);  
+                             }
+                        }else{
+                            if($slots_data['slots'] > $slots){
+                               $this->load->model('superadmin_model');
+                               $active_count_slots = $this->superadmin_model->get_count_slot_id();
+                               $final_count = $active_count_slots['total'] - $slots;
+                               $slots_id = $this->superadmin_model->get_slot_id($final_count);
+                              
+                               foreach ($slots_id as $slots_id_key => $slots_id_row) {
+                                  $update_status = array(
+                                        'del_status' => 0,
+                                        'fk_machine_status'=>0
+                                  );
+                                    $this->model->updateData('tbl_slot_info',$update_status,array('id'=>$slots_id_row['id']));
+                               }
+                            }
+                        }
+                        
                         $response['code'] = REST_Controller::HTTP_OK;
                         $response['status'] = true;
-                        $response['message'] = 'Parking Places Inserted Successfully';
+                        $response['message'] = 'Parking Places Updated Successfully';
                     }
                 }
         }else {
@@ -1128,8 +1153,50 @@ class Superadmin_api extends REST_Controller {
         }
         echo json_encode($response);
     }
-    public function display_all_device_data_post()
+    public function display_all_device_data_get()
     {
+        $response = array('code' => - 1, 'status' => false, 'message' => '');
+        $validate = validateToken();
+        if ($validate) {
+            $this->load->model('superadmin_model');
+                $device_data = $this->superadmin_model->display_all_device_data();
+                // foreach ($device_data as $device_data_key => $device_data_row) {
+                    
+                // }
+                // $device_data = $this->model->selectWhereData('tbl_device',array(),array('*','CONCAT(tbl_device.status,",",tbl_device.id) AS statusdata'),false,array('id',"desc"));
+                $response['code'] = REST_Controller::HTTP_OK;
+                $response['status'] = true;
+                $response['message'] = 'success';
+                $response['device_data'] = $device_data;
+        } else {
+            $response['code'] = REST_Controller::HTTP_UNAUTHORIZED;
+            $response['message'] = 'Unauthorised';
+        }
+        echo json_encode($response);   
+    }
+    public function update_device_status_post()
+    {
+        $response = array('code' => - 1, 'status' => false, 'message' => '');
+        $validate = validateToken();
+        if ($validate) {
+                $status = $this->input->post('status');
+                $id = $this->input->post('id');
+                if(empty($id)){
+                    $response['message'] = "Id is required";
+                    $response['code'] = 201;
+                }else{
+                    $update_data = array('status' => $status);
+                    $this->model->updateData('tbl_device',$update_data,array('id'=>$id));
+                    
+                        $response['code'] = REST_Controller::HTTP_OK;
+                        $response['status'] = true;
+                        $response['message'] = 'Device Status Updated Successfully';
+                }
+        }else {
+            $response['code'] = REST_Controller::HTTP_UNAUTHORIZED;
+            $response['message'] = 'Unauthorised';
+        }
+        echo json_encode($response);
     }
     public function add_bonus_amount_post()
     {
@@ -1363,7 +1430,7 @@ class Superadmin_api extends REST_Controller {
     }
     public function update_price_type_post()
     {
-         $response = array('code' => - 1, 'status' => false, 'message' => '');
+        $response = array('code' => - 1, 'status' => false, 'message' => '');
         $validate = validateToken();
         if($validate){
             $id = $this->input->post('id');
@@ -1421,5 +1488,58 @@ class Superadmin_api extends REST_Controller {
         }
         echo json_encode($response);
     }  
+
+    public function save_mapped_device_post()
+    {
+        $response = array('code' => - 1, 'status' => false, 'message' => '');
+        $validate = validateToken();
+        if($validate){
+            $edit_id = $this->input->post('edit_id');
+            $fk_machine_id=$this->input->post('fk_machine_id');
+            $fk_machine_id = json_decode($fk_machine_id);
+            $slot_id=$this->input->post('slot_id');
+            $slot_id = json_decode($slot_id);
+            if (empty($edit_id)) {
+                $response['message'] = 'Id is required';
+                $response['code'] = 201;
+            }else if (empty($fk_machine_id[0])) {
+                $response['message'] = 'Machine Id is required';
+                $response['code'] = 201;
+            }else if (empty($slot_id[0])) {
+                $response['message'] = 'Slot Id is required';
+                $response['code'] = 201;
+            } else {
+                foreach($fk_machine_id as $fk_machine_id_key => $fk_machine_id_row){
+                        $check_slot_info_count = $this->model->CountWhereRecord('tbl_slot_info', array('fk_machine_id'=>$fk_machine_id_row,'del_status'=>1,'id !='=>$slot_id[$fk_machine_id_key]));
+                        // echo '<pre>'; print_r($check_slot_info_count); 
+                        if($check_slot_info_count > 0){
+                            $response['code'] = 201;
+                            $response['status'] = false;
+                            $response['message'] = 'Device Id Already exist.';
+                        }else{
+                                $update_data = array(
+                                    'fk_machine_id'=>$fk_machine_id_row,
+                                    'fk_machine_status'=>1
+                                );
+                                $this->model->updateData('tbl_slot_info',$update_data, array('id'=>$slot_id[$fk_machine_id_key]));
+
+                                $insert_data=array(
+                                        'fk_parking_place_id' =>$edit_id,
+                                        'fk_device_id' => $fk_machine_id_row
+                                    );
+                                    $this->model->insertData('tbl_place_device_mapped',$insert_data);
+                                    $response['message'] = 'success';
+                                    $response['code'] = 200;
+                                    $response['status'] = true;
+                        }                    
+                    }               
+                // exit;
+            }
+        } else {
+            $response['message'] = 'Invalid Request';
+            $response['code'] = 204;
+        }
+        echo json_encode($response);
+    }
 
 }

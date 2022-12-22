@@ -88,15 +88,64 @@ class Superadmin_model extends CI_Model {
     }
     public function parking_place_data_on_id($id='')
     {
-    	// ,tbl_hours_price_slab.*, tbl_hours_price_slab.id as price_slab_id,tbl_slot_info.*,tbl_slot_info.id as slot_info_id
     	$this->db->select('tbl_parking_place.*');
     	$this->db->from('tbl_parking_place');
-    	// $this->db->join('tbl_hours_price_slab','tbl_hours_price_slab.fk_place_id=tbl_parking_place.id','left');
-    	// $this->db->join('tbl_slot_info','tbl_slot_info.fk_place_id=tbl_slot_info.id','left');
     	$this->db->where('tbl_parking_place.id',$id);
     	$query = $this->db->get();
         $result = $query->row_array();
         return $result;
+    }
+
+    public function display_all_device_data()
+    {
+    	$this->db->select('tbl_device.*,CONCAT(tbl_device.status,",",tbl_device.id) AS statusdata,tbl_parking_place.place_name,tbl_slot_info.slot_name,tbl_slot_info.display_id');
+
+    	$this->db->from('tbl_device');
+    	// $this->db->join('tbl_place_device_mapped','tbl_place_device_mapped.fk_device_id=tbl_device.id','left');
+    	$this->db->join('tbl_slot_info','tbl_slot_info.fk_machine_id=tbl_device.id','left');
+    	$this->db->join('tbl_parking_place','tbl_parking_place.id=tbl_slot_info.fk_place_id','left');
+    	
+    	$this->db->order_by('tbl_device.id','DESC');
+    	$query = $this->db->get();
+        $result = $query->result_array();
+        return $result;
+
+    }
+    public function get_parking_place_details_on_id($id='')
+    {
+    	$this->db->select('tbl_parking_place.*,pa_users.firstName,pa_users.lastName,tbl_cities.name as city_name,tbl_states.name as state_name,tbl_countries.name as country_name,tbl_parking_place_status.place_status,tbl_parking_price_type.price_type');
+    	$this->db->from('tbl_parking_place');
+    	$this->db->join('pa_users','tbl_parking_place.fk_vendor_id=pa_users.id','left');
+    	$this->db->join('tbl_countries','tbl_parking_place.fk_country_id=tbl_countries.id','left');
+        $this->db->join('tbl_states','tbl_parking_place.fk_state_id=tbl_states.id','left');
+        $this->db->join('tbl_cities','tbl_parking_place.fk_city_id=tbl_cities.id','left');
+        $this->db->join('tbl_parking_place_status','tbl_parking_place.fk_place_status_id=tbl_parking_place_status.id','left');
+        $this->db->join('tbl_parking_price_type','tbl_parking_place.fk_place_status_id=tbl_parking_price_type.id','left');
+    	$this->db->where('tbl_parking_place.id',$id);
+    	$query = $this->db->get();
+        $result = $query->row_array();
+        return $result;
+    }
+
+    public function get_slot_id($slots='')
+    {
+    	$this->db->select('id');
+    	$this->db->from('tbl_slot_info');
+    	$this->db->order_by('id','DESC');
+  		$this->db->limit($slots);
+  		$query = $this->db->get();
+        $result = $query->result_array();
+        return $result;
+
+    }
+
+    public function get_count_slot_id()
+    {
+    	$this->db->select('count(id) as total');
+        $this->db->from('tbl_slot_info');
+        $this->db->where('del_status',1);
+        $query = $this->db->get();
+        return $query->row_array();
     }
 }
 	

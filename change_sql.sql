@@ -11,3 +11,4 @@ ALTER TABLE `pa_users` ADD `del_status` INT NOT NULL DEFAULT '1' AFTER `app_buil
 ALTER TABLE `tbl_parking_place_status` ADD `del_status` INT NOT NULL DEFAULT '1' AFTER `status`;
 ALTER TABLE `tbl_parking_place` ADD `fk_parking_price_type` INT NULL DEFAULT NULL AFTER `fk_place_status_id`;
 ALTER TABLE `tbl_parking_place` ADD `ext_price` INT NULL DEFAULT NULL AFTER `fk_parking_price_type`;
+ALTER TABLE `tbl_device` ADD `del_status` INT NOT NULL DEFAULT '1' AFTER `status`;

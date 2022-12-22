@@ -4,7 +4,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 ini_set("memory_limit", "-1");
 require APPPATH . '/libraries/REST_Controller.php';
 
-class UserApp_api extends REST_Controller {
+class User_api extends REST_Controller {
 
 	public function __construct() {
         parent::__construct();
@@ -320,12 +320,18 @@ class UserApp_api extends REST_Controller {
 		    		$response['code'] = 201;
 		    	}else{
 		    		$car_list = $this->model->selectWhereData('tbl_user_car_details',array('fk_user_id'=>$user_id,'status'=>1),array('id','car_number'),false);
-
-    					$response['code'] = REST_Controller::HTTP_OK;
+		    		if(!empty($car_list)){
+		    			$response['code'] = REST_Controller::HTTP_OK;
                         $response['status'] = true;
     					$response['message'] = 'success';
     					$response['car_list_data'] = $car_list;
+		    		}else{
+		    			$response['code'] = REST_Controller::HTTP_OK;
+                        $response['status'] = false;
+    					$response['message'] = 'Data not found';
+    					$response['car_list_data'] =[];   					
     				}
+		    	}
 		}else {
             $response['code'] = REST_Controller::HTTP_UNAUTHORIZED;
             $response['message'] = 'Unauthorised';
@@ -393,11 +399,11 @@ class UserApp_api extends REST_Controller {
 		    		$this->load->model('user_model');
 		    		$user_wallet = $this->model->selectWhereData('tbl_user_wallet',array('fk_user_id'=>$user_id),array('id','amount'),false);
 
-    					$response['code'] = REST_Controller::HTTP_OK;
-                        $response['status'] = true;
-    					$response['message'] = 'success';
-    					$response['user_wallet_data'] = $user_wallet;
-    				}
+					$response['code'] = REST_Controller::HTTP_OK;
+                    $response['status'] = true;
+					$response['message'] = 'success';
+					$response['user_wallet_data'] = $user_wallet;
+    			}
 		}else {
             $response['code'] = REST_Controller::HTTP_UNAUTHORIZED;
             $response['message'] = 'Unauthorised';

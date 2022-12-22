@@ -53,17 +53,17 @@ $route['default_controller'] = 'welcome';
 $route['404_override'] = '';
 $route['translate_uri_dashes'] = FALSE;
 
-$route['register-user'] = 'userapp_api/register_user';
-$route['login-data'] = 'userapp_api/login';
-$route['update-user-profile'] = 'userapp_api/update_user_profile';
-$route['add-user-car'] = 'userapp_api/add_user_car';
-$route['delete-user-car'] = 'userapp_api/delete_user_car';
-$route['user-cars-list-data'] = 'userapp_api/user_cars_list_data';
-$route['booking-history'] = 'userapp_api/booking_history';
-$route['booking-deatils-on-id'] = 'userapp_api/booking_details_on_id';
-$route['user-wallet'] = 'userapp_api/user_wallet';
-$route['place-list'] = 'userapp_api/place_list';
-$route['place-details-on-id'] = 'userapp_api/place_details_on_id';
+$route['register-user'] = 'user_api/register_user';
+$route['login-data'] = 'user_api/login';
+$route['update-user-profile'] = 'user_api/update_user_profile';
+$route['add-user-car'] = 'user_api/add_user_car';
+$route['delete-user-car'] = 'user_api/delete_user_car';
+$route['user-cars-list-data'] = 'user_api/user_cars_list_data';
+$route['booking-history'] = 'user_api/booking_history';
+$route['booking-deatils-on-id'] = 'user_api/booking_details_on_id';
+$route['user-wallet'] = 'user_api/user_wallet';
+$route['place-list'] = 'user_api/place_list';
+$route['place-details-on-id'] = 'user_api/place_details_on_id';
 
 
 // =============Super Admin API=============================
@@ -105,6 +105,7 @@ $route['delete-parking-place'] = 'superadmin_api/delete_parking_place';
 
 $route['add-device'] = 'superadmin_api/add_device';
 $route['display-all-device-data'] = 'superadmin_api/display_all_device_data';
+$route['update-device-status'] = 'superadmin_api/update_device_status';
 
 $route['add-bonus-amount'] = 'superadmin_api/add_bonus_amount';
 $route['display-all-bonus-data'] = 'superadmin_api/display_all_bonus_data';
@@ -118,5 +119,7 @@ $route['add-price-type'] = 'superadmin_api/add_price_type';
 $route['display-all-price-type-data'] = 'superadmin_api/display_all_price_type_data';
 $route['update-price-type'] = 'superadmin_api/update_price_type';
 $route['update-price-type-data'] = 'superadmin_api/update_price_type_data';
+$route['save-mapped-device'] = 'superadmin_api/save_mapped_device';
 
 
+// 
