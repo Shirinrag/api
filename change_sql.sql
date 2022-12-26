@@ -12,3 +12,10 @@ ALTER TABLE `tbl_parking_place_status` ADD `del_status` INT NOT NULL DEFAULT '1'
 ALTER TABLE `tbl_parking_place` ADD `fk_parking_price_type` INT NULL DEFAULT NULL AFTER `fk_place_status_id`;
 ALTER TABLE `tbl_parking_place` ADD `ext_price` INT NULL DEFAULT NULL AFTER `fk_parking_price_type`;
 ALTER TABLE `tbl_device` ADD `del_status` INT NOT NULL DEFAULT '1' AFTER `status`;
+
+-- 23/12/2022
+ALTER TABLE `tbl_duty_allocation` ADD INDEX(`id`);
+ALTER TABLE `tbl_duty_allocation` ADD INDEX(`fk_place_id`);
+ALTER TABLE `tbl_duty_allocation` ADD INDEX(`fk_verifier_id`);
+ALTER TABLE `tbl_duty_allocation` ADD `date` DATE NULL DEFAULT NULL AFTER `fk_verifier_id`;
+ALTER TABLE `tbl_duty_allocation` CHANGE `date` `date` VARCHAR(20) NULL DEFAULT NULL;

@@ -123,5 +123,8 @@ $route['update-price-type-data'] = 'superadmin_api/update_price_type_data';
 $route['save-mapped-device'] = 'superadmin_api/save_mapped_device';
 $route['update-machine-device-status'] = 'superadmin_api/update_machine_device_status';
 $route['dashboard-data'] = 'superadmin_api/dashboard';
-
-// 
+$route['get-allocation-data'] = 'superadmin_api/get_allocation_data';
+$route['save-duty-allocation'] = 'superadmin_api/save_duty_allocation';
+$route['display-all-duty-allocation-data'] = 'superadmin_api/display_all_duty_allocation_data';
+$route['get-duty-allocation-details-on-id'] = 'superadmin_api/get_duty_allocation_details_on_id';
+$route['delete-duty-allocation'] = 'superadmin_api/delete_duty_allocation';

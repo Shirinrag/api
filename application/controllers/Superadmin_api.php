@@ -249,7 +249,7 @@ class Superadmin_api extends REST_Controller {
                             'firstName' =>$first_name,
                             'lastName' =>$last_name,
                             'email' =>$email,
-                            'phoneNo' =>$phone_no,
+                            'phoneNo' =>$mobile_no,
                             'password' =>dec_enc('encrypt',$password),
                             'user_type' =>$user_type,
                             'username' =>$username,
@@ -1594,6 +1594,133 @@ class Superadmin_api extends REST_Controller {
         } else {
             $response['message'] = 'Invalid Request';
             $response['code'] = 204;
+        }
+        echo json_encode($response);
+    }
+    public function get_allocation_data_get()
+    {
+        $response = array('code' => - 1, 'status' => false, 'message' => '');
+        $validate = validateToken();
+        if($validate){
+                $place_list = $this->model->selectWhereData('tbl_parking_place',array('status'=>1),array('id','place_name'),false);
+                $verifier_list = $this->model->selectWhereData('pa_users',array('isActive'=>1,'user_type'=>3),array('id','firstName','lastName'),false);
+                $response['message'] = 'success';
+                $response['code'] = 200;
+                $response['status'] = true;
+                $response['place_list'] = $place_list;
+                $response['verifier_list'] = $verifier_list;
+        } else {
+            $response['message'] = 'Invalid Request';
+            $response['code'] = 204;
+        }
+        echo json_encode($response);
+    }
+
+    public function save_duty_allocation_post()
+    {
+       $response = array('code' => - 1, 'status' => false, 'message' => '');
+        $validate = validateToken();
+        if($validate){
+            $fk_place_id = $this->input->post('fk_place_id');
+            $fk_place_id = json_decode($fk_place_id);
+
+            $fk_verifier_id=$this->input->post('fk_verifier_id');
+            $fk_verifier_id = json_decode($fk_verifier_id);
+            $date=$this->input->post('date');
+            $date = json_decode($date);
+            if (empty($fk_place_id[0])) {
+                $response['message'] = 'Place is required';
+                $response['code'] = 201;
+            }else if (empty($fk_verifier_id[0])) {
+                $response['message'] = 'Verifier Id is required';
+                $response['code'] = 201;
+            }else if (empty($date[0])) {
+                $response['message'] = 'Date is required';
+                $response['code'] = 201;
+            } else {
+                foreach($fk_verifier_id as $fk_verifier_id_key => $fk_verifier_id_row){
+                    // $check_user_car_count = $this->model->CountWhereRecord('tbl_duty_allocation', array('fk_place_id' =>@$fk_place_id[$fk_verifier_id_key],'fk_verifier_id' => @$fk_verifier_id_row,,'date'=> @$date[$fk_verifier_id_key]));
+                    // if($check_user_car_count > 0){
+                    //     $response['code'] = 201;
+                    //     $response['status'] = false;
+                    //     $response['message'] = 'Duty Already Allocated.';                             
+                    // }else{
+                        $insert_data=array(
+                            'fk_place_id' =>$fk_place_id[$fk_verifier_id_key],      
+                            'fk_verifier_id' => $fk_verifier_id_row,
+                            'date'=>$date[$fk_verifier_id_key]
+                        );
+                        $this->model->insertData('tbl_duty_allocation',$insert_data);
+                        $response['message'] = 'success';
+                        $response['code'] = 200;
+                        $response['status'] = true;   
+                    // }
+                }            
+                            
+            }
+        } else {
+            $response['message'] = 'Invalid Request';
+            $response['code'] = 204;
+        }
+        echo json_encode($response);
+    }
+
+    public function display_all_duty_allocation_data_get()
+    {
+        $response = array('code' => - 1, 'status' => false, 'message' => '');
+        $validate = validateToken();
+        if ($validate) {
+                $this->load->model('superadmin_model');
+                $duty_allocation = $this->superadmin_model->display_all_duty_allocation_data();
+                $response['code'] = REST_Controller::HTTP_OK;
+                $response['status'] = true;
+                $response['message'] = 'success';
+                $response['duty_allocation'] = $duty_allocation;
+        } else {
+            $response['code'] = REST_Controller::HTTP_UNAUTHORIZED;
+            $response['message'] = 'Unauthorised';
+        }
+        echo json_encode($response);
+    }
+    public function get_duty_allocation_details_on_id()
+    {
+        $response = array('code' => - 1, 'status' => false, 'message' => '');
+        $validate = validateToken();
+        if ($validate) {
+                $id = $this->input->post('id');
+                $duty_allocation = $this->model->selectWhereData('tbl_duty_allocation',array('id'=>$id),array('*'));
+                $response['code'] = REST_Controller::HTTP_OK;
+                $response['status'] = true;
+                $response['message'] = 'success';
+                $response['duty_allocation'] = $duty_allocation;
+        } else {
+            $response['code'] = REST_Controller::HTTP_UNAUTHORIZED;
+            $response['message'] = 'Unauthorised';
+        }
+        echo json_encode($response);
+    }
+
+    public function delete_duty_allocation_post()
+    {
+        $response = array('code' => - 1, 'status' => false, 'message' => '');
+        $validate = validateToken();
+        if ($validate) {
+                $id = $this->input->post('id');
+                if(empty($id)){
+                    $response['message'] = "Id is required";
+                    $response['code'] = 201;
+                }else{
+                        $curl_data = array(
+                            'del_status' =>0,
+                        );
+                        $this->model->updateData('tbl_duty_allocation',$curl_data,array('id'=>$id));
+                        $response['code'] = REST_Controller::HTTP_OK;
+                        $response['status'] = true;
+                        $response['message'] = 'Duty Allocation Deleted Successfully';
+                }
+        }else {
+            $response['code'] = REST_Controller::HTTP_UNAUTHORIZED;
+            $response['message'] = 'Unauthorised';
         }
         echo json_encode($response);
     }

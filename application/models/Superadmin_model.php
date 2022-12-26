@@ -137,7 +137,6 @@ class Superadmin_model extends CI_Model {
   		$query = $this->db->get();
         $result = $query->result_array();
         return $result;
-
     }
 
     public function get_count_slot_id()
@@ -147,6 +146,18 @@ class Superadmin_model extends CI_Model {
         $this->db->where('del_status',1);
         $query = $this->db->get();
         return $query->row_array();
+    }
+    public function display_all_duty_allocation_data()
+    {
+       $this->db->select('tbl_duty_allocation.*,pa_users.firstName,pa_users.lastName,tbl_parking_place.place_name,pa_users.phoneNo,tbl_parking_place.address');
+       $this->db->from('tbl_duty_allocation');
+       $this->db->join('pa_users','tbl_duty_allocation.fk_verifier_id=pa_users.id','left');
+       $this->db->join('tbl_parking_place','tbl_duty_allocation.fk_place_id=tbl_parking_place.id','left');
+       $this->db->where('tbl_duty_allocation.del_status','1');
+       $this->db->order_by('tbl_duty_allocation.id','DESC');
+        $query = $this->db->get();
+        $result = $query->result_array();
+        return $result;
     }
 }
 	
