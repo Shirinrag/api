@@ -397,12 +397,18 @@ class User_api extends REST_Controller {
 		    		$response['code'] = 201;
 		    	}else{
 		    		$this->load->model('user_model');
-		    		$user_wallet = $this->model->selectWhereData('tbl_user_wallet',array('fk_user_id'=>$user_id),array('id','amount'),false);
-
-					$response['code'] = REST_Controller::HTTP_OK;
-                    $response['status'] = true;
-					$response['message'] = 'success';
-					$response['user_wallet_data'] = $user_wallet;
+		    		$user_wallet = $this->model->selectWhereData('tbl_user_wallet',array('fk_user_id'=>$user_id),array('id','amount'));
+					if(!empty($user_wallet)){
+                        $response['code'] = REST_Controller::HTTP_OK;
+                        $response['status'] = true;
+    					$response['message'] = 'success';
+    					$response['user_wallet_data'] = $user_wallet;
+                    }else{
+                        $response['code'] = 201;
+                        $response['status'] = false;
+    					$response['message'] = 'No Record';
+    					$response['user_wallet_data'] = "";
+                    }
     			}
 		}else {
             $response['code'] = REST_Controller::HTTP_UNAUTHORIZED;
@@ -441,11 +447,11 @@ class User_api extends REST_Controller {
         if ($validate) {
         	$id = $this->input->post('id');
         	if(empty($id)){
-        		$response['message'] = "User Id is required";
+        		$response['message'] = "Id is required";
 		    	$response['code'] = 201;
         	}else{
         		$this->load->model('user_model');
-			    $place_details = $this->user_model->place_details_on_id();
+			    $place_details = $this->user_model->place_details_on_id($id);
 				$response['code'] = REST_Controller::HTTP_OK;
 	            $response['status'] = true;
 				$response['message'] = 'success';
@@ -479,7 +485,6 @@ class User_api extends REST_Controller {
 				$response['code'] = REST_Controller::HTTP_OK;
 	            $response['status'] = true;
 				$response['message'] = 'success';
-				$response['place_details'] = $place_details;
         	}        	
 		}else {
             $response['code'] = REST_Controller::HTTP_UNAUTHORIZED;
@@ -487,8 +492,8 @@ class User_api extends REST_Controller {
         }
         echo json_encode($response);
     }
-    public function add_amount_to_wallet()
-    {
+    // public function add_amount_to_wallet()
+    // {
     	
-    }
+    // }
 }

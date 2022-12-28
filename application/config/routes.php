@@ -101,6 +101,7 @@ $route['add-place'] = 'superadmin_api/add_place';
 $route['display-all-parking-place-data'] = 'superadmin_api/display_all_parking_place_data';
 $route['get-parking-place-details-on-id'] = 'superadmin_api/get_parking_place_details_on_id';
 $route['update-place'] = 'superadmin_api/update_place';
+$route['update-parking-place-status'] = 'superadmin_api/update_parking_place_status';
 
 $route['delete-parking-place'] = 'superadmin_api/delete_parking_place';
 
@@ -128,3 +129,7 @@ $route['save-duty-allocation'] = 'superadmin_api/save_duty_allocation';
 $route['display-all-duty-allocation-data'] = 'superadmin_api/display_all_duty_allocation_data';
 $route['get-duty-allocation-details-on-id'] = 'superadmin_api/get_duty_allocation_details_on_id';
 $route['delete-duty-allocation'] = 'superadmin_api/delete_duty_allocation';
+$route['save-blogs'] = 'superadmin_api/save_blogs';
+$route['display-all-blogs-data'] = 'superadmin_api/display_all_blogs';
+$route['update-blogs'] = 'superadmin_api/update_blogs';
+$route['delete-blogs'] = 'superadmin_api/delete_blogs';

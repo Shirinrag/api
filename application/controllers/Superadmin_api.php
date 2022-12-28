@@ -1131,6 +1131,31 @@ class Superadmin_api extends REST_Controller {
         }
         echo json_encode($response);
     }
+    public function update_parking_place_status_post()
+    {
+        $response = array('code' => - 1, 'status' => false, 'message' => '');
+        $validate = validateToken();
+        if($validate){
+            $id = $this->input->post('id');
+            $status=$this->input->post('status');
+            if (empty($id)) {
+                $response['message'] = 'id is required';
+                $response['code'] = 201;
+            } else {
+                $update_data = array(
+                    'fk_place_status_id'=>$status,
+                );
+                $this->model->updateData('tbl_parking_place',$update_data, array('id'=>$id));
+                $response['message'] = 'success';
+                $response['code'] = 200;
+                $response['status'] = true;
+            }
+        } else {
+            $response['message'] = 'Invalid Request';
+            $response['code'] = 204;
+        }
+        echo json_encode($response);
+    }
     public function add_device_post()
     {
         $response = array('code' => - 1, 'status' => false, 'message' => '');
@@ -1724,5 +1749,128 @@ class Superadmin_api extends REST_Controller {
         }
         echo json_encode($response);
     }
+    // ======================== Blogs =========================================
+    public function save_blogs_post()
+    {
+        $response = array('code' => - 1, 'status' => false, 'message' => '');
+        $validate = validateToken();
+        if ($validate) {
+                $title = $this->input->post('title');
+                $description = $this->input->post('description');
+                $image = $this->input->post('image');
+                if (empty($title)) {
+                    $response['message'] = "Title is required";
+                    $response['code'] = 201;
+                }else if (empty($description)) {
+                    $response['message'] = "Description is required";
+                    $response['code'] = 201;
+                } else {
+                         $check_blogs_count = $this->model->CountWhereRecord('tbl_blogs', array('title'=>$title,'del_status'=>1));
+                       
+                        if($check_blogs_count > 0){
+                            $response['code'] = 201;
+                            $response['status'] = false;
+                            $response['message'] = 'Blogs Already Exist';
+                        } else {
+                            $curl_data = array(
+                                'title' => $title, 
+                                'description' => $description, 
+                                'image' => $image
+                            );
+                            $curl = $this->model->insertData('tbl_blogs', $curl_data);
+                            $response['message'] = 'Blogs Added Successfully';
+                            $response['code'] = 200;
+                            $response['status'] = true;
+                        }
+                }
+        } else {
+            $response['code'] = REST_Controller::HTTP_UNAUTHORIZED;
+            $response['message'] = 'Unauthorised';
+        }
+        echo json_encode($response);
+    }
 
+    public function display_all_blogs_get()
+    {
+        $response = array('code' => - 1, 'status' => false, 'message' => '');
+        $validate = validateToken();
+        if ($validate) {
+                $blogs_data = $this->model->selectWhereData('tbl_blogs',array('del_status'=>1),array('*'),false);
+                $response['code'] = REST_Controller::HTTP_OK;
+                $response['status'] = true;
+                $response['message'] = 'success';
+                $response['blogs_data'] = $blogs_data;
+        } else {
+            $response['code'] = REST_Controller::HTTP_UNAUTHORIZED;
+            $response['message'] = 'Unauthorised';
+        }
+        echo json_encode($response);
+    }
+     public function update_blogs_post()
+    {
+        $response = array('code' => - 1, 'status' => false, 'message' => '');
+        $validate = validateToken();
+        if ($validate) {
+                $id = $this->input->post('id');
+                $title = $this->input->post('title');
+                $description = $this->input->post('description');
+                $image = $this->input->post('image');
+                if (empty($title)) {
+                    $response['message'] = "Title is required";
+                    $response['code'] = 201;
+                }else if (empty($description)) {
+                    $response['message'] = "Description is required";
+                    $response['code'] = 201;
+                } else if (empty($id)) {
+                    $response['message'] = "Id is required";
+                    $response['code'] = 201;
+                } else {
+                         $check_blogs_count = $this->model->CountWhereRecord('tbl_blogs', array('title'=>$title,'del_status'=>1,'id !=' =>$id));
+                       
+                        if($check_blogs_count > 0){
+                            $response['code'] = 201;
+                            $response['status'] = false;
+                            $response['message'] = 'Blogs Already Exist';
+                        } else {
+                            $curl_data = array(
+                                'title' => $title, 
+                                'description' => $description, 
+                                'image' => $image
+                            );
+                            $curl = $this->model->updateData('tbl_blogs', $curl_data,array('id'=>$id));
+                            $response['message'] = 'Blogs Added Successfully';
+                            $response['code'] = 200;
+                            $response['status'] = true;
+                        }
+                }
+        } else {
+            $response['code'] = REST_Controller::HTTP_UNAUTHORIZED;
+            $response['message'] = 'Unauthorised';
+        }
+        echo json_encode($response);
+    }
+     public function delete_blogs_post()
+    {
+        $response = array('code' => - 1, 'status' => false, 'message' => '');
+        $validate = validateToken();
+        if ($validate) {
+                $id = $this->input->post('id');
+                if(empty($id)){
+                    $response['message'] = "Id is required";
+                    $response['code'] = 201;
+                }else{
+                        $curl_data = array(
+                            'del_status' =>0,
+                        );
+                        $this->model->updateData('tbl_blogs',$curl_data,array('id'=>$id));
+                        $response['code'] = REST_Controller::HTTP_OK;
+                        $response['status'] = true;
+                        $response['message'] = 'Blogs Deleted Successfully';
+                }
+        }else {
+            $response['code'] = REST_Controller::HTTP_UNAUTHORIZED;
+            $response['message'] = 'Unauthorised';
+        }
+        echo json_encode($response);
+    }
 }
