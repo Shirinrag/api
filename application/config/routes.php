@@ -65,6 +65,7 @@ $route['user-wallet'] = 'user_api/user_wallet';
 $route['place-list'] = 'user_api/place_list';
 $route['place-details-on-id'] = 'user_api/place_details_on_id';
 $route['place-traffic'] = 'user_api/place_traffic';
+$route['place-booking'] = 'user_api/place_booking';
 
 
 // =============Super Admin API=============================
@@ -119,7 +120,7 @@ $route['update-place-status-data'] = 'superadmin_api/update_place_status_data';
 
 $route['add-price-type'] = 'superadmin_api/add_price_type';
 $route['display-all-price-type-data'] = 'superadmin_api/display_all_price_type_data';
-$route['update-price-type'] = 'superadmin_api/update_price_type';
+$route['update-price-type'] = 'superadmin_api/update_price_type_status';
 $route['update-price-type-data'] = 'superadmin_api/update_price_type_data';
 $route['save-mapped-device'] = 'superadmin_api/save_mapped_device';
 $route['update-machine-device-status'] = 'superadmin_api/update_machine_device_status';
@@ -133,3 +134,10 @@ $route['save-blogs'] = 'superadmin_api/save_blogs';
 $route['display-all-blogs-data'] = 'superadmin_api/display_all_blogs';
 $route['update-blogs'] = 'superadmin_api/update_blogs';
 $route['delete-blogs'] = 'superadmin_api/delete_blogs';
+
+
+$route['add-vehicle-type'] = 'superadmin_api/add_vehicle_type';
+$route['display-all-vehicle-type-data'] = 'superadmin_api/display_all_vehicle_type_data';
+$route['update-vehicle-type-status'] = 'superadmin_api/update_vehicle_type_status';
+$route['update-vehicle-type-data'] = 'superadmin_api/update_vehicle_type_data';
+$route['delete-vehicle-type'] = 'superadmin_api/delete_vehicle_type';

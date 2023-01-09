@@ -632,135 +632,12 @@ class Superadmin_api extends REST_Controller {
         }
         echo json_encode($response);
     }
-
-    // public function add_place_post()
-    // {
-    //     $response = array('code' => - 1, 'status' => false, 'message' => '');
-    //     $validate = validateToken();
-    //     if ($validate) {
-    //             $fk_vendor_id = $this->input->post('fk_vendor_id');
-    //             $fk_country_id = $this->input->post('fk_country_id');
-    //             $fk_state_id = $this->input->post('fk_state_id');
-    //             $fk_city_id = $this->input->post('fk_city_id');
-    //             $place_name = $this->input->post('place_name');
-    //             $address = $this->input->post('address');
-    //             $pincode = $this->input->post('pincode');
-    //             $latitude = $this->input->post('latitude');
-    //             $longitude = $this->input->post('longitude');
-    //             $pincode = $this->input->post('pincode');
-    //             $slots = $this->input->post('slots');
-    //             $fk_place_status_id = $this->input->post('fk_place_status_id');
-    //             $fk_parking_price_type = $this->input->post('fk_parking_price_type');
-    //             $from_hours = $this->input->post('from_hours');
-    //             $from_hours = json_decode($from_hours,true);
-    //             $to_hours = $this->input->post('to_hours');
-    //             $to_hours = json_decode($to_hours,true);                
-    //             $price = $this->input->post('price');
-    //             $price = json_decode($price,true);                
-
-    //             if(empty($fk_vendor_id)){
-    //                 $response['message'] = "First Name is required";
-    //                 $response['code'] = 201;
-    //             }else if(empty($fk_country_id)){
-    //                 $response['message'] = "Last Name is required";
-    //                 $response['code'] = 201;
-    //             }else if(empty($fk_state_id)){
-    //                 $response['message'] = "fk_state_id is required";
-    //                 $response['code'] = 201;
-    //             }else if(empty($fk_city_id)){
-    //                 $response['message'] = "Mobile No is required";
-    //                 $response['code'] = 201;
-    //             }else if(empty($place_name)){
-    //                 $response['message'] = "place_name is required";
-    //                 $response['code'] = 201;
-    //             }else if(empty($address)){
-    //                 $response['message'] = "User Name is required";
-    //                 $response['code'] = 201;
-    //             }else if(empty($pincode)){
-    //                 $response['message'] = "Pincode is required";
-    //                 $response['code'] = 201;
-    //             }else if(empty($latitude)){
-    //                 $response['message'] = "Latitude is required";
-    //                 $response['code'] = 201;
-    //             }else if(empty($longitude)){
-    //                 $response['message'] = "Longitude is required";
-    //                 $response['code'] = 201;
-    //             }else if(empty($slots)){
-    //                 $response['message'] = "Slots is required";
-    //                 $response['code'] = 201;
-    //             }else{
-    //                 $check_place_count = $this->model->CountWhereRecord('tbl_parking_place', array('place_name'=>$place_name,'status'=>1));
-                   
-    //                 if($check_place_count > 0){
-    //                     $response['code'] = 201;
-    //                     $response['status'] = false;
-    //                     $response['message'] = 'Place Name Already exist.';                              
-    //                 }else{
-    //                     $curl_data = array(
-    //                         'fk_vendor_id'=>$fk_vendor_id,
-    //                         'fk_country_id'=>$fk_country_id,
-    //                         'fk_state_id'=>$fk_state_id,
-    //                         'fk_city_id'=>$fk_city_id,
-    //                         'place_name'=>$place_name,
-    //                         'address'=>$address,
-    //                         'pincode'=>$pincode,
-    //                         'latitude'=>$latitude,
-    //                         'longitude'=>$longitude,
-    //                         'slots'=>$slots,
-    //                         'fk_place_status_id'=>$fk_place_status_id,
-    //                         'fk_parking_price_type'=>$fk_parking_price_type,
-    //                     );
-    //                     $last_inserted_id = $this->model->insertData('tbl_parking_place',$curl_data);
-    //                     if($from_hours!= "" && $to_hours !="" && !empty($price)){
-    //                         foreach ($from_hours as $from_hours_key => $from_hours_rows) {
-    //                             $insert_price_data = array(
-    //                                 'fk_place_id' =>$last_inserted_id,
-    //                                 'from_hours' =>$from_hours_rows,
-    //                                 'to_hours' =>$to_hours[$from_hours_key],
-    //                                 'cost' =>$price[$from_hours_key],
-    //                             );
-    //                             $this->model->insertData('tbl_hours_price_slab',$insert_price_data);  
-    //                         }
-    //                     }
-    //                     $prefix = $this->model->selectWhereData('tbl_states',array('id'=>$fk_state_id),array('prefix'));
-    //                     for ($i=0; $i < $slots; $i++) { 
-    //                         $this->load->model('superadmin_model');
-    //                         $count = $this->superadmin_model->get_count_slot_name($prefix['prefix']);
-    //                         if($count['total']==0){
-    //                             $slot_name = $prefix['prefix'] . "-AA000";
-    //                         }else{
-    //                             $slot_name = $this->model->selectWhereData('tbl_slot_info',array('del_status'=>1),array('slot_name'),true,array('id','DESC'));
-    //                             $slot_name = $slot_name['slot_name'];
-    //                         }  
-
-    //                         $this->load->model('superadmin_model');
-    //                         $slot_name1 = $prefix['prefix'] . "-" . $this->superadmin_model->uniqueSlotName($slot_name);
-                            
-    //                             $display_id = "P-" . ($i + 1);
-
-    //                             $insert_slot_info_data=array(
-    //                                 'fk_place_id' =>$last_inserted_id,
-    //                                 'slot_name' =>$slot_name1,
-    //                                 'display_id' =>$display_id
-    //                             );
-    //                             $this->model->insertData('tbl_slot_info',$insert_slot_info_data);  
-    //                     }
-    //                     $response['code'] = REST_Controller::HTTP_OK;
-    //                     $response['status'] = true;
-    //                     $response['message'] = 'Parking Places Inserted Successfully';
-    //                 }
-    //             }
-    //     }else {
-    //         $response['code'] = REST_Controller::HTTP_UNAUTHORIZED;
-    //         $response['message'] = 'Unauthorised';
-    //     }
-    //     echo json_encode($response);
-    // }
     public function add_place_post()
     {
         $response = array('code' => - 1, 'status' => false, 'message' => '');
         $validate = validateToken();
         if ($validate) {
+
                 $fk_vendor_id = $this->input->post('fk_vendor_id');
                 $fk_country_id = $this->input->post('fk_country_id');
                 $fk_state_id = $this->input->post('fk_state_id');
@@ -781,7 +658,6 @@ class Superadmin_api extends REST_Controller {
                 $to_hours = json_decode($to_hours,true);                
                 $price = $this->input->post('price');
                 $price = json_decode($price,true);                
-
                 if(empty($fk_vendor_id)){
                     $response['message'] = "First Name is required";
                     $response['code'] = 201;
@@ -816,7 +692,7 @@ class Superadmin_api extends REST_Controller {
                     $response['message'] = "Extension Price is required";
                     $response['code'] = 201;
                 }else{
-                    $check_place_count = $this->model->CountWhereRecord('tbl_parking_place', array('place_name'=>$place_name,'status'=>1));
+                    $check_place_count = $this->model->CountWhereRecord('tbl_parking_place', array('place_name'=>$place_name,'fk_place_status_id'=>$fk_place_status_id,'status'=>1));
                    
                     if($check_place_count > 0){
                         $response['code'] = 201;
@@ -926,11 +802,11 @@ class Superadmin_api extends REST_Controller {
                     $slot_info_on_place_id = $this->model->selectWhereData('tbl_slot_info',array('fk_place_id'=>$id,'del_status'=>1),array('*',"id as slot_info_id",),false);
                     foreach ($slot_info_on_place_id as $slot_info_on_place_id_key => $slot_info_on_place_id_row) {
                         $device_data = $this->model->selectWhereData('tbl_device',array(),array('id','device_id'),false,array('id',"ASC"));
-
-                        $device_id = $this->model->selectWhereData('tbl_device',array('id'=>$slot_info_on_place_id_row['fk_machine_id']),array('device_id'));
-                        $slot_info_on_place_id[$slot_info_on_place_id_key]['device_id'] = $device_id['device_id'];
+                        if(!empty($slot_info_on_place_id_row['fk_machine_id'])){
+                              $device_id = $this->model->selectWhereData('tbl_device',array('id'=>$slot_info_on_place_id_row['fk_machine_id']),array('device_id'));
+                              $slot_info_on_place_id[$slot_info_on_place_id_key]['device_id'] = $device_id['device_id'];
+                        }
                     }
-
                     $response['code'] = REST_Controller::HTTP_OK;
                     $response['status'] = true;
                     $response['message'] = 'success';
@@ -1011,7 +887,7 @@ class Superadmin_api extends REST_Controller {
                     $response['message'] = "Extension Price is required";
                     $response['code'] = 201;
                 }else{
-                    $check_place_count = $this->model->CountWhereRecord('tbl_parking_place', array('place_name'=>$place_name,'id !='=> $id));                   
+                    $check_place_count = $this->model->CountWhereRecord('tbl_parking_place', array('place_name'=>$place_name,'fk_place_status_id'=>$fk_place_status_id,'id !='=> $id));                   
                     if($check_place_count > 0){
                         $response['code'] = 201;
                         $response['status'] = false;
@@ -1466,7 +1342,7 @@ class Superadmin_api extends REST_Controller {
         }
         echo json_encode($response);
     }
-    public function update_price_type_post()
+    public function update_price_type_status_post()
     {
         $response = array('code' => - 1, 'status' => false, 'message' => '');
         $validate = validateToken();
@@ -1849,7 +1725,7 @@ class Superadmin_api extends REST_Controller {
         }
         echo json_encode($response);
     }
-     public function delete_blogs_post()
+    public function delete_blogs_post()
     {
         $response = array('code' => - 1, 'status' => false, 'message' => '');
         $validate = validateToken();
@@ -1866,6 +1742,140 @@ class Superadmin_api extends REST_Controller {
                         $response['code'] = REST_Controller::HTTP_OK;
                         $response['status'] = true;
                         $response['message'] = 'Blogs Deleted Successfully';
+                }
+        }else {
+            $response['code'] = REST_Controller::HTTP_UNAUTHORIZED;
+            $response['message'] = 'Unauthorised';
+        }
+        echo json_encode($response);
+    }
+    // ================================= Vechile Type =====================================
+
+    public function add_vehicle_type_post()
+    {
+         $response = array('code' => - 1, 'status' => false, 'message' => '');
+        $validate = validateToken();
+        if ($validate) {
+                $vehicle_type = $this->input->post('vehicle_type');
+                if(empty($vehicle_type)){
+                    $response['message'] = "Place Status is required";
+                    $response['code'] = 201;
+                }else{
+                    $check_user_car_count = $this->model->CountWhereRecord('tbl_vehicle_type', array('vehicle_type'=>$vehicle_type,'status'=>1));
+                    if($check_user_car_count > 0){
+                        $response['code'] = 201;
+                        $response['status'] = false;
+                        $response['message'] = 'Vehicle Type Already exist.';                              
+                    }else{
+                        $curl_data = array(
+                            'vehicle_type' =>$vehicle_type,
+                        );
+                        $this->model->insertData('tbl_vehicle_type',$curl_data);
+                        $response['code'] = REST_Controller::HTTP_OK;
+                        $response['status'] = true;
+                        $response['message'] = 'Price Type Inserted Successfully';
+                    }
+                }
+        }else {
+            $response['code'] = REST_Controller::HTTP_UNAUTHORIZED;
+            $response['message'] = 'Unauthorised';
+        }
+        echo json_encode($response);
+    }       
+    public function display_all_vehicle_type_data_get()
+    {
+        $response = array('code' => - 1, 'status' => false, 'message' => '');
+        $validate = validateToken();
+        if ($validate) {
+                $vehicle_type = $this->model->selectWhereData('tbl_vehicle_type',array('del_status'=>1),array('*','CONCAT(tbl_vehicle_type.status,",",tbl_vehicle_type.id) AS statusdata'),false,array('id',"desc"));
+                $response['code'] = REST_Controller::HTTP_OK;
+                $response['status'] = true;
+                $response['message'] = 'success';
+                $response['vehicle_type'] = $vehicle_type;
+        } else {
+            $response['code'] = REST_Controller::HTTP_UNAUTHORIZED;
+            $response['message'] = 'Unauthorised';
+        }
+        echo json_encode($response);
+    }
+    public function update_vehicle_type_status_post()
+    {
+        $response = array('code' => - 1, 'status' => false, 'message' => '');
+        $validate = validateToken();
+        if($validate){
+            $id = $this->input->post('id');
+            $status=$this->input->post('status');
+            if (empty($id)) {
+                $response['message'] = 'id is required';
+                $response['code'] = 201;
+            } else {
+                $update_data = array(
+                    'status'=>$status,
+                );
+                $this->model->updateData('tbl_vehicle_type',$update_data, array('id'=>$id));
+                $response['message'] = 'success';
+                $response['code'] = 200;
+                $response['status'] = true;
+            }
+        } else {
+            $response['message'] = 'Invalid Request';
+            $response['code'] = 204;
+        }
+        echo json_encode($response);
+    }
+    public function update_vehicle_type_data_post()
+    {
+         $response = array('code' => - 1, 'status' => false, 'message' => '');
+        $validate = validateToken();
+        if ($validate) {
+                $vehicle_type = $this->input->post('vehicle_type');
+                $id = $this->input->post('id');
+                if(empty($vehicle_type)){
+                    $response['message'] = "vehicle Type is required";
+                    $response['code'] = 201;
+                }else if(empty($id)){
+                    $response['message'] = "Id is required";
+                    $response['code'] = 201;
+                }else{
+                    $check_user_car_count = $this->model->CountWhereRecord('tbl_vehicle_type', array('vehicle_type'=>$vehicle_type,'status'=>1,'id !=' =>$id));
+                    if($check_user_car_count > 0){
+                        $response['code'] = 201;
+                        $response['status'] = false;
+                        $response['message'] = 'vehicle Type Already exist.';  
+                    }else{
+                        $curl_data = array(
+                            'vehicle_type' =>$vehicle_type,
+                        );
+                        $this->model->updateData('tbl_vehicle_type',$curl_data,array('id'=>$id));
+                        $response['code'] = REST_Controller::HTTP_OK;
+                        $response['status'] = true;
+                        $response['message'] = 'Vehicle Type Updated Successfully';
+                    }
+                }
+        }else {
+            $response['code'] = REST_Controller::HTTP_UNAUTHORIZED;
+            $response['message'] = 'Unauthorised';
+        }
+        echo json_encode($response);
+    } 
+
+    public function delete_vehicle_type_post()
+    {
+        $response = array('code' => - 1, 'status' => false, 'message' => '');
+        $validate = validateToken();
+        if ($validate) {
+                $id = $this->input->post('id');
+                if(empty($id)){
+                    $response['message'] = "Id is required";
+                    $response['code'] = 201;
+                }else{
+                        $curl_data = array(
+                            'del_status' =>0,
+                        );
+                        $this->model->updateData('tbl_vehicle_type',$curl_data,array('id'=>$id));
+                        $response['code'] = REST_Controller::HTTP_OK;
+                        $response['status'] = true;
+                        $response['message'] = 'Vehicle Deleted Successfully';
                 }
         }else {
             $response['code'] = REST_Controller::HTTP_UNAUTHORIZED;

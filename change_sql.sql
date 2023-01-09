@@ -19,3 +19,6 @@ ALTER TABLE `tbl_duty_allocation` ADD INDEX(`fk_place_id`);
 ALTER TABLE `tbl_duty_allocation` ADD INDEX(`fk_verifier_id`);
 ALTER TABLE `tbl_duty_allocation` ADD `date` DATE NULL DEFAULT NULL AFTER `fk_verifier_id`;
 ALTER TABLE `tbl_duty_allocation` CHANGE `date` `date` VARCHAR(20) NULL DEFAULT NULL;
+--09/01/2023
+
+INSERT INTO `tbl_user_type` (`id`, `user_type`, `status`, `created_at`, `updated_at`) VALUES (NULL, 'POS Verifier', '1', current_timestamp(), current_timestamp());

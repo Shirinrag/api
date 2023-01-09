@@ -422,18 +422,18 @@ class User_api extends REST_Controller {
     	$validate = validateToken();
         if ($validate) {
         	$this->load->model('user_model');
-		    $active_place = $this->user_model->active_place_data();
-		    $inactive_place = $this->user_model->inactive_place_data();
-		    $upcoming_place = $this->user_model->upcoming_place_data();
-		    $other_place = $this->user_model->other_place_data();
+		    $place_data = $this->user_model->place_data();
+		    // $inactive_place = $this->user_model->inactive_place_data();
+		    // $upcoming_place = $this->user_model->upcoming_place_data();
+		    // $other_place = $this->user_model->other_place_data();
 
 			$response['code'] = REST_Controller::HTTP_OK;
             $response['status'] = true;
 			$response['message'] = 'success';
-			$response['active_place'] = $active_place;
-			$response['inactive_place'] = $inactive_place;
-			$response['upcoming_place'] = $upcoming_place;
-			$response['other_place'] = $other_place;
+			$response['place_data'] = $place_data;
+			// $response['inactive_place'] = $inactive_place;
+			// $response['upcoming_place'] = $upcoming_place;
+			// $response['other_place'] = $other_place;
 		}else {
             $response['code'] = REST_Controller::HTTP_UNAUTHORIZED;
             $response['message'] = 'Unauthorised';
@@ -452,10 +452,14 @@ class User_api extends REST_Controller {
         	}else{
         		$this->load->model('user_model');
 			    $place_details = $this->user_model->place_details_on_id($id);
+			    $slot_info = $this->model->selectWhereData('tbl_slot_info',array('del_status'=>1,'fk_place_id'=>$id),array('*'),false);
+			    $price_details = $this->model->selectWhereData('tbl_hours_price_slab',array('del_status'=>1,'fk_place_id'=>$id),array('*'),false);
 				$response['code'] = REST_Controller::HTTP_OK;
 	            $response['status'] = true;
 				$response['message'] = 'success';
 				$response['place_details'] = $place_details;
+				$response['slot_info'] = $slot_info;
+				$response['price_details'] = $price_details;
         	}        	
 		}else {
             $response['code'] = REST_Controller::HTTP_UNAUTHORIZED;
@@ -492,8 +496,67 @@ class User_api extends REST_Controller {
         }
         echo json_encode($response);
     }
-    // public function add_amount_to_wallet()
-    // {
-    	
-    // }
+    public function place_booking_post()
+    {
+    	$response = array('code' => - 1, 'status' => false, 'message' => '');
+    	$validate = validateToken();
+        if ($validate) {
+		    	$fk_user_id = $this->input->post('fk_user_id');
+		    	$fk_car_id = $this->input->post('fk_car_id');
+		    	$fk_place_id = $this->input->post('fk_place_id');
+		    	$fk_slot_id = $this->input->post('fk_slot_id');
+		    	$fk_booking_type_id = $this->input->post('fk_booking_type_id');
+		    	$booking_from_date = $this->input->post('booking_from_date');
+		    	$booking_to_date = $this->input->post('booking_to_date');
+		    	$booking_from_time = $this->input->post('booking_from_time');
+		    	$booking_to_time = $this->input->post('booking_to_time');
+		    	$longitude = $this->input->post('longitude');
+		    	$latitude = $this->input->post('latitude');
+		    	// $reserve_from_time = $this->input->post('reserve_from_time');
+		    	// $reserve_to_time = $this->input->post('reserve_to_time');
+
+		    	if(empty($fk_user_id)){
+		    		$response['code']=201;
+		    		$response['status']=false;
+		    		$response['message']= "User Id is required";
+		    	}else if(empty($fk_place_id)){
+		    		$response['code']=201;
+		    		$response['status']=false;
+		    		$response['message']= "Place Id is required";
+		    	}else if(empty($booking_from_date)){
+		    		$response['code']=201;
+		    		$response['status']=false;
+		    		$response['message']= "From Date is required";
+		    	}else if(empty($booking_to_date)){
+		    		$response['code']=201;
+		    		$response['status']=false;
+		    		$response['message']= "To Date is required";
+		    	}else if(empty($booking_from_time)){
+		    		$response['code']=201;
+		    		$response['status']=false;
+		    		$response['message']= "From time is required";
+		    	}else if(empty($booking_to_time)){
+		    		$response['code']=201;
+		    		$response['status']=false;
+		    		$response['message']= "To time is required";
+		    	}else if(empty($latitude)){
+		    		$response['code']=201;
+		    		$response['status']=false;
+		    		$response['message']= "Latitude is required";
+		    	}else if(empty($longitude)){
+		    		$response['code']=201;
+		    		$response['status']=false;
+		    		$response['message']= "Longitude  is required";
+		    	}else{
+		    		$delay_time1 = rand(100000, 800000);
+                	$delay_time = rand(1000000, 1500000) + $delay_time1;	
+                	
+                	$slot_info = $this->model->selectWhereData('tbl_slot_info',array('id'=>$slot_id,'del_status'=>1,'isBlocked'=>1));
+		    	}
+		}else {
+            $response['code'] = REST_Controller::HTTP_UNAUTHORIZED;
+            $response['message'] = 'Unauthorised';
+        }
+        echo json_encode($response);
+    }
 }
