@@ -657,7 +657,8 @@ class Superadmin_api extends REST_Controller {
                 $to_hours = $this->input->post('to_hours');
                 $to_hours = json_decode($to_hours,true);                
                 $price = $this->input->post('price');
-                $price = json_decode($price,true);                
+                $price = json_decode($price,true);       
+                $per_hour_charges = $this->input->post('per_hour_charges');
                 if(empty($fk_vendor_id)){
                     $response['message'] = "First Name is required";
                     $response['code'] = 201;
@@ -713,6 +714,7 @@ class Superadmin_api extends REST_Controller {
                             'fk_place_status_id'=>$fk_place_status_id,
                             'fk_parking_price_type'=>$fk_parking_price_type,
                             'ext_price'=>$ext_price,
+                            'per_hour_charges'=>$per_hour_charges
                         );
                         $last_inserted_id = $this->model->insertData('tbl_parking_place',$curl_data);
                         if($from_hours!= "" && $to_hours !="" && !empty($price)){
