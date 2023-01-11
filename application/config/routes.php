@@ -141,3 +141,4 @@ $route['display-all-vehicle-type-data'] = 'superadmin_api/display_all_vehicle_ty
 $route['update-vehicle-type-status'] = 'superadmin_api/update_vehicle_type_status';
 $route['update-vehicle-type-data'] = 'superadmin_api/update_vehicle_type_data';
 $route['delete-vehicle-type'] = 'superadmin_api/delete_vehicle_type';
+$route['get-vehicle-details'] = 'superadmin_api/get_vehicle_details';

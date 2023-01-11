@@ -1885,4 +1885,26 @@ class Superadmin_api extends REST_Controller {
         }
         echo json_encode($response);
     }
+    public function get_vehicle_details_post()
+    {
+        $response = array('code' => - 1, 'status' => false, 'message' => '');
+        $validate = validateToken();
+        if ($validate) {
+                $id = $this->input->post('id');
+                if(empty($id)){
+                    $response['message'] = "Id is required";
+                    $response['code'] = 201;
+                }else{
+                        $vehicle_data = $this->model->selectWhereData('tbl_vehicle_type',array('id'=>$id),array('id','vehicle_type'));
+                        $response['code'] = REST_Controller::HTTP_OK;
+                        $response['status'] = true;
+                        $response['message'] = 'success';
+                        $response['vehicle_data'] = $vehicle_data;
+                }
+        }else {
+            $response['code'] = REST_Controller::HTTP_UNAUTHORIZED;
+            $response['message'] = 'Unauthorised';
+        }
+        echo json_encode($response);
+    }
 }
