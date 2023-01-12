@@ -620,7 +620,6 @@ class Superadmin_api extends REST_Controller {
                 }else{
                     $this->load->model('superadmin_model');
                     $booking_history = $this->superadmin_model->booking_history_data();
-
                         $response['code'] = REST_Controller::HTTP_OK;
                         $response['status'] = true;
                         $response['message'] = 'success';
@@ -637,7 +636,6 @@ class Superadmin_api extends REST_Controller {
         $response = array('code' => - 1, 'status' => false, 'message' => '');
         $validate = validateToken();
         if ($validate) {
-
                 $fk_vendor_id = $this->input->post('fk_vendor_id');
                 $fk_country_id = $this->input->post('fk_country_id');
                 $fk_state_id = $this->input->post('fk_state_id');
@@ -659,6 +657,8 @@ class Superadmin_api extends REST_Controller {
                 $price = $this->input->post('price');
                 $price = json_decode($price,true);       
                 $per_hour_charges = $this->input->post('per_hour_charges');
+                $fk_vehicle_type = $this->input->post('fk_vehicle_type');
+                $fk_vehicle_type = json_decode($fk_vehicle_type,true);
                 if(empty($fk_vendor_id)){
                     $response['message'] = "First Name is required";
                     $response['code'] = 201;
@@ -716,16 +716,29 @@ class Superadmin_api extends REST_Controller {
                             'ext_price'=>$ext_price,
                             'per_hour_charges'=>$per_hour_charges
                         );
-                        $last_inserted_id = $this->model->insertData('tbl_parking_place',$curl_data);
+                        $last_inserted_id = $this->model->insertData('tbl_parking_place',$curl_data); 
+
+                        if(!empty($fk_vehicle_type[0])){
+                            foreach ($fk_vehicle_type as $fk_vehicle_type_key => $fk_vehicle_type_row) {
+                                $insert_vehicle_type_data = array(
+                                    'fk_place_id' =>$last_inserted_id,
+                                    'fk_vehicle_type_id'=>$fk_vehicle_type_row
+                                );
+                                $this->model->insertData('tbl_parking_place_vehicle_type',$insert_vehicle_type_data);  
+                            }
+                        }                                                     
                         if($from_hours!= "" && $to_hours !="" && !empty($price)){
                             foreach ($from_hours as $from_hours_key => $from_hours_rows) {
-                                $insert_price_data = array(
+                                 foreach($from_hours_rows as $from_hours_rows_key => $from_hours_rows_rows){
+                                    $insert_price_data = array(
                                     'fk_place_id' =>$last_inserted_id,
-                                    'from_hours' =>$from_hours_rows,
-                                    'to_hours' =>$to_hours[$from_hours_key],
-                                    'cost' =>$price[$from_hours_key],
+                                    'from_hours' =>$from_hours_rows_rows,
+                                    'to_hours' =>$to_hours[$from_hours_key][$from_hours_rows_key],
+                                    'cost' =>$price[$from_hours_key][$from_hours_rows_key],
+                                    'fk_vehicle_type_id'=>$from_hours_rows[$from_hours_key]
                                 );
                                 $this->model->insertData('tbl_hours_price_slab',$insert_price_data);  
+                                }                                     
                             }
                         }
                         $prefix = $this->model->selectWhereData('tbl_states',array('id'=>$fk_state_id),array('prefix'));
@@ -936,7 +949,7 @@ class Superadmin_api extends REST_Controller {
                         $prefix = $this->model->selectWhereData('tbl_states',array('id'=>$fk_state_id),array('prefix'));
                        
                         if($slots_data['slots'] < $slots){                           
-                                for ($i=$slots_data['slots']; $i < $slots; $i++) {
+                            for ($i=$slots_data['slots']; $i < $slots; $i++) {
                                     $this->load->model('superadmin_model');
                                     $count = $this->superadmin_model->get_count_slot_name($prefix['prefix']);
                                     if($count['total']==0){
@@ -947,8 +960,7 @@ class Superadmin_api extends REST_Controller {
                                     }  
 
                                     $this->load->model('superadmin_model');
-                                    $slot_name1 = $prefix['prefix'] . "-" . $this->superadmin_model->uniqueSlotName($slot_name);
-                                    
+                                    $slot_name1 = $prefix['prefix'] . "-" . $this->superadmin_model->uniqueSlotName($slot_name);                                   
                                         $display_id = "P-" . ($i + 1);
                                         $insert_slot_info_data=array(
                                             'fk_place_id' =>$id,
@@ -956,7 +968,7 @@ class Superadmin_api extends REST_Controller {
                                             'display_id' =>$display_id
                                         );
                                         $this->model->insertData('tbl_slot_info',$insert_slot_info_data);  
-                             }
+                            }
                         }else{
                             if($slots_data['slots'] > $slots){
                                $this->load->model('superadmin_model');

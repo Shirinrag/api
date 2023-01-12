@@ -142,3 +142,9 @@ $route['update-vehicle-type-status'] = 'superadmin_api/update_vehicle_type_statu
 $route['update-vehicle-type-data'] = 'superadmin_api/update_vehicle_type_data';
 $route['delete-vehicle-type'] = 'superadmin_api/delete_vehicle_type';
 $route['get-vehicle-details'] = 'superadmin_api/get_vehicle_details';
+
+
+// ============================= POS API=====================================
+$route['register-pos-verifier'] = 'pos_api/register_pos_verifier';
+$route['login-pos-verifier'] = 'pos_api/login_pos_verifier';
+$route['get-all-vehicle-type'] = 'pos_api/get_all_vehicle_type';
