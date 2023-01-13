@@ -23,3 +23,7 @@ ALTER TABLE `tbl_duty_allocation` CHANGE `date` `date` VARCHAR(20) NULL DEFAULT 
 
 INSERT INTO `tbl_user_type` (`id`, `user_type`, `status`, `created_at`, `updated_at`) VALUES (NULL, 'POS Verifier', '1', current_timestamp(), current_timestamp());
 ALTER TABLE `tbl_parking_place` ADD `per_hour_charges` DOUBLE NULL DEFAULT NULL AFTER `ext_price`;
+
+--13/01/2023
+
+ALTER TABLE `pa_users` ADD `aadhaar_card` LONGTEXT NULL DEFAULT NULL AFTER `image`, ADD `pan_card` LONGTEXT NULL DEFAULT NULL AFTER `aadhaar_card`;

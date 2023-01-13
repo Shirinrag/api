@@ -822,6 +822,7 @@ class Superadmin_api extends REST_Controller {
                               $slot_info_on_place_id[$slot_info_on_place_id_key]['device_id'] = $device_id['device_id'];
                         }
                     }
+                    $parking_place_vehicle_type = $this->model->selectWhereData('tbl_parking_place_vehicle_type',array('fk_place_id'=>$id),array('*',"id as parking_place_vehicle_type_id"),false);
                     $response['code'] = REST_Controller::HTTP_OK;
                     $response['status'] = true;
                     $response['message'] = 'success';
@@ -831,6 +832,7 @@ class Superadmin_api extends REST_Controller {
                     $response['state_details'] = $state_details;
                     $response['city_details'] = $city_details;
                     $response['device_data'] = $device_data;
+                    $response['parking_place_vehicle_type'] = $parking_place_vehicle_type;
                 }
         }else {
             $response['code'] = REST_Controller::HTTP_UNAUTHORIZED;
