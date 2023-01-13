@@ -135,13 +135,14 @@ $route['display-all-blogs-data'] = 'superadmin_api/display_all_blogs';
 $route['update-blogs'] = 'superadmin_api/update_blogs';
 $route['delete-blogs'] = 'superadmin_api/delete_blogs';
 
-
 $route['add-vehicle-type'] = 'superadmin_api/add_vehicle_type';
 $route['display-all-vehicle-type-data'] = 'superadmin_api/display_all_vehicle_type_data';
 $route['update-vehicle-type-status'] = 'superadmin_api/update_vehicle_type_status';
 $route['update-vehicle-type-data'] = 'superadmin_api/update_vehicle_type_data';
 $route['delete-vehicle-type'] = 'superadmin_api/delete_vehicle_type';
 $route['get-vehicle-details'] = 'superadmin_api/get_vehicle_details';
+
+$route['add-pos-device-mapped'] = 'superadmin_api/add_pos_device_mapped';
 
 
 // ============================= POS API=====================================

@@ -1921,4 +1921,42 @@ class Superadmin_api extends REST_Controller {
         }
         echo json_encode($response);
     }
+     // ================================= POS Device Mapped ==============================
+
+    public function add_pos_device_mapped_post()
+    {
+        $response = array('code' => - 1, 'status' => false, 'message' => '');
+        $validate = validateToken();
+        if ($validate) {
+                $fk_place_id = $this->input->post('fk_place_id');
+                $device_id = $this->input->post('device_id');
+                if(empty($fk_place_id)){
+                    $response['message'] = "Place Status is required";
+                    $response['code'] = 201;
+                }else if(empty($device_id)){
+                    $response['message'] = "Device id is required";
+                    $response['code'] = 201;
+                }else{
+                    $check_pos_device_map_count = $this->model->CountWhereRecord('tbl_pos_device_map', array('fk_place_id'=>$fk_place_id,'status'=>1));
+                    if($check_pos_device_map_count > 0){
+                        $response['code'] = 201;
+                        $response['status'] = false;
+                        $response['message'] = 'Device Already exist.';
+                    }else{
+                        $curl_data = array(
+                            'fk_place_id' => $fk_place_id,
+                            'device_id' => $device_id,
+                        );
+                        $this->model->insertData('tbl_pos_device_map',$curl_data);
+                        $response['code'] = REST_Controller::HTTP_OK;
+                        $response['status'] = true;
+                        $response['message'] = 'Price Type Inserted Successfully';
+                    }
+                }
+        }else {
+            $response['code'] = REST_Controller::HTTP_UNAUTHORIZED;
+            $response['message'] = 'Unauthorised';
+        }
+        echo json_encode($response);
+    }  
 }
