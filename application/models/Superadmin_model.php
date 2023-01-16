@@ -159,5 +159,16 @@ class Superadmin_model extends CI_Model {
         $result = $query->result_array();
         return $result;
     }
+    public function display_all_pos_device_map_data()
+    {
+        $this->db->select('tbl_pos_device_map.*,CONCAT(tbl_pos_device_map.status,",",tbl_pos_device_map.id) AS statusdata,tbl_parking_place.place_name');
+        $this->db->from('tbl_pos_device_map');
+        $this->db->join('tbl_parking_place','tbl_parking_place.id=tbl_pos_device_map.fk_place_id','left'); 
+        $this->db->where('tbl_pos_device_map.del_status','1');       
+        $this->db->order_by('tbl_pos_device_map.id','DESC');
+        $query = $this->db->get();
+        $result = $query->result_array();
+        return $result;
+    }
 }
 	

@@ -81,73 +81,84 @@ class Pos_api extends REST_Controller {
                         $response['message'] = 'Username Already exist.'; 
                         $response['error_status'] = 'username';       
                     }else{
-                    	$is_signature_file = true;
-	                    if (!empty($_FILES['pan_card']['name'])) {
-	                        $filename = $_FILES['pan_card']['name'];
-	                        $ext = pathinfo($filename, PATHINFO_EXTENSION);
-	                        $test_img = $filename;
-	                        $test_img = preg_replace('/\s/', '_', $test_img);
-	                        $test_image = mt_rand(100000, 999999) . '_' . $test_img;
-	                        $config['upload_path'] = './uploads/';
-	                        $config['file_name'] = $test_image;
-	                        $config['overwrite'] = TRUE;
-	                        $config["allowed_types"] = 'png|jpg|jpeg';
-	                        $this->load->library('upload', $config);
-	                        $this->upload->initialize($config);
-	                        if (!$this->upload->do_upload('pan_card')) {
-	                            $is_signature_file = false;
-	                            $response['code'] = 201;
-	                            $response['message'] = $this->upload->display_errors();
-	                        } else {
-	                            $pan_card = 'uploads/' . $test_image;
-	                        }
-	                    } else if (empty($image)) {
-	                        $is_signature_file = false;
-	                        $response['status'] = 'failure';
-	                        $response['error'] = array('image' => "Image required",);
-	                    }
-                        if (!empty($_FILES['aadhaar_card']['name'])) {
-                            $filename1 = $_FILES['aadhaar_card']['name'];
-                            $ext = pathinfo($filename1, PATHINFO_EXTENSION);
-                            $test_img1 = $filename1;
-                            $test_img1 = preg_replace('/\s/', '_', $test_img1);
-                            $test_image1 = mt_rand(100000, 999999) . '_' . $test_img1;
-                            $config['upload_path'] = './uploads/';
-                            $config['file_name'] = $test_image;
-                            $config['overwrite'] = TRUE;
-                            $config["allowed_types"] = 'png|jpg|jpeg';
-                            $this->load->library('upload', $config);
-                            $this->upload->initialize($config);
-                            if (!$this->upload->do_upload('aadhaar_card')) {
-                                $is_signature_file = false;
-                                $response['code'] = 201;
-                                $response['message'] = $this->upload->display_errors();
-                            } else {
-                                $aadhaar_card = 'uploads/' . $test_image1;
-                            }
-                        } else if (empty($image1)) {
-                            $is_signature_file = false;
-                            $response['status'] = 'failure';
-                            $response['error'] = array('image' => "Image required",);
+                        $verify_device_id = $this->model->CountWhereRecord('tbl_pos_device_map', array('device_id'=>$device_id));
+                        if($verify_device_id > 0){
+                                $is_signature_file = true;
+                                if (!empty($_FILES['pan_card']['name'])) {
+                                    $filename = $_FILES['pan_card']['name'];
+                                    $ext = pathinfo($filename, PATHINFO_EXTENSION);
+                                    $test_img = $filename;
+                                    $test_img = preg_replace('/\s/', '_', $test_img);
+                                    $test_image = mt_rand(100000, 999999) . '_' . $test_img;
+                                    $config['upload_path'] = './uploads/';
+                                    $config['file_name'] = $test_image;
+                                    $config['overwrite'] = TRUE;
+                                    $config["allowed_types"] = 'png|jpg|jpeg';
+                                    $this->load->library('upload', $config);
+                                    $this->upload->initialize($config);
+                                    if (!$this->upload->do_upload('pan_card')) {
+                                        $is_signature_file = false;
+                                        $response['code'] = 201;
+                                        $response['message'] = $this->upload->display_errors();
+                                    } else {
+                                        $pan_card = 'uploads/' . $test_image;
+                                    }
+                                } else if (empty($image)) {
+                                    $is_signature_file = false;
+                                    $response['status'] = 'failure';
+                                    $response['error'] = array('image' => "Image required",);
+                                }
+                                if (!empty($_FILES['aadhaar_card']['name'])) {
+                                    $filename1 = $_FILES['aadhaar_card']['name'];
+                                    $ext = pathinfo($filename1, PATHINFO_EXTENSION);
+                                    $test_img1 = $filename1;
+                                    $test_img1 = preg_replace('/\s/', '_', $test_img1);
+                                    $test_image1 = mt_rand(100000, 999999) . '_' . $test_img1;
+                                    $config['upload_path'] = './uploads/';
+                                    $config['file_name'] = $test_image;
+                                    $config['overwrite'] = TRUE;
+                                    $config["allowed_types"] = 'png|jpg|jpeg';
+                                    $this->load->library('upload', $config);
+                                    $this->upload->initialize($config);
+                                    if (!$this->upload->do_upload('aadhaar_card')) {
+                                        $is_signature_file = false;
+                                        $response['code'] = 201;
+                                        $response['message'] = $this->upload->display_errors();
+                                    } else {
+                                        $aadhaar_card = 'uploads/' . $test_image1;
+                                    }
+                                } else if (empty($image1)) {
+                                    $is_signature_file = false;
+                                    $response['status'] = 'failure';
+                                    $response['error'] = array('image' => "Image required",);
+                                }
+                                if ($is_signature_file) {
+                                        $pos_device_id = $this->model->selectWhereData('tbl_pos_device_map',array('device_id'=>$device_id),array('id'));
+                                        $curl_data = array(
+                                            'firstName' =>$first_name,
+                                            'lastName' =>$last_name,
+                                            'email' =>$email,
+                                            'phoneNo' =>$mobile_no,
+                                            'password' =>dec_enc('encrypt',$password),
+                                            'user_type' =>14,
+                                            'username' =>$username,
+                                            'pan_card'=> $pan_card,
+                                            'aadhaar_card' =>$aadhaar_card,
+                                            'pos_device_id' => $pos_device_id['id']
+                                        );
+                                        $this->model->insertData('pa_users',$curl_data);
+                                        $response['code'] = REST_Controller::HTTP_OK;
+                                        $response['status'] = true;
+                                        $response['message'] = 'Registered Successfully';
+                                }
+                        }else{
+                            $response['code'] = 201;
+                            $response['status'] = false;
+                            $response['message'] = 'Device Id Does Not Match';
                         }
-	                    if ($is_signature_file) {
-                        $curl_data = array(
-                            'firstName' =>$first_name,
-                            'lastName' =>$last_name,
-                            'email' =>$email,
-                            'phoneNo' =>$mobile_no,
-                            'password' =>dec_enc('encrypt',$password),
-                            'user_type' =>14,
-                            'username' =>$username,
-                            'pan_card'=> $pan_card,
-                            'aadhaar_card' =>$aadhaar_card
-                        );
-                        $this->model->insertData('pa_users',$curl_data);
-                        $response['code'] = REST_Controller::HTTP_OK;
-                        $response['status'] = true;
-                        $response['message'] = 'Registered Successfully';
                     }
                 }
+                    	
         }else {
             $response['code'] = REST_Controller::HTTP_UNAUTHORIZED;
             $response['message'] = 'Unauthorised';
@@ -209,27 +220,38 @@ class Pos_api extends REST_Controller {
         }
         echo json_encode($response);
     }
-    public function get_all_price_data_on_id()
+    public function get_all_price_data_on_id_post()
     {
     	$response = array('code' => - 1, 'status' => false, 'message' => '');
         $validate = validateToken();
         if ($validate) {
-        	$fk_vehicle_type_id = $this->input->post('fk_vehicle_type_id');
+        	// $fk_vehicle_type_id = $this->input->post('fk_vehicle_type_id');
         	$fk_place_id = $this->input->post('fk_place_id');
 
-        	if(empty($fk_vehicle_type_id)){
-        		$response['message'] = "Vehicle Type Id is required";
-        		$response['code'] = 201;
-        	}else if(empty($fk_place_id)){
+        	if(empty($fk_place_id)){
         		$response['message'] = "Place id is required";
         		$response['code'] = 201;
         	}else{
-        		$hours_price_slab = $this->model->selectWhereData('tbl_hours_price_slab',array('fk_place_id'=>$fk_place_id,'fk_vehicle_type_id'=>$fk_vehicle_type_id,'del_status'=>1),array('*'),false);
+                $two_wheller_price_slab = $this->model->selectWhereData('tbl_hours_price_slab',array('fk_place_id'=>$fk_place_id,'fk_vehicle_type_id'=>1,'del_status'=>1),array('*'),false);
+                $three_wheller_price_slab = $this->model->selectWhereData('tbl_hours_price_slab',array('fk_place_id'=>$fk_place_id,'fk_vehicle_type_id'=>2,'del_status'=>1),array('*'),false);
+                $four_wheller_price_slab = $this->model->selectWhereData('tbl_hours_price_slab',array('fk_place_id'=>$fk_place_id,'fk_vehicle_type_id'=>3,'del_status'=>1),array('*'),false);
+        		$truck_van_wheller_price_slab = $this->model->selectWhereData('tbl_hours_price_slab',array('fk_place_id'=>$fk_place_id,'fk_vehicle_type_id'=>4,'del_status'=>1),array('*'),false);
 
 	            $response['code'] = REST_Controller::HTTP_OK;
 	            $response['status'] = true;
 	            $response['message'] = 'success';
-	            $response['hours_price_slab_data'] = $hours_price_slab;
+                if(!empty($two_wheller_price_slab)){
+                    $response['two_wheller_price_slab'] = $two_wheller_price_slab;
+                }
+                if(!empty($three_wheller_price_slab)){
+                       $response['three_wheller_price_slab'] = $three_wheller_price_slab;
+                }
+                if(!empty($four_wheller_price_slab)){
+                       $response['four_wheller_price_slab'] = $four_wheller_price_slab;
+                }
+                if(!empty($truck_van_wheller_price_slab)){
+                       $response['truck_van_wheller_price_slab'] = $truck_van_wheller_price_slab;
+                }
         	}           
         }else {
             $response['code'] = REST_Controller::HTTP_UNAUTHORIZED;

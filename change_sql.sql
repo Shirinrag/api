@@ -27,3 +27,6 @@ ALTER TABLE `tbl_parking_place` ADD `per_hour_charges` DOUBLE NULL DEFAULT NULL 
 --13/01/2023
 
 ALTER TABLE `pa_users` ADD `aadhaar_card` LONGTEXT NULL DEFAULT NULL AFTER `image`, ADD `pan_card` LONGTEXT NULL DEFAULT NULL AFTER `aadhaar_card`;
+--16/01/2023
+ALTER TABLE `pa_users` ADD `pos_device_id` LONGTEXT NULL DEFAULT NULL AFTER `pan_card`;
+ALTER TABLE `pa_users` CHANGE `pos_device_id` `pos_device_id` BIGINT NULL DEFAULT NULL;
