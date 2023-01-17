@@ -1532,6 +1532,7 @@ class Superadmin_api extends REST_Controller {
         }
         echo json_encode($response);
     }
+    
 
     public function save_duty_allocation_post()
     {
@@ -1922,7 +1923,24 @@ class Superadmin_api extends REST_Controller {
         echo json_encode($response);
     }
      // ================================= POS Device Mapped ==============================
-
+    public function get_pos_map_data_get()
+    {
+        $response = array('code' => - 1, 'status' => false, 'message' => '');
+        $validate = validateToken();
+        if($validate){
+                $place_list = $this->model->selectWhereData('tbl_parking_place',array('status'=>1),array('id','place_name'),false);
+                $device_id = $this->model->selectWhereData('tbl_pos_device',array('status'=>1,'del_status'=>1),array('id','pos_device_id'),false);
+                $response['message'] = 'success';
+                $response['code'] = 200;
+                $response['status'] = true;
+                $response['place_list'] = $place_list;
+                $response['device_id'] = $device_id;
+        } else {
+            $response['message'] = 'Invalid Request';
+            $response['code'] = 204;
+        }
+        echo json_encode($response);
+    }
     public function add_pos_device_mapped_post()
     {
         $response = array('code' => - 1, 'status' => false, 'message' => '');
@@ -1994,7 +2012,7 @@ class Superadmin_api extends REST_Controller {
                     $response['message'] = "Id is required";
                     $response['code'] = 201;
                 }else{
-                    $check_pos_device_map_count = $this->model->CountWhereRecord('tbl_pos_device_map', array('fk_place_id'=>$fk_place_id,'id !='=>$id,'status'=>1));
+                    $check_pos_device_map_count = $this->model->CountWhereRecord('tbl_pos_device_map', array('fk_place_id'=>$fk_place_id,'device_id'=>$device_id,'id !='=>$id,'status'=>1));
                     if($check_pos_device_map_count > 0){
                         $response['code'] = 201;
                         $response['status'] = false;
@@ -2042,7 +2060,7 @@ class Superadmin_api extends REST_Controller {
             echo json_encode($response);
       }
 
-      public function update_pos_device_status_post()
+      public function update_pos_device_map_status_post()
       {
         $response = array('code' => - 1, 'status' => false, 'message' => '');
         $validate = validateToken();
@@ -2080,6 +2098,181 @@ class Superadmin_api extends REST_Controller {
                 $response['status'] = true;
                 $response['place_list'] = $place_list;
                 $response['pos_verifier_list'] = $pos_verifier_list;
+        } else {
+            $response['message'] = 'Invalid Request';
+            $response['code'] = 204;
+        }
+        echo json_encode($response);
+      }
+
+      public function save_pos_verifier_duty_allocation_post()
+      {
+        $response = array('code' => - 1, 'status' => false, 'message' => '');
+        $validate = validateToken();
+        if($validate){
+            $fk_place_id = $this->input->post('fk_place_id');
+            $fk_place_id = json_decode($fk_place_id);
+
+            $fk_pos_verifier_id=$this->input->post('fk_pos_verifier_id');
+            $fk_pos_verifier_id = json_decode($fk_pos_verifier_id);
+            $date=$this->input->post('date');
+            $date = json_decode($date);
+            if (empty($fk_place_id[0])) {
+                $response['message'] = 'Place is required';
+                $response['code'] = 201;
+            }else if (empty($fk_pos_verifier_id[0])) {
+                $response['message'] = 'Verifier Id is required';
+                $response['code'] = 201;
+            }else if (empty($date[0])) {
+                $response['message'] = 'Date is required';
+                $response['code'] = 201;
+            } else {
+                foreach($fk_pos_verifier_id as $fk_pos_verifier_id_key => $fk_pos_verifier_id_row){
+                   
+                    // $check_pos_device_count = $this->model->CountWhereRecord('tbl_pos_duty_allocation', array('fk_place_id' =>@$fk_place_id[$fk_pos_verifier_id_key],'fk_pos_verifier_id' => @$fk_pos_verifier_id_row,,'date'=> @$date[$fk_pos_verifier_id_key]));
+                    // if($check_pos_device_count > 0){
+                    //     $response['code'] = 201;
+                    //     $response['status'] = false;
+                    //     $response['message'] = 'Duty Already Allocated.';                             
+                    // }else{
+                         $device_id = $this->model->selectWhereData('tbl_pos_device_map',array('fk_place_id'=>$fk_place_id[$fk_pos_verifier_id_key]),array('id'));
+                        $insert_data=array(
+                            'fk_place_id' =>$fk_place_id[$fk_pos_verifier_id_key],      
+                            'fk_pos_verifier_id' => $fk_pos_verifier_id_row,
+                            'date'=>$date[$fk_pos_verifier_id_key],
+                            'fk_device_id'=>$device_id['id']
+                        );
+                        $this->model->insertData('tbl_pos_duty_allocation',$insert_data);
+                        $response['message'] = 'success';
+                        $response['code'] = 200;
+                        $response['status'] = true;   
+                    // }
+                }                              
+            }
+        } else {
+            $response['message'] = 'Invalid Request';
+            $response['code'] = 204;
+        }
+        echo json_encode($response);
+      }
+
+    public function display_all_pos_verifier_duty_allocation_data_get()
+    {
+        $response = array('code' => - 1, 'status' => false, 'message' => '');
+        $validate = validateToken();
+        if ($validate) {
+                $this->load->model('superadmin_model');
+                $pos_duty_allocation = $this->superadmin_model->display_all_pos_verifier_duty_allocation_data();
+                $response['code'] = REST_Controller::HTTP_OK;
+                $response['status'] = true;
+                $response['message'] = 'success';
+                $response['pos_duty_allocation'] = $pos_duty_allocation;
+        } else {
+            $response['code'] = REST_Controller::HTTP_UNAUTHORIZED;
+            $response['message'] = 'Unauthorised';
+        }
+        echo json_encode($response);
+    }
+    public function delete_pos_duty_allocation_post()
+    {
+        $response = array('code' => - 1, 'status' => false, 'message' => '');
+        $validate = validateToken();
+        if ($validate) {
+                $id = $this->input->post('id');
+                if(empty($id)){
+                    $response['message'] = "Id is required";
+                    $response['code'] = 201;
+                }else{
+                        $curl_data = array(
+                            'del_status' =>0,
+                        );
+                        $this->model->updateData('tbl_pos_duty_allocation',$curl_data,array('id'=>$id));
+                        $response['code'] = REST_Controller::HTTP_OK;
+                        $response['status'] = true;
+                        $response['message'] = 'POS Duty Allocation Deleted Successfully';
+                }
+        }else {
+            $response['code'] = REST_Controller::HTTP_UNAUTHORIZED;
+            $response['message'] = 'Unauthorised';
+        }
+        echo json_encode($response);
+    }
+
+    public function add_pos_device_post()
+    {
+        $response = array('code' => - 1, 'status' => false, 'message' => '');
+        $validate = validateToken();
+        if ($validate) {
+                $device_id = $this->input->post('device_id');
+                $device_id = json_decode($device_id,true);
+                if(empty($device_id)){
+                    $response['message'] = "Device Id is required";
+                    $response['code'] = 201;
+                }else{
+                    foreach ($device_id as $device_id_key => $device_id_row) {
+                        $check_user_car_count = $this->model->CountWhereRecord('tbl_pos_device', array('pos_device_id'=>$device_id_row,'status'=>1));
+                        if($check_user_car_count > 0){
+                            $response['code'] = 201;
+                            $response['status'] = false;
+                            $response['message'] = 'POS Device Already exist.';                              
+                        }else{
+                            $curl_data = array(
+                                'pos_device_id' =>$device_id_row,
+                            );
+                            $this->model->insertData('tbl_pos_device',$curl_data);
+                            $response['code'] = REST_Controller::HTTP_OK;
+                            $response['status'] = true;
+                            $response['message'] = 'POS Device Inserted Successfully';
+                        }
+                    }
+                    
+                }
+        }else {
+            $response['code'] = REST_Controller::HTTP_UNAUTHORIZED;
+            $response['message'] = 'Unauthorised';
+        }
+        echo json_encode($response);
+    }
+     public function display_all_pos_device_data_get()
+    {
+        $response = array('code' => - 1, 'status' => false, 'message' => '');
+        $validate = validateToken();
+        if ($validate) {
+            $this->load->model('superadmin_model');
+                // $device_data = $this->model->selectWhereData();
+                // foreach ($device_data as $device_data_key => $device_data_row) {
+                    
+                // }
+                $device_data = $this->model->selectWhereData('tbl_pos_device',array(),array('*','CONCAT(tbl_pos_device.status,",",tbl_pos_device.id) AS statusdata'),false,array('id',"desc"));
+                $response['code'] = REST_Controller::HTTP_OK;
+                $response['status'] = true;
+                $response['message'] = 'success';
+                $response['device_data'] = $device_data;
+        } else {
+            $response['code'] = REST_Controller::HTTP_UNAUTHORIZED;
+            $response['message'] = 'Unauthorised';
+        }
+        echo json_encode($response);   
+    }
+    public function update_pos_device_status_post()
+      {
+        $response = array('code' => - 1, 'status' => false, 'message' => '');
+        $validate = validateToken();
+        if($validate){
+            $id = $this->input->post('id');
+            $status=$this->input->post('status');
+            if (empty($id)) {
+                $response['message'] = 'id is required';
+                $response['code'] = 201;
+            } else {
+                $update_data = array(
+                    'status'=>$status,
+                );
+                $this->model->updateData('tbl_pos_device',$update_data, array('id'=>$id));
+                $response['message'] = 'success';
+                $response['code'] = 200;
+                $response['status'] = true;
+            }
         } else {
             $response['message'] = 'Invalid Request';
             $response['code'] = 204;

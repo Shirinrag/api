@@ -142,18 +142,28 @@ $route['update-vehicle-type-data'] = 'superadmin_api/update_vehicle_type_data';
 $route['delete-vehicle-type'] = 'superadmin_api/delete_vehicle_type';
 $route['get-vehicle-details'] = 'superadmin_api/get_vehicle_details';
 
+$route['get-pos-map-data'] = 'superadmin_api/get_pos_map_data';
 $route['add-pos-device-map'] = 'superadmin_api/add_pos_device_mapped';
 $route['display-all-pos-device-map-data'] = 'superadmin_api/display_all_pos_device_map_data';
 $route['update-pos-device-map'] = 'superadmin_api/update_pos_device_map';
 $route['delete-pos-device-map'] = 'superadmin_api/delete_pos_device_map';
-$route['update-pos-device-status'] = 'superadmin_api/update_pos_device_status';
+$route['update-pos-device-map-status'] = 'superadmin_api/update_pos_device_map_status';
 
 $route['get-all-pos-verifier'] = 'superadmin_api/get_all_pos_verifier';
+$route['save-pos-verifier-duty-allocation'] = 'superadmin_api/save_pos_verifier_duty_allocation';
+$route['display-all-pos-duty-allocation-data'] = 'superadmin_api/display_all_pos_verifier_duty_allocation_data';
 
+$route['delete-pos-duty-allocation'] = 'superadmin_api/delete_pos_duty_allocation';
+
+$route['add-pos-device'] = 'superadmin_api/add_pos_device';
+$route['display-all-pos-device-data'] = 'superadmin_api/display_all_pos_device_data';
+$route['update-pos-device-status'] = 'superadmin_api/update_pos_device_status';
 
 // ============================= POS API=====================================
 $route['register-pos-verifier'] = 'pos_api/register_pos_verifier';
 $route['login-pos-verifier'] = 'pos_api/login_pos_verifier';
 $route['get-all-vehicle-type'] = 'pos_api/get_all_vehicle_type';
 $route['get-all-price-data-on-id'] = 'pos_api/get_all_price_data_on_id';
+$route['check-in-data'] = 'pos_api/check_in';
+$route['check-out-data'] = 'pos_api/check_out';
 

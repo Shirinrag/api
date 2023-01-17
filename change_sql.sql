@@ -30,3 +30,6 @@ ALTER TABLE `pa_users` ADD `aadhaar_card` LONGTEXT NULL DEFAULT NULL AFTER `imag
 --16/01/2023
 ALTER TABLE `pa_users` ADD `pos_device_id` LONGTEXT NULL DEFAULT NULL AFTER `pan_card`;
 ALTER TABLE `pa_users` CHANGE `pos_device_id` `pos_device_id` BIGINT NULL DEFAULT NULL;
+
+--17/01/2023
+ALTER TABLE `tbl_pos_booking` ADD `book_status` INT NULL DEFAULT NULL COMMENT '1. Check-in \r\n2. Check-out' AFTER `longitude`;

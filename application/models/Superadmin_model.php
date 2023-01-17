@@ -161,11 +161,25 @@ class Superadmin_model extends CI_Model {
     }
     public function display_all_pos_device_map_data()
     {
-        $this->db->select('tbl_pos_device_map.*,CONCAT(tbl_pos_device_map.status,",",tbl_pos_device_map.id) AS statusdata,tbl_parking_place.place_name');
+        $this->db->select('tbl_pos_device_map.*,CONCAT(tbl_pos_device_map.status,",",tbl_pos_device_map.id) AS statusdata,tbl_parking_place.place_name,tbl_pos_device.pos_device_id');
         $this->db->from('tbl_pos_device_map');
         $this->db->join('tbl_parking_place','tbl_parking_place.id=tbl_pos_device_map.fk_place_id','left'); 
+        $this->db->join('tbl_pos_device','tbl_pos_device.id=tbl_pos_device_map.device_id','left'); 
         $this->db->where('tbl_pos_device_map.del_status','1');       
         $this->db->order_by('tbl_pos_device_map.id','DESC');
+        $query = $this->db->get();
+        $result = $query->result_array();
+        return $result;
+    }
+
+    public function display_all_pos_verifier_duty_allocation_data()
+    {
+        $this->db->select('tbl_pos_duty_allocation.*,pa_users.firstName,pa_users.lastName,tbl_parking_place.place_name,pa_users.phoneNo,tbl_parking_place.address');
+       $this->db->from('tbl_pos_duty_allocation');
+       $this->db->join('pa_users','tbl_pos_duty_allocation.fk_pos_verifier_id=pa_users.id','left');
+       $this->db->join('tbl_parking_place','tbl_pos_duty_allocation.fk_place_id=tbl_parking_place.id','left');
+       $this->db->where('tbl_pos_duty_allocation.del_status','1');
+       $this->db->order_by('tbl_pos_duty_allocation.id','DESC');
         $query = $this->db->get();
         $result = $query->result_array();
         return $result;
