@@ -603,7 +603,7 @@ class Pos_api extends REST_Controller {
         echo json_encode($response);
     }
 
-    public function pos_report_data()
+    public function pos_report_data_post()
     {
         $response = array('code' => - 1, 'status' => false, 'message' => '');
         $validate = validateToken();
@@ -623,6 +623,7 @@ class Pos_api extends REST_Controller {
                 $response['code'] = REST_Controller::HTTP_OK;
                 $response['status'] = true;
                 $response['message'] = 'Logout Successfully';
+                $response['booking_data'] = $booking_data;
             }
         }else{
             $response['code'] = REST_Controller::HTTP_UNAUTHORIZED;
