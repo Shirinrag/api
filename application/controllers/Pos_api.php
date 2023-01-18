@@ -430,11 +430,11 @@ class Pos_api extends REST_Controller {
         }
         echo json_encode($response);
     }
-     public function check_out_post()
+    public function check_out_post()
     {
         $response = array('code' => - 1, 'status' => false, 'message' => '');
         $validate = validateToken();
-        if ($validate) {0
+        if ($validate) {
             $fk_place_id = $this->input->post('fk_place_id');
             $fk_verifier_id = $this->input->post('fk_verifier_id');
             $fk_vehicle_type_id = $this->input->post('fk_vehicle_type_id');
@@ -567,7 +567,7 @@ class Pos_api extends REST_Controller {
         }
         echo json_encode($response);
     }
-    public function logout_api()
+    public function logout_post()
     {
         $response = array('code' => - 1, 'status' => false, 'message' => '');
         $validate = validateToken();
@@ -575,12 +575,56 @@ class Pos_api extends REST_Controller {
             
             $fk_pos_verifier_id = $this->input->post('fk_verifier_id');
             $device_id = $this->input->post('device_id');
-            
+            $lang_id = $this->input->post('lang_id');
+            if(empty($fk_pos_verifier_id)){
+                $response['message']= "Verifier Id is required";
+                $response['code'] = 201;
+            }else if(empty($device_id)){
+                $response['message']= "Device Id is required";
+                $response['code'] = 201;
+            }else{
+                $pos_device_id = $this->model->selectWhereData('tbl_pos_device',array('pos_device_id'=>$device_id),array('id'));
+                $curl_data = array(
+                    'status'=> 2
+                );
+                $this->model->updateData('tbl_pos_verifier_logged_in',$curl_data,array('fk_pos_verifier_id'=> $fk_pos_verifier_id,'fk_device_id'=> $pos_device_id['id'],));
+                $response['code'] = REST_Controller::HTTP_OK;
+                $response['status'] = true;
+                if($lang_id==1){
+                        $response['message'] = 'Logout Successfully';
+                }else {
+                    $response['message'] = 'लॉगआउट सफलतापूर्वक';
+                }
+            }            
+        }else{
+             $response['code'] = REST_Controller::HTTP_UNAUTHORIZED;
+             $response['message'] = 'Unauthorised';
+        }
+        echo json_encode($response);
+    }
 
-            $response['code'] = REST_Controller::HTTP_OK;
-            $response['status'] = true;
-            $response['message'] = 'Logout Successfully';
-                   }else {
+    public function pos_report_data()
+    {
+        $response = array('code' => - 1, 'status' => false, 'message' => '');
+        $validate = validateToken();
+        if ($validate) {            
+            $from_date = $this->input->post('from_date');
+            $to_date = $this->input->post('to_date');
+            $place_id = $this->input->post('place_id');
+            if(empty($from_date)){
+                $response['message']= "From Date is required";
+                $response['code'] = 201;
+            }else if(empty($to_date)){
+                $response['message']= "To Date is required";
+                $response['code'] = 201;
+            }else{  
+                $this->load->model('pos_model');
+                $booking_data = $this->pos_model->pos_report($place_id,$from_date,$to_date);
+                $response['code'] = REST_Controller::HTTP_OK;
+                $response['status'] = true;
+                $response['message'] = 'Logout Successfully';
+            }
+        }else{
             $response['code'] = REST_Controller::HTTP_UNAUTHORIZED;
             $response['message'] = 'Unauthorised';
         }

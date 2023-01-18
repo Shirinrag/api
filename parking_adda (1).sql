@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Dec 17, 2022 at 12:23 PM
+-- Generation Time: Jan 18, 2023 at 08:25 AM
 -- Server version: 10.4.24-MariaDB
 -- PHP Version: 7.4.29
 
@@ -46,6 +46,9 @@ CREATE TABLE `pa_users` (
   `password_reset_code` varchar(255) DEFAULT NULL,
   `last_ip` varchar(30) DEFAULT NULL,
   `image` text DEFAULT NULL,
+  `aadhaar_card` longtext DEFAULT NULL,
+  `pan_card` longtext DEFAULT NULL,
+  `pos_device_id` bigint(20) DEFAULT NULL,
   `referal_code` text DEFAULT NULL,
   `referenced_by` text DEFAULT NULL,
   `device_id` text DEFAULT NULL,
@@ -66,9 +69,36 @@ CREATE TABLE `pa_users` (
 -- Dumping data for table `pa_users`
 --
 
-INSERT INTO `pa_users` (`id`, `userName`, `firstName`, `lastName`, `email`, `phoneNo`, `otp`, `password`, `address`, `role`, `user_type`, `isActive`, `isVerified`, `isAdmin`, `token`, `password_reset_code`, `last_ip`, `image`, `referal_code`, `referenced_by`, `device_id`, `refrel_applied`, `verifier_referral_id`, `device_type`, `notifn_topic`, `terms_condition`, `terms_conditn_id`, `app_version`, `app_build_no`, `del_status`, `created_at`, `updated_at`) VALUES
-(1, 'superadmin', 'Ricky', 'Fernandes', 'ricky.fernandes@stzsoft.com', '977500182', NULL, 'cllDYnpmK01ZSFQ3Q3JyN01sR0pnUT09', NULL, 1, 1, 1, 0, 0, NULL, NULL, NULL, 'uploads/501059_13.jpg', '', NULL, NULL, NULL, NULL, NULL, '977500182PAUser', 1, 0, NULL, NULL, 1, '2022-12-12 11:18:39', '2022-12-12 11:18:39'),
-(2, 'ricky', 'Ricky', 'Fernandes', 'ricky.fernandes@stzsoft.com', NULL, NULL, 'Ritra2Nta2luWmQxUEFCaEJoMmtGQT09', NULL, 1, 5, 1, 0, 0, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 1, 0, NULL, NULL, 1, '2022-12-15 14:58:53', '2022-12-15 14:58:53');
+INSERT INTO `pa_users` (`id`, `userName`, `firstName`, `lastName`, `email`, `phoneNo`, `otp`, `password`, `address`, `role`, `user_type`, `isActive`, `isVerified`, `isAdmin`, `token`, `password_reset_code`, `last_ip`, `image`, `aadhaar_card`, `pan_card`, `pos_device_id`, `referal_code`, `referenced_by`, `device_id`, `refrel_applied`, `verifier_referral_id`, `device_type`, `notifn_topic`, `terms_condition`, `terms_conditn_id`, `app_version`, `app_build_no`, `del_status`, `created_at`, `updated_at`) VALUES
+(1, 'superadmin', 'Ricky', 'Fernandes', 'ricky.fernandes@stzsoft.com', '977500182', NULL, 'cllDYnpmK01ZSFQ3Q3JyN01sR0pnUT09', NULL, 1, 1, 1, 0, 0, NULL, NULL, NULL, 'uploads/501059_13.jpg', NULL, NULL, NULL, '', NULL, NULL, NULL, NULL, NULL, '977500182PAUser', 1, 0, NULL, NULL, 1, '2022-12-12 11:18:39', '2022-12-12 11:18:39'),
+(2, 'ricky', 'Ricky', 'Fernandes', 'ricky.fernandes@stzsoft.com', NULL, NULL, 'Ritra2Nta2luWmQxUEFCaEJoMmtGQT09', NULL, 1, 5, 1, 0, 0, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 1, 0, NULL, NULL, 1, '2022-12-15 14:58:53', '2022-12-15 14:58:53'),
+(3, 'akashyadav', 'Akash', 'Yadav', 'yadavakash50894@gmail.com', '9517418495', NULL, 'WU1tajQ4QWtobDBxYk9BY1c2b2NkWWdlMTJuZ2VweU1JMTU0Wktobkhwbz0=', NULL, 1, 3, 1, 0, 0, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 1, 0, NULL, NULL, 1, '2022-12-23 11:48:19', '2022-12-23 11:48:19'),
+(4, 'shamimshaikh', 'Shamim', 'Shaikh', 'shamimakhtarshaikh85@gmail.com', '9076607607	', NULL, 'WU1tajQ4QWtobDBxYk9BY1c2b2NkWWdlMTJuZ2VweU1JMTU0Wktobkhwbz0=', NULL, 1, 3, 1, 0, 0, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 1, 0, NULL, NULL, 1, '2022-12-23 11:49:22', '2022-12-23 11:49:22'),
+(5, 'sheshnathgiri', 'Sheshnath', 'Giri', 'sheshnathgiri7@gmail.com', '7408525925', NULL, 'WU1tajQ4QWtobDBxYk9BY1c2b2NkWWdlMTJuZ2VweU1JMTU0Wktobkhwbz0=', NULL, 1, 3, 1, 0, 0, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 1, 0, NULL, NULL, 1, '2022-12-23 11:50:25', '2022-12-23 11:50:25'),
+(6, 'shirinr', 'Shirin', 'Singh', 'shirin@stzsoft.com', '8010597075', NULL, 'WHc5dFJ1WE9iVjdYOStpR2E1c05hQT09', NULL, 1, 14, 1, 0, 0, NULL, NULL, NULL, NULL, 'uploads/655239_social_icons_set_new_3_generated.jpg', 'uploads/268064_11.png', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 1, 0, NULL, NULL, 1, '2023-01-16 11:37:41', '2023-01-16 11:37:41');
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `tbl_blogs`
+--
+
+CREATE TABLE `tbl_blogs` (
+  `id` bigint(20) NOT NULL,
+  `title` varchar(100) DEFAULT NULL,
+  `image` longtext DEFAULT NULL,
+  `description` longtext DEFAULT NULL,
+  `del_status` int(11) NOT NULL DEFAULT 1,
+  `created_at` datetime NOT NULL DEFAULT current_timestamp(),
+  `updated_at` datetime NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp()
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+--
+-- Dumping data for table `tbl_blogs`
+--
+
+INSERT INTO `tbl_blogs` (`id`, `title`, `image`, `description`, `del_status`, `created_at`, `updated_at`) VALUES
+(1, 'Parking Issues in Mumbai', 'uploads/blogs/601346_images.jpg', '‘ParkingAdda’ is here to solve parking issues in Mumbai\r\nIts official, Mumbaikars can now book parking spaces in advance via the ‘ParkingAdda App’ within minutes.\r\nIn India, parking spaces are getting increasingly scarce. \r\nSurely, we want to find parking spots quickly and in a much simpler way, \r\nrather than having to keep an eye out for our automobiles and going from one spot to the next in the hope of finding a parking. \r\n\'PARKINGADDA\' is an internet service that assists you in finding a parking spot. \r\nWe have tried and tested our proprietary technology through a pilot project in few areas within Mumbai, one can book a parking space as well as rent out your vacant parking space to ‘ParkingAdda’ easily via an online application.', 0, '2022-12-27 16:26:56', '2022-12-28 14:06:47');
 
 -- --------------------------------------------------------
 
@@ -90,7 +120,8 @@ CREATE TABLE `tbl_bonus` (
 
 INSERT INTO `tbl_bonus` (`id`, `bonus_amount`, `status`, `created_at`, `updated_at`) VALUES
 (1, 50, '0', '2022-12-15 14:21:58', '2022-12-15 14:22:03'),
-(2, 25, '1', '2022-12-15 14:22:03', '2022-12-15 14:22:03');
+(2, 25, '1', '2022-12-15 14:22:03', '2022-12-29 17:08:52'),
+(3, 100, '0', '2022-12-23 13:34:24', '2022-12-29 17:08:52');
 
 -- --------------------------------------------------------
 
@@ -48418,9 +48449,51 @@ CREATE TABLE `tbl_device` (
   `id` int(11) NOT NULL,
   `device_id` varchar(100) DEFAULT NULL,
   `status` int(11) NOT NULL,
+  `del_status` int(11) NOT NULL DEFAULT 1,
   `created_at` datetime NOT NULL DEFAULT current_timestamp(),
   `updated_at` datetime NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+--
+-- Dumping data for table `tbl_device`
+--
+
+INSERT INTO `tbl_device` (`id`, `device_id`, `status`, `del_status`, `created_at`, `updated_at`) VALUES
+(1, '001', 1, 1, '2022-12-20 10:28:41', '2022-12-22 14:34:19'),
+(2, '002', 1, 1, '2022-12-20 10:28:41', '2022-12-22 14:34:21'),
+(3, '003', 1, 1, '2022-12-20 10:28:41', '2022-12-22 14:34:24'),
+(4, '004', 0, 1, '2022-12-20 15:01:31', '2022-12-20 15:01:31'),
+(5, '005', 0, 1, '2022-12-20 15:01:31', '2022-12-20 15:01:31'),
+(6, '006', 0, 1, '2022-12-21 10:43:50', '2022-12-21 10:43:50'),
+(7, '007', 0, 1, '2022-12-21 10:43:50', '2022-12-21 10:43:50'),
+(8, '008', 0, 1, '2022-12-21 10:43:50', '2022-12-21 10:43:50'),
+(9, '009', 0, 1, '2022-12-21 10:43:50', '2022-12-21 10:43:50'),
+(10, '0010', 0, 1, '2022-12-21 10:43:50', '2022-12-21 18:11:15');
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `tbl_duty_allocation`
+--
+
+CREATE TABLE `tbl_duty_allocation` (
+  `id` bigint(20) NOT NULL,
+  `fk_place_id` int(11) DEFAULT NULL,
+  `fk_verifier_id` int(11) DEFAULT NULL,
+  `date` varchar(20) DEFAULT NULL,
+  `del_status` int(11) NOT NULL DEFAULT 1,
+  `created_at` datetime NOT NULL DEFAULT current_timestamp(),
+  `updated_at` datetime NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp()
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+--
+-- Dumping data for table `tbl_duty_allocation`
+--
+
+INSERT INTO `tbl_duty_allocation` (`id`, `fk_place_id`, `fk_verifier_id`, `date`, `del_status`, `created_at`, `updated_at`) VALUES
+(1, 1, 3, '26/12/2022', 0, '2022-12-26 11:42:47', '2022-12-26 13:46:19'),
+(2, 1, 3, '27/12/2022', 1, '2022-12-26 11:42:47', '2022-12-26 11:42:47'),
+(3, 1, 3, '28/12/2022', 1, '2022-12-26 11:42:47', '2022-12-26 11:42:47');
 
 -- --------------------------------------------------------
 
@@ -48468,6 +48541,7 @@ CREATE TABLE `tbl_extension_price_charges` (
 CREATE TABLE `tbl_hours_price_slab` (
   `id` bigint(20) NOT NULL,
   `fk_place_id` int(11) DEFAULT NULL,
+  `fk_vehicle_type_id` int(11) DEFAULT NULL,
   `from_hours` int(11) DEFAULT NULL,
   `to_hours` int(11) DEFAULT NULL,
   `cost` double DEFAULT NULL,
@@ -48480,13 +48554,14 @@ CREATE TABLE `tbl_hours_price_slab` (
 -- Dumping data for table `tbl_hours_price_slab`
 --
 
-INSERT INTO `tbl_hours_price_slab` (`id`, `fk_place_id`, `from_hours`, `to_hours`, `cost`, `del_status`, `created_at`, `updated_at`) VALUES
-(1, 1, 0, 1, 60, 1, '2022-12-16 16:34:49', '2022-12-16 16:34:49'),
-(2, 1, 2, 3, 75, 1, '2022-12-16 16:34:49', '2022-12-16 16:34:49'),
-(3, 1, 4, 6, 105, 1, '2022-12-16 16:34:49', '2022-12-16 16:34:49'),
-(4, 1, 7, 9, 180, 1, '2022-12-16 16:34:49', '2022-12-16 16:34:49'),
-(5, 1, 10, 12, 180, 1, '2022-12-16 16:34:49', '2022-12-16 16:34:49'),
-(6, 1, 13, 24, 210, 1, '2022-12-16 16:34:49', '2022-12-16 16:34:49');
+INSERT INTO `tbl_hours_price_slab` (`id`, `fk_place_id`, `fk_vehicle_type_id`, `from_hours`, `to_hours`, `cost`, `del_status`, `created_at`, `updated_at`) VALUES
+(1, 436, 1, 0, 1, 1, 1, '2023-01-12 12:31:29', '2023-01-12 12:31:29'),
+(2, 436, 1, 1, 2, 2, 1, '2023-01-12 12:31:29', '2023-01-12 12:31:29'),
+(3, 436, 1, 2, 3, 5, 1, '2023-01-12 12:31:29', '2023-01-12 12:31:29'),
+(4, 436, 1, 3, 4, 6, 1, '2023-01-12 12:31:29', '2023-01-12 12:31:29'),
+(5, 436, 2, 0, 1, 10, 1, '2023-01-12 12:31:29', '2023-01-12 12:31:29'),
+(6, 436, 2, 1, 2, 20, 1, '2023-01-12 12:31:29', '2023-01-12 12:31:29'),
+(7, 436, 2, 2, 3, 30, 1, '2023-01-12 12:31:29', '2023-01-12 12:31:29');
 
 -- --------------------------------------------------------
 
@@ -48533,6 +48608,8 @@ CREATE TABLE `tbl_parking_place` (
   `slots` int(11) DEFAULT NULL,
   `fk_place_status_id` int(11) DEFAULT NULL,
   `fk_parking_price_type` int(11) DEFAULT NULL,
+  `ext_price` int(11) DEFAULT NULL,
+  `per_hour_charges` double DEFAULT NULL,
   `status` enum('0','1') NOT NULL,
   `del_status` int(11) NOT NULL DEFAULT 1,
   `created_at` datetime NOT NULL DEFAULT current_timestamp(),
@@ -48543,8 +48620,445 @@ CREATE TABLE `tbl_parking_place` (
 -- Dumping data for table `tbl_parking_place`
 --
 
-INSERT INTO `tbl_parking_place` (`id`, `fk_vendor_id`, `fk_country_id`, `fk_state_id`, `fk_city_id`, `place_name`, `address`, `pincode`, `latitude`, `longitude`, `slots`, `fk_place_status_id`, `fk_parking_price_type`, `status`, `del_status`, `created_at`, `updated_at`) VALUES
-(1, 2, 101, 22, 2707, 'NSE BKC', 'G Block BKC, Bandra Kurla Complex, Bandra East, Mumbai, Maharashtra 400051', 400051, '19.05930658446322', '72.86027129279579', 5, 3, 1, '0', 1, '2022-12-16 16:34:49', '2022-12-17 09:11:46');
+INSERT INTO `tbl_parking_place` (`id`, `fk_vendor_id`, `fk_country_id`, `fk_state_id`, `fk_city_id`, `place_name`, `address`, `pincode`, `latitude`, `longitude`, `slots`, `fk_place_status_id`, `fk_parking_price_type`, `ext_price`, `per_hour_charges`, `status`, `del_status`, `created_at`, `updated_at`) VALUES
+(1, 2, 101, 22, 2707, 'BDS Services Private Limited, Kanjurmarg West', '1-B (12), Ground Floor Saroagi Estate, Lal Bahadur Shastri Rd, Kanjurmarg West, Mumbai, Maharashtra', 400078, '30.7352354', '79.0647063', 5, 1, 1, 10, NULL, '0', 1, '2022-12-29 12:31:58', '2022-12-29 12:31:58'),
+(2, 2, 101, 22, 2836, 'Cinemax WonderMall, Thane West', 'Ghodbunder Road, Kapur Bawadi Naka opposite Bank Of Baroda Chitalsar, Manpada, Thane West, Maharashtra', 400601, '19.221160463578', '72.977327337421', 5, 3, 3, 10, NULL, '0', 1, '2022-12-29 12:31:58', '2022-12-29 12:31:58'),
+(3, 2, 101, 22, 2707, 'Opp. Ambani Intl. School, MCGM  Parking, BKC, Bandra East', 'G BLOCK, 46, Trident Road, G Block BKC, Bandra Kurla Complex, Bandra East, Mumbai, Maharashtra', 400098, '19.06685759355', '72.870082343855', 5, 1, 1, 10, NULL, '0', 1, '2022-12-29 12:31:58', '2022-12-29 12:31:58'),
+(4, 2, 101, 22, 2707, 'ICICI MMRDA Pay & Park', '3V76+3C9, Bandra-Kurla Complex, G Block Road, Bandra East, Mumbai, Maharashtra', 400051, '19.062664768117', '72.861071302126', 5, 1, 1, 10, NULL, '0', 1, '2022-12-29 12:31:58', '2022-12-29 12:31:58'),
+(5, 2, 101, 22, 2707, 'Kohinoor Square, MCGM Parking, Dadar West', 'N.C.Kelkar Marg, R.G. Gadkari Chowk, Shivaji Park, Dadar West, Maharashtra 400028', 400028, '19.024937242043', '72.841503489731', 5, 1, 1, 10, NULL, '0', 1, '2022-12-29 12:31:58', '2022-12-29 12:31:58'),
+(6, 2, 101, 22, 2707, 'UTI Mutual Fund, MCGM Parking, Bandra East', '7, Bharat Nagar Rd, G Block BKC, Patthar Nagar, Valmiki Nagar, Bandra East, Mumbai, Maharashtra 400051', 400051, '19.065802', '72.859228', 5, 1, 1, 10, NULL, '0', 1, '2022-12-29 12:31:58', '2022-12-29 12:31:58'),
+(7, 2, 101, 22, 2707, 'IIT Bombay - Demo', 'IIT Bombay, Powai', 400078, '19.1334302', '72.9110792', 2, 2, 0, 10, NULL, '0', 1, '2022-12-29 12:31:58', '2022-12-29 12:31:58'),
+(8, 2, 101, 22, 2707, 'Wadhwa Group, Ghatkopar West', 'The Address by Wadhwa Groups Lal Bahadur Shastri Road, Opposite R City Mall, Ghatkopar West, Mumbai, Maharashtra', 400086, '19.098756', '72.919241', 5, 3, 1, 1, NULL, '0', 1, '2022-12-29 12:31:58', '2022-12-29 12:31:58'),
+(9, 2, 101, 22, 2707, 'Metro Mall, MCGM Parking, Bhandup West', 'Lal Bahadur Shastri Rd, Bhandup, Ganesh Nagar, Bhandup West, Mumbai, Maharashtra 400078', 400078, '19.141841', '72.931819', 3, 3, 1, 10, NULL, '0', 1, '2022-12-29 12:31:58', '2022-12-29 12:31:58'),
+(10, 2, 101, 22, 2707, 'India Bulls, MCGM Parking, Dadar', '2R6P+32F, Babasaheb Ambedkar Nagar, Dadar, Mumbai, Maharashtra', 400012, '19.010249070694', '72.834993209246', 5, 1, 1, 10, NULL, '0', 1, '2022-12-29 12:31:59', '2022-12-29 12:31:59'),
+(11, 2, 101, 22, 2707, 'The Legend, Walkeshwar Road, MCGM Parking, Malabar Hill', 'Legend, Legend Cooperative Housing Society, 220, Walkeshwar Rd, Teen Batti, Malabar Hill, Mumbai, Maharashtra 400006', 400006, '18.946246', '72.795367', 2, 3, 1, 10, NULL, '0', 1, '2022-12-29 12:31:59', '2022-12-29 12:31:59'),
+(12, 2, 101, 22, 2707, 'Turbe Station, Cidco parking', '181, Thane - Belapur Rd, Turbhe Store, Turbhe MIDC, Turbhe, Navi Mumbai, Maharashtra 400705', 400705, '19.0783275', '73.0177504', 1, 3, 1, 10, NULL, '0', 1, '2022-12-29 12:31:59', '2022-12-29 12:31:59'),
+(13, 2, 101, 22, 2707, 'Oberoi, MCGM Parking, JVLR', 'Jogeshwari - Vikhroli Link Rd, Goregaon, Mumbai, Maharashtra 400065', 400065, '19.1399333', '72.8670014', 1, 3, 1, 10, NULL, '0', 1, '2022-12-29 12:31:59', '2022-12-29 12:31:59'),
+(14, 2, 101, 22, 2707, 'Tunga Village, MCGM Parking', 'Saki Vihar Rd, Tunga Village, Chandivali, Powai, Mumbai, Maharashtra 400072', 400072, '19.118030552401', '72.890684165581', 1, 3, 1, 10, NULL, '0', 1, '2022-12-29 12:31:59', '2022-12-29 12:31:59'),
+(15, 2, 101, 22, 2707, 'Lodha Aurum Grande, Kanjurmarg East', 'Lodha aurum grande, BMC parking 4th floor, Nehru Nagar, Kanjurmarg East, Mumbai, Maharashtra 400042', 400042, '19.1294613', '72.9310675', 1, 7, 3, 10, NULL, '0', 1, '2022-12-29 12:31:59', '2022-12-29 12:31:59'),
+(16, 2, 101, 22, 2707, 'Lodha Supremo, Kanjurmarg East', 'H. J Forgingas, Kanjur Village Road, Kanjurmarg East, Mumbai - 400042', 400042, '19.1294576', '72.9309973', 1, 3, 1, 10, NULL, '0', 1, '2022-12-29 12:31:59', '2022-12-29 12:31:59'),
+(17, 2, 101, 22, 2707, 'Sanpada Station, Cidco parking', 'Parking lot, Sector 3, Sanpada, Navi Mumbai, Maharashtra 400705', 400705, '19.0651519', '73.0107416', 1, 3, 3, 10, NULL, '0', 1, '2022-12-29 12:31:59', '2022-12-29 12:31:59'),
+(18, 2, 101, 22, 2707, 'Cidco Parking, Sanpada Station West', 'Parking lot, Sector 30A, Vashi, Navi Mumbai, Maharashtra 400705', 400705, '19.0668594', '73.0094659', 1, 3, 3, 10, NULL, '0', 1, '2022-12-29 12:31:59', '2022-12-29 12:31:59'),
+(19, 2, 101, 22, 2707, 'Crawford Market - MCGM', 'Dr Dadabhai Naoroji Rd, Dhobi Talao, Chhatrapati Shivaji Terminus Area, Fort, Mumbai, Maharashtra 400001', 400001, '18.9450704', '72.8342877', 1, 3, 1, 10, NULL, '0', 1, '2022-12-29 12:31:59', '2022-12-29 12:31:59'),
+(20, 2, 101, 22, 2707, 'MCGM Parking Crawford Market', 'Dr Dadabhai Naoroji Rd, Dhobi Talao, Chhatrapati Shivaji Terminus Area, Fort, Mumbai, Maharashtra 400001', 400001, '18.9450199', '72.8343555', 1, 3, 1, 10, NULL, '0', 1, '2022-12-29 12:31:59', '2022-12-29 12:31:59'),
+(21, 2, 101, 22, 2707, 'St xaviers, Azad Maidan,CSMT, Mumbai', 'ST. XAVIERS COLLEGE, Dhobi Talao, Chhatrapati Shivaji Terminus Area, Fort, Mumbai, Maharashtra 400001', 400001, '18.9430391', '72.8310297', 1, 3, 3, 10, NULL, '0', 1, '2022-12-29 12:32:00', '2022-12-29 12:32:00'),
+(22, 2, 101, 22, 2707, 'Vashi Station, Cidco Parking', '3X8W+6QP Navi Mumbai, Maharashtra', 400703, '19.0655884', '72.9969432', 1, 2, 3, 10, NULL, '0', 1, '2022-12-29 12:32:00', '2022-12-29 12:32:00'),
+(23, 2, 101, 22, 2707, 'Open Parking, Powai', 'Lake Blvd Rd, Hiranandani Gardens, MHADA Colony 19, Powai, Mumbai, Maharashtra 400076', 400076, '19.1199475', '72.9074964', 1, 2, 1, 10, NULL, '0', 1, '2022-12-29 12:32:00', '2022-12-29 12:32:00'),
+(24, 2, 101, 22, 2707, 'Croma, Horniman Circle,Kala Ghoda, Fort', 'Elphinstone Building, Veer Nariman Road, Kala Ghoda, Fort, Mumbai, Maharashtra 400001', 400001, '18.9321922', '72.8342299', 1, 3, 1, 10, NULL, '0', 1, '2022-12-29 12:32:00', '2022-12-29 12:32:00'),
+(25, 2, 101, 22, 2707, 'Flora Fountain, near Zara, Kala Ghoda, Fort', 'Majmudar & Partners, Majmudar & Partners, Office No.304, 3rd floor, Rustom Building, 29, Veer Nariman Road, Kala Ghoda, Fort, Mumbai, Maharashtra 400001', 400001, '18.932159', '72.8328026', 1, 3, 1, 10, NULL, '0', 1, '2022-12-29 12:32:00', '2022-12-29 12:32:00'),
+(26, 2, 101, 22, 2707, 'Vashi, Sector 17', 'Jai Jawan Complex, Liberty Housing Society, Sector 17, Vashi, Navi Mumbai, Maharashtra 400703', 400703, '19.069985', '72.9977517', 1, 3, 1, 10, NULL, '0', 1, '2022-12-29 12:32:00', '2022-12-29 12:32:00'),
+(27, 2, 101, 22, 2707, 'Haiko Hiranandani, Powai', 'Main St, Hiranandani Gardens, Panchkutir Ganesh Nagar, Powai, Mumbai, Maharashtra 400076', 400076, '19.1192184', '72.9107415', 1, 2, 1, 10, NULL, '0', 1, '2022-12-29 12:32:00', '2022-12-29 12:32:00'),
+(28, 2, 101, 22, 2707, 'Center One Mall, Vashi, Sector 30. ', 'Sector 30A, Vashi, Navi Mumbai, Maharashtra 400703', 400703, '19.067563', '72.9979982', 1, 3, 1, 10, NULL, '0', 1, '2022-12-29 12:32:00', '2022-12-29 12:32:00'),
+(29, 2, 101, 22, 2707, 'Bombay House, Fort', 'Tamarind Ln, Kala Ghoda, Fort, Mumbai, Maharashtra 400001', 400001, '18.9312577', '72.8330453', 1, 3, 1, 10, NULL, '0', 1, '2022-12-29 12:32:00', '2022-12-29 12:32:00'),
+(30, 2, 101, 22, 2707, 'BSE, Near SBI Main Branch', 'Mumbai Samachar Marg, Kala Ghoda, Fort, Mumbai, Maharashtra 400001', 400001, '18.9308434', '72.8342164', 1, 3, 1, 10, NULL, '0', 1, '2022-12-29 12:32:01', '2022-12-29 12:32:01'),
+(31, 2, 101, 22, 2707, 'Runwal Anthonia, LBS Road, Mulund ', 'RUNWAL ANTHURIUM, 404, Gemini, Lal Bahadur Shastri Rd, Veena Nagar, Mulund West, Mumbai, Maharashtra 400080', 400080, '19.1815409', '72.9468068', 1, 3, 1, 10, NULL, '0', 1, '2022-12-29 12:32:01', '2022-12-29 12:32:01'),
+(32, 2, 101, 22, 2707, 'Vashi Sector 30A, Tunga Hotel', 'Bhagwan Mahaveer Rd, Sector 30A, Vashi, Navi Mumbai, Maharashtra 400703', 400703, '19.0667377', '72.9987426', 1, 3, 1, 10, NULL, '0', 1, '2022-12-29 12:32:01', '2022-12-29 12:32:01'),
+(33, 2, 101, 22, 2707, 'GN vidya Marg, Near Jimmy Boy Restaurant, Stockholding and SBI Main Branch', '16-29, G Vaidya Rd, Kala Ghoda, Fort, Mumbai, Maharashtra 400001', 400001, '18.9305392', '72.8348386', 1, 3, 1, 10, NULL, '0', 1, '2022-12-29 12:32:01', '2022-12-29 12:32:01'),
+(34, 2, 101, 22, 2707, 'Regal Cinema, Kala Ghoda, Fort', 'WRGJ+5RP, SP Mukherjee Chowk, Kala Ghoda, Fort, Mumbai, Maharashtra 400001', 400001, '18.9254317', '72.8320962', 1, 3, 1, 10, NULL, '0', 1, '2022-12-29 12:32:01', '2022-12-29 12:32:01'),
+(35, 2, 101, 22, 2707, 'Behind Taj Hotel, Mahakavi Bhushan Marg', 'B K Boman Behram Marg, Apollo Bandar, Colaba, Mumbai, Maharashtra 400001', 400001, '18.9226679', '72.833065', 1, 3, 1, 10, NULL, '0', 1, '2022-12-29 12:32:01', '2022-12-29 12:32:01'),
+(36, 2, 101, 22, 2707, 'Mahindra Office, Opp. Pizza Express, Colaba', 'Chhatrapati Shivaji Maharaj Marg, Apollo Bandar, Colaba, Mumbai, Maharashtra 400001', 400001, '18.9236555', '72.8332248', 1, 3, 1, 10, NULL, '0', 1, '2022-12-29 12:32:01', '2022-12-29 12:32:01'),
+(37, 2, 101, 22, 2707, 'Starbucks, Near Diplomat, Colaba', 'BEST Marg, Apollo Bandar, Colaba, Mumbai, Maharashtra 400001', 400001, '18.9213949', '72.8325339', 1, 3, 1, 10, NULL, '0', 1, '2022-12-29 12:32:01', '2022-12-29 12:32:01'),
+(38, 2, 101, 22, 2707, 'Koparkhairane Station, Cidco Parking', 'MIDC Industrial Area, Kopar Khairane, Navi Mumbai, Maharashtra 400709', 400709, '19.1041', '73.0114167', 1, 3, 1, 10, NULL, '0', 1, '2022-12-29 12:32:01', '2022-12-29 12:32:01'),
+(39, 2, 101, 22, 2707, 'Back Bay Reclamation, Nariman Point', 'Raheja Chambers, RAHEJA CHAMBERS, Free Press Journal Marg, Nariman Point, Mumbai, Maharashtra 400021', 400021, '18.9235929', '72.823789', 1, 3, 1, 10, NULL, '0', 1, '2022-12-29 12:32:01', '2022-12-29 12:32:01'),
+(40, 2, 101, 22, 2707, 'Maker Chamber, Opp. Status Restaurant, Narimon Point', 'Jamnalal Bajaj Marg, opposite makers chamber,_5, Nariman Point, Mumbai, Maharashtra 400021', 400021, '18.9246549', '72.8222057', 1, 3, 1, 10, NULL, '0', 1, '2022-12-29 12:32:02', '2022-12-29 12:32:02'),
+(41, 2, 101, 22, 2707, 'Runwal Green, Nahur West', 'Bhandup Village Rd, Nahur West, Industrial Area, Bhandup West, Mumbai, Maharashtra 400078', 400078, '19.159322', '72.9445291', 1, 3, 1, 10, NULL, '0', 1, '2022-12-29 12:32:02', '2022-12-29 12:32:02'),
+(42, 2, 101, 22, 2707, 'Ghansoli Station, Cidco Parking', '4284+WVR, Reliance Corporate Park, MIDC Industrial Area, Ghansoli, Navi Mumbai, Maharashtra 400701', 400701, '19.1173422', '73.0071581', 1, 2, 3, 10, NULL, '0', 1, '2022-12-29 12:32:02', '2022-12-29 12:32:02'),
+(43, 2, 101, 22, 2707, 'Rabale Station, Cidco Parking', 'Sector 26, Ghansoli, Navi Mumbai, Maharashtra 400701', 400701, '19.1359529', '73.0035323', 1, 3, 1, 10, NULL, '0', 1, '2022-12-29 12:32:02', '2022-12-29 12:32:02'),
+(44, 2, 101, 22, 2707, 'Airoli East, Railway Parking', 'Thane - Belapur Rd, MIDC INDL Area, Airoli, Navi Mumbai, Maharashtra 400708', 400708, '19.159675', '72.9998268', 1, 3, 1, 10, NULL, '0', 1, '2022-12-29 12:32:02', '2022-12-29 12:32:02'),
+(45, 2, 101, 22, 2707, 'Airoli West Station', 'Sector 3, Airoli, Navi Mumbai, Maharashtra 400708', 400708, '19.1595082', '72.9988372', 1, 3, 1, 10, NULL, '0', 1, '2022-12-29 12:32:02', '2022-12-29 12:32:02'),
+(46, 2, 101, 22, 2707, 'Byculla, Agripada', 'XRGG+RR2, R.B.Chandorkar Rd, New Police Line, Byculla West, Agripada, Mumbai, Maharashtra 400011', 400011, '18.9771189', '72.8270003', 1, 3, 1, 10, NULL, '0', 1, '2022-12-29 12:32:02', '2022-12-29 12:32:02'),
+(47, 2, 101, 22, 2707, 'Inox Theater, Ghatkopar East', 'Saibaba Nagar, Pant Nagar, Ghatkopar East, Mumbai, Maharashtra 400077', 400077, '19.0855398', '72.9086132', 1, 3, 1, 10, NULL, '0', 1, '2022-12-29 12:32:02', '2022-12-29 12:32:02'),
+(48, 2, 101, 22, 2707, 'Hub mall, Goregaon East', 'Service Rd, Cama Industrial Estate, Goregaon, Mumbai, Maharashtra 400063', 400063, '19.1538891', '72.8563114', 1, 2, 1, 10, NULL, '0', 1, '2022-12-29 12:32:02', '2022-12-29 12:32:02'),
+(49, 2, 101, 22, 2707, 'CR2, Inox Parking, Nariman Point', '69, Barrister Rajni Patel Marg, Nariman Point, Mumbai, Maharashtra 400021', 400021, '18.926748', '72.8221365', 1, 3, 1, 10, NULL, '0', 1, '2022-12-29 12:32:02', '2022-12-29 12:32:02'),
+(50, 2, 101, 22, 2707, 'Romell Aether, MCGM Parking ', 'Churi Wadi, Goregaon, Mumbai, Maharashtra 400063', 400063, '19.1695633', '72.8534383', 1, 3, 1, 10, NULL, '0', 1, '2022-12-29 12:32:03', '2022-12-29 12:32:03'),
+(51, 2, 101, 22, 2707, 'Topiwala Talkies, Goregaon West', 'Off, Swami Vivekananda Rd, Kakaji Nagar, Jawahar Nagar, Goregaon West, Mumbai, Maharashtra 400062', 400062, '19.1639541', '72.8475666', 1, 3, 1, 10, NULL, '0', 1, '2022-12-29 12:32:03', '2022-12-29 12:32:03'),
+(52, 2, 101, 22, 2707, 'Eaze zone, Goregaon West', 'Shop No.1123, Rustomjee Eaze Zone mall, near Inorbit mall, Malad West, Mumbai, Maharashtra 400064', 400064, '19.1741916', '72.8421052', 1, 3, 1, 10, NULL, '0', 1, '2022-12-29 12:32:03', '2022-12-29 12:32:03'),
+(53, 2, 101, 22, 2707, 'Inorbit Mall, Malad west', 'Inorbit Rd, Malad, Mindspace, Goregaon West, Mumbai, Maharashtra 400104', 400104, '19.1744553_x000D_\n', '72.8345053_x000D_\n', 1, 3, 1, 10, NULL, '0', 1, '2022-12-29 12:32:03', '2022-12-29 12:32:03'),
+(54, 2, 101, 22, 2707, 'Runwal Elegant, Lokandwala, Andheri', 'WING-A, RUNWAL ELEGANTE, Phase D, Shastri Nagar, Andheri West, Mumbai, Maharashtra 400053', 400053, '19.1409931', '72.8287135', 1, 3, 1, 10, NULL, '0', 1, '2022-12-29 12:32:03', '2022-12-29 12:32:03'),
+(55, 2, 101, 22, 2707, 'Infinity Mall, Oshiwara, Andheri ', '216, Citi Mall, Andheri Link Road, Next to PVR Cinema,, Andheri West, Mumbai, Maharashtra 400053', 400053, '19.1408307', '72.8315521', 1, 3, 1, 10, NULL, '0', 1, '2022-12-29 12:32:03', '2022-12-29 12:32:03'),
+(56, 2, 101, 22, 2707, 'Citi Mall, Link Road, Andheri', '5th Floor, Idea Business Square, Veera Desai Industrial Estate Road,, Off New Link Road, Andheri West, Mumbai, Mumbai, Maharashtra 400053', 400053, '19.1390437', '72.8318996', 1, 3, 1, 10, NULL, '0', 1, '2022-12-29 12:32:03', '2022-12-29 12:32:03'),
+(57, 2, 101, 22, 2707, 'Vile Parle East, Bigbazaar, MCGM parking', 'Municipal Market 1, Navpada, Vile Parle East, Vile Parle, Mumbai, Maharashtra 400057', 400057, '19.1003351', '72.8449311', 1, 3, 1, 10, NULL, '0', 1, '2022-12-29 12:32:03', '2022-12-29 12:32:03'),
+(58, 2, 101, 22, 2707, 'Fun Republic, Andheri', 'Industrial Area, Andheri West, Mumbai, Maharashtra 400102', 400102, '19.1345667', '72.8330867', 1, 3, 3, 10, NULL, '0', 1, '2022-12-29 12:32:03', '2022-12-29 12:32:03'),
+(59, 2, 101, 22, 2707, 'Kala Ghoda, MCGM Parking', 'Opp. 145 Kala Ghoda, Temple Bar Building, Mahatma Gandhi Road, Kala Ghoda, Fort, Mumbai, Maharashtra 400001', 400001, '18.928120204079', '72.831607244937', 1, 3, 1, 10, NULL, '0', 1, '2022-12-29 12:32:03', '2022-12-29 12:32:03'),
+(60, 2, 101, 22, 2707, 'Veera Desai Road, Shah Ind. Estate, Andheri West', 'Industrial Area, Andheri West, Mumbai, Maharashtra 400102', 400102, '19.1340326', '72.8368199', 1, 3, 1, 10, NULL, '0', 1, '2022-12-29 12:32:03', '2022-12-29 12:32:03'),
+(61, 2, 101, 22, 2707, 'Vile Parle East, Bigbazaar, MCGM parking', 'Swami Vivekananda Rd, Bandra West, Mumbai, Maharashtra 400050', 400050, '19.0568455', '72.8368775', 1, 3, 1, 10, NULL, '0', 1, '2022-12-29 12:32:03', '2022-12-29 12:32:03'),
+(62, 2, 101, 22, 2707, 'Linking Road ,Near KFC Bandra West', 'St Theresa Rd, Khar West, Mumbai, Maharashtra 400050', 400050, '19.0647214', '72.833161', 1, 3, 3, 10, NULL, '0', 1, '2022-12-29 12:32:04', '2022-12-29 12:32:04'),
+(63, 2, 101, 22, 2707, 'Versova, Andheri West', 'Versova Marg, Gharkul Society, Mudran Press Colony, Andheri West, Mumbai, Maharashtra 400061', 400061, '19.1299401', '72.823005', 1, 3, 1, 10, NULL, '0', 1, '2022-12-29 12:32:04', '2022-12-29 12:32:04'),
+(64, 2, 101, 22, 2707, 'DB Mall, Chandan Talkies,Juhu ', 'S Dnyaneshwar Marg, Sainath Nagar, MHADA Colony, Juhu, Mumbai, Maharashtra 400049', 400049, '19.1144354', '72.8271509', 1, 3, 3, 10, NULL, '0', 1, '2022-12-29 12:32:04', '2022-12-29 12:32:04'),
+(65, 2, 101, 22, 2707, 'Hill Road Junction, Bandra', 'Beaupride Apartment, Ranwar, Bandra West, Mumbai, Maharashtra 400050', 400050, '19.0552375', '72.8324218', 1, 3, 1, 10, NULL, '0', 1, '2022-12-29 12:32:04', '2022-12-29 12:32:04'),
+(66, 2, 101, 22, 2707, 'Juhu, Shivsagar', 'Juhu Tara, Juhu, Mumbai, Maharashtra 400049', 400049, '19.0984698', '72.8278899', 1, 2, 3, 10, NULL, '0', 1, '2022-12-29 12:32:04', '2022-12-29 12:32:04'),
+(67, 2, 101, 22, 2707, 'Milan Mall, Santa Cruz west', 'Milan Mall, PV Avasare Marg, MSEB Colony, Santacruz West, Mumbai, Maharashtra 400054', 400054, '19.0897166', '72.839123', 1, 3, 3, 10, NULL, '0', 1, '2022-12-29 12:32:04', '2022-12-29 12:32:04'),
+(68, 2, 101, 22, 2707, 'Utopia Star Bazar,MCGM Parking', 'Kanti Park, Borivali West, Mumbai, Maharashtra 400092', 400092, '19.2211891', '72.8378341', 1, 3, 1, 10, NULL, '0', 1, '2022-12-29 12:32:04', '2022-12-29 12:32:04'),
+(69, 2, 101, 22, 2707, 'Vasanta Oasis, Marol, Andheri East', 'Makwana Rd, Marol, Andheri East, Mumbai, Maharashtra 400059', 400059, '19.115793', '72.8835403', 1, 3, 1, 10, NULL, '0', 1, '2022-12-29 12:32:04', '2022-12-29 12:32:04'),
+(70, 2, 101, 22, 2707, 'R City Mall, Ghatkopar', 'President Tawar, Ghatkopar, Vikhroli West, Mumbai, Maharashtra 400079', 400079, '19.0988667', '72.9171933', 1, 2, 3, 10, NULL, '0', 1, '2022-12-29 12:32:05', '2022-12-29 12:32:05'),
+(71, 2, 101, 22, 2707, 'Mumbai Central Railway Station East Parking', 'Mumbai Central, Mumbai, Maharashtra 400008', 400008, '18.9714961', '72.8199727', 1, 3, 1, 10, NULL, '0', 1, '2022-12-29 12:32:05', '2022-12-29 12:32:05'),
+(72, 2, 101, 22, 2707, 'Juinagar Station, Cidco Parking', 'Juinagar Station Rd, Sector 10, Sanpada, Navi Mumbai, Maharashtra 400705', 400705, '19.0571457', '73.0168375', 1, 3, 1, 10, NULL, '0', 1, '2022-12-29 12:32:05', '2022-12-29 12:32:05'),
+(73, 2, 101, 22, 2707, 'Boomerang ,Chandivali Powai', 'Ram Temple, Chandivali Farm Rd, Yadav Nagar, Chandivali, Powai, Mumbai, Maharashtra 400072', 400072, '19.1140396', '72.8919785', 1, 3, 1, 10, NULL, '0', 1, '2022-12-29 12:32:05', '2022-12-29 12:32:05'),
+(74, 2, 101, 22, 2707, 'Bay View Hotel, Gorai Khadi', '6RMF+9WQ, Gorai 3, Borivali West, Mumbai, Maharashtra 400091', 400091, '19.2335188', '72.8248115', 1, 3, 1, 10, NULL, '0', 1, '2022-12-29 12:32:05', '2022-12-29 12:32:05'),
+(75, 2, 101, 22, 2707, 'Maxus Mall, Gorai', '1A, Gorai Rd, CHS, Samabhav Society, Gorai 1, Borivali West, Mumbai, Maharashtra 400092', 400092, '19.2323679', '72.8286667', 1, 3, 3, 10, NULL, '0', 1, '2022-12-29 12:32:05', '2022-12-29 12:32:05'),
+(76, 2, 101, 22, 2707, 'Shree Siddhivinayak Mandir,Prabhadevi, Dadar', '392, Swatantrya Veer Sawarkar Marg, S K Bole Marg, Prabhadevi, Dadar West, Mumbai, Mah?r?shtra 400025', 400025, '19.01696232', '72.83072247', 1, 3, 1, 10, NULL, '0', 1, '2022-12-29 12:32:05', '2022-12-29 12:32:05'),
+(77, 2, 101, 22, 2707, 'Celestial Spaces, Parel', 'Celestia Spaces Sewri, Cotton Green Zakaria B, Abhyudaya Nagar, Parel, Mumbai, Maharashtra 400033', 400033, '18.99329068', '72.84769479', 1, 2, 3, 10, NULL, '0', 1, '2022-12-29 12:32:05', '2022-12-29 12:32:05'),
+(78, 2, 101, 22, 2707, 'Ravindra Natya Mandir, Prabhadevi', '2R8J+47C, Ground Floor, PL Deshpande Auditorium, Sayani Rd, near Shree Siddhivinayak Ganpati Temple, Prabhadevi, Mumbai, Maharashtra 400025', 400025, '19.01545042', '72.83097496', 1, 3, 1, 10, NULL, '0', 1, '2022-12-29 12:32:05', '2022-12-29 12:32:05'),
+(79, 2, 101, 22, 2707, 'Jehangir Art Gallery, Kala Ghoda, Fort', 'Mahatma Gandhi Road, Kala Ghoda, Fort, Mumbai, Maharashtra 400001', 400001, '18.92746933', '72.83169901', 1, 3, 1, 10, NULL, '0', 1, '2022-12-29 12:32:05', '2022-12-29 12:32:05'),
+(80, 2, 101, 22, 2707, 'M/W Ward, 21/22 RD, Chembur', '70-82, Narayan Gajanan Acharya Marg, Chembur West, Chembur Gaothan, Chembur, Mumbai, Maharashtra 400071', 400071, '19.06176265', '72.90161356', 1, 3, 1, 10, NULL, '0', 1, '2022-12-29 12:32:06', '2022-12-29 12:32:06'),
+(81, 2, 101, 22, 2707, 'Bombay High Court', 'The Registrar General, Bombay High Court, Fort, Mumbai, Maharashtra 400032', 400032, '18.93128918', '72.83072948', 1, 3, 1, 10, NULL, '0', 1, '2022-12-29 12:32:06', '2022-12-29 12:32:06'),
+(82, 2, 101, 22, 2707, 'HSBC Parking, Mantralaya, Fort, Mumbai', 'WRJJ+JF9, Mantralaya, Fort, Mumbai, Maharashtra 400001', 400001, '18.93154639', '72.8312562', 1, 3, 3, 10, NULL, '0', 1, '2022-12-29 12:32:06', '2022-12-29 12:32:06'),
+(83, 2, 101, 22, 2707, 'Behind Thomas Cook Building, Azad Maidan, Fort, Mumbai', 'Fort Bye Lanes 1 and 2, Azad Maidan, Fort, Mumbai, Maharashtra 400001', 400001, '18.93446906', '72.83194968', 1, 3, 1, 10, NULL, '0', 1, '2022-12-29 12:32:06', '2022-12-29 12:32:06'),
+(84, 2, 101, 22, 2707, 'Cafe Shaheen, Fort, Mumbai', 'Fine Mansion Building, Shop No. 203/205, Dr Dadabhai Naoroji Rd, Fort, Mumbai, Maharashtra 400001', 400001, '18.93706436', '72.83380784', 1, 3, 1, 10, NULL, '0', 1, '2022-12-29 12:32:06', '2022-12-29 12:32:06'),
+(85, 2, 101, 22, 2707, 'Trident Hotel, MCGM Parking, BKC,  Bandra East', 'C 56, G Block BKC, Bandra Kurla Complex, Bandra East, Mumbai, Maharashtra 400098', 400098, '19.06662229', '72.86743996', 1, 3, 1, 10, NULL, '0', 1, '2022-12-29 12:32:06', '2022-12-29 12:32:06'),
+(86, 2, 101, 22, 2707, 'Koram Mall, Thane West', 'Eastern Express Hwy, Samata Nagar, Thane West, Thane, Maharashtra 400606', 400606, '19.20282783', '72.96537352', 1, 3, 1, 10, NULL, '0', 1, '2022-12-29 12:32:06', '2022-12-29 12:32:06'),
+(87, 2, 101, 22, 2707, 'R Mall, Mulund West', 'Lal Bahadur Shastri Rd, Kamgar Colony, Mulund West, Mumbai, Maharashtra 400080', 400080, '19.18404861', '72.95134241', 1, 3, 1, 10, NULL, '0', 1, '2022-12-29 12:32:06', '2022-12-29 12:32:06'),
+(88, 2, 101, 22, 2707, 'R Mall, Thane west', 'Ghodbunder Rd, opp. Lokim Company, Dokali Pada, Dhokali, Thane West, Thane, Maharashtra 400607', 400607, '19.23061159', '72.97737097', 1, 3, 1, 10, NULL, '0', 1, '2022-12-29 12:32:07', '2022-12-29 12:32:07'),
+(89, 2, 101, 22, 2707, 'Viviana Mall, Thane West', 'Eastern Express Hwy, Laxmi Nagar, Thane West, Thane, Maharashtra 400606', 400606, '19.2088789', '72.9713369', 1, 3, 1, 10, NULL, '0', 1, '2022-12-29 12:32:07', '2022-12-29 12:32:07'),
+(90, 2, 101, 22, 2707, 'BDS Services Private Limited, Kanjurmarg West', '1-B (12), Ground Floor Saroagi Estate, Lal Bahadur Shastri Rd, Kanjurmarg West, Mumbai, Maharashtra 400078', 400078, '19.12872767691', '72.925628369312', 1, 2, 0, 10, NULL, '0', 1, '2022-12-29 12:32:07', '2022-12-29 12:32:07'),
+(91, 2, 101, 22, 2707, 'Kohinoor', 'Ambedkar Nagar, Kanjurmarg West, Bhandup West, Mumbai, Maharashtra 400078', 400078, '19.1310004', '72.9268315', 1, 2, 3, 10, NULL, '0', 1, '2022-12-29 12:32:07', '2022-12-29 12:32:07'),
+(92, 2, 101, 22, 2707, 'Central Railways Pay & Park-Kanjur Marg', 'Kanjur Marg, Lal Bahadur Shastri Rd, Kanjurmarg West, Bhandup West, Mumbai, Maharashtra 400078', 400078, '19.13069', '72.92879', 1, 3, 3, 10, NULL, '0', 1, '2022-12-29 12:32:07', '2022-12-29 12:32:07'),
+(93, 2, 101, 22, 2707, 'Indiabulls Kanjurmarg West', 'Ambedkar Nagar, Kanjurmarg West, Bhandup West, Mumbai, Maharashtra 400078', 400078, '19.130992', '72.9268427', 1, 2, 3, 10, NULL, '0', 1, '2022-12-29 12:32:07', '2022-12-29 12:32:07'),
+(94, 2, 101, 22, 2707, 'Vashi Station, Cidco Parking', '3X8W+6QP Navi Mumbai, Maharashtra', 400703, '19.0655884', '72.9969432', 1, 3, 3, 10, NULL, '0', 1, '2022-12-29 12:32:07', '2022-12-29 12:32:07'),
+(95, 2, 101, 22, 2707, 'Open Parking Powai, Near Naivaidyam (Food Truck)', 'Lake Blvd Rd, Hiranandani Gardens, MHADA Colony 19, Powai, Mumbai, Maharashtra 400076', 400076, '19.1199475', '72.9074964', 1, 3, 3, 10, NULL, '0', 1, '2022-12-29 12:32:08', '2022-12-29 12:32:08'),
+(96, 2, 101, 22, 2707, 'Opp. Haiko Hiranandani Powai', 'Main St, Hiranandani Gardens, Panchkutir Ganesh Nagar, Powai, Mumbai, Maharashtra 400076', 400076, '19.117789', '72.911317', 1, 3, 3, 10, NULL, '0', 1, '2022-12-29 12:32:08', '2022-12-29 12:32:08'),
+(97, 2, 101, 22, 2707, 'Powai Plaza Powai IIT', 'Powai Plaza, Central Ave, Opp. Pizza Hut, Hiranandani Gardens, Sainath Nagar, Powai, Mumbai, Maharashtra 400076', 400076, '19.1237327', '72.912981', 1, 3, 3, 10, NULL, '0', 1, '2022-12-29 12:32:08', '2022-12-29 12:32:08'),
+(98, 2, 101, 22, 2707, 'Jalaram Parking', 'Sevaram Lalwani Rd, Vidya Vihar, Mulund West, Mumbai, Maharashtra 400080', 400080, '19.1730927', '72.9545722', 1, 3, 3, 10, NULL, '0', 1, '2022-12-29 12:32:08', '2022-12-29 12:32:08'),
+(99, 2, 101, 22, 2707, 'Ghansoli Station, Cidco parking', '4284+WVR, Reliance Corporate Park, MIDC Industrial Area, Ghansoli, Navi Mumbai, Maharashtra 400701', 400701, '19.1173422', '73.0071581', 1, 3, 3, 10, NULL, '0', 1, '2022-12-29 12:32:08', '2022-12-29 12:32:08'),
+(100, 2, 101, 22, 2707, 'Pay & Park, Metro Bridge', 'Pedestrian Opas, Saibaba Nagar, Pant Nagar, Ghatkopar East, Mumbai, Maharashtra 400077', 400077, '19.085003676592', '72.90803117', 1, 3, 3, 10, NULL, '0', 1, '2022-12-29 12:32:09', '2022-12-29 12:32:09'),
+(101, 2, 101, 22, 2707, 'Metro Bridge End Shival Nagar', 'Shival Nagar, Saibaba Nagar, Pant Nagar, Ghatkopar East, Mumbai, Maharashtra 400077', 400077, '19.0854166', '72.9092516', 1, 3, 3, 10, NULL, '0', 1, '2022-12-29 12:32:09', '2022-12-29 12:32:09'),
+(102, 2, 101, 22, 2707, 'Metro Bridge End Jawahar Nagar', 'Ibexis Ghatkopar Office, 3rd Floor IInd level, Neelyog Square, Plot 273, Patel Chowk, Pedestrian Opas, Saibaba Nagar, Pant Nagar, Ghatkopar East, Mumbai, Maharashtra 400077', 400077, '19.0852398', '72.9086288', 1, 3, 3, 10, NULL, '0', 1, '2022-12-29 12:32:09', '2022-12-29 12:32:09'),
+(103, 2, 101, 22, 2707, 'Anandnagar MCGM parking Dahisar East', 'Meghdoot Building, CS Rd, Anand Nagar, Dahisar East, Mira Bhayandar, Maharashtra 400068', 400068, '19.2567938', '72.8648953', 1, 3, 3, 10, NULL, '0', 1, '2022-12-29 12:32:09', '2022-12-29 12:32:09'),
+(104, 2, 101, 22, 2707, 'Citi Center, Goregaon West', 'EKTA SOCIET, G-1, Divyapuri CHS, Shri Nagar, Goregaon West, Mumbai, Maharashtra 400086', 400086, '19.1622158', '72.8453121', 1, 3, 3, 10, NULL, '0', 1, '2022-12-29 12:32:09', '2022-12-29 12:32:09'),
+(105, 2, 101, 22, 2707, 'Citi Mall, Link Road. Andheri West', 'Gopi Chambers, KL Walawalkar Marg, Veera Desai Industrial Estate, Andheri West, Mumbai, Maharashtra 400102', 400102, '19.1392857', '72.8319286', 1, 3, 3, 10, NULL, '0', 1, '2022-12-29 12:32:10', '2022-12-29 12:32:10'),
+(106, 2, 101, 22, 2707, 'Star bazaar, Lonk  road, andheri West', 'Clue Hunt Andheri, KL Walawalkar Marg, Sahayog Nagar, Bhudargarh Colony, Andheri West, Mumbai, Maharashtra 400102', 400102, '19.1308788', '72.8310956', 1, 3, 3, 10, NULL, '0', 1, '2022-12-29 12:32:10', '2022-12-29 12:32:10'),
+(107, 2, 101, 22, 2707, 'Juhu, shivsagar', 'Juhu Tara, Juhu, Mumbai, Maharashtra 400049', 400049, '19.0984698', '72.8278899', 1, 3, 3, 10, NULL, '0', 1, '2022-12-29 12:32:10', '2022-12-29 12:32:10'),
+(108, 2, 101, 22, 2707, 'R city mall, Ghatkopar', 'President Tawar, Ghatkopar, Vikhroli West, Mumbai, Maharashtra 400079', 400079, '19.0988667', '72.9171933', 1, 3, 3, 10, NULL, '0', 1, '2022-12-29 12:32:10', '2022-12-29 12:32:10'),
+(109, 2, 101, 22, 2707, 'Water kingdom Parking Gorai', 'Sangeetas vada pav center, opp. Essel world Amusement Park, Essel world Amusement Park, Gorai, Mumbai, Maharashtra 400092', 400092, '19.2397666', '72.8020151', 1, 3, 3, 10, NULL, '0', 1, '2022-12-29 12:32:10', '2022-12-29 12:32:10'),
+(110, 2, 101, 22, 2707, 'Kohinoor mall vidyavihar west', '70-64, Premier Road, Amar Nagar, Nav Pada, Kurla West, Mumbai, Maharashtra 400070', 400070, '19.0824552', '72.885626', 1, 3, 3, 10, NULL, '0', 1, '2022-12-29 12:32:11', '2022-12-29 12:32:11'),
+(111, 2, 101, 22, 2707, 'Nathani Heights, Mumbai Central', 'Nathani Heights, A Wing, Ground Floor, Shop No. 7, 8 & 9, Lamington Rd, Mumbai Central, Mumbai, Maharashtra 400008', 400008, '18.968813', '72.8199243', 1, 3, 3, 10, NULL, '0', 1, '2022-12-29 12:32:11', '2022-12-29 12:32:11'),
+(112, 2, 101, 22, 2707, 'Celestial Spaces', 'Celestia Spaces Sewri, Cotton Green Zakaria B, Abhyudaya Nagar, Parel, Mumbai, Maharashtra 400033', 400033, '18.99329068', '72.84769479', 1, 3, 3, 10, NULL, '0', 1, '2022-12-29 12:32:11', '2022-12-29 12:32:11'),
+(113, 2, 101, 22, 2707, 'Carnival cinemas, Wadala', 'Carnival Cinemas Imax, Anik Wadala Link Rd, Bhakti Park, Wadala, Mumbai, Maharashtra 400037', 400037, '19.031310175824', '72.88076556', 1, 3, 3, 10, NULL, '0', 1, '2022-12-29 12:32:11', '2022-12-29 12:32:11'),
+(114, 2, 101, 22, 2707, 'Lodha primero, BMC parking, chinchpokli', 'NM Joshi Marg, Shastri Nagar, Adarsh Nagar, Mahalakshmi, Mumbai, Maharashtra 400011', 400011, '18.987456597134', '72.82945293', 1, 3, 3, 10, NULL, '0', 1, '2022-12-29 12:32:11', '2022-12-29 12:32:11'),
+(115, 2, 101, 22, 2707, 'Institute Of Good Literature', 'Juinagar Station Rd, Sector 10, Sanpada, Navi Mumbai, Maharashtra 400705', 400705, '19.05701', '73.01636', 1, 7, 3, 10, NULL, '0', 1, '2022-12-29 12:32:11', '2022-12-29 12:32:11'),
+(116, 2, 101, 22, 2707, 'NSE BKC', 'G Block BKC, Bandra Kurla Complex, Bandra East, Mumbai, Maharashtra 400051', 400051, '19.059217550343', '72.86276859697', 5, 1, 1, 10, NULL, '0', 1, '2022-12-29 12:32:11', '2022-12-29 12:32:11'),
+(117, 2, 101, 22, 2707, 'Geetanjali Art Gallery', 'Parking lot, Sector 3, Sanpada, Navi Mumbai, Maharashtra 400705', 400705, '19.06521', '73.01072', 1, 3, 1, 10, NULL, '0', 1, '2022-12-29 12:32:12', '2022-12-29 12:32:12'),
+(118, 2, 101, 22, 2707, 'Old GIM Building', 'Reilway Station, Shop G-195 Sector 30a Plot 47 Hawre Fantasia Business Park, opp. Vashi, Navi Mumbai, Maharashtra 400703', 400703, '19.06491', '73.00202', 1, 7, 3, 10, NULL, '0', 1, '2022-12-29 12:32:12', '2022-12-29 12:32:12'),
+(119, 2, 101, 22, 2707, 'Inorbit Mall Vashi', 'Real Tech Park, 39/2, Bhagwan Mahaveer Rd, Sector 30A, Vashi, Navi Mumbai, Maharashtra 400703', 400703, '19.06613', '72.9993', 1, 7, 3, 10, NULL, '0', 1, '2022-12-29 12:32:12', '2022-12-29 12:32:12'),
+(120, 2, 101, 22, 2707, 'Devi Prasad Hotel, Vashi-turbhe Road, Vashi', '7/8, A.P.M.C, Truck Terminal, Vashi-Turbhe Rd, opp. Onion & Potato market, Sector 19, Vashi, Navi Mumbai, Maharashtra 400705', 400705, '19.07423', '73.00463', 1, 7, 3, 10, NULL, '0', 1, '2022-12-29 12:32:12', '2022-12-29 12:32:12'),
+(121, 2, 101, 22, 2707, 'Inorbit Bypass Road, Vashi', 'Inorbit Bypass, Sector 30A, Vashi, Navi Mumbai, Maharashtra 400703', 400703, '19.06556', '72.99986', 1, 7, 3, 10, NULL, '0', 1, '2022-12-29 12:32:12', '2022-12-29 12:32:12'),
+(122, 2, 101, 22, 2707, 'Airport, Vashi, Navi Mumbai', 'Parking lot, Swami Pranabananda Marg, Sector 30, Vashi, Navi Mumbai, Maharashtra 400703', 400703, '19.06476', '72.99718', 1, 7, 3, 10, NULL, '0', 1, '2022-12-29 12:32:12', '2022-12-29 12:32:12'),
+(123, 2, 101, 22, 2707, 'Bhagwan Mahaverr Road, Vashi', 'Bhagwan Mahaveer Rd, Sector 30, Vashi, Navi Mumbai, Maharashtra 400703', 400703, '19.06598', '72.99693', 1, 7, 3, 10, NULL, '0', 1, '2022-12-29 12:32:12', '2022-12-29 12:32:12'),
+(124, 2, 101, 22, 2707, 'Swami Pranavanandji Marg', 'Pranavanandji Marg, Sector 30, Vashi, Navi Mumbai, Maharashtra 400703', 400703, '19.05701', '73.01636', 1, 2, 1, 10, NULL, '0', 1, '2022-12-29 12:32:12', '2022-12-29 12:32:12'),
+(125, 2, 101, 22, 2707, 'Sector-11, Juinagar, Sanpada', 'Sector 10, Sanpada, Navi Mumbai, Maharashtra 400705', 400705, '19.05738', '73.01756', 1, 2, 1, 10, NULL, '0', 1, '2022-12-29 12:32:13', '2022-12-29 12:32:13'),
+(126, 2, 101, 22, 2707, 'Royal Orchid Central Hotel, Vashi', '42, Truck Terminal St, Sector-16, Vashi, Navi Mumbai, Maharashtra 400703', 400703, '19.07732', '73.00381', 1, 7, 3, 10, NULL, '0', 1, '2022-12-29 12:32:13', '2022-12-29 12:32:13'),
+(127, 2, 101, 22, 2707, 'Central Mall, Vashi', '3X7W+R89, Pranavanandji Marg, Sector 30, Vashi, Navi Mumbai, Maharashtra 400703', 400703, '19.06454', '72.99587', 1, 7, 3, 10, NULL, '0', 1, '2022-12-29 12:32:13', '2022-12-29 12:32:13'),
+(128, 2, 101, 22, 2707, 'Inox Commodity Exchange Office, Vashi', 'MAFCO Rd, Sector 19A, Vashi, Navi Mumbai, Maharashtra 400703', 400703, '19.0794', '73.01016', 1, 3, 3, 10, NULL, '0', 1, '2022-12-29 12:32:14', '2022-12-29 12:32:14'),
+(129, 2, 101, 22, 2707, 'Ellora Park, Juinagar', 'Gaondevi Marg, Sector 11, Juinagar West, Navi Mumbai, Maharashtra 400705', 400705, '19.05454', '73.01652', 1, 7, 3, 10, NULL, '0', 1, '2022-12-29 12:32:15', '2022-12-29 12:32:15'),
+(130, 2, 101, 22, 2707, 'Goan Wine House', 'Cidco business centre, cidco exhibition and convention centre, Sector 30A, Sector 30, Vashi, Navi Mumbai, Maharashtra 400703', 400703, '19.06715', '72.99506', 1, 7, 3, 10, NULL, '0', 1, '2022-12-29 12:32:15', '2022-12-29 12:32:15'),
+(131, 2, 101, 22, 2707, 'Vishnudas Bhave Natyagruha, Vashi', 'MTNL VASHI OFFICE, Vashi Kopar Khairane Rd, Juhu Nagar, Sector-16, Vashi, Navi Mumbai, Maharashtra 400703', 400703, '19.07541', '72.99828', 1, 7, 3, 10, NULL, '0', 1, '2022-12-29 12:32:15', '2022-12-29 12:32:15'),
+(132, 2, 101, 22, 2707, 'Ganesh Mandir Marg', 'Ganesh Mandir Marg, Sector 2, Vashi, Navi Mumbai, Maharashtra 400703', 400703, '19.07343', '72.9964', 1, 7, 3, 10, NULL, '0', 1, '2022-12-29 12:32:15', '2022-12-29 12:32:15'),
+(133, 2, 101, 22, 2707, 'Health Mart', 'Cidco business centre, cidco exhibition and convention centre, Sector 30A, Sector 30, Vashi, Navi Mumbai, Maharashtra 400703', 400703, '19.06716', '72.99508', 1, 2, 1, 10, NULL, '0', 1, '2022-12-29 12:32:15', '2022-12-29 12:32:15'),
+(134, 2, 101, 22, 2707, 'Navi Mumbai Sports Association, Vashi', 'Sports Association, Sports Association Park, Sector 1A, Vashi, Navi Mumbai, Maharashtra 400703', 400703, '19.0719', '72.99216', 1, 7, 3, 10, NULL, '0', 1, '2022-12-29 12:32:15', '2022-12-29 12:32:15'),
+(135, 2, 101, 22, 2707, 'Palm Beach Galleria, Vashi', 'Palm Beach Galleria Mall, Phase 2, Sector 19D, Vashi, Navi Mumbai, Maharashtra 400703', 400703, '19.08503', '73.00786', 1, 2, 1, 10, NULL, '0', 1, '2022-12-29 12:32:15', '2022-12-29 12:32:15'),
+(136, 2, 101, 22, 2707, 'Vishweshraiya Bhawan', 'Sector 10/12A,Mini Sea Shore Road, Vashi, Navi Mumbai, Maharashtra 400703', 400703, '19.08511', '72.99737', 1, 7, 3, 10, NULL, '0', 1, '2022-12-29 12:32:16', '2022-12-29 12:32:16'),
+(137, 2, 101, 22, 2707, 'Fortis Hiranandani Hospital, Vashi', 'Juhu Nagar, Sector 10A, Vashi, Navi Mumbai, Maharashtra 400703', 400703, '19.08356', '72.99623', 1, 7, 3, 10, NULL, '0', 1, '2022-12-29 12:32:16', '2022-12-29 12:32:16'),
+(138, 2, 101, 22, 2707, 'Shushrusha Hospital, Nerul', 'Plot No 22/A, Phase III, Palm Beach Road, Sector 6, Nerul West, Navi Mumabai, Maharashtra 400706', 400706, '19.0432', '73.00971', 1, 7, 3, 10, NULL, '0', 1, '2022-12-29 12:32:16', '2022-12-29 12:32:16'),
+(139, 2, 101, 22, 2707, 'Jagadguru Chandrasekhara Saraswathi Marg, Navi Mumbai', '22FQ+6J8 City And Industrial Development Corporation Of Maharashtra, Sakaram Patil Marg, Sector 10, CBD Belapur, Navi Mumbai, Maharashtra 400614', 400614, '19.02304', '73.03905', 1, 7, 3, 10, NULL, '0', 1, '2022-12-29 12:32:16', '2022-12-29 12:32:16'),
+(140, 2, 101, 22, 2707, 'Nerul Station Parking, Nerul', 'Parking, Nerul East, Sector 20, Nerul, Navi Mumbai, Maharashtra 400706', 400706, '19.03256', '73.01737', 1, 3, 1, 10, NULL, '0', 1, '2022-12-29 12:32:16', '2022-12-29 12:32:16'),
+(141, 2, 101, 22, 2707, 'Nerul Railway Station', 'Nerul East, Sector 21, Nerul, Navi Mumbai, Maharashtra 400706', 400706, '19.03243', '73.01863', 1, 3, 1, 10, NULL, '0', 1, '2022-12-29 12:32:16', '2022-12-29 12:32:16'),
+(142, 2, 101, 22, 2707, 'Nerul Station West, Nerul', 'Shop No.1 Plot No.1 Nerul Station, Navi Mumbai, Maharashtra 400705', 400705, '19.03291', '73.01732', 1, 7, 3, 10, NULL, '0', 1, '2022-12-29 12:32:16', '2022-12-29 12:32:16'),
+(143, 2, 101, 22, 2707, 'Maasaheb Meenatai Thakery Hospital, Nerul', 'Maasaheb Meenatai Thackeray Hospital, Nerul East, Sector 15, Nerul, Navi Mumbai, Maharashtra 400706', 400706, '19.03394', '73.02086', 1, 7, 3, 10, NULL, '0', 1, '2022-12-29 12:32:17', '2022-12-29 12:32:17'),
+(144, 2, 101, 22, 2707, 'Home n Lifestyle,_x000D_\nMata Amritanandamayi Marg,Nerul', '22J8+8PV, Nerul East, Sector 22, Nerul, Navi Mumbai, Maharashtra 400706', 400706, '19.03089', '73.01673', 1, 7, 3, 10, NULL, '0', 1, '2022-12-29 12:32:17', '2022-12-29 12:32:17'),
+(145, 2, 101, 22, 2707, 'Nerul fish market', 'Vehicle Parking, Nerul East, Sector 20, Nerul, Navi Mumbai, Maharashtra 400706', 400706, '19.03504', '73.01753', 1, 2, 3, 10, NULL, '0', 1, '2022-12-29 12:32:17', '2022-12-29 12:32:17'),
+(146, 2, 101, 22, 2707, 'Nerul Marg', 'Parking, Nerul East, Sector 20, Nerul, Navi Mumbai, Maharashtra 400706', 400706, '19.03257', '73.01735', 1, 2, 1, 10, NULL, '0', 1, '2022-12-29 12:32:17', '2022-12-29 12:32:17'),
+(147, 2, 101, 22, 2707, 'Terna Hospital, Nerul', 'Nerul East, Sector 22, Nerul, Navi Mumbai, Maharashtra 400706', 400706, '19.03169', '73.01621', 1, 3, 3, 10, NULL, '0', 1, '2022-12-29 12:32:17', '2022-12-29 12:32:17'),
+(148, 2, 101, 22, 2707, 'Koparkhairne Station Road', 'plot no 6, Sai Sadguru apartments, chals, Sector 9N, CBD Belapur, Navi Mumbai, Maharashtra 400614', 400614, '19.1041', '73.00975', 1, 7, 3, 10, NULL, '0', 1, '2022-12-29 12:32:17', '2022-12-29 12:32:17'),
+(149, 2, 101, 22, 2707, 'Mathadi Hospital Trust, Koparkhairne', 'Gyan Vikas Road, Sector 3, Kopar Khairane, Navi Mumbai, Maharashtra 400709', 400709, '19.10515', '73.00451', 1, 7, 3, 10, NULL, '0', 1, '2022-12-29 12:32:17', '2022-12-29 12:32:17'),
+(150, 2, 101, 22, 2707, 'Mgm Hospital, Cbd Belapur', 'Atmashanti Society, Vashi, Navi Mumbai, Maharashtra 400703', 400703, '19.07286', '72.99375', 1, 7, 3, 10, NULL, '0', 1, '2022-12-29 12:32:17', '2022-12-29 12:32:17'),
+(151, 2, 101, 22, 2707, 'Rajiv Gandhi Stadium, Cbd Belapur', 'Sector 3, CBD Belapur, Navi Mumbai, Maharashtra 400614', 400614, '19.02721', '73.04298', 1, 7, 3, 10, NULL, '0', 1, '2022-12-29 12:32:17', '2022-12-29 12:32:17'),
+(152, 2, 101, 22, 2707, 'Prabhat Shopping Center, Cbd Belapur', 'Prabhat Center, Sakaram Patil Marg, Sector 1A, CBD Belapur, Navi Mumbai, Maharashtra 400614', 400614, '19.02502', '73.04089', 1, 7, 3, 10, NULL, '0', 1, '2022-12-29 12:32:18', '2022-12-29 12:32:18'),
+(153, 2, 101, 22, 2707, 'Inox', 'Sector 29, CBD Belapur, Navi Mumbai, Maharashtra 400614', 400614, '19.02124', '73.03831', 1, 3, 1, 10, NULL, '0', 1, '2022-12-29 12:32:18', '2022-12-29 12:32:18'),
+(154, 2, 101, 22, 2707, 'Bhilbag Belpur Bhavan, Cbd Belapur', 'Konkan Railway Corporation, Sector 11, CBD Belapur, Navi Mumbai, Maharashtra 400614', 400614, '19.01963', '73.04226', 1, 2, 1, 10, NULL, '0', 1, '2022-12-29 12:32:18', '2022-12-29 12:32:18'),
+(155, 2, 101, 22, 2707, 'Cbd Belapur Cidco Parking, Belapur', 'Sector 11, CBD Belapur, Navi Mumbai, Maharashtra 400614', 400614, '19.0179', '73.03892', 1, 3, 1, 10, NULL, '0', 1, '2022-12-29 12:32:18', '2022-12-29 12:32:18'),
+(156, 2, 101, 22, 2707, 'CBD Belapur, Navi Mumbai', 'CBD Belapur, Navi Mumbai, Maharashtra 400614', 400614, '19.01937', '73.0442', 1, 7, 3, 10, NULL, '0', 1, '2022-12-29 12:32:18', '2022-12-29 12:32:18'),
+(157, 2, 101, 22, 2707, 'Sharda Terrace, Cbd Belapur, Navi Mumbai', 'Sharda Terraces, Palm Beach Rd, Sector 11, CBD Belapur, Navi Mumbai, Maharashtra 400614', 400614, '19.01471', '73.03886', 1, 7, 3, 10, NULL, '0', 1, '2022-12-29 12:32:18', '2022-12-29 12:32:18'),
+(158, 2, 101, 22, 2707, 'Sector -15, Palm Beach Road, Cbd Belapur', '15, Plot no, B1/802, Lakhani\'s Suncoast CHS , Sector, 27, Sector 15, CBD Belapur, Navi Mumbai, Maharashtra 400614', 400614, '19.00899', '73.03288', 1, 2, 1, 10, NULL, '0', 1, '2022-12-29 12:32:18', '2022-12-29 12:32:18'),
+(159, 2, 101, 22, 2707, 'Ymt Hospital, Kharghar', '23J7+929, Sector 4, Kharghar, Navi Mumbai, Maharashtra 410210', 410210, '19.03136', '73.06252', 1, 7, 3, 10, NULL, '0', 1, '2022-12-29 12:32:18', '2022-12-29 12:32:18'),
+(160, 2, 101, 22, 2707, 'Hiranandani Crystal Plaza, Kharghar', 'Hiranandani Crystal Plaza, 18, Hiranandani Service Rd, Sector 7, Kharghar, Navi Mumbai, Maharashtra 410210', 410210, '19.03351', '73.06554', 1, 7, 3, 10, NULL, '0', 1, '2022-12-29 12:32:18', '2022-12-29 12:32:18'),
+(161, 2, 101, 22, 2707, 'Mansarovar Railway Station', 'Shop No 3,at TEMBHODE, POST KALAMBOLI, TAL, opposite SAI AANGAN CHS, New Panvel, Panvel, Maharashtra 410206', 410206, '19.01832', '73.08843', 1, 7, 3, 10, NULL, '0', 1, '2022-12-29 12:32:18', '2022-12-29 12:32:18'),
+(162, 2, 101, 22, 2707, 'Sector-28, Khandeshwar Station Road, Khandeshwar', 'Khandeshwar Rd, Railway Station, Khandeshhwar, Panvel, Navi Mumbai, Maharashtra 410206', 410206, '19.00822', '73.09392', 1, 7, 3, 10, NULL, '0', 1, '2022-12-29 12:32:18', '2022-12-29 12:32:18'),
+(163, 2, 101, 22, 2707, 'Mantra Hotel, Panvel', 'Bhoomi LandMark, Bhoomi Landmark, Sector 17, Khanda Colony, Panvel, Navi Mumbai, Maharashtra 410206', 410206, '19.00585', '73.10701', 1, 7, 3, 10, NULL, '0', 1, '2022-12-29 12:32:18', '2022-12-29 12:32:18'),
+(164, 2, 101, 22, 2707, 'Javeri\'s', 'Sector 5, New Panvel East, Panvel, Navi Mumbai, Maharashtra 410206', 410206, '19.00452', '73.11664', 1, 7, 3, 10, NULL, '0', 1, '2022-12-29 12:32:19', '2022-12-29 12:32:19'),
+(165, 2, 101, 22, 2707, 'Nathany Steel Shop', 'HOC Colony, Panvel, Navi Mumbai, Maharashtra 410206', 410206, '18.99755', '73.10977', 1, 7, 3, 10, NULL, '0', 1, '2022-12-29 12:32:19', '2022-12-29 12:32:19'),
+(166, 2, 101, 22, 2707, 'Miraj Cinema, Panvel', 'Sector 11, New Panvel East, Panvel, Navi Mumbai, Maharashtra 410206', 410206, '18.99883', '73.12292', 1, 7, 3, 10, NULL, '0', 1, '2022-12-29 12:32:19', '2022-12-29 12:32:19'),
+(167, 2, 101, 22, 2707, 'Gandhi Hospital, Panvel', 'Bramhakumari Rd, MCCH Society, Panvel, Navi Mumbai, Maharashtra 410206', 410206, '18.98705', '73.1153', 1, 7, 3, 10, NULL, '0', 1, '2022-12-29 12:32:19', '2022-12-29 12:32:19'),
+(168, 2, 101, 22, 2707, 'Old Panvel Railway Station Parking, Panvel', 'Panvel Railway Parking Lot, Forest Colony, Panvel, Navi Mumbai, Maharashtra 410206', 410206, '18.98912', '73.12067', 1, 3, 1, 10, NULL, '0', 1, '2022-12-29 12:32:19', '2022-12-29 12:32:19'),
+(169, 2, 101, 22, 2707, 'Mahada Parking, Mahul Gaon', 'Shop No.30, Mhada Colony Rd, Vasi Naka, MMRDA Colony, Chembur, Mumbai, Maharashtra 400074', 400074, '19.03119243', '72.90275887', 1, 3, 3, 10, NULL, '0', 1, '2022-12-29 12:32:19', '2022-12-29 12:32:19'),
+(170, 2, 101, 22, 2707, 'BARC, Anukshakti Nagar, Chembur', 'New Mandala Rd, Anushakti Nagar, Mumbai, Maharashtra 400094', 400094, '19.0293931', '72.92556133', 1, 3, 3, 10, NULL, '0', 1, '2022-12-29 12:32:19', '2022-12-29 12:32:19'),
+(171, 2, 101, 22, 2707, 'MCGM PARKING, NEAR ANIMAL HOSPITAL, AVANA BUILDING', 'XRXR+4WQ, General Nagesh Marg, Parel East, Parel, Mumbai, Maharashtra 400012', 400012, '18.9979542', '72.8422876', 1, 3, 1, 10, NULL, '0', 1, '2022-12-29 12:32:19', '2022-12-29 12:32:19'),
+(172, 2, 101, 22, 2707, 'Income Tax Office, Marine lines', 'UAH Khan Marg, New Marine Lines, Marine Lines, Mumbai, Maharashtra 400020', 400020, '18.9390023', '72.8275974', 1, 3, 1, 10, NULL, '0', 1, '2022-12-29 12:32:20', '2022-12-29 12:32:20'),
+(173, 2, 101, 22, 2707, 'Nistha Bhawan, Marine lines', 'D Mulla Rd, New Marine Lines, Fort, Mumbai, Maharashtra 400020', 400020, '18.9371255', '72.8281827', 1, 3, 1, 10, NULL, '0', 1, '2022-12-29 12:32:20', '2022-12-29 12:32:20'),
+(174, 2, 101, 22, 2707, 'Opp. KC college, free Road parking', 'JTS Malani Marg, Churchgate, Mumbai, Maharashtra 400020', 400020, '18.9311259', '72.827346', 1, 3, 3, 10, NULL, '0', 1, '2022-12-29 12:32:20', '2022-12-29 12:32:20'),
+(175, 2, 101, 22, 2707, 'Free Parking, Makers Towers A, B', 'Cuffe Parade, Mumbai, Maharashtra 400005', 400005, '18.91656', '72.8167734', 1, 3, 3, 10, NULL, '0', 1, '2022-12-29 12:32:20', '2022-12-29 12:32:20'),
+(176, 2, 101, 22, 2707, 'Heera panna, Powai', '4W94+G3C, Orchard Avenue Off JVLR Near Jalvayu Vihar, Hiranandani Gardens, MHADA Colony 19, Powai, Mumbai, Maharashtra 400076', 400076, '19.1187468_x000D_\n', '72.9050642_x000D_\n', 1, 3, 3, 10, NULL, '0', 1, '2022-12-29 12:32:20', '2022-12-29 12:32:20'),
+(177, 2, 101, 22, 2707, 'Fire Brigade- BKC, Road Parking', 'Kanzul Iman Rd, Kolivery Village, MMRDA Area, Kalina, Bandra East, Mumbai, Maharashtra 400098', 400098, '19.0707233', '72.86793', 1, 3, 1, 10, NULL, '0', 1, '2022-12-29 12:32:20', '2022-12-29 12:32:20'),
+(178, 2, 101, 22, 2707, 'Mumbai Port Trust', 'Princess Dock, Mumbai Port Trust, Mazgaon, Mumbai, Maharashtra 400009', 400009, '18.9593404', '72.8458299', 1, 3, 1, 10, NULL, '0', 1, '2022-12-29 12:32:20', '2022-12-29 12:32:20'),
+(179, 2, 101, 22, 2707, 'Mumbai Port Trust, Dongari Vahatuk Vibhag', 'Malet Bandar Rd, Wadi Bandar, Mazgaon, Mumbai, Maharashtra 400009', 400009, '18.9599374', '72.8436058', 1, 3, 1, 10, NULL, '0', 1, '2022-12-29 12:32:20', '2022-12-29 12:32:20'),
+(180, 2, 101, 22, 2707, 'Carnac Bunder', 'P D\'Mello Rd, Carnac Bunder, Indira Docks, Mumbai Port Trust, Mazgaon, Mumbai, Maharashtra 400001', 400001, '18.94926', '72.84103', 1, 3, 3, 10, NULL, '0', 1, '2022-12-29 12:32:20', '2022-12-29 12:32:20'),
+(181, 2, 101, 22, 2707, 'Sagar Tech Plaza, Andheri', 'Sagar Tech Plaza, ICICI bank building, Junction, Andheri - Kurla Rd, Saki Naka, Mumbai', 400059, '19.1028533', '72.8859183', 1, 3, 3, 10, NULL, '0', 1, '2022-12-29 12:32:21', '2022-12-29 12:32:21'),
+(182, 2, 101, 22, 2707, 'CST Yellow Gate, Chhatrapati Shivaji Terminus Area', 'Chhatrapati Shivaji Terminus Area, Fort, Mumbai, Maharashtra 400001', 400001, '18.9454217', '72.8395264', 1, 3, 1, 10, NULL, '0', 1, '2022-12-29 12:32:21', '2022-12-29 12:32:21'),
+(183, 2, 101, 22, 2707, 'Times Square, Marol', 'Town Centre, Andheri - Kurla Rd, Mittal Industrial Estate, Marol, Andheri East, Mumbai, Maharashtra 400059', 400059, '19.107578844642', '72.883108035718', 1, 3, 1, 10, NULL, '0', 1, '2022-12-29 12:32:21', '2022-12-29 12:32:21'),
+(184, 2, 101, 22, 2707, 'Ramjibhai Kamani Marg Ballard Piar', 'R Kamani Rd, Indira Docks, Ballard Estate, Fort, Mumbai, Maharashtra 400001', 400001, '18.9374303', '72.8395263', 1, 7, 3, 10, NULL, '0', 1, '2022-12-29 12:32:21', '2022-12-29 12:32:21'),
+(185, 2, 101, 22, 2707, 'Gold Field Plaza Kala, Kila Dharavi', 'Sion-Bandra Link Rd, Dharavi, Mumbai, Maharashtra 400017', 400017, '19.0481164', '72.859008', 1, 3, 3, 10, NULL, '0', 1, '2022-12-29 12:32:21', '2022-12-29 12:32:21'),
+(186, 2, 101, 22, 2707, 'The Qub, Marol', 'Hasan Pada Rd, Mittal Industrial Estate, Marol, Andheri East, Mumbai, Maharashtra 400099', 400099, '19.1023029', '72.879361', 1, 3, 1, 10, NULL, '0', 1, '2022-12-29 12:32:21', '2022-12-29 12:32:21'),
+(187, 2, 101, 22, 2707, 'NC kelkar Marg, Dadar West', 'Ram Maruti Marg, Dadar West, Dadar, Mumbai, Maharashtra 400028', 400028, '19.023583', '72.8413004', 1, 7, 3, 10, NULL, '0', 1, '2022-12-29 12:32:21', '2022-12-29 12:32:21'),
+(188, 2, 101, 22, 2707, 'Hanuman Nagar lower parel, free parking', 'Shankar Rao Naram Path, Lower Parel West, Lower Parel, Mumbai, Maharashtra 400013', 400013, '19.0016311', '72.8253343', 1, 3, 3, 10, NULL, '0', 1, '2022-12-29 12:32:22', '2022-12-29 12:32:22'),
+(189, 2, 101, 22, 2707, 'H R devrukhkar Marg lower Parel West Worli free parking', 'Hind Cycle Marg, Gopal Nagar, Mumbai, Maharashtra, 400030', 400030, '19.0072895', '72.8235004', 1, 3, 3, 10, NULL, '0', 1, '2022-12-29 12:32:22', '2022-12-29 12:32:22'),
+(190, 2, 101, 22, 2707, 'Ganapatrao Kadam Marg Office Parking, lower parel', 'Shah & Nahar Indl. Estate, Sun Mill Lane, Lower Parel (West), Mumbai, Maharashtra 400013', 400013, '18.996394', '72.8280873', 1, 3, 3, 10, NULL, '0', 1, '2022-12-29 12:32:22', '2022-12-29 12:32:22'),
+(191, 2, 101, 22, 2707, 'Aacharya Marga, Bhandup Road', 'BLOCK-4, HDIL Dreams Co-operative Housing Society, Bhandup, Bhandup West, Mumbai, Maharashtra 400078', 400078, '19.1468079', '72.9381446', 1, 3, 1, 10, NULL, '0', 1, '2022-12-29 12:32:22', '2022-12-29 12:32:22'),
+(192, 2, 101, 22, 2707, 'Near Animal Hospital, Parel', 'St Xavier St, Best Colony, Parel, Mumbai, Maharashtra 400012', 400012, '18.9978988', '72.8421087', 1, 7, 3, 10, NULL, '0', 1, '2022-12-29 12:32:22', '2022-12-29 12:32:22'),
+(193, 2, 101, 22, 2707, 'Lodha Venijiya, Kala  Chowki', 'Kala Chowky Rd, Jijamata Nagar, Abhyudaya Nagar, Parel, Mumbai, Maharashtra 400033', 400033, '18.9917408', '72.8417442', 1, 3, 3, 10, NULL, '0', 1, '2022-12-29 12:32:22', '2022-12-29 12:32:22'),
+(194, 2, 101, 22, 2707, 'Movie Max Sion circle', 'Rupam Building, Rd Number 8, Namdev Koli Marg, Sion, Mumbai, Maharashtra 400022', 400022, '19.0419466', '72.8641733', 1, 3, 3, 10, NULL, '0', 1, '2022-12-29 12:32:22', '2022-12-29 12:32:22'),
+(195, 2, 101, 22, 2707, 'MTNL, Powai', 'E Ave Rd, Hiranandani Gardens, Sainath Nagar, Powai, Mumbai, Maharashtra 400076', 400076, '19.1203367', '72.9148567', 1, 7, 3, 10, NULL, '0', 1, '2022-12-29 12:32:22', '2022-12-29 12:32:22'),
+(196, 2, 101, 22, 2707, 'Nakshtra Cine Shop (mall) Pay & Park', 'Ranade Rd, Dadar West, Dadar, Mumbai, Maharashtra 400028', 400028, '19.0201919', '72.8413644', 1, 3, 3, 10, NULL, '0', 1, '2022-12-29 12:32:22', '2022-12-29 12:32:22'),
+(197, 2, 101, 22, 2707, 'Hiranandani, D mart. Powai', 'Central Ave, Hiranandani Gardens, Powai, Mumbai, Maharashtra 400076', 400076, '19.1164176_x000D_\n', '72.9097406_x000D_\n', 1, 3, 3, 10, NULL, '0', 1, '2022-12-29 12:32:22', '2022-12-29 12:32:22'),
+(198, 2, 101, 22, 2707, 'Central Avenue, Hiranandani', 'Hiranandani Gardens, MHADA Colony 19, Powai, Mumbai, Maharashtra 400076', 400076, '19.1188417', '72.9075567', 1, 7, 3, 10, NULL, '0', 1, '2022-12-29 12:32:22', '2022-12-29 12:32:22'),
+(199, 2, 101, 22, 2707, 'Galleria Mall, Powai', 'Hiranandani Gardens, Powai, Mumbai, Maharashtra 400076', 400076, '19.1197317', '72.9122083', 1, 3, 1, 10, NULL, '0', 1, '2022-12-29 12:32:23', '2022-12-29 12:32:23');
+INSERT INTO `tbl_parking_place` (`id`, `fk_vendor_id`, `fk_country_id`, `fk_state_id`, `fk_city_id`, `place_name`, `address`, `pincode`, `latitude`, `longitude`, `slots`, `fk_place_status_id`, `fk_parking_price_type`, `ext_price`, `per_hour_charges`, `status`, `del_status`, `created_at`, `updated_at`) VALUES
+(200, 2, 101, 22, 2707, 'Maxus Mall, Saki Naka', '624, 90 Feet Rd, Safed Pul, Saki Naka, Mumbai, Maharashtra 400072', 400072, '19.0938067', '72.8837267', 1, 2, 1, 10, NULL, '0', 1, '2022-12-29 12:32:23', '2022-12-29 12:32:23'),
+(201, 2, 101, 22, 2707, 'Raheja Asteriya Hinda Cycle Road, worli', '228, Hind Cycle Marg, Hanuman Nagar, Worli, Mumbai, Maharashtra 400030', 400030, '19.0084988', '72.8218442', 1, 3, 1, 10, NULL, '0', 1, '2022-12-29 12:32:23', '2022-12-29 12:32:23'),
+(202, 2, 101, 22, 2707, 'Fulcrum Bldg., Hyatt Regency Andheri', 'IA Project Rd, Ashok Nagar, Andheri East, Mumbai, Maharashtra 400059', 400059, '19.1032067', '72.87227', 1, 3, 1, 10, NULL, '0', 1, '2022-12-29 12:32:23', '2022-12-29 12:32:23'),
+(203, 2, 101, 22, 2707, 'Utopia City, Lower Parel', 'Madhu Industrial Estate, Madhu Estate Office, Pandurang Budhkar Marg, Lower Parel, Mumbai, Maharashtra 400013', 400013, '19.0056355', '72.8259357', 1, 3, 3, 10, NULL, '0', 1, '2022-12-29 12:32:23', '2022-12-29 12:32:23'),
+(204, 2, 101, 22, 2707, 'Movie Max, Andheri East', 'Prakashwadi Rd, Chakala, Andheri East, Mumbai, Maharashtra 400053', 400053, '19.1163217', '72.8567667', 1, 3, 1, 10, NULL, '0', 1, '2022-12-29 12:32:23', '2022-12-29 12:32:23'),
+(205, 2, 101, 22, 2707, 'The Summit, Chakala', 'Prakashwadi Rd, Chakala, Andheri East, Mumbai, Maharashtra 400053', 400053, '19.1168258', '72.85678', 1, 7, 3, 10, NULL, '0', 1, '2022-12-29 12:32:23', '2022-12-29 12:32:23'),
+(206, 2, 101, 22, 2707, 'Botavala Chowl, New Prabhadevi', 'Botawala Building, Nagusayajichi Wadi, Prabhadevi, Mumbai, Maharashtra 400030', 400030, '19.0107783', '72.828615', 1, 7, 3, 10, NULL, '0', 1, '2022-12-29 12:32:23', '2022-12-29 12:32:23'),
+(207, 2, 101, 22, 2707, 'Shoppers Stop,', 'Shoppers Stop, Ganga Vihar, Andheri West, Mumbai, Maharashtra 400058', 400058, '19.1149767', '72.842675', 1, 3, 3, 10, NULL, '0', 1, '2022-12-29 12:32:23', '2022-12-29 12:32:23'),
+(208, 2, 101, 22, 2707, 'Dev Plaza, Andheri West', '75, Swami Vivekananda Rd, Irla Bridge, T E Colony, Vile Parle West, Mumbai, Maharashtra 400058', 400058, '19.1123468', '72.8417086', 1, 3, 1, 10, NULL, '0', 1, '2022-12-29 12:32:23', '2022-12-29 12:32:23'),
+(209, 2, 101, 22, 2707, 'Prime Mall, Ville Parle West', 'Ram Ganesh Gadkari Marg, Navpada, Prem Nagar, Vile Parle West, Mumbai, Maharashtra 400056', 400056, '19.1080567', '72.8397533', 1, 3, 1, 10, NULL, '0', 1, '2022-12-29 12:32:24', '2022-12-29 12:32:24'),
+(210, 2, 101, 22, 2707, 'Prime Mall, Open Parking', 'Prime Mall, Irla Rd, Indira Nagar, Vile Parle West, Mumbai, Maharashtra 400056', 400056, '19.10789', '72.83938', 1, 3, 1, 10, NULL, '0', 1, '2022-12-29 12:32:24', '2022-12-29 12:32:24'),
+(211, 2, 101, 22, 2707, 'Irla, Opp. N. M. college. Vile Parle west', '4R5Q+235 Dwarkadas Jivanlal Sanghvi College Of Engineering, Navpada, Suvarna Nagar, Juhu, Mumbai, Maharashtra 400056', 400056, '19.1074667', '72.837815', 1, 7, 3, 10, NULL, '0', 1, '2022-12-29 12:32:24', '2022-12-29 12:32:24'),
+(212, 2, 101, 22, 2707, 'Opp Mithibhai, Vileparle', 'N S Road No. 1, Navpada, Swastik Society, Juhu, Mumbai, Maharashtra 400056', 400056, '19.1042067', '72.83685', 1, 7, 3, 10, NULL, '0', 1, '2022-12-29 12:32:24', '2022-12-29 12:32:24'),
+(213, 2, 101, 22, 2707, 'Opp Kalaniketan, Juhu Road', '7th Floor, V. L, Vaikunthlal Mehta Rd, Vile Parle West, Mumbai, Maharashtra 400056', 400056, '19.1034567', '72.8328517', 1, 7, 3, 10, NULL, '0', 1, '2022-12-29 12:32:24', '2022-12-29 12:32:24'),
+(214, 2, 101, 22, 2707, 'Opp. Amprapali Shopping Center, Juhu Road', 'Vaikunthlal Mehta Rd, Shivkunj, JVPD Scheme, Juhu, Mumbai, Maharashtra 400049', 400049, '19.103965', '72.8305883', 1, 7, 3, 10, NULL, '0', 1, '2022-12-29 12:32:24', '2022-12-29 12:32:24'),
+(215, 2, 101, 22, 2707, 'Novotel MCGM Parking, Juhu Beach', 'Balraj Sahni Rd, Janki Kutir, Juhu Tara, Juhu, Mumbai, Maharashtra 400049', 400049, '19.10852', '72.825175', 1, 3, 1, 10, NULL, '0', 1, '2022-12-29 12:32:24', '2022-12-29 12:32:24'),
+(216, 2, 101, 22, 2707, 'Sun-n-sand Patron, Juhu', 'Janki Kutir, Juhu Tara, Juhu, Mumbai, Maharashtra 400049', 400049, '19.1092383', '72.8245833', 1, 3, 1, 10, NULL, '0', 1, '2022-12-29 12:32:24', '2022-12-29 12:32:24'),
+(217, 2, 101, 22, 2707, 'K Star Mall, Chembur', '302, V N Purva Marg, Diamond Garden, Basant Garden, Chembur, Mumbai, Maharashtra 400071', 400071, '19.0520399', '72.9019006', 1, 3, 1, 10, NULL, '0', 1, '2022-12-29 12:32:24', '2022-12-29 12:32:24'),
+(218, 2, 101, 22, 2707, 'Nataraj Cinema, Chembur', 'Amita Building, 1st Rd, Chembur West, Chembur Gaothan, Chembur, Mumbai, Maharashtra 400071', 400071, '19.0623004', '72.8995244', 1, 3, 1, 10, NULL, '0', 1, '2022-12-29 12:32:24', '2022-12-29 12:32:24'),
+(219, 2, 101, 22, 2707, 'Aacharya Marga, Chembur', 'Shop No 4, Road No 1, Acharya Vaidya Swimming Pool Comp, opp. Hotel Jewel of Ch, Mumbai, Maharashtra 400071', 400071, '19.0614392', '72.8994016', 1, 3, 1, 10, NULL, '0', 1, '2022-12-29 12:32:24', '2022-12-29 12:32:24'),
+(220, 2, 101, 22, 2707, 'Balasaheb Thakare Nagar, Tilak Nagar East ', 'Kamgaar Nagar, Kurla, Mumbai, Maharashtra 400024', 400024, '19.06559', '72.889975', 1, 7, 3, 10, NULL, '0', 1, '2022-12-29 12:32:25', '2022-12-29 12:32:25'),
+(221, 2, 101, 22, 2707, 'Lokmanya Tilak Terminus, Pay & Park', 'Tilak Nagar, Kurla, Mumbai, Maharashtra 400089', 400089, '19.0682996', '72.8904094', 1, 3, 1, 10, NULL, '0', 1, '2022-12-29 12:32:25', '2022-12-29 12:32:25'),
+(222, 2, 101, 22, 2707, 'Kurla Signal Near Swastik Chembar', 'Shop No, 5, Linking Rd, Thakkar Bappa Colony, Rajiv Gandhi Nagar, Bandra West, Mumbai, Maharashtra 400050', 400050, '19.0569369', '72.8875649', 1, 3, 1, 10, NULL, '0', 1, '2022-12-29 12:32:25', '2022-12-29 12:32:25'),
+(223, 2, 101, 22, 2707, 'Swastik Chembar, Kurla East', '5-10, SG Barve Marg, Swastik Park, Chembur, Mumbai, Maharashtra 400071', 400071, '19.0551833', '72.8883849', 1, 3, 1, 10, NULL, '0', 1, '2022-12-29 12:32:25', '2022-12-29 12:32:25'),
+(224, 2, 101, 22, 2707, 'Sakivihar Road, Chandivali', 'Adityavardhan Raheja Vihar Access Rd, Tunga Village, Chandivali, Powai, Mumbai, Maharashtra 400072', 400072, '19.11499', '72.88974', 1, 7, 3, 10, NULL, '0', 1, '2022-12-29 12:32:25', '2022-12-29 12:32:25'),
+(225, 2, 101, 22, 2707, 'Phoenix Mall, Kurla West,', '16, Sunder Baug Ln, Kamani, Ashok Nagar, Saki Naka, Mumbai, Maharashtra 400072', 400072, '19.085455', '72.886645', 1, 3, 1, 10, NULL, '0', 1, '2022-12-29 12:32:25', '2022-12-29 12:32:25'),
+(226, 2, 101, 22, 2707, 'Kalina, Near Mercedes Show Room, MCGM Parking', 'CST Road, Kolivery Village, Kunchi Kurve Nagar, Kalina, Santacruz East, Mumbai, Maharashtra 400098', 400098, '19.072835', '72.8676133', 1, 3, 3, 10, NULL, '0', 1, '2022-12-29 12:32:26', '2022-12-29 12:32:26'),
+(227, 2, 101, 22, 2707, 'Sundar Nagar, Kalina', 'Kolivery Rd, Kolivery Village, Vidya Nagari, Kalina, Santacruz East, Mumbai, Maharashtra 400098', 400098, '19.07561', '72.8658833', 1, 7, 3, 10, NULL, '0', 1, '2022-12-29 12:32:26', '2022-12-29 12:32:26'),
+(228, 2, 101, 22, 2707, 'Opp. Kotak Mahindra Bank, Kalina', 'Golden Square Wing-L, Manipada Rd, Kolivery Village, Vidya Nagari, Kalina, Santacruz East, Mumbai, Maharashtra 400098', 400098, '19.0728267', '72.86417', 1, 7, 3, 10, NULL, '0', 1, '2022-12-29 12:32:26', '2022-12-29 12:32:26'),
+(229, 2, 101, 22, 2707, 'Nehru Nagar, Play Ground, Kurla East', 'Nehru Nagar, Kurla, Mumbai, Maharashtra 400024', 400024, '19.0623122', '72.8807036', 1, 7, 3, 10, NULL, '0', 1, '2022-12-29 12:32:26', '2022-12-29 12:32:26'),
+(230, 2, 101, 22, 2707, 'East Point Mall, Kurla East Railway Station', 'SG Barve Marg, Jagruti Nagar, Police Colony, Kurla, Mumbai, Maharashtra 400024', 400024, '19.064856', '72.8810395', 1, 3, 3, 10, NULL, '0', 1, '2022-12-29 12:32:26', '2022-12-29 12:32:26'),
+(231, 2, 101, 22, 2707, 'Opp. Yes bank, Santa Cruz East', 'Sen Nagar, Santacruz East, Mumbai, Maharashtra 400055', 400055, '19.0825', '72.845615', 1, 7, 3, 10, NULL, '0', 1, '2022-12-29 12:32:26', '2022-12-29 12:32:26'),
+(232, 2, 101, 22, 2707, 'Smart Super Market, Santacruz', '6th Ln, Rizvi Nagar, Khira Nagar, Santacruz West, Mumbai, Maharashtra 400054', 400054, '19.0886767', '72.837105', 1, 3, 3, 10, NULL, '0', 1, '2022-12-29 12:32:26', '2022-12-29 12:32:26'),
+(233, 2, 101, 22, 2707, 'SV Road, Opp LIC colony, Santa Cruz west', 'BUS DEPOT OFFICE, Mcgm Garbage Department, Swami Vivekananda Rd, BEST Colony, Juhu, Mumbai, Maharashtra 400054', 400054, '19.09164', '72.83832', 1, 3, 1, 10, NULL, '0', 1, '2022-12-29 12:32:26', '2022-12-29 12:32:26'),
+(234, 2, 101, 22, 2707, 'Khira Nagar, Santa Cruz West', '6th Ln, Rizvi Nagar, Khira Nagar, Santacruz West, Mumbai, Maharashtra 400054', 400054, '19.0885917', '72.838065', 1, 7, 3, 10, NULL, '0', 1, '2022-12-29 12:32:26', '2022-12-29 12:32:26'),
+(235, 2, 101, 22, 2707, 'Nilkantha Business Park, Vidhyavihar West', 'Sadguru Nagar, Neelkanth Kingdom, Vidyavihar West, Vidyavihar, Mumbai, Maharashtra 400086', 400086, '19.0798898', '72.89548', 1, 3, 1, 10, NULL, '0', 1, '2022-12-29 12:32:26', '2022-12-29 12:32:26'),
+(236, 2, 101, 22, 2707, 'Maxus Mall, Saki Naka', 'Maxus Mall, 90 Feet Rd, Jarimari, Saki Naka, Mumbai, Maharashtra 400072', 400072, '19.09345', '72.883712', 1, 3, 1, 10, NULL, '0', 1, '2022-12-29 12:32:26', '2022-12-29 12:32:26'),
+(237, 2, 101, 22, 2707, 'Near Boston House, Gundavali, Andheri East', 'Prakashwadi Rd, Gundavali, Andheri East, Mumbai, Maharashtra 400053', 400053, '19.116457', '72.856605', 1, 3, 1, 10, NULL, '0', 1, '2022-12-29 12:32:27', '2022-12-29 12:32:27'),
+(238, 2, 101, 22, 2707, 'Huma Mall, Kanjurmarg West', 'Huma Mall, MAHAVIR MAJESTIC, Ambedkar Nagar, Kanjurmarg West, Bhandup West, Mumbai, Maharashtra 400078', 400078, '19.12886848', '72.92582557', 1, 6, 3, 10, NULL, '0', 1, '2022-12-29 12:32:27', '2022-12-29 12:32:27'),
+(239, 2, 101, 22, 2707, 'Lodha Fiorenza, MCGM Parking, Goregaon', 'Lodha Fiorenza, Cama Industrial Estate, Goregaon, Mumbai, Maharashtra 400063', 400063, '19.1538707', '72.8560672', 1, 3, 1, 10, NULL, '0', 1, '2022-12-29 12:32:27', '2022-12-29 12:32:27'),
+(240, 2, 101, 22, 2707, 'Balraj Sahni Rd, Janki Kutir, Juhu Tara', 'Balraj Sahni Rd, Janki Kutir, Juhu Tara, Juhu, Mumbai, Maharashtra 400049', 400049, '19.1084713937', '72.8251496164', 1, 3, 1, 10, NULL, '0', 1, '2022-12-29 12:32:27', '2022-12-29 12:32:27'),
+(241, 2, 101, 22, 2707, 'Shamrao Parulekar Marg Juhu', 'Juhu Church Rd, Janki Kutir, Juhu Tara, Juhu, Mumbai, Maharashtra 400049', 400049, '19.10781', '72.82653', 1, 7, 3, 10, NULL, '0', 1, '2022-12-29 12:32:27', '2022-12-29 12:32:27'),
+(242, 2, 101, 22, 2707, 'Siddharth Nagar, Goregaon', '3, Swami Vivekananda Rd, Motilal Nagar I, Goregaon West, Mumbai, Maharashtra 400062', 400062, '19.15761039', '72.8458085', 1, 3, 1, 10, NULL, '0', 1, '2022-12-29 12:32:27', '2022-12-29 12:32:27'),
+(243, 2, 101, 22, 2707, 'Hari Ravendrakar Road near SNDT college', 'Juhu Tara Rd, Shivaji Nagar, Juhu, Mumbai, Maharashtra 400049', 400049, '19.085969', '72.828819', 1, 7, 3, 10, NULL, '0', 1, '2022-12-29 12:32:27', '2022-12-29 12:32:27'),
+(244, 2, 101, 22, 2707, 'Station Road Sen Nagar Santacruz East', 'Station Rd, Sen Nagar, Santacruz East, Mumbai, Maharashtra 400055', 400055, '19.08134', '72.84228', 1, 3, 1, 10, NULL, '0', 1, '2022-12-29 12:32:27', '2022-12-29 12:32:27'),
+(245, 2, 101, 22, 2707, 'Shastri Nagar Linking Road Extn Santacruz West', 'Linking Rd, Khira Nagar, Santacruz West, Mumbai, Maharashtra 400054', 400054, '19.08753', '72.83483', 1, 3, 1, 10, NULL, '0', 1, '2022-12-29 12:32:28', '2022-12-29 12:32:28'),
+(246, 2, 101, 22, 2474, 'Hi Life Mall,Railway Colony, Santacruz West', 'Hi Life Mall, Phirozshah Mehta Rd, Railway Colony, Santacruz West, Mumbai, Maharashtra 400054', 400054, '19.083232', '72.8402', 1, 3, 1, 10, NULL, '0', 1, '2022-12-29 12:32:28', '2022-12-29 12:32:28'),
+(247, 2, 101, 22, 2707, 'Shaha Industrial Rd , Andheri West', 'No 107, Andheri Industrial Estate, Andheri West, Off Veera Desai Road, Andheri West, Mumbai, Maharashtra 400053', 400053, '19.133425', '72.833771', 1, 3, 1, 10, NULL, '0', 1, '2022-12-29 12:32:28', '2022-12-29 12:32:28'),
+(248, 2, 101, 22, 2707, 'Sahyog Co-operative Housing Society, Andheri West', 'Sahyog Co-operative Housing Society, Gharkul Society, Ratan Nagar, Four Bungalows, Andheri West, Mumbai, Maharashtra 400058', 400058, '19.128553', '72.823857', 1, 3, 1, 10, NULL, '0', 1, '2022-12-29 12:32:28', '2022-12-29 12:32:28'),
+(249, 2, 101, 22, 2707, 'Yashodham, Western Express Highway, Goregaon', 'Oberoi Mall, Western Express Hwy, Yashodham, Goregaon, Mumbai, Maharashtra 400063', 400063, '19.173808', '72.860559', 1, 3, 1, 10, NULL, '0', 1, '2022-12-29 12:32:28', '2022-12-29 12:32:28'),
+(250, 2, 101, 22, 2707, 'Four Bungalows Andheri West', '35, Manish Nagar Rd, Gharkul Society, Manish Nagar, Four Bungalows, Andheri West, Mumbai, Maharashtra 400058', 400058, '19.126779', '72.827434', 1, 7, 3, 10, NULL, '0', 1, '2022-12-29 12:32:28', '2022-12-29 12:32:28'),
+(251, 2, 101, 22, 2707, 'Maitri Park Road Number 5, Chembur East', '3W32+4M8, Maitri Park, Road No.5, Chembur East, Kurla, Mumbai, Maharashtra 400071', 400071, '19.052686', '72.901689', 1, 3, 1, 10, NULL, '0', 1, '2022-12-29 12:32:28', '2022-12-29 12:32:28'),
+(252, 2, 101, 22, 2707, 'K Star Mall, VN Purav Marg, Chembur', 'K Star Mall, VN Purav Marg, Diamond Garden, Basant Garden, Chembur, Mumbai, Maharashtra 400071', 400071, '19.052473', '72.901657', 1, 3, 1, 10, NULL, '0', 1, '2022-12-29 12:32:28', '2022-12-29 12:32:28'),
+(253, 2, 101, 22, 2707, 'Azad Nagar Andheri West', 'Everson Building, JP Rd, Sahakar Nagar, Azad Nagar, Andheri West, Mumbai, Maharashtra 400053', 400053, '19.128221', '72.832017', 1, 3, 1, 10, NULL, '0', 1, '2022-12-29 12:32:28', '2022-12-29 12:32:28'),
+(254, 2, 101, 22, 2707, 'Seven Bungalow, JP Rd  Andheri West', 'PRATAP CO-OPERATIVE HOUSING SOCIETY-1, Mudran Press Colony, Andheri West, Mumbai, Maharashtra 400053', 400053, '19.130338', '72.822651', 1, 3, 1, 10, NULL, '0', 1, '2022-12-29 12:32:29', '2022-12-29 12:32:29'),
+(255, 2, 101, 22, 2707, 'Seven Bungalows J P Road Andheri West', 'Avinash Towers, Versova, Andheri West, Mumbai, Maharashtra 400061', 400061, '19.13078', '72.81925', 1, 3, 1, 10, NULL, '0', 1, '2022-12-29 12:32:29', '2022-12-29 12:32:29'),
+(256, 2, 101, 22, 2707, 'Suburbia Mall, Linking Rd, Khar West', 'Suburbia Mall, Linking Rd, Khar West, Mumbai, Maharashtra 400050', 400050, '19.061232', '72.83654', 1, 3, 1, 10, NULL, '0', 1, '2022-12-29 12:32:29', '2022-12-29 12:32:29'),
+(257, 2, 101, 22, 2707, 'Peninsula Plaza, Veera Industrial Estate, Off New Link Rd, near Yash Raj Studios & Balaji Telefilms ', 'Peninsula Plaza, Veera Industrial Estate, Off New Link Rd, near Yash Raj Studios & Balaji Telefilms Head Office, Veera Desai Industrial Estate, Andheri West, Mumbai, Maharashtra 400058', 400058, '19.135782', '72.835045', 1, 3, 1, 10, NULL, '0', 1, '2022-12-29 12:32:29', '2022-12-29 12:32:29'),
+(258, 2, 101, 22, 2707, 'New Link Rd Veera Desai Industrial Estate Andheri West', 'RUSHABH COMPLEX, 5/6, Off New Link Rd, opposite Fun Republic Road, THEATRE, Andheri West, Mumbai, Maharashtra 400053', 400053, '19.136802', '72.833436', 1, 3, 1, 10, NULL, '0', 1, '2022-12-29 12:32:29', '2022-12-29 12:32:29'),
+(259, 2, 101, 22, 2707, 'Rupam Building, Sion Circle Road, Sion', 'Rupam Building, Rd Number 8, Namdev Koli Marg, Sion, Mumbai, Maharashtra 400022', 400022, '19.041916', '72.864245', 1, 3, 1, 10, NULL, '0', 1, '2022-12-29 12:32:29', '2022-12-29 12:32:29'),
+(260, 2, 101, 22, 2707, 'Vastu Ln Shastri Nagar Andheri West', 'A-4/5, Vastu Precint, Lokhandwala Complex Rd, Andheri West, Mumbai, Maharashtra 400053', 400053, '19.136610923', '72.8282751966', 1, 3, 1, 10, NULL, '0', 1, '2022-12-29 12:32:29', '2022-12-29 12:32:29'),
+(261, 2, 101, 22, 2707, 'Chunilal Giridharilal Marg, Malad Goraswadi Kandivali West', 'Sejj Plaza, Chunilal Giridharilal Marg, Malad, Goraswadi, Kandivali West, Mumbai, Maharashtra 400064', 400064, '19.19204296', '72.84550573', 1, 3, 1, 10, NULL, '0', 1, '2022-12-29 12:32:29', '2022-12-29 12:32:29'),
+(262, 2, 101, 22, 2707, 'KL Walawalkar Marg, Veera Desai Industrial Estate, Andheri West', 'Durolite House, Off New Link Rd, Veera Desai Industrial Estate, Andheri West, Mumbai, Maharashtra 400102', 400102, '19.136958', '72.832305', 1, 3, 1, 10, NULL, '0', 1, '2022-12-29 12:32:29', '2022-12-29 12:32:29'),
+(263, 2, 101, 22, 2707, 'N C Kelkar Rd, Kelkar Wadi, Dadar', 'N C. Kelkar Rd, Kelkar Wadi, Dadar, Mumbai, Maharashtra 400028', 400028, '19.02283463', '72.84199081', 1, 3, 1, 10, NULL, '0', 1, '2022-12-29 12:32:30', '2022-12-29 12:32:30'),
+(264, 2, 101, 22, 2707, 'Sundervan Complex Rd, Shastri Nagar, Andheri West', 'Cluster_mumbai Suburban_689, Sundervan Complex Rd, Sundervan Complex, Shastri Nagar, Andheri West, Mumbai, Maharashtra 400102', 400102, '19.1372257948', '72.8260444677', 1, 3, 1, 10, NULL, '0', 1, '2022-12-29 12:32:30', '2022-12-29 12:32:30'),
+(265, 2, 101, 22, 2707, 'Sundervan Complex Rd, Shastri Nagar, Andheri West', 'Shankar Dham Cooperative Housing Society, Sundervan Complex Rd, Sundervan Complex, Shastri Nagar, Andheri West, Mumbai, Maharashtra 400102', 400102, '19.1372268071', '72.8277139851', 1, 3, 1, 10, NULL, '0', 1, '2022-12-29 12:32:30', '2022-12-29 12:32:30'),
+(266, 2, 101, 22, 2707, 'Company Link Rd, Veera Desai Industrial Estate, Near Fortune Terraces Building, Andheri West', 'Company Link Rd, Veera Desai Industrial Estate, Andheri West, Mumbai, Maharashtra 400102', 400102, '19.138031588', '72.832297914', 1, 3, 1, 10, NULL, '0', 1, '2022-12-29 12:32:30', '2022-12-29 12:32:30'),
+(267, 2, 101, 22, 2707, 'Veera Desai Rd,Veera Desai Industrial Estate, Andheri West', '10-316, Off New Link Rd, Veera Desai Industrial Estate, Andheri West, Mumbai, Maharashtra 400102', 400102, '19.14035', '72.8335874', 1, 3, 1, 10, NULL, '0', 1, '2022-12-29 12:32:30', '2022-12-29 12:32:30'),
+(268, 2, 101, 22, 2707, 'VRL Logistics Next to Ashok Gardens, Sewri West', 'Celestia Spaces Sewri, Cotton Green Zakaria B, Abhyudaya Nagar, Parel, Mumbai, Maharashtra 400033', 400033, '18.993029', '72.848037', 1, 7, 3, 10, NULL, '0', 1, '2022-12-29 12:32:30', '2022-12-29 12:32:30'),
+(269, 2, 101, 22, 2707, 'Shiv Sagar Estate, Markandeshwar Nagar, Worli', 'Atria-The Millennium Mall, Dr Annie Besant Rd, Lotus Colony, Worli, Mumbai, Maharashtra 400018', 400018, '18.991173', '72.814439', 1, 3, 1, 10, NULL, '0', 1, '2022-12-29 12:32:30', '2022-12-29 12:32:30'),
+(270, 2, 101, 22, 2707, 'Oberoi Park View Rd, Kanakiya Thakur Village, Kandivali East', 'Oberoi Park View Rd, Kandivali, Kanakiya, Thakur Village, Kandivali East, Mumbai, Maharashtra 400101', 400101, '19.209143', '72.872606', 1, 3, 1, 10, NULL, '0', 1, '2022-12-29 12:32:30', '2022-12-29 12:32:30'),
+(271, 2, 101, 22, 2707, 'New Link Rd, Sejal Park, Goregaon West', '1, New Link Rd, Sejal Park, Colony No 1, Bhagat Singh II, Goregaon West, Mumbai, Maharashtra 400104', 400104, '19.1575', '72.835', 1, 3, 1, 10, NULL, '0', 1, '2022-12-29 12:32:30', '2022-12-29 12:32:30'),
+(272, 2, 101, 22, 2707, 'New Link Rd, Goregaon West', 'Best Nagar, Goregaon West, Mumbai, Maharashtra 400104', 400104, '19.15395', '72.83609', 1, 3, 1, 10, NULL, '0', 1, '2022-12-29 12:32:31', '2022-12-29 12:32:31'),
+(273, 2, 101, 22, 2707, 'Mezzanine Floor, SV Road, Mhatre Wadi, Borivali West', 'Thakkar Shopping Centre, 3Rd Floor, Opposite Borivali Railway Station, S V Road, Borivali West, Mumbai - 400092, Swami Vivekananda Rd, Gyan Nagar, Mhatre Wadi, Borivali West, Mumbai, Maharashtra 400092', 400092, '19.227673', '72.8554963', 1, 3, 1, 10, NULL, '0', 1, '2022-12-29 12:32:31', '2022-12-29 12:32:31'),
+(274, 2, 101, 22, 2707, 'Vishnu Shivam mall, Kandivali east, Dattani park', 'Kandivali, Dattani Park, Thakur Village, Kandivali East, Mumbai, Maharashtra 400101', 400101, '19.211851', '72.871717', 1, 3, 1, 10, NULL, '0', 1, '2022-12-29 12:32:31', '2022-12-29 12:32:31'),
+(275, 2, 101, 22, 2707, 'Chandavarkar Cross Road, Himmat Nagar, Borivali', 'Cluster_mumbai Suburban_251 Blue Star Crystal Chs, Chandavarkar Cross Rd 1, Himmat Nagar, Borivali, Mumbai, Maharashtra 400091', 400091, '19.233574', '72.854205', 1, 3, 1, 10, NULL, '0', 1, '2022-12-29 12:32:31', '2022-12-29 12:32:31'),
+(276, 2, 101, 22, 2707, 'Saikrupa Mall, Lokmanya Tilak Road, Dahisar West', 'Saikrupa Mall, Tawde Wadi, Dahisar West, Mumbai, Maharashtra 400068', 400068, '19.249193', '72.858784', 1, 3, 1, 10, NULL, '0', 1, '2022-12-29 12:32:31', '2022-12-29 12:32:31'),
+(277, 2, 101, 22, 2707, 'Zoom Plaza Mall, Lokmanya Tilak Road, Borivali', 'Zoom Plaza Mall, Gorai 1, Borivali, Mumbai, Maharashtra 400092', 400092, '19.232225', '72.828696', 1, 3, 1, 10, NULL, '0', 1, '2022-12-29 12:32:31', '2022-12-29 12:32:31'),
+(278, 2, 101, 22, 2707, 'Thakur Shyamnarayan Marg,Kanakiya Thakur Village,Kandivali East', 'Thakur Mall, Kandivali East, Shyamnarayan Thakur Rd, Kandivali, Kanakiya, Thakur Village, Kandivali East, Mumbai, Maharashtra 400101', 400101, '19.208859', '72.872489', 1, 3, 1, 10, NULL, '0', 1, '2022-12-29 12:32:31', '2022-12-29 12:32:31'),
+(279, 2, 101, 22, 2707, 'Central Ave Hiranandani Gardens, Powai', 'Ventura Building, Hiranandani Gardens, Powai, Mumbai, Maharashtra 400076', 400076, '19.116413', '72.909344', 1, 3, 1, 10, NULL, '0', 1, '2022-12-29 12:32:31', '2022-12-29 12:32:31'),
+(280, 2, 101, 22, 2707, 'NG SUNCITY, thakur aspire, thakur village,kandivali east', 'SUNCITY PHASE-2 NG, Phase- II, Farid Estate, Huzefa Nagar, Kandivali East, Mumbai, Maharashtra 400101', 400101, '19.207872', '72.877691', 1, 3, 1, 10, NULL, '0', 1, '2022-12-29 12:32:31', '2022-12-29 12:32:31'),
+(281, 2, 101, 22, 2707, 'Kanakia Zillion, Kurla West', 'Kanakia Zillion, Kurla West, Kurla, Mumbai, Maharashtra 400070', 400070, '19.07534', '72.8759', 1, 3, 1, 10, NULL, '0', 1, '2022-12-29 12:32:31', '2022-12-29 12:32:31'),
+(282, 2, 101, 22, 2707, 'Dev Plaza, Swami Vivekanand Marg, Andheri West', 'Dev Plaza, Swami Vivekananda Rd, Navpada, T E Colony, Vile Parle West, Mumbai, Maharashtra 400058', 400058, '19.112542', '72.841827', 1, 7, 3, 10, NULL, '0', 1, '2022-12-29 12:32:32', '2022-12-29 12:32:32'),
+(283, 2, 101, 22, 2707, 'Lokmanya Tilak Terminus Flyover Tilak Nagar, Kurla', 'Lokmanya Tilak Terminus Flyover Tilak Nagar, Kurla, Mumbai, Maharashtra 400089', 400089, '19.06924198', '72.89258871', 1, 3, 1, 10, NULL, '0', 1, '2022-12-29 12:32:32', '2022-12-29 12:32:32'),
+(284, 2, 101, 22, 2707, 'Swami Vivekananda Rd, Zalawad Nagar, Ganga Vihar, Andheri West', 'Shoppers Stop, Ganga Vihar, Andheri West, Mumbai, Maharashtra 400058', 400058, '19.1150743', '72.8426492', 1, 3, 1, 10, NULL, '0', 1, '2022-12-29 12:32:32', '2022-12-29 12:32:32'),
+(285, 2, 101, 22, 2707, 'One BKC, G Block, Bandra Kurla Complex, Bandra (East)', '66, G Block BKC, Bandra Kurla Complex, Bandra East, Mumbai, Maharashtra 400051', 400051, '19.0602334', '72.865031', 1, 3, 1, 10, NULL, '0', 1, '2022-12-29 12:32:32', '2022-12-29 12:32:32'),
+(286, 2, 101, 22, 2707, 'Sahar Road, next to Hyatt Regency, Ashok Nagar, Andheri East', 'Marriott Hotels India Marriott Hotel India, Ashok Nagar, Andheri East, Mumbai, Maharashtra 400059', 400059, '19.103941', '72.872471', 1, 3, 1, 10, NULL, '0', 1, '2022-12-29 12:32:32', '2022-12-29 12:32:32'),
+(287, 2, 101, 22, 2707, 'Municipal Kamgar Vasahat, SIon East', 'Municipal Kamgar Vasahat, Sion East, Sion, Mumbai, Maharashtra 400022', 400022, '19.04559', '72.87774', 1, 7, 3, 10, NULL, '0', 1, '2022-12-29 12:32:32', '2022-12-29 12:32:32'),
+(288, 2, 101, 22, 2707, 'Shri Ram Mandir Road, Jogeshwari East', 'Laxmi Nagar, Jogeshwari East, Mumbai, Maharashtra 400063', 400063, '19.145697', '72.852048', 1, 7, 3, 10, NULL, '0', 1, '2022-12-29 12:32:32', '2022-12-29 12:32:32'),
+(289, 2, 101, 22, 2707, 'Terminal 2 International Airport, Shankar Mandal Road', 'Ashok Nagar, Andheri East, Mumbai, Maharashtra 400059', 400059, '19.1035773', '72.8721616', 1, 3, 1, 10, NULL, '0', 1, '2022-12-29 12:32:32', '2022-12-29 12:32:32'),
+(290, 2, 101, 22, 2707, 'Mahatma Gandhi Rd, Navpada Vile, Parle East', 'Monghibai Rd, Navpada, Park Road, Vile Parle, Mumbai, Maharashtra 400057', 400057, '19.099786298', '72.8456947772', 1, 3, 1, 10, NULL, '0', 1, '2022-12-29 12:32:32', '2022-12-29 12:32:32'),
+(291, 2, 101, 22, 2707, 'MMRDA Colony, Tripathi Nagar Jogeshwari East', 'Tripathi Nagar, Jogeshwari East, Mumbai, Maharashtra 400093', 400093, '19.13083431', '72.87286296', 1, 7, 3, 10, NULL, '0', 1, '2022-12-29 12:32:33', '2022-12-29 12:32:33'),
+(292, 2, 101, 22, 2707, 'Yashodhan Building, Malviya Road, Vile Parle East', '4V22+32C, NP Thakkar Cross Rd, Satsang CHSL, Navpada, Vile Parle East, Vile Parle, Mumbai, Maharashtra 400057', 400057, '19.100188', '72.849972', 1, 3, 3, 10, NULL, '0', 1, '2022-12-29 12:32:33', '2022-12-29 12:32:33'),
+(293, 2, 101, 22, 2707, 'Cross Road, MIDC,  Andheri East', 'Marol Bus Depot, Cross Rd A, Chakala Industrial Area (MIDC), Andheri East, Mumbai, Maharashtra 400093', 400093, '19.11846', '72.86527', 1, 7, 3, 10, NULL, '0', 1, '2022-12-29 12:32:33', '2022-12-29 12:32:33'),
+(294, 2, 101, 22, 2707, 'Kandivali Gayatri Nagar, Gokul Garden,Near Vasat Pride building', 'Shop no 44, BMC parking opp Krishna Gokul garden, Thakur Complex, Kandivali East, Mumbai', 400101, '19.2116016124', '72.863166768', 1, 3, 1, 10, NULL, '0', 1, '2022-12-29 12:32:33', '2022-12-29 12:32:33'),
+(295, 2, 101, 22, 2707, 'Ghokhale Bridge, Andheri Vile Parle', 'Professor N S Phadke Road, Sampada Society, Andheri East, Mumbai, Maharashtra 400053', 400053, '19.1158565', '72.8487988', 1, 7, 3, 10, NULL, '0', 1, '2022-12-29 12:32:33', '2022-12-29 12:32:33'),
+(296, 2, 101, 22, 2707, 'NJX Road Number 1, Jethava Nagar, Kandivali West', 'NJX Rd Number 1, Kandivali, Jethava Nagar, Kandivali West, Mumbai, Maharashtra 400067', 400067, '19.203741378', '72.8504838389', 1, 3, 3, 10, NULL, '0', 1, '2022-12-29 12:32:33', '2022-12-29 12:32:33'),
+(297, 2, 101, 22, 2707, 'Om Sai Plaza, opposite Jain Sweet, Kandivali West', 'Vasanji Lalji Rd, Kandivali, Jethava Nagar, Kandivali West, Mumbai, Maharashtra 400067', 400067, '19.20458338', '72.8512088543', 1, 3, 3, 10, NULL, '0', 1, '2022-12-29 12:32:33', '2022-12-29 12:32:33'),
+(298, 2, 101, 22, 2707, 'Modi Market, Kandivali West', 'Nemi Krishna Society, Kandivali, Jethava Nagar, Kandivali West, Mumbai, Maharashtra 400067', 400067, '19.2057606', '72.8516661', 1, 3, 3, 10, NULL, '0', 1, '2022-12-29 12:32:33', '2022-12-29 12:32:33'),
+(299, 2, 101, 22, 2707, 'Opp Poinsur Church, S V Road, Kandivali', 'Internal Depot Rd, Kandivali, Jai Bhim Sanjay Nagar, Kandivali West, Mumbai, Maharashtra 400067', 400067, '19.21396', '72.85014', 1, 3, 1, 10, NULL, '0', 1, '2022-12-29 12:32:34', '2022-12-29 12:32:34'),
+(300, 2, 101, 22, 2707, 'Durga Mandir St, Kandivali, Narsi Pada', 'Durga Mandir St, Kandivali, Narsi Pada, Kandivali East, Mumbai, Maharashtra 400101', 400101, '19.201392', '72.863924', 1, 3, 1, 10, NULL, '0', 1, '2022-12-29 12:32:34', '2022-12-29 12:32:34'),
+(301, 2, 101, 22, 2707, 'Galaxy E Wing, Gokul Garden, Kandivali East', 'Galaxy E Wing, Gokul Garden VWX, Kandivali East, Mumbai, Maharashtra 400101', 400101, '19.20902', '72.862071', 1, 3, 1, 10, NULL, '0', 1, '2022-12-29 12:32:34', '2022-12-29 12:32:34'),
+(302, 2, 101, 22, 2707, 'Azad Chourasiya Road, Shantaram Pond, Malad', 'Azad Chourasiya Road, Hanuman Nagar, Kandivali East, Mumbai, Maharashtra 400101', 400101, '19.192872', '72.865997', 1, 3, 1, 10, NULL, '0', 1, '2022-12-29 12:32:34', '2022-12-29 12:32:34'),
+(303, 2, 101, 22, 2707, 'Chhatrapati Shivaji International Airport Area, Vile Parle', 'Navpada, Chhatrapati Shivaji International Airport Area, Vile Parle, Mumbai, Maharashtra 400099', 400099, '19.0970024', '72.8541673', 1, 3, 1, 10, NULL, '0', 1, '2022-12-29 12:32:34', '2022-12-29 12:32:34'),
+(304, 2, 101, 22, 2707, 'Swami Vivekanand Road, Santacruz West', 'Mcgm Garbage Department, Santacruz, Mumbai, Maharashtra,400001', 400001, '19.09133', '72.83777', 1, 3, 1, 10, NULL, '0', 1, '2022-12-29 12:32:34', '2022-12-29 12:32:34'),
+(305, 2, 101, 22, 2707, 'Veera Desai Industrial Estate, Andheri West', 'Veera Desai Industrial Estate, Andheri West, Mumbai, Maharashtra 400102', 400102, '19.138025', '72.836486', 1, 3, 1, 10, NULL, '0', 1, '2022-12-29 12:32:34', '2022-12-29 12:32:34'),
+(306, 2, 101, 22, 2707, 'Veera Desai Road, Veera Desai Industrial Estate, Andheri West', 'Veera Desai Industrial Estate, Andheri West, Mumbai, Maharashtra 400102', 400102, '19.138141', '72.837036', 1, 3, 1, 10, NULL, '0', 1, '2022-12-29 12:32:34', '2022-12-29 12:32:34'),
+(307, 2, 101, 22, 2707, 'Runwal Elegante, Andheri West', 'RUNWAL ELEGANTE, Phase D, Shastri Nagar, Andheri West, Mumbai, Maharashtra 400053', 400053, '19.14056', '72.82839', 1, 3, 1, 10, NULL, '0', 1, '2022-12-29 12:32:34', '2022-12-29 12:32:34'),
+(308, 2, 101, 22, 2707, 'Sundarvan Complex Road, Andheri West', 'A/203, Green Ville Society, Millat Nagar Circle, Lokhandwala Complex, Andheri West, Mumbai, Maharashtra 400053', 400053, '19.13772223', '72.83115767', 1, 2, 1, 10, NULL, '0', 1, '2022-12-29 12:32:35', '2022-12-29 12:32:35'),
+(309, 2, 101, 22, 2707, 'Sundarvan Complex, Valencia Apartment, Andheri', 'Sundarvan Complex Near Valencia Apartment, Andheri, Mumbai, Maharashtra 400053', 400053, '19.13756512', '72.82967709', 1, 7, 3, 10, NULL, '0', 1, '2022-12-29 12:32:35', '2022-12-29 12:32:35'),
+(310, 2, 101, 22, 2707, 'Veera Desai Industrial Estate, Andheri West', 'Off New Link Rd, Veera Desai Industrial Estate, Andheri West, Mumbai, Maharashtra 400102', 400102, '19.137098622895', '72.83291265322', 1, 2, 1, 10, NULL, '0', 1, '2022-12-29 12:32:35', '2022-12-29 12:32:35'),
+(311, 2, 101, 22, 2707, 'Fun Republic Road, Veera Desai Industrial Estate, Andheri West', 'Fun Republic Rd, near Fun Republic, Veera Desai Industrial Estate, Andheri West, Mumbai, Maharashtra 400053', 400053, '19.135863', '72.833626', 1, 3, 1, 10, NULL, '0', 1, '2022-12-29 12:32:35', '2022-12-29 12:32:35'),
+(312, 2, 101, 22, 2707, 'Fun Republic Road, Industrial Area, Andheri West', '2, Fun Republic Rd, Industrial Area, Andheri West, Mumbai, Maharashtra 400102', 400102, '19.135258383461', '72.832642181996', 1, 7, 3, 10, NULL, '0', 1, '2022-12-29 12:32:35', '2022-12-29 12:32:35'),
+(313, 2, 101, 22, 2707, 'Off-Veera Desai Road, Andheri West', '4RMM+GF4, Chitrakoot Ground, Andheri West, Mumbai, Maharashtra 400047', 400047, '19.133903', '72.833776', 1, 3, 1, 10, NULL, '0', 1, '2022-12-29 12:32:35', '2022-12-29 12:32:35'),
+(314, 2, 101, 22, 2707, 'J.V.P.D Bus Station, Andheri West', 'Kapaswadi, Andheri West, Mumbai, Maharashtra 400058', 400058, '19.11644', '72.82923', 1, 3, 1, 10, NULL, '0', 1, '2022-12-29 12:32:35', '2022-12-29 12:32:35'),
+(315, 2, 101, 22, 2707, 'Bibijan Street, Santacruz', 'Bibijan Street, Ground Floor Shop-26A, Mumbai, Maharashtra 400003', 400003, '19.08111829', '72.84201898', 1, 3, 3, 10, NULL, '0', 1, '2022-12-29 12:32:35', '2022-12-29 12:32:35'),
+(316, 2, 101, 22, 2707, 'BSNL Colony, Powai, Mumbai', 'E Ave Rd, Hiranandani Gardens, Sainath Nagar, Powai, Mumbai, Maharashtra 400076', 400076, '19.1203367', '72.9148567', 1, 7, 3, 10, NULL, '0', 1, '2022-12-29 12:32:36', '2022-12-29 12:32:36'),
+(317, 2, 101, 22, 2707, 'Nakshtra Cine Shop(Mall), Pay & Park, Dadar', 'Ranade Rd, Dadar West, Dadar, Mumbai, Maharashtra 400028', 400028, '19.0201919', '72.8413644', 1, 2, 1, 10, NULL, '0', 1, '2022-12-29 12:32:36', '2022-12-29 12:32:36'),
+(318, 2, 101, 22, 2707, 'D mart Hiranandani, Powai', 'Central Ave, Hiranandani Gardens, Powai, Mumbai, Maharashtra 400076', 400076, '19.1164167', '72.90984', 1, 2, 1, 10, NULL, '0', 1, '2022-12-29 12:32:36', '2022-12-29 12:32:36'),
+(319, 2, 101, 22, 2707, 'Raheja Asteriya, Hinda Cycle Road, Warli', 'Hind Cycle Marg, Hanuman Nagar, Worli, Mumbai, Maharashtra 400030', 400030, '19.0084988', '72.8218442', 1, 2, 1, 10, NULL, '0', 1, '2022-12-29 12:32:36', '2022-12-29 12:32:36'),
+(320, 2, 101, 22, 2707, 'IA Project Road, Andheri East', 'IA Project Rd, Ashok Nagar, Andheri East, Mumbai, Maharashtra 400059', 400059, '19.1032067', '72.87227', 1, 3, 1, 10, NULL, '0', 1, '2022-12-29 12:32:36', '2022-12-29 12:32:36'),
+(321, 2, 101, 22, 2707, 'Utopia City, Lower Parel', 'Madhu Industrial Estate, Madhu Estate Office, Pandurang Budhkar Marg, Lower Parel, Mumbai, Maharashtra 400013', 400013, '19.0056355', '72.8259357', 1, 2, 1, 10, NULL, '0', 1, '2022-12-29 12:32:36', '2022-12-29 12:32:36'),
+(322, 2, 101, 22, 2707, 'MCGM, Senapati Bapat Marg, Lower Parel', 'Senapati Bapat Marg, Lower Parel, Mumbai, Maharashtra 400013', 400013, '19.00457', '72.83069', 1, 7, 3, 10, NULL, '0', 1, '2022-12-29 12:32:36', '2022-12-29 12:32:36'),
+(323, 2, 101, 22, 2707, 'MIDC Andheri East, Tunga Int.', 'Krantiveer Lakhuji Salve Marg, Mulgaon, Andheri East, Mumbai, Maharashtra 400093', 400093, '19.1178267', '72.865695', 1, 7, 3, 10, NULL, '0', 1, '2022-12-29 12:32:37', '2022-12-29 12:32:37'),
+(324, 2, 101, 22, 2707, 'Indiabulls, Senapati Bapat Marg, Mcgm Free Parking', 'Fitwala Rd, Saidham Nagar, Prabhadevi, Mumbai, Maharashtra 400013', 400013, '19.0083325', '72.8327647', 1, 3, 3, 10, NULL, '0', 1, '2022-12-29 12:32:37', '2022-12-29 12:32:37'),
+(325, 2, 101, 22, 2707, 'Munciple Kannada school, Santa Cruz West', 'Chapel Ln, near Raas (Saree,Bridals & Much more), Navin Nagar, Willingdon, Santacruz West, Mumbai, Maharashtra 400054', 400054, '19.079305', '72.838365', 1, 7, 3, 10, NULL, '0', 1, '2022-12-29 12:32:37', '2022-12-29 12:32:37'),
+(326, 2, 101, 22, 2707, 'Waterfield Road, Bandra West', 'Waterfield Road, Bandra West, Mumbai, Maharashtra 400050', 400050, '19.0611817', '72.834465', 1, 7, 3, 10, NULL, '0', 1, '2022-12-29 12:32:37', '2022-12-29 12:32:37'),
+(327, 2, 101, 22, 2707, 'Off Linking Road, Besides Shoppers Stop. Bandra West', 'Bharti Villa, 30th Rd, Bandra West, Mumbai, Maharashtra 400050', 400050, '19.0618633', '72.8364633', 1, 7, 3, 10, NULL, '0', 1, '2022-12-29 12:32:37', '2022-12-29 12:32:37'),
+(328, 2, 101, 22, 2707, 'Lal Bahadur Shastri Road, Dina Bama Estate, Bhandup West', 'Lal Bahadur Shastri Rd, Bhandup, Dina Bama Estate, Bhandup West, Mumbai, Maharashtra 400078', 400078, '19.1445883', '72.9378233', 1, 7, 3, 10, NULL, '0', 1, '2022-12-29 12:32:37', '2022-12-29 12:32:37'),
+(329, 2, 101, 22, 2707, 'Linksquare Mall, Linking Road, Khar West', '33rd Rd, Khar West, Mumbai, Maharashtra 400050', 400050, '19.0653779', '72.8338277', 1, 7, 3, 10, NULL, '0', 1, '2022-12-29 12:32:37', '2022-12-29 12:32:37'),
+(330, 2, 101, 22, 2707, 'Duruelo Convent School, Â Bandra West', 'Peoples Cosmopolitan, St Theresa Rd, Bandra West, Mumbai, Maharashtra 400050', 400050, '19.0604833', '72.8324983', 1, 7, 3, 10, NULL, '0', 1, '2022-12-29 12:32:37', '2022-12-29 12:32:37'),
+(331, 2, 101, 22, 2707, 'Almeda Garden, Behind Elco Market, Bandra West', 'Amina House, Almeida Park Marg, Bandra West, Mumbai, Maharashtra 400050', 400050, '19.0573867', '72.8321083', 1, 7, 3, 10, NULL, '0', 1, '2022-12-29 12:32:37', '2022-12-29 12:32:37'),
+(332, 2, 101, 22, 2707, 'Elco Arcade, Bandra West', 'Ramdas Nayak Marg, Ranwar, Bandra West, Mumbai, Maharashtra 400050', 400050, '19.0558183', '72.83312', 1, 7, 3, 10, NULL, '0', 1, '2022-12-29 12:32:38', '2022-12-29 12:32:38'),
+(333, 2, 101, 22, 2707, 'Trendz Mall, Bandra West', 'Ramdas Nayak Marg, Bandra West, Mumbai, Maharashtra 400050', 400050, '19.0559083', '72.83359', 1, 7, 3, 10, NULL, '0', 1, '2022-12-29 12:32:38', '2022-12-29 12:32:38'),
+(334, 2, 101, 22, 2707, 'Globus Mall, Hill Road, Bandra West', 'Globus Mall, Hill Rd, Bandra West, Mumbai, Maharashtra 400050', 400050, '19.05631', '72.8338017', 1, 7, 3, 10, NULL, '0', 1, '2022-12-29 12:32:38', '2022-12-29 12:32:38'),
+(335, 2, 101, 22, 2707, 'Teen Haat Naka, Opp. Wood Mall, Service Road', 'Lal Bahadur Shastri Rd, MIDC Colony, Raheja Gardens, Thane West, Thane, Maharashtra 400080', 400080, '19.1861211', '72.9589778', 1, 7, 3, 10, NULL, '0', 1, '2022-12-29 12:32:38', '2022-12-29 12:32:38'),
+(336, 2, 101, 22, 2707, 'Infinity Mall, Pokhran Road, Thane west', 'Infinity Mall, Smt Gladys Alvares Rd, Gandhi Nagar, Thane West, Mumbai, Maharashtra 400606', 400606, '19.2198617', '72.970355', 1, 3, 1, 10, NULL, '0', 1, '2022-12-29 12:32:38', '2022-12-29 12:32:38'),
+(337, 2, 101, 22, 2707, 'TMC Parking, Gandhi Nagar, Thane West', 'Ashar Residency Imperial Parking Club Zone, Gandhi Nagar, Thane West, Thane, Maharashtra 400606', 400606, '19.2187962', '72.9705822', 1, 3, 1, 10, NULL, '0', 1, '2022-12-29 12:32:38', '2022-12-29 12:32:38'),
+(338, 2, 101, 22, 2707, 'Hindamata Gold cinema, pay and Park, Dadar East', 'Haria House, Govindji Keni Rd, Hindmata, Dadar East, Mumbai, Maharashtra 400014', 400014, '19.0090226', '72.8422293', 1, 2, 1, 10, NULL, '0', 1, '2022-12-29 12:32:38', '2022-12-29 12:32:38'),
+(339, 2, 101, 22, 2707, 'Govind Dham Society, Manisha Nagar, Kalwa West', 'Buva Ramdas, shop no 01, near krantikari sant parampujya kalyan, opp. Govind Dham Society, Kalwa West, Thane, Maharashtra 400605', 400605, '19.1981467', '72.99417', 1, 7, 3, 10, NULL, '0', 1, '2022-12-29 12:32:38', '2022-12-29 12:32:38'),
+(340, 2, 101, 22, 2707, 'Gokuldas pasta Road, Dadar East.', 'Bharat Seva Sadan Trust Building, Dada Saheb Phalke Marg, Next to Sadhna Hotel, Dadar East, Maharashtra 400014', 400014, '19.0142874', '72.8426282', 1, 7, 3, 10, NULL, '0', 1, '2022-12-29 12:32:38', '2022-12-29 12:32:38'),
+(341, 2, 101, 22, 2707, 'Dattawadi, Kharegaon, Kalwa', '60 Feet Rd, Kharegaon, behind karuna building, Kalwa, Thane, Maharashtra 400605', 400605, '19.2024151', '72.9972445', 1, 7, 3, 10, NULL, '0', 1, '2022-12-29 12:32:39', '2022-12-29 12:32:39'),
+(342, 2, 101, 22, 2707, 'MCGM pay and park, Bhulabhai Desai Rd Nr Mahalaxmi Mandir, Mahalaxmi', 'Breach Candy, Cumballa Hill, Mumbai, Maharashtra 400026', 400026, '18.9750119', '72.8060209', 1, 7, 3, 10, NULL, '0', 1, '2022-12-29 12:32:39', '2022-12-29 12:32:39'),
+(343, 2, 101, 22, 2707, 'Kalwa Station Road, Budhaji Nagar. Kalwa West,', 'Shop No 5, Station Road, Kalwa West, Budhaji Nagar, Kalwa, Mumbai, Maharashtra 400605', 400605, '19.1946347', '72.9944944', 1, 7, 3, 10, NULL, '0', 1, '2022-12-29 12:32:39', '2022-12-29 12:32:39'),
+(344, 2, 101, 22, 2707, 'Navroji Gamadia Road, Mahalaxmi', '3, Navroji Gamadia Rd, Mahalaxmi(W), Breach Candy, Cumballa Hill, Mumbai, Maharashtra 400026', 400026, '18.9750827', '72.8065618', 1, 7, 3, 10, NULL, '0', 1, '2022-12-29 12:32:39', '2022-12-29 12:32:39'),
+(345, 2, 101, 22, 2707, 'Heera Panna pay and park, Hajiali', 'Haji Ali, Malviya Nagar, Tardeo, Mumbai, Maharashtra 400034', 400034, '18.9769128', '72.8115995', 1, 2, 1, 10, NULL, '0', 1, '2022-12-29 12:32:39', '2022-12-29 12:32:39'),
+(346, 2, 101, 22, 2707, 'Thane Court, Thane West', 'Balwantrai Mehta Marg, Thane West, Thane, Maharashtra 400601', 400601, '19.1979733', '72.9807567', 1, 7, 3, 10, NULL, '0', 1, '2022-12-29 12:32:39', '2022-12-29 12:32:39'),
+(347, 2, 101, 22, 2707, 'Brand Factory, Vastlabai Desai chowk, Sarkar Nivas,Hajiali', 'Tardeo Rd, Malviya Nagar, Tardeo, Mumbai, Maharashtra 400034', 400034, '18.976132', '72.8120339', 1, 7, 3, 10, NULL, '0', 1, '2022-12-29 12:32:39', '2022-12-29 12:32:39'),
+(348, 2, 101, 22, 2707, 'Anand Dhige Off. Thane Market', 'Lily Apartment, Shivaji Path, Charai, Thane West, Thane, Maharashtra 400601', 400601, '19.195985', '72.9770883', 1, 7, 3, 10, NULL, '0', 1, '2022-12-29 12:32:39', '2022-12-29 12:32:39'),
+(349, 2, 101, 22, 2707, 'MCGM pay and park, Everest building,near Tardev bus depot', 'Everest Building, Tardeo Rd, Janata Nagar, Tardeo, Mumbai, Maharashtra 400034', 400034, '18.9705106', '72.8147128', 1, 3, 3, 10, NULL, '0', 1, '2022-12-29 12:32:40', '2022-12-29 12:32:40'),
+(350, 2, 101, 22, 2707, 'Parsi Temple, Thane West', 'Lily Apartment, Shivaji Path, Charai, Thane West, Thane, Maharashtra 400601', 400601, '19.1960883', '72.9770917', 1, 7, 3, 10, NULL, '0', 1, '2022-12-29 12:32:40', '2022-12-29 12:32:40'),
+(351, 2, 101, 22, 2707, 'opp. Federal Bank, Vashi', 'Sector 17, Vashi, Navi Mumbai, Maharashtra 400703', 400703, '19.0731067', '73.0016983', 1, 7, 3, 10, NULL, '0', 1, '2022-12-29 12:32:40', '2022-12-29 12:32:40'),
+(352, 2, 101, 22, 2707, 'Sun Flower Road, Sector 17, Vashi', '28-8, Sun Flower Road, Sector 17, Vashi, Navi Mumbai, Maharashtra 400703', 400703, '19.07182', '72.9996567', 1, 3, 1, 10, NULL, '0', 1, '2022-12-29 12:32:40', '2022-12-29 12:32:40'),
+(353, 2, 101, 22, 2707, 'Gadhav Naka, Tembipada Road, Bhandup,', 'Tembipada Rd, Bhandup, Gadhav Naka, Kokan Nagar, Bhandup West, Mumbai, Maharashtra 400078', 400078, '19.1473883', '72.92791', 1, 7, 3, 10, NULL, '0', 1, '2022-12-29 12:32:40', '2022-12-29 12:32:40'),
+(354, 2, 101, 22, 2707, 'Nana chowk, Papanas Wadi ,Tardeo Pay & Park', 'Papnas Wadi Rd, Babulnath, Papanas Wadi, Tardeo, Mumbai, Maharashtra 400007', 400007, '18.9619834', '72.8117553', 1, 3, 1, 10, NULL, '0', 1, '2022-12-29 12:32:40', '2022-12-29 12:32:40'),
+(355, 2, 101, 22, 2707, 'Raghuleela mall, Vashi', 'Pranavanandji Marg, Sector 30, Vashi, Navi Mumbai, Maharashtra 400703', 400703, '19.06466', '72.9956667', 1, 7, 3, 10, NULL, '0', 1, '2022-12-29 12:32:40', '2022-12-29 12:32:40'),
+(356, 2, 101, 22, 2707, 'Near CIDCO exhibition center, Vashi', 'Pranavanandji Marg, Sector 30, Vashi, Navi Mumbai, Maharashtra 400703', 400703, '19.0653783', '72.9943783', 1, 7, 3, 10, NULL, '0', 1, '2022-12-29 12:32:40', '2022-12-29 12:32:40'),
+(357, 2, 101, 22, 2707, 'Raheja Vivarea, Sane Guruji Marg, Agripada', 'BLOCK-2, Raheja Vivarea, Sane Guruji Marg, Agripada, Mumbai, Maharashtra 400011', 400011, '18.979297', '72.8259771', 1, 2, 1, 10, NULL, '0', 1, '2022-12-29 12:32:40', '2022-12-29 12:32:40'),
+(358, 2, 101, 22, 2707, 'August Kranti Rd, Gowalia Tank, Tardeo', 'August Kranti Rd, Gowalia Tank, Tardeo, Mumbai, Maharashtra 400007', 400007, '18.9637779', '72.8094914', 1, 7, 3, 10, NULL, '0', 1, '2022-12-29 12:32:40', '2022-12-29 12:32:40'),
+(359, 2, 101, 22, 2707, 'Lodha  Park,  Altamont Road, MCGM Pay & Park,Tardeo', 'ANTILIA APARTMENT, Tardeo, Mumbai, Maharashtra 400026', 400026, '18.9682425', '72.8096879', 1, 7, 3, 10, NULL, '0', 1, '2022-12-29 12:32:40', '2022-12-29 12:32:40'),
+(360, 2, 101, 22, 2707, 'Morland Road, RBI Staff Colony, Mumbai Central', 'Morland Rd, RBI Staff Colony, Mumbai Central, Mumbai, Maharashtra 400008', 400008, '18.9707017', '72.82503', 1, 7, 3, 10, NULL, '0', 1, '2022-12-29 12:32:41', '2022-12-29 12:32:41'),
+(361, 2, 101, 22, 2707, 'Phule Nagar, Mankurd West, Railway Station', 'Phule Nagar, Mankhurd, Mumbai, Maharashtra 400088', 400088, '19.0486417', '72.9321167', 1, 7, 3, 10, NULL, '0', 1, '2022-12-29 12:32:41', '2022-12-29 12:32:41'),
+(362, 2, 101, 22, 2707, 'Khambala Hill, Bhai Magandas Marg', 'Tej Apartments, Babulnath, Papanas Wadi, Tardeo, Mumbai, Maharashtra 400007', 400007, '18.9628195', '72.808262', 1, 7, 3, 10, NULL, '0', 1, '2022-12-29 12:32:41', '2022-12-29 12:32:41'),
+(363, 2, 101, 22, 2707, 'Atmaram Rangnekar marga ,Wilson college,Gamdevi', 'AR Rangnekar Rd, Sea Face, Gamdevi, Mumbai, Maharashtra 400007', 400007, '18.9566117', '72.8123762', 1, 7, 3, 10, NULL, '0', 1, '2022-12-29 12:32:41', '2022-12-29 12:32:41'),
+(364, 2, 101, 22, 2707, 'Maratha Mandir Cinema, Madanpura, Mumbai', 'M.M Marg, RBI Staff Colony, Madanpura, Mumbai, Maharashtra 400008', 400008, '18.9715599', '72.8220088', 1, 7, 3, 10, NULL, '0', 1, '2022-12-29 12:32:41', '2022-12-29 12:32:41'),
+(365, 2, 101, 22, 2707, 'Jehangir Boman Behram Rd, Marzban Parsi Colony, Kamathipura, Mumbai', 'Jehangir Boman Behram Rd, Marzban Parsi Colony, Dalal Estate, Kamathipura, Mumbai, Maharashtra 400008', 400008, '18.968779', '72.8198222', 1, 7, 3, 10, NULL, '0', 1, '2022-12-29 12:32:41', '2022-12-29 12:32:41'),
+(366, 2, 101, 22, 2707, 'V P Road, Congress House, Girgaon, Mumbai', 'Congress House Ln, Charni Road East, Shapur Baug, Girgaon, Mumbai, Maharashtra 400004', 400004, '18.9584692', '72.816637', 1, 7, 3, 10, NULL, '0', 1, '2022-12-29 12:32:41', '2022-12-29 12:32:41'),
+(367, 2, 101, 22, 2707, 'Morland Road, RBI Staff Colony, Mumbai Central', 'Morland Road, RBI Staff Colony, Mumbai Central, Mumbai, Maharashtra 400008', 400008, '18.9706828', '72.8250261', 1, 2, 1, 10, NULL, '0', 1, '2022-12-29 12:32:41', '2022-12-29 12:32:41'),
+(368, 2, 101, 22, 2707, 'R Odeon Mall,R Narkar Marg, Ghatkopar East', '3WH5+WP4, MHADA Colony, Pant Nagar, Ghatkopar East, Mumbai, Maharashtra 400077', 400077, '19.0797121', '72.9093775', 1, 3, 1, 10, NULL, '0', 1, '2022-12-29 12:32:41', '2022-12-29 12:32:41'),
+(369, 2, 101, 22, 2707, 'Chatrapati Maidan, Jagruti Nagar, R. B.  Mehta Marg, Ghatkopar West', 'Maneklal Estate, Ghatkopar West, Mumbai, Maharashtra 400086', 400086, '19.0910703', '72.9022816', 1, 7, 3, 10, NULL, '0', 1, '2022-12-29 12:32:42', '2022-12-29 12:32:42'),
+(370, 2, 101, 22, 2707, 'Express zone, Goregaon East', 'Malad, MBH Colony, Panch Bawadi, Malad East, Mumbai, Maharashtra 400097', 400097, '19.1762083', '72.8588217', 1, 3, 3, 10, NULL, '0', 1, '2022-12-29 12:32:42', '2022-12-29 12:32:42'),
+(371, 2, 101, 22, 2707, 'Growels Mall, Akurli Road, Kandivali East', 'Kandivali, Akurli Industry Estate, Kandivali East, Mumbai, Maharashtra 400101', 400101, '19.2019133', '72.8598683', 1, 3, 3, 10, NULL, '0', 1, '2022-12-29 12:32:42', '2022-12-29 12:32:42'),
+(372, 2, 101, 22, 2707, 'Thakur Village Road, Kandivali East', '120 Feet Rd, Kanakiya, Thakur Village, Kandivali East, Mumbai, Maharashtra 400101', 400101, '19.2071383', '72.87262', 1, 7, 3, 10, NULL, '0', 1, '2022-12-29 12:32:42', '2022-12-29 12:32:42'),
+(373, 2, 101, 22, 2707, 'Thakur Mall, Oberoi Park View Road, Kandivali', 'Oberoi Park View Rd, Kandivali, Kanakiya, Thakur Village, Kandivali East, Mumbai, Maharashtra 400101', 400101, '19.2093133', '72.8726417', 1, 3, 1, 10, NULL, '0', 1, '2022-12-29 12:32:42', '2022-12-29 12:32:42'),
+(374, 2, 101, 22, 2707, 'Evershine Millennium, Thakur Village. Kandivali East', 'Gokul Towers Road, Evershine Millennium Paradise, Thakur Village, Kandivali East, Mumbai, Maharashtra 400101', 400101, '19.210225', '72.8759467', 1, 7, 3, 10, NULL, '0', 1, '2022-12-29 12:32:42', '2022-12-29 12:32:42'),
+(375, 2, 101, 22, 2707, 'Dagdi Chawl, Agripada, Mumbai', 'Dagdi Chawl ,Agripada, Mumbai, Maharashtra 400011', 400011, '18.9772033', '72.829665', 1, 7, 3, 10, NULL, '0', 1, '2022-12-29 12:32:42', '2022-12-29 12:32:42'),
+(376, 2, 101, 22, 2707, 'Shirin Talkies Lane, Jacob Circle', 'Anandilal P Marg, RTO Colony, Mumbai Central, Mumbai, Maharashtra 400011', 400011, '18.9807111', '72.8257269', 1, 7, 3, 10, NULL, '0', 1, '2022-12-29 12:32:42', '2022-12-29 12:32:42'),
+(377, 2, 101, 22, 2707, 'K.K Road, Mahalaxmi Bridge, Dhobi Ghat', 'K.K Road, RTO Colony, Mahalakshmi, Mumbai, Maharashtra 400011', 400011, '18.9820466', '72.8244344', 1, 7, 3, 10, NULL, '0', 1, '2022-12-29 12:32:43', '2022-12-29 12:32:43'),
+(378, 2, 101, 22, 2707, 'Gallops Restaurant, Royal Western India Turf Club, Mahalakshmi', 'XRJC+399, Royal Western India Turf Club, Mahalakshmi, Mumbai, Maharashtra 400018', 400018, '18.980245', '72.8209746', 1, 3, 3, 10, NULL, '0', 1, '2022-12-29 12:32:43', '2022-12-29 12:32:43'),
+(379, 2, 101, 22, 2707, 'Racecourse Mahalaxmi, Keshavrao Khadye Marg, Mahalakshmi', 'XRH9+VGM, Keshavrao Khadye Marg, Royal Western India Turf Club, Mahalakshmi, Mumbai, Maharashtra 400034', 400034, '18.9797525', '72.8189515', 1, 3, 3, 10, NULL, '0', 1, '2022-12-29 12:32:43', '2022-12-29 12:32:43'),
+(380, 2, 101, 22, 2707, 'Wockhardt Hospital, Agripada, Mumbai', 'Motibai St, Agripada, Mumbai, Maharashtra 400008', 400008, '18.9748336', '72.8241507', 1, 7, 3, 10, NULL, '0', 1, '2022-12-29 12:32:43', '2022-12-29 12:32:43'),
+(381, 2, 101, 22, 2707, 'Baby\'s Garden and St Josephs School', 'Building No. 3, Navjivan Society, Dr. D. B Marg, Lamington Road, Mumbai - 400008', 400008, '18.9735491', '72.8247255', 1, 7, 3, 10, NULL, '0', 1, '2022-12-29 12:32:43', '2022-12-29 12:32:43'),
+(382, 2, 101, 22, 2707, 'YMCA Swimming Pool, Farukh Oomerbhoy Marg, Agripada', 'Farukh Oomerbhoy Marg, Agripada, Mumbai, Maharashtra 400011', 400011, '18.9742433', '72.8248404', 1, 7, 3, 10, NULL, '0', 1, '2022-12-29 12:32:43', '2022-12-29 12:32:43'),
+(383, 2, 101, 22, 2707, 'Ishwar Nagar, Maharshi Vittal Ramji Shinde Marg, Bhandup West', 'E110, 1st floor, eastern business district, MV Shinde Marg, Bhandup, Dina Bama Estate, Bhandup West, Mumbai, Maharashtra 400078', 400078, '19.1433452', '72.9351299', 1, 7, 3, 10, NULL, '0', 1, '2022-12-29 12:32:43', '2022-12-29 12:32:43'),
+(384, 2, 101, 22, 2707, 'Subhash Road, Sardar Pratap Sing Sankul, Bhandup West', 'Ram Nagar, Jaydev Singh Nagar, Bhandup West, Mumbai, Maharashtra 400078', 400078, '19.143718', '72.9297155', 1, 7, 3, 10, NULL, '0', 1, '2022-12-29 12:32:43', '2022-12-29 12:32:43'),
+(385, 2, 101, 22, 2707, 'J M Rd, Citycare Hospital, Bhandup West', 'Shop 2, Tembipada, Kokan Nagar, Bhandup West, Mumbai, Maharashtra 400078', 400078, '19.1452857', '72.9285391', 1, 7, 3, 10, NULL, '0', 1, '2022-12-29 12:32:43', '2022-12-29 12:32:43'),
+(386, 2, 101, 22, 2707, 'Mahavir Nagar, Croma, Borivali West', 'Boraspada Road, Kandivali, Satya Nagar, Borivali West, Mumbai, Maharashtra 400067', 400067, '19.2130751', '72.8427354', 1, 3, 3, 10, NULL, '0', 1, '2022-12-29 12:32:44', '2022-12-29 12:32:44'),
+(387, 2, 101, 22, 2707, 'Parag School, Shivaji Talav, Bhandup West', 'WING-C, Lal Bahadur Shastri Rd, Jaydev Singh Nagar, Bhandup West, Mumbai, Maharashtra 400078', 400078, '19.146276', '72.930419', 1, 7, 3, 10, NULL, '0', 1, '2022-12-29 12:32:44', '2022-12-29 12:32:44'),
+(388, 2, 101, 22, 2707, 'Lake Road, Near Madhuban gardan,opp Old Krishna cinema, Bhandup West', '13, Maruti Mandir Rd, Bhandup, Sadan wadi, Bhandup West, Mumbai, Maharashtra 400078', 400078, '19.1516832', '72.936989', 1, 2, 1, 10, NULL, '0', 1, '2022-12-29 12:32:44', '2022-12-29 12:32:44'),
+(389, 2, 101, 22, 2707, 'Raghuleela Mall, Poisar Gymkhana, Kandivali West,', 'Poisar Lt Nagar Road Opp Megh Aghuleela Mall, Kandivali West, Mumbai, Maharashtra 400067', 400067, '19.212935', '72.8491683', 1, 3, 1, 10, NULL, '0', 1, '2022-12-29 12:32:44', '2022-12-29 12:32:44');
+INSERT INTO `tbl_parking_place` (`id`, `fk_vendor_id`, `fk_country_id`, `fk_state_id`, `fk_city_id`, `place_name`, `address`, `pincode`, `latitude`, `longitude`, `slots`, `fk_place_status_id`, `fk_parking_price_type`, `ext_price`, `per_hour_charges`, `status`, `del_status`, `created_at`, `updated_at`) VALUES
+(390, 2, 101, 22, 2707, 'Jangal Mangal Road, Sarvodayanagar Main Gate. Bhandup West', 'S Pratap Singh Rd, Satyavijay Society, Panchsheel Nagar, Bhandup West, Mumbai, Maharashtra 400078', 400078, '19.1492971', '72.9321933', 1, 2, 1, 10, NULL, '0', 1, '2022-12-29 12:32:44', '2022-12-29 12:32:44'),
+(391, 2, 101, 22, 2707, 'Cross lain. Between Myuresh Srushti & Mayuresh Residency, L.B.S.Road,Bhandup West', 'Bhandup, Rajiv Gandhi Nagar, Bhandup West, Mumbai, Maharashtra 400078', 400078, '19.1588027', '72.9372362', 1, 2, 1, 10, NULL, '0', 1, '2022-12-29 12:32:44', '2022-12-29 12:32:44'),
+(392, 2, 101, 22, 2707, 'Lodha Imperiya, Sarthi Hospital, Thank Road, Bhandup West', 'Shop No, 1, Tank Rd, Bhandup, Nirmal Nagar, Bhandup West, Mumbai, Maharashtra 400078', 400078, '19.1469721', '72.9349395', 1, 7, 3, 10, NULL, '0', 1, '2022-12-29 12:32:45', '2022-12-29 12:32:45'),
+(393, 2, 101, 22, 2707, 'Veera Desai,Jogeshwari West', 'Jogeshwari West, Mumbai, Maharashtra 400047', 400047, '19.1422067', '72.8373967', 1, 7, 3, 10, NULL, '0', 1, '2022-12-29 12:32:45', '2022-12-29 12:32:45'),
+(394, 2, 101, 22, 2707, 'Oberoi Mall, Malad East', 'General Arun Kumar Vaidya Marg, Yashodham, Malad East, Mumbai, Maharashtra 400097', 400097, '19.1743683', '72.86059', 1, 3, 1, 10, NULL, '0', 1, '2022-12-29 12:32:45', '2022-12-29 12:32:45'),
+(395, 2, 101, 22, 2707, 'Blossom Wedding , Mahakali Road, Andheri East', 'Mahakali Caves Rd, Sundar Nagar, Sunder Nagar, Jogeshwari East, Mumbai, Maharashtra 400093', 400093, '19.1311666', '72.8718683', 1, 7, 3, 10, NULL, '0', 1, '2022-12-29 12:32:45', '2022-12-29 12:32:45'),
+(396, 2, 101, 22, 2707, 'Pheonix Lower Parel', 'Extension of Entry Rd to Phoenix, Lower Parel, Mumbai, Maharashtra 400013', 400013, '18.9942354', '72.824194', 1, 3, 1, 10, NULL, '0', 1, '2022-12-29 12:32:45', '2022-12-29 12:32:45'),
+(397, 2, 101, 22, 2707, 'Holy Spirit hospital, Mahakali Caves Road, Andheri East', 'Mahakali Caves Rd, Sher E Punjab Colony, Andheri East, Mumbai, Maharashtra 400093', 400093, '19.1273117', '72.86732', 1, 3, 1, 10, NULL, '0', 1, '2022-12-29 12:32:45', '2022-12-29 12:32:45'),
+(398, 2, 101, 22, 2707, 'Off New Link Road, Vastu Road, Andheri West', 'Red Rose Apartments, Shastri Nagar, Mumbai, Maharashtra India, SAB TV Rd, Shastri Nagar, Andheri West, Mumbai, Maharashtra 400102', 400102, '19.1367267', '72.8301717', 1, 7, 3, 10, NULL, '0', 1, '2022-12-29 12:32:45', '2022-12-29 12:32:45'),
+(399, 2, 101, 22, 2707, 'Sai Palace parking, Chakala, Andheri East', 'Mahakali Caves Rd, Chakala, Andheri East, Mumbai, Maharashtra 400053', 400053, '19.1154933', '72.8605483', 1, 7, 3, 10, NULL, '0', 1, '2022-12-29 12:32:46', '2022-12-29 12:32:46'),
+(400, 2, 101, 22, 2707, 'Guru Govind Road. Chakala, Andheri East', 'Shaheed Bhagat Singh Society, S B Singh Colony, J B Nagar, Andheri East, Mumbai, Maharashtra 400053', 400053, '19.1111967', '72.86221', 1, 7, 3, 10, NULL, '0', 1, '2022-12-29 12:32:46', '2022-12-29 12:32:46'),
+(401, 2, 101, 22, 2707, 'Marol church road, Andheri East', 'Church Road, Marol Pipeline Rd, near Metro Station Airport Road, Andheri East, Mumbai, Maharashtra 400059', 400059, '19.1105583', '72.874515', 1, 7, 3, 10, NULL, '0', 1, '2022-12-29 12:32:46', '2022-12-29 12:32:46'),
+(402, 2, 101, 22, 2707, 'Bhandarkar Road, Ram Mandir, Matunga East', 'Bhandarkar Road, Matunga, Mumbai, Maharashtra 400019', 400019, '19.0273873', '72.8537797', 1, 7, 3, 10, NULL, '0', 1, '2022-12-29 12:32:46', '2022-12-29 12:32:46'),
+(403, 2, 101, 22, 2707, 'Comred Harbansal Lal Road, Shanmukhananda Hall, Sion East', 'Sri Shanmukhananda Chandrasekarendra Saraswathi Auditorium, Flank Rd, Antop Hill, Mumbai, Maharashtra 400037', 400037, '19.0311403', '72.8597038', 1, 7, 3, 10, NULL, '0', 1, '2022-12-29 12:32:46', '2022-12-29 12:32:46'),
+(404, 2, 101, 22, 2707, 'Flank Road, Anand Nagar, Sion Koliwada', 'Flank Road, Sion East, Antop Hill, Mumbai, Maharashtra 400037', 400037, '19.03361', '72.8618117', 1, 3, 3, 10, NULL, '0', 1, '2022-12-29 12:32:46', '2022-12-29 12:32:46'),
+(405, 2, 101, 22, 2707, 'Railway Quarters Road, NESCO, Goregaon', 'Railway Quarters Road, NESCO, Goregaon, Mumbai, Maharashtra 400063', 400063, '19.1491137', '72.8518511', 1, 3, 3, 10, NULL, '0', 1, '2022-12-29 12:32:46', '2022-12-29 12:32:46'),
+(406, 2, 101, 22, 2707, 'K.J.Somaya Hospital, Chunabhatti,Sion', 'Somaiya Hospital Rd, Lalbaug, Somaiya, Sion, Mumbai, Maharashtra 400022', 400022, '19.0481928', '72.8744966', 1, 7, 3, 10, NULL, '0', 1, '2022-12-29 12:32:46', '2022-12-29 12:32:46'),
+(407, 2, 101, 22, 2707, 'SB marg, J.B.Nagar, Andheri East', 'Sahar Road, Taruvel CHS, Wing-C, Tarun Bharat, Andheri East, Mumbai, Maharashtra 400099', 400099, '19.10645', '72.8637567', 1, 7, 3, 10, NULL, '0', 1, '2022-12-29 12:32:47', '2022-12-29 12:32:47'),
+(408, 2, 101, 22, 2707, 'Byaris Int. Hotel, Sahar Road, Vile Parle East', 'Sahar Rd, Bamanwada, Andheri East, Mumbai, Maharashtra 400099', 400099, '19.1047633', '72.8611283', 1, 7, 3, 10, NULL, '0', 1, '2022-12-29 12:32:47', '2022-12-29 12:32:47'),
+(409, 2, 101, 22, 2707, 'Matunga Railway Station East', 'Matunga, Mumbai, Maharashtra 400019', 400019, '19.0272333', '72.8505167', 1, 3, 3, 10, NULL, '0', 1, '2022-12-29 12:32:47', '2022-12-29 12:32:47'),
+(410, 2, 101, 22, 2707, 'Nityanand Road, Andheri East station', 'Railway Colony, Andheri East, Mumbai, Maharashtra 400058', 400058, '19.1164683', '72.84705', 1, 3, 1, 10, NULL, '0', 1, '2022-12-29 12:32:47', '2022-12-29 12:32:47'),
+(411, 2, 101, 22, 2707, 'Laxmi Napoo Road, Welingkar Institute, Mumbai', 'Laxmi Napoo Rd, Matunga, Mumbai, Maharashtra 400019', 400019, '19.0249648', '72.850056', 1, 3, 3, 10, NULL, '0', 1, '2022-12-29 12:32:47', '2022-12-29 12:32:47'),
+(412, 2, 101, 22, 2707, 'Gilbert Hill Road, Andheri Recreation Club, Bhavans College', 'Gilbert Hill Rd, Munshi Nagar, Andheri West, Mumbai, Maharashtra 400058', 400058, '19.1246117', '72.8382583', 1, 7, 3, 10, NULL, '0', 1, '2022-12-29 12:32:48', '2022-12-29 12:32:48'),
+(413, 2, 101, 22, 2707, 'Juhu Versova Link Road, 7 bungalow, Versova Metro', 'Juhu Versova Link Rd, Gharkul Society, Seven Bunglow, Andheri West, Mumbai, Maharashtra 400058', 400058, '19.1297183', '72.8221617', 1, 7, 3, 10, NULL, '0', 1, '2022-12-29 12:32:48', '2022-12-29 12:32:48'),
+(414, 2, 101, 22, 2707, '7 bungalow Best Depot Parking, Andheri West', 'Seven Bungalows Bus Depot, Model Town, Andheri West, Mumbai, Maharashtra 400047', 400047, '19.131295', '72.8196367', 1, 7, 3, 10, NULL, '0', 1, '2022-12-29 12:32:48', '2022-12-29 12:32:48'),
+(415, 2, 101, 22, 2707, 'G Mall, 7 Bungalow, Andheri West', 'Model Town, Andheri West, Mumbai, Maharashtra 400053', 400053, '19.1307292', '72.8199403', 1, 3, 1, 10, NULL, '0', 1, '2022-12-29 12:32:48', '2022-12-29 12:32:48'),
+(416, 2, 101, 22, 2707, 'Model Town, Kabra Metro One. Andheri West', 'Pratap Cooperative Housing Society 1 Metro Station Versova, Andheri West, Mumbai, Maharashtra 400047', 400047, '19.130235', '72.8220067', 1, 7, 3, 10, NULL, '0', 1, '2022-12-29 12:32:48', '2022-12-29 12:32:48'),
+(417, 2, 101, 22, 2707, 'Four Bungalows, Saint Louis Convent Road, Andheri West', 'Saint Louis Convent Rd, Gharkul Society, Manish Nagar, Four Bungalows, Andheri West, Mumbai, Maharashtra 400058', 400058, '19.1283167', '72.8255183', 1, 3, 1, 10, NULL, '0', 1, '2022-12-29 12:32:48', '2022-12-29 12:32:48'),
+(418, 2, 101, 22, 2707, 'Manish Nagar, 4 bungalow. Andheri West', 'Manish Nagar Rd, Gharkul Society, Manish Nagar, Four Bungalows, Andheri West, Mumbai, Maharashtra 400058', 400058, '19.1285567', '72.8258633', 1, 7, 3, 10, NULL, '0', 1, '2022-12-29 12:32:48', '2022-12-29 12:32:48'),
+(419, 2, 101, 22, 2707, 'Raycon IT Park Road, Nahur West,', 'Raycon IT Park Rd, Nahur West, Industrial Area, Bhandup West, Mumbai, Maharashtra 400078', 400078, '19.1535794', '72.9443486', 1, 7, 3, 10, NULL, '0', 1, '2022-12-29 12:32:49', '2022-12-29 12:32:49'),
+(420, 2, 101, 22, 2707, 'Ceat Tyre Main Gate, Bhandup Village Road, Nahur West', 'Bhandup Village Road, Nahur West, Industrial Area, Bhandup West, Mumbai, Maharashtra 400078', 400078, '19.1543439', '72.9435376', 1, 7, 3, 10, NULL, '0', 1, '2022-12-29 12:32:49', '2022-12-29 12:32:49'),
+(421, 2, 101, 22, 2707, 'Red Rose Apartments, Shastri Nagar, SAB TV Road, Andheri West', 'Red Rose Apartments, Shastri Nagar, Mumbai, Maharashtra India, SAB TV Rd, Shastri Nagar, Andheri West, Mumbai, Maharashtra 400102', 400102, '19.1367267', '72.8301717', 1, 7, 3, 10, NULL, '0', 1, '2022-12-29 12:32:49', '2022-12-29 12:32:49'),
+(422, 2, 101, 22, 2707, 'R Kamani Road, Ballard Estate, Fort, Mumbai,', 'R Kamani Rd, Ballard Estate, Fort, Mumbai, Maharashtra 400001', 400001, '18.9373597', '72.8395405', 1, 3, 1, 10, NULL, '0', 1, '2022-12-29 12:32:49', '2022-12-29 12:32:49'),
+(423, 2, 101, 22, 2707, 'Sir Phirozshah Mehta Rd, Ballard Estate, Fort', 'Sir Phirozshah Mehta Rd, Ballard Estate, Fort, Mumbai, Maharashtra 400001', 400001, '18.9343883', '72.8364783', 1, 3, 1, 10, NULL, '0', 1, '2022-12-29 12:32:49', '2022-12-29 12:32:49'),
+(424, 2, 101, 22, 2474, 'Verma Chambers, Kala Ghoda, Fort', 'Verma Chambers, Kala Ghoda, Fort, Mumbai, Maharashtra 400001', 400001, '18.9331371', '72.835546', 1, 3, 1, 10, NULL, '0', 1, '2022-12-29 12:32:49', '2022-12-29 12:32:49'),
+(425, 2, 101, 22, 2707, 'Murzban Road, Near McDonald\'s, Azad Maidan, Fort', 'Murzban Road, Azad Maidan, Fort, Mumbai, Maharashtra 400001', 400001, '18.9390749', '72.8344848', 1, 3, 1, 10, NULL, '0', 1, '2022-12-29 12:32:49', '2022-12-29 12:32:49'),
+(426, 2, 101, 22, 2707, 'Garam Masala, Sector 15, Airoli', 'Mulund - Airoli Rd, Panchatara Co Housing Society, Sector 15, Airoli, Navi Mumbai, Maharashtra 400708', 400708, '19.1488733', '72.9902133', 1, 7, 3, 10, NULL, '0', 1, '2022-12-29 12:32:49', '2022-12-29 12:32:49'),
+(427, 2, 101, 22, 2707, 'Jerbai Wadia Road, Parel East', 'Jerbai Wadia Rd, Parel East, Parel, Mumbai, Maharashtra 400012', 400012, '19.0053247', '72.8409672', 1, 3, 3, 10, NULL, '0', 1, '2022-12-29 12:32:49', '2022-12-29 12:32:49'),
+(428, 2, 101, 22, 2707, 'Babasaheb Ambedkar Road, lalbag, Chinchapokali East, Pay and Park ', 'Ghodapdeo, Byculla East, Byculla, Mumbai, Maharashtra 400033', 400033, '18.9858735', '72.8356816', 1, 3, 1, 10, NULL, '0', 1, '2022-12-29 12:32:49', '2022-12-29 12:32:49'),
+(429, 2, 101, 22, 2707, 'Nerul fish market', 'Vehicle Parking, Nerul East, Sector 20, Nerul, Navi Mumbai, Maharashtra', 400706, '19.03504', '73.01753', 1, 3, 1, 10, NULL, '0', 1, '2022-12-29 12:32:50', '2022-12-29 12:32:50'),
+(430, 2, 101, 22, 2707, 'Waterfield Road, Bandra West', '210-205, Waterfield Road, Bandra West, Mumbai, Maharashtra 400050', 400050, '19.0611817', '72.834465', 1, 2, 3, 10, NULL, '0', 1, '2022-12-29 12:32:50', '2022-12-29 12:32:50'),
+(431, 2, 101, 22, 2707, 'Hitchki, Powai - Free Valet', 'G5, Transocean house, Lake Boulevard Rd. Hiranandani Business Park, near Kaya skin clinic, Powai, Mumbai, Maharashtra 400076', 400076, '19.1199167', '72.9071313', 1, 5, 4, 10, NULL, '0', 1, '2022-12-29 12:32:50', '2022-12-29 12:32:50'),
+(432, 2, 101, 22, 2707, 'Mirchi & Mime Powai - Free Valet', 'Transocean House, Lake Blvd Rd, Hiranandani Gardens, MHADA Colony 19, Powai, Mumbai, Maharashtra 400076', 400076, '19.1198468', '72.9071803', 1, 5, 4, 10, NULL, '0', 1, '2022-12-29 12:32:50', '2022-12-29 12:32:50'),
+(433, 2, 101, 22, 2707, 'Bayroute Powai - Free Valet', 'Transocean House Lake Boulevard Road, Hiranandani Business Park, Powai, Mumbai, Maharashtra 400076', 400076, '19.1201698', '72.9070085', 1, 5, 4, 10, NULL, '0', 1, '2022-12-29 12:32:50', '2022-12-29 12:32:50'),
+(434, 2, 101, 22, 2707, 'Lodha Heaven, Near Kopar Road, Dombivli', 'Lodha Heaven, Shastri Nagar, Dombivli West, Maharashtra 421202', 421202, '19.217557907104', '73.085029602051', 1, 3, 3, 10, NULL, '0', 1, '2022-12-29 12:32:50', '2022-12-29 12:32:50'),
+(435, 2, 101, 22, 2707, 'Metro Cinema Pay & Park, Dhobi Talao, New Marine Lines', 'Metro House, Cinema Ln, Dhobi Talao, New Marine Lines, Marine Lines, Mumbai, Maharashtra 400020', 400020, '18.942831039429', '72.828956604004', 1, 3, 3, 10, NULL, '0', 1, '2022-12-29 12:32:50', '2022-12-29 12:32:50'),
+(436, 2, 101, 22, 2707, 'NSE BKCaAA', 'test', 400051, '25.28704728025247', ' 51.51610505350684', 1, 1, 1, 10, 0, '0', 1, '2023-01-12 12:31:29', '2023-01-12 12:31:29');
 
 -- --------------------------------------------------------
 
@@ -48566,12 +49080,36 @@ CREATE TABLE `tbl_parking_place_status` (
 --
 
 INSERT INTO `tbl_parking_place_status` (`id`, `place_status`, `status`, `del_status`, `created_at`, `updated_at`) VALUES
-(1, 'Active', 1, 1, '2022-12-07 11:38:52', '2022-12-15 12:31:03'),
+(1, 'Active', 1, 1, '2022-12-07 11:38:52', '2022-12-22 13:56:45'),
 (2, 'Inactive', 1, 1, '2022-12-07 11:38:52', '2022-12-15 12:10:47'),
 (3, 'Upcoming', 1, 1, '2022-12-07 11:38:52', '2022-12-07 11:38:52'),
 (4, 'Others', 1, 1, '2022-12-07 11:38:52', '2022-12-07 11:38:52'),
 (5, 'Vallet', 1, 1, '2022-12-15 11:50:19', '2022-12-15 11:50:19'),
-(6, 'CTCB', 1, 1, '2022-12-15 12:32:07', '2022-12-15 12:32:07');
+(6, 'CTCB', 1, 1, '2022-12-15 12:32:07', '2022-12-15 12:32:07'),
+(7, 'Road Side', 1, 1, '2022-12-29 10:58:43', '2022-12-29 10:58:43');
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `tbl_parking_place_vehicle_type`
+--
+
+CREATE TABLE `tbl_parking_place_vehicle_type` (
+  `id` bigint(20) NOT NULL,
+  `fk_place_id` int(11) DEFAULT NULL,
+  `fk_vehicle_type_id` int(11) NOT NULL,
+  `del_status` int(11) NOT NULL DEFAULT 1,
+  `created_at` datetime NOT NULL DEFAULT current_timestamp(),
+  `updated_at` datetime NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp()
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+--
+-- Dumping data for table `tbl_parking_place_vehicle_type`
+--
+
+INSERT INTO `tbl_parking_place_vehicle_type` (`id`, `fk_place_id`, `fk_vehicle_type_id`, `del_status`, `created_at`, `updated_at`) VALUES
+(1, 436, 1, 1, '2023-01-12 17:36:00', '2023-01-12 17:36:34'),
+(2, 436, 2, 1, '2023-01-12 17:36:00', '2023-01-12 17:36:37');
 
 -- --------------------------------------------------------
 
@@ -48630,6 +49168,189 @@ CREATE TABLE `tbl_place_device_mapped` (
   `updated_at` datetime NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
+--
+-- Dumping data for table `tbl_place_device_mapped`
+--
+
+INSERT INTO `tbl_place_device_mapped` (`id`, `fk_parking_place_id`, `fk_device_id`, `created_at`, `updated_at`) VALUES
+(1, 1, 1, '2022-12-21 10:25:44', '2022-12-21 10:25:44'),
+(2, 1, 2, '2022-12-21 10:25:44', '2022-12-21 10:25:44'),
+(3, 1, 3, '2022-12-21 10:25:44', '2022-12-21 10:25:44'),
+(4, 1, 4, '2022-12-21 10:25:44', '2022-12-21 10:25:44'),
+(5, 1, 5, '2022-12-21 10:25:44', '2022-12-21 10:25:44'),
+(6, 1, 2, '2022-12-21 11:23:58', '2022-12-21 11:23:58'),
+(7, 1, 3, '2022-12-21 11:23:58', '2022-12-21 11:23:58'),
+(8, 1, 4, '2022-12-21 11:23:58', '2022-12-21 11:23:58'),
+(9, 1, 5, '2022-12-21 11:23:58', '2022-12-21 11:23:58'),
+(10, 1, 2, '2022-12-21 11:25:08', '2022-12-21 11:25:08'),
+(11, 1, 3, '2022-12-21 11:25:08', '2022-12-21 11:25:08'),
+(12, 1, 4, '2022-12-21 11:25:08', '2022-12-21 11:25:08'),
+(13, 1, 5, '2022-12-21 11:25:08', '2022-12-21 11:25:08'),
+(14, 1, 2, '2022-12-21 11:31:21', '2022-12-21 11:31:21'),
+(15, 1, 3, '2022-12-21 11:31:21', '2022-12-21 11:31:21'),
+(16, 1, 4, '2022-12-21 11:31:21', '2022-12-21 11:31:21'),
+(17, 1, 5, '2022-12-21 11:31:21', '2022-12-21 11:31:21'),
+(18, 1, 2, '2022-12-21 11:34:48', '2022-12-21 11:34:48'),
+(19, 1, 3, '2022-12-21 11:34:48', '2022-12-21 11:34:48'),
+(20, 1, 4, '2022-12-21 11:34:48', '2022-12-21 11:34:48'),
+(21, 1, 5, '2022-12-21 11:34:48', '2022-12-21 11:34:48'),
+(22, 1, 1, '2022-12-21 17:09:21', '2022-12-21 17:09:21'),
+(23, 1, 2, '2022-12-21 17:09:21', '2022-12-21 17:09:21'),
+(24, 1, 3, '2022-12-21 17:09:21', '2022-12-21 17:09:21'),
+(25, 1, 4, '2022-12-21 17:09:21', '2022-12-21 17:09:21'),
+(26, 1, 5, '2022-12-21 17:09:21', '2022-12-21 17:09:21');
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `tbl_place_traffic`
+--
+
+CREATE TABLE `tbl_place_traffic` (
+  `id` bigint(20) NOT NULL,
+  `fk_user_id` int(11) DEFAULT NULL,
+  `fk_place_id` int(11) DEFAULT NULL,
+  `del_status` int(11) NOT NULL DEFAULT 1,
+  `created_at` datetime NOT NULL DEFAULT current_timestamp(),
+  `updated_at` datetime NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp()
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `tbl_pos_booking`
+--
+
+CREATE TABLE `tbl_pos_booking` (
+  `id` int(11) NOT NULL,
+  `fk_place_id` int(11) DEFAULT NULL,
+  `fk_verifier_id` int(11) DEFAULT NULL,
+  `fk_vehicle_type_id` int(11) DEFAULT NULL,
+  `fk_device_id` int(11) DEFAULT NULL,
+  `fk_lang_id` int(11) DEFAULT NULL,
+  `car_no` varchar(100) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `phone_no` varchar(20) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `from_date` date DEFAULT NULL,
+  `to_date` date DEFAULT NULL,
+  `from_time` time DEFAULT NULL,
+  `to_time` time DEFAULT NULL,
+  `total_hours` varchar(50) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `price` double DEFAULT NULL,
+  `latitude` longtext COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `longitude` longtext COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `book_status` int(11) DEFAULT NULL COMMENT '1. Check-in \r\n2. Check-out',
+  `IP` longtext COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `Mac_address` longtext COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `created_at` datetime NOT NULL DEFAULT current_timestamp(),
+  `updated_at` datetime NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp()
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+--
+-- Dumping data for table `tbl_pos_booking`
+--
+
+INSERT INTO `tbl_pos_booking` (`id`, `fk_place_id`, `fk_verifier_id`, `fk_vehicle_type_id`, `fk_device_id`, `fk_lang_id`, `car_no`, `phone_no`, `from_date`, `to_date`, `from_time`, `to_time`, `total_hours`, `price`, `latitude`, `longitude`, `book_status`, `IP`, `Mac_address`, `created_at`, `updated_at`) VALUES
+(1, 1, 6, 1, 1, 2, 'KA 19P 8488', '', '0000-00-00', '0000-00-00', '00:00:01', '00:00:00', '', 0, '19.128484389229634', '72.9256605528929', 1, NULL, '11111', '2023-01-17 12:50:54', '2023-01-17 12:50:54'),
+(2, 1, 6, 1, 1, 2, 'KA 19P 8488', '', '0000-00-00', '0000-00-00', '00:00:01', '00:00:02', '1', 20, '19.128484389229634', '72.9256605528929', 1, NULL, '11111', '2023-01-17 12:53:54', '2023-01-17 12:53:54'),
+(3, 1, 6, 1, 1, 2, 'KA 19P 8488', '', '0000-00-00', '0000-00-00', '00:00:01', '00:00:02', '1', 20, '19.128484389229634', '72.9256605528929', 1, NULL, '11111', '2023-01-17 14:00:41', '2023-01-17 14:00:41');
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `tbl_pos_device`
+--
+
+CREATE TABLE `tbl_pos_device` (
+  `id` int(11) NOT NULL,
+  `pos_device_id` longtext DEFAULT NULL,
+  `status` int(11) NOT NULL DEFAULT 1,
+  `del_status` int(11) NOT NULL DEFAULT 1,
+  `created_at` datetime NOT NULL DEFAULT current_timestamp(),
+  `updated_at` datetime NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp()
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+--
+-- Dumping data for table `tbl_pos_device`
+--
+
+INSERT INTO `tbl_pos_device` (`id`, `pos_device_id`, `status`, `del_status`, `created_at`, `updated_at`) VALUES
+(1, '585d2bfe0cf79aeb', 1, 1, '2023-01-17 16:09:50', '2023-01-17 16:48:15'),
+(2, '3907b09c0a375a29', 1, 1, '2023-01-17 16:09:50', '2023-01-17 16:09:50');
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `tbl_pos_device_map`
+--
+
+CREATE TABLE `tbl_pos_device_map` (
+  `id` bigint(20) NOT NULL,
+  `fk_place_id` int(11) DEFAULT NULL,
+  `device_id` int(11) DEFAULT NULL,
+  `status` int(11) NOT NULL DEFAULT 1,
+  `del_status` int(11) NOT NULL DEFAULT 1,
+  `created_at` datetime NOT NULL DEFAULT current_timestamp(),
+  `updated_at` datetime NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp()
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+--
+-- Dumping data for table `tbl_pos_device_map`
+--
+
+INSERT INTO `tbl_pos_device_map` (`id`, `fk_place_id`, `device_id`, `status`, `del_status`, `created_at`, `updated_at`) VALUES
+(1, 1, 1, 1, 1, '2023-01-16 11:16:09', '2023-01-17 16:48:08'),
+(2, 238, 2, 0, 1, '2023-01-17 10:28:59', '2023-01-17 16:40:49');
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `tbl_pos_duty_allocation`
+--
+
+CREATE TABLE `tbl_pos_duty_allocation` (
+  `id` bigint(20) NOT NULL,
+  `fk_place_id` int(11) DEFAULT NULL,
+  `fk_pos_verifier_id` int(11) DEFAULT NULL,
+  `fk_device_id` int(11) DEFAULT NULL,
+  `date` varchar(30) DEFAULT NULL,
+  `del_status` int(11) NOT NULL DEFAULT 1,
+  `created_at` datetime NOT NULL DEFAULT current_timestamp(),
+  `updated_at` datetime NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp()
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+--
+-- Dumping data for table `tbl_pos_duty_allocation`
+--
+
+INSERT INTO `tbl_pos_duty_allocation` (`id`, `fk_place_id`, `fk_pos_verifier_id`, `fk_device_id`, `date`, `del_status`, `created_at`, `updated_at`) VALUES
+(1, 1, 6, 1, '17/01/2023', 1, '2023-01-17 10:39:25', '2023-01-17 10:39:25'),
+(2, 238, 6, 2, '18/01/2023', 1, '2023-01-17 10:39:25', '2023-01-17 11:03:20'),
+(3, 1, 6, 1, '19/01/2023', 1, '2023-01-17 10:39:25', '2023-01-17 11:03:22'),
+(4, 238, 6, 2, '20/01/2023', 1, '2023-01-17 10:39:25', '2023-01-17 11:03:24');
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `tbl_pos_verifier_logged_in`
+--
+
+CREATE TABLE `tbl_pos_verifier_logged_in` (
+  `id` bigint(20) NOT NULL,
+  `fk_pos_verifier_id` int(11) DEFAULT NULL,
+  `fk_device_id` int(11) DEFAULT NULL,
+  `status` int(11) DEFAULT NULL COMMENT '1. logged in\r\n2. logged out',
+  `created_at` datetime NOT NULL DEFAULT current_timestamp(),
+  `updated_at` datetime NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp()
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+--
+-- Dumping data for table `tbl_pos_verifier_logged_in`
+--
+
+INSERT INTO `tbl_pos_verifier_logged_in` (`id`, `fk_pos_verifier_id`, `fk_device_id`, `status`, `created_at`, `updated_at`) VALUES
+(1, 6, 2, 2, '2023-01-17 17:21:05', '2023-01-18 10:35:36'),
+(2, 6, 1, 1, '2023-01-18 10:36:15', '2023-01-18 10:36:15');
+
 -- --------------------------------------------------------
 
 --
@@ -48642,7 +49363,8 @@ CREATE TABLE `tbl_slot_info` (
   `slot_name` varchar(100) NOT NULL,
   `display_id` varchar(100) DEFAULT NULL,
   `fk_machine_id` int(11) DEFAULT NULL,
-  `isBlocked` int(11) NOT NULL DEFAULT 0 COMMENT '0: true\r\n1:false',
+  `fk_machine_status` int(11) NOT NULL DEFAULT 0,
+  `isBlocked` int(11) NOT NULL DEFAULT 1 COMMENT '0: true\r\n1:false',
   `del_status` int(11) NOT NULL DEFAULT 1,
   `created_at` datetime NOT NULL DEFAULT current_timestamp(),
   `updated_at` datetime NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp()
@@ -48652,12 +49374,483 @@ CREATE TABLE `tbl_slot_info` (
 -- Dumping data for table `tbl_slot_info`
 --
 
-INSERT INTO `tbl_slot_info` (`id`, `fk_place_id`, `slot_name`, `display_id`, `fk_machine_id`, `isBlocked`, `del_status`, `created_at`, `updated_at`) VALUES
-(1, 1, 'MH-AA001', 'P-1', NULL, 0, 1, '2022-12-16 16:34:49', '2022-12-16 16:34:49'),
-(2, 1, 'MH-AA002', 'P-2', NULL, 0, 1, '2022-12-16 16:34:49', '2022-12-16 16:34:49'),
-(3, 1, 'MH-AA003', 'P-3', NULL, 0, 1, '2022-12-16 16:34:49', '2022-12-16 16:34:49'),
-(4, 1, 'MH-AA004', 'P-4', NULL, 0, 1, '2022-12-16 16:34:49', '2022-12-16 16:34:49'),
-(5, 1, 'MH-AA005', 'P-5', NULL, 0, 1, '2022-12-16 16:34:49', '2022-12-16 16:34:49');
+INSERT INTO `tbl_slot_info` (`id`, `fk_place_id`, `slot_name`, `display_id`, `fk_machine_id`, `fk_machine_status`, `isBlocked`, `del_status`, `created_at`, `updated_at`) VALUES
+(1, 1, 'MH-AA001', 'P-1', NULL, 0, 1, 1, '2022-12-29 12:31:58', '2022-12-30 13:30:41'),
+(2, 1, 'MH-AA002', 'P-2', NULL, 0, 1, 1, '2022-12-29 12:31:58', '2022-12-30 13:30:41'),
+(3, 1, 'MH-AA003', 'P-3', NULL, 0, 1, 1, '2022-12-29 12:31:58', '2022-12-30 13:30:41'),
+(4, 1, 'MH-AA004', 'P-4', NULL, 0, 1, 1, '2022-12-29 12:31:58', '2022-12-30 13:30:41'),
+(5, 1, 'MH-AA005', 'P-5', NULL, 0, 1, 1, '2022-12-29 12:31:58', '2022-12-30 13:30:41'),
+(6, 2, 'MH-AA006', 'P-1', NULL, 0, 1, 1, '2022-12-29 12:31:58', '2022-12-30 13:30:41'),
+(7, 2, 'MH-AA007', 'P-2', NULL, 0, 1, 1, '2022-12-29 12:31:58', '2022-12-30 13:30:41'),
+(8, 2, 'MH-AA008', 'P-3', NULL, 0, 1, 1, '2022-12-29 12:31:58', '2022-12-30 13:30:41'),
+(9, 2, 'MH-AA009', 'P-4', NULL, 0, 1, 1, '2022-12-29 12:31:58', '2022-12-30 13:30:41'),
+(10, 2, 'MH-AA010', 'P-5', NULL, 0, 1, 1, '2022-12-29 12:31:58', '2022-12-30 13:30:41'),
+(11, 3, 'MH-AA011', 'P-1', NULL, 0, 1, 1, '2022-12-29 12:31:58', '2022-12-30 13:30:41'),
+(12, 3, 'MH-AA012', 'P-2', NULL, 0, 1, 1, '2022-12-29 12:31:58', '2022-12-30 13:30:41'),
+(13, 3, 'MH-AA013', 'P-3', NULL, 0, 1, 1, '2022-12-29 12:31:58', '2022-12-30 13:30:41'),
+(14, 3, 'MH-AA014', 'P-4', NULL, 0, 1, 1, '2022-12-29 12:31:58', '2022-12-30 13:30:41'),
+(15, 3, 'MH-AA015', 'P-5', NULL, 0, 1, 1, '2022-12-29 12:31:58', '2022-12-30 13:30:41'),
+(16, 4, 'MH-AA016', 'P-1', NULL, 0, 1, 1, '2022-12-29 12:31:58', '2022-12-30 13:30:41'),
+(17, 4, 'MH-AA017', 'P-2', NULL, 0, 1, 1, '2022-12-29 12:31:58', '2022-12-30 13:30:41'),
+(18, 4, 'MH-AA018', 'P-3', NULL, 0, 1, 1, '2022-12-29 12:31:58', '2022-12-30 13:30:41'),
+(19, 4, 'MH-AA019', 'P-4', NULL, 0, 1, 1, '2022-12-29 12:31:58', '2022-12-30 13:30:41'),
+(20, 4, 'MH-AA020', 'P-5', NULL, 0, 1, 1, '2022-12-29 12:31:58', '2022-12-30 13:30:41'),
+(21, 5, 'MH-AA021', 'P-1', NULL, 0, 1, 1, '2022-12-29 12:31:58', '2022-12-30 13:30:41'),
+(22, 5, 'MH-AA022', 'P-2', NULL, 0, 1, 1, '2022-12-29 12:31:58', '2022-12-30 13:30:41'),
+(23, 5, 'MH-AA023', 'P-3', NULL, 0, 1, 1, '2022-12-29 12:31:58', '2022-12-30 13:30:41'),
+(24, 5, 'MH-AA024', 'P-4', NULL, 0, 1, 1, '2022-12-29 12:31:58', '2022-12-30 13:30:41'),
+(25, 5, 'MH-AA025', 'P-5', NULL, 0, 1, 1, '2022-12-29 12:31:58', '2022-12-30 13:30:41'),
+(26, 6, 'MH-AA026', 'P-1', NULL, 0, 1, 1, '2022-12-29 12:31:58', '2022-12-30 13:30:41'),
+(27, 6, 'MH-AA027', 'P-2', NULL, 0, 1, 1, '2022-12-29 12:31:58', '2022-12-30 13:30:41'),
+(28, 6, 'MH-AA028', 'P-3', NULL, 0, 1, 1, '2022-12-29 12:31:58', '2022-12-30 13:30:41'),
+(29, 6, 'MH-AA029', 'P-4', NULL, 0, 1, 1, '2022-12-29 12:31:58', '2022-12-30 13:30:41'),
+(30, 6, 'MH-AA030', 'P-5', NULL, 0, 1, 1, '2022-12-29 12:31:58', '2022-12-30 13:30:41'),
+(31, 7, 'MH-AA031', 'P-1', NULL, 0, 1, 1, '2022-12-29 12:31:58', '2022-12-30 13:30:41'),
+(32, 7, 'MH-AA032', 'P-2', NULL, 0, 1, 1, '2022-12-29 12:31:58', '2022-12-30 13:30:41'),
+(33, 8, 'MH-AA033', 'P-1', NULL, 0, 1, 1, '2022-12-29 12:31:58', '2022-12-30 13:30:41'),
+(34, 8, 'MH-AA034', 'P-2', NULL, 0, 1, 1, '2022-12-29 12:31:58', '2022-12-30 13:30:41'),
+(35, 8, 'MH-AA035', 'P-3', NULL, 0, 1, 1, '2022-12-29 12:31:58', '2022-12-30 13:30:41'),
+(36, 8, 'MH-AA036', 'P-4', NULL, 0, 1, 1, '2022-12-29 12:31:58', '2022-12-30 13:30:41'),
+(37, 8, 'MH-AA037', 'P-5', NULL, 0, 1, 1, '2022-12-29 12:31:58', '2022-12-30 13:30:41'),
+(38, 9, 'MH-AA038', 'P-1', NULL, 0, 1, 1, '2022-12-29 12:31:58', '2022-12-30 13:30:41'),
+(39, 9, 'MH-AA039', 'P-2', NULL, 0, 1, 1, '2022-12-29 12:31:58', '2022-12-30 13:30:41'),
+(40, 9, 'MH-AA040', 'P-3', NULL, 0, 1, 1, '2022-12-29 12:31:58', '2022-12-30 13:30:41'),
+(41, 10, 'MH-AA041', 'P-1', NULL, 0, 1, 1, '2022-12-29 12:31:59', '2022-12-30 13:30:41'),
+(42, 10, 'MH-AA042', 'P-2', NULL, 0, 1, 1, '2022-12-29 12:31:59', '2022-12-30 13:30:41'),
+(43, 10, 'MH-AA043', 'P-3', NULL, 0, 1, 1, '2022-12-29 12:31:59', '2022-12-30 13:30:41'),
+(44, 10, 'MH-AA044', 'P-4', NULL, 0, 1, 1, '2022-12-29 12:31:59', '2022-12-30 13:30:41'),
+(45, 10, 'MH-AA045', 'P-5', NULL, 0, 1, 1, '2022-12-29 12:31:59', '2022-12-30 13:30:41'),
+(46, 11, 'MH-AA046', 'P-1', NULL, 0, 1, 1, '2022-12-29 12:31:59', '2022-12-30 13:30:41'),
+(47, 11, 'MH-AA047', 'P-2', NULL, 0, 1, 1, '2022-12-29 12:31:59', '2022-12-30 13:30:41'),
+(48, 12, 'MH-AA048', 'P-1', NULL, 0, 1, 1, '2022-12-29 12:31:59', '2022-12-30 13:30:41'),
+(49, 13, 'MH-AA049', 'P-1', NULL, 0, 1, 1, '2022-12-29 12:31:59', '2022-12-30 13:30:41'),
+(50, 14, 'MH-AA050', 'P-1', NULL, 0, 1, 1, '2022-12-29 12:31:59', '2022-12-30 13:30:41'),
+(51, 15, 'MH-AA051', 'P-1', NULL, 0, 1, 1, '2022-12-29 12:31:59', '2022-12-30 13:30:41'),
+(52, 16, 'MH-AA052', 'P-1', NULL, 0, 1, 1, '2022-12-29 12:31:59', '2022-12-30 13:30:41'),
+(53, 17, 'MH-AA053', 'P-1', NULL, 0, 1, 1, '2022-12-29 12:31:59', '2022-12-30 13:30:41'),
+(54, 18, 'MH-AA054', 'P-1', NULL, 0, 1, 1, '2022-12-29 12:31:59', '2022-12-30 13:30:41'),
+(55, 19, 'MH-AA055', 'P-1', NULL, 0, 1, 1, '2022-12-29 12:31:59', '2022-12-30 13:30:41'),
+(56, 20, 'MH-AA056', 'P-1', NULL, 0, 1, 1, '2022-12-29 12:31:59', '2022-12-30 13:30:41'),
+(57, 21, 'MH-AA057', 'P-1', NULL, 0, 1, 1, '2022-12-29 12:32:00', '2022-12-30 13:30:41'),
+(58, 22, 'MH-AA058', 'P-1', NULL, 0, 1, 1, '2022-12-29 12:32:00', '2022-12-30 13:30:41'),
+(59, 23, 'MH-AA059', 'P-1', NULL, 0, 1, 1, '2022-12-29 12:32:00', '2022-12-30 13:30:41'),
+(60, 24, 'MH-AA060', 'P-1', NULL, 0, 1, 1, '2022-12-29 12:32:00', '2022-12-30 13:30:41'),
+(61, 25, 'MH-AA061', 'P-1', NULL, 0, 1, 1, '2022-12-29 12:32:00', '2022-12-30 13:30:41'),
+(62, 26, 'MH-AA062', 'P-1', NULL, 0, 1, 1, '2022-12-29 12:32:00', '2022-12-30 13:30:41'),
+(63, 27, 'MH-AA063', 'P-1', NULL, 0, 1, 1, '2022-12-29 12:32:00', '2022-12-30 13:30:41'),
+(64, 28, 'MH-AA064', 'P-1', NULL, 0, 1, 1, '2022-12-29 12:32:00', '2022-12-30 13:30:41'),
+(65, 29, 'MH-AA065', 'P-1', NULL, 0, 1, 1, '2022-12-29 12:32:00', '2022-12-30 13:30:41'),
+(66, 30, 'MH-AA066', 'P-1', NULL, 0, 1, 1, '2022-12-29 12:32:01', '2022-12-30 13:30:41'),
+(67, 31, 'MH-AA067', 'P-1', NULL, 0, 1, 1, '2022-12-29 12:32:01', '2022-12-30 13:30:41'),
+(68, 32, 'MH-AA068', 'P-1', NULL, 0, 1, 1, '2022-12-29 12:32:01', '2022-12-30 13:30:41'),
+(69, 33, 'MH-AA069', 'P-1', NULL, 0, 1, 1, '2022-12-29 12:32:01', '2022-12-30 13:30:41'),
+(70, 34, 'MH-AA070', 'P-1', NULL, 0, 1, 1, '2022-12-29 12:32:01', '2022-12-30 13:30:41'),
+(71, 35, 'MH-AA071', 'P-1', NULL, 0, 1, 1, '2022-12-29 12:32:01', '2022-12-30 13:30:41'),
+(72, 36, 'MH-AA072', 'P-1', NULL, 0, 1, 1, '2022-12-29 12:32:01', '2022-12-30 13:30:41'),
+(73, 37, 'MH-AA073', 'P-1', NULL, 0, 1, 1, '2022-12-29 12:32:01', '2022-12-30 13:30:41'),
+(74, 38, 'MH-AA074', 'P-1', NULL, 0, 1, 1, '2022-12-29 12:32:01', '2022-12-30 13:30:41'),
+(75, 39, 'MH-AA075', 'P-1', NULL, 0, 1, 1, '2022-12-29 12:32:01', '2022-12-30 13:30:41'),
+(76, 40, 'MH-AA076', 'P-1', NULL, 0, 1, 1, '2022-12-29 12:32:02', '2022-12-30 13:30:41'),
+(77, 41, 'MH-AA077', 'P-1', NULL, 0, 1, 1, '2022-12-29 12:32:02', '2022-12-30 13:30:41'),
+(78, 42, 'MH-AA078', 'P-1', NULL, 0, 1, 1, '2022-12-29 12:32:02', '2022-12-30 13:30:41'),
+(79, 43, 'MH-AA079', 'P-1', NULL, 0, 1, 1, '2022-12-29 12:32:02', '2022-12-30 13:30:41'),
+(80, 44, 'MH-AA080', 'P-1', NULL, 0, 1, 1, '2022-12-29 12:32:02', '2022-12-30 13:30:41'),
+(81, 45, 'MH-AA081', 'P-1', NULL, 0, 1, 1, '2022-12-29 12:32:02', '2022-12-30 13:30:41'),
+(82, 46, 'MH-AA082', 'P-1', NULL, 0, 1, 1, '2022-12-29 12:32:02', '2022-12-30 13:30:41'),
+(83, 47, 'MH-AA083', 'P-1', NULL, 0, 1, 1, '2022-12-29 12:32:02', '2022-12-30 13:30:41'),
+(84, 48, 'MH-AA084', 'P-1', NULL, 0, 1, 1, '2022-12-29 12:32:02', '2022-12-30 13:30:41'),
+(85, 49, 'MH-AA085', 'P-1', NULL, 0, 1, 1, '2022-12-29 12:32:02', '2022-12-30 13:30:41'),
+(86, 50, 'MH-AA086', 'P-1', NULL, 0, 1, 1, '2022-12-29 12:32:03', '2022-12-30 13:30:41'),
+(87, 51, 'MH-AA087', 'P-1', NULL, 0, 1, 1, '2022-12-29 12:32:03', '2022-12-30 13:30:41'),
+(88, 52, 'MH-AA088', 'P-1', NULL, 0, 1, 1, '2022-12-29 12:32:03', '2022-12-30 13:30:41'),
+(89, 53, 'MH-AA089', 'P-1', NULL, 0, 1, 1, '2022-12-29 12:32:03', '2022-12-30 13:30:41'),
+(90, 54, 'MH-AA090', 'P-1', NULL, 0, 1, 1, '2022-12-29 12:32:03', '2022-12-30 13:30:41'),
+(91, 55, 'MH-AA091', 'P-1', NULL, 0, 1, 1, '2022-12-29 12:32:03', '2022-12-30 13:30:41'),
+(92, 56, 'MH-AA092', 'P-1', NULL, 0, 1, 1, '2022-12-29 12:32:03', '2022-12-30 13:30:41'),
+(93, 57, 'MH-AA093', 'P-1', NULL, 0, 1, 1, '2022-12-29 12:32:03', '2022-12-30 13:30:41'),
+(94, 58, 'MH-AA094', 'P-1', NULL, 0, 1, 1, '2022-12-29 12:32:03', '2022-12-30 13:30:41'),
+(95, 59, 'MH-AA095', 'P-1', NULL, 0, 1, 1, '2022-12-29 12:32:03', '2022-12-30 13:30:41'),
+(96, 60, 'MH-AA096', 'P-1', NULL, 0, 1, 1, '2022-12-29 12:32:03', '2022-12-30 13:30:41'),
+(97, 61, 'MH-AA097', 'P-1', NULL, 0, 1, 1, '2022-12-29 12:32:03', '2022-12-30 13:30:41'),
+(98, 62, 'MH-AA098', 'P-1', NULL, 0, 1, 1, '2022-12-29 12:32:04', '2022-12-30 13:30:41'),
+(99, 63, 'MH-AA099', 'P-1', NULL, 0, 1, 1, '2022-12-29 12:32:04', '2022-12-30 13:30:41'),
+(100, 64, 'MH-AA100', 'P-1', NULL, 0, 1, 1, '2022-12-29 12:32:04', '2022-12-30 13:30:41'),
+(101, 65, 'MH-AA101', 'P-1', NULL, 0, 1, 1, '2022-12-29 12:32:04', '2022-12-30 13:30:41'),
+(102, 66, 'MH-AA102', 'P-1', NULL, 0, 1, 1, '2022-12-29 12:32:04', '2022-12-30 13:30:41'),
+(103, 67, 'MH-AA103', 'P-1', NULL, 0, 1, 1, '2022-12-29 12:32:04', '2022-12-30 13:30:41'),
+(104, 68, 'MH-AA104', 'P-1', NULL, 0, 1, 1, '2022-12-29 12:32:04', '2022-12-30 13:30:41'),
+(105, 69, 'MH-AA105', 'P-1', NULL, 0, 1, 1, '2022-12-29 12:32:04', '2022-12-30 13:30:41'),
+(106, 70, 'MH-AA106', 'P-1', NULL, 0, 1, 1, '2022-12-29 12:32:05', '2022-12-30 13:30:41'),
+(107, 71, 'MH-AA107', 'P-1', NULL, 0, 1, 1, '2022-12-29 12:32:05', '2022-12-30 13:30:41'),
+(108, 72, 'MH-AA108', 'P-1', NULL, 0, 1, 1, '2022-12-29 12:32:05', '2022-12-30 13:30:41'),
+(109, 73, 'MH-AA109', 'P-1', NULL, 0, 1, 1, '2022-12-29 12:32:05', '2022-12-30 13:30:41'),
+(110, 74, 'MH-AA110', 'P-1', NULL, 0, 1, 1, '2022-12-29 12:32:05', '2022-12-30 13:30:41'),
+(111, 75, 'MH-AA111', 'P-1', NULL, 0, 1, 1, '2022-12-29 12:32:05', '2022-12-30 13:30:41'),
+(112, 76, 'MH-AA112', 'P-1', NULL, 0, 1, 1, '2022-12-29 12:32:05', '2022-12-30 13:30:41'),
+(113, 77, 'MH-AA113', 'P-1', NULL, 0, 1, 1, '2022-12-29 12:32:05', '2022-12-30 13:30:41'),
+(114, 78, 'MH-AA114', 'P-1', NULL, 0, 1, 1, '2022-12-29 12:32:05', '2022-12-30 13:30:41'),
+(115, 79, 'MH-AA115', 'P-1', NULL, 0, 1, 1, '2022-12-29 12:32:05', '2022-12-30 13:30:41'),
+(116, 80, 'MH-AA116', 'P-1', NULL, 0, 1, 1, '2022-12-29 12:32:06', '2022-12-30 13:30:41'),
+(117, 81, 'MH-AA117', 'P-1', NULL, 0, 1, 1, '2022-12-29 12:32:06', '2022-12-30 13:30:41'),
+(118, 82, 'MH-AA118', 'P-1', NULL, 0, 1, 1, '2022-12-29 12:32:06', '2022-12-30 13:30:41'),
+(119, 83, 'MH-AA119', 'P-1', NULL, 0, 1, 1, '2022-12-29 12:32:06', '2022-12-30 13:30:41'),
+(120, 84, 'MH-AA120', 'P-1', NULL, 0, 1, 1, '2022-12-29 12:32:06', '2022-12-30 13:30:41'),
+(121, 85, 'MH-AA121', 'P-1', NULL, 0, 1, 1, '2022-12-29 12:32:06', '2022-12-30 13:30:41'),
+(122, 86, 'MH-AA122', 'P-1', NULL, 0, 1, 1, '2022-12-29 12:32:06', '2022-12-30 13:30:41'),
+(123, 87, 'MH-AA123', 'P-1', NULL, 0, 1, 1, '2022-12-29 12:32:06', '2022-12-30 13:30:41'),
+(124, 88, 'MH-AA124', 'P-1', NULL, 0, 1, 1, '2022-12-29 12:32:07', '2022-12-30 13:30:41'),
+(125, 89, 'MH-AA125', 'P-1', NULL, 0, 1, 1, '2022-12-29 12:32:07', '2022-12-30 13:30:41'),
+(126, 90, 'MH-AA126', 'P-1', NULL, 0, 1, 1, '2022-12-29 12:32:07', '2022-12-30 13:30:41'),
+(127, 91, 'MH-AA127', 'P-1', NULL, 0, 1, 1, '2022-12-29 12:32:07', '2022-12-30 13:30:41'),
+(128, 92, 'MH-AA128', 'P-1', NULL, 0, 1, 1, '2022-12-29 12:32:07', '2022-12-30 13:30:41'),
+(129, 93, 'MH-AA129', 'P-1', NULL, 0, 1, 1, '2022-12-29 12:32:07', '2022-12-30 13:30:41'),
+(130, 94, 'MH-AA130', 'P-1', NULL, 0, 1, 1, '2022-12-29 12:32:07', '2022-12-30 13:30:41'),
+(131, 95, 'MH-AA131', 'P-1', NULL, 0, 1, 1, '2022-12-29 12:32:08', '2022-12-30 13:30:41'),
+(132, 96, 'MH-AA132', 'P-1', NULL, 0, 1, 1, '2022-12-29 12:32:08', '2022-12-30 13:30:41'),
+(133, 97, 'MH-AA133', 'P-1', NULL, 0, 1, 1, '2022-12-29 12:32:08', '2022-12-30 13:30:41'),
+(134, 98, 'MH-AA134', 'P-1', NULL, 0, 1, 1, '2022-12-29 12:32:08', '2022-12-30 13:30:41'),
+(135, 99, 'MH-AA135', 'P-1', NULL, 0, 1, 1, '2022-12-29 12:32:09', '2022-12-30 13:30:41'),
+(136, 100, 'MH-AA136', 'P-1', NULL, 0, 1, 1, '2022-12-29 12:32:09', '2022-12-30 13:30:41'),
+(137, 101, 'MH-AA137', 'P-1', NULL, 0, 1, 1, '2022-12-29 12:32:09', '2022-12-30 13:30:41'),
+(138, 102, 'MH-AA138', 'P-1', NULL, 0, 1, 1, '2022-12-29 12:32:09', '2022-12-30 13:30:41'),
+(139, 103, 'MH-AA139', 'P-1', NULL, 0, 1, 1, '2022-12-29 12:32:09', '2022-12-30 13:30:41'),
+(140, 104, 'MH-AA140', 'P-1', NULL, 0, 1, 1, '2022-12-29 12:32:09', '2022-12-30 13:30:41'),
+(141, 105, 'MH-AA141', 'P-1', NULL, 0, 1, 1, '2022-12-29 12:32:10', '2022-12-30 13:30:41'),
+(142, 106, 'MH-AA142', 'P-1', NULL, 0, 1, 1, '2022-12-29 12:32:10', '2022-12-30 13:30:41'),
+(143, 107, 'MH-AA143', 'P-1', NULL, 0, 1, 1, '2022-12-29 12:32:10', '2022-12-30 13:30:41'),
+(144, 108, 'MH-AA144', 'P-1', NULL, 0, 1, 1, '2022-12-29 12:32:10', '2022-12-30 13:30:41'),
+(145, 109, 'MH-AA145', 'P-1', NULL, 0, 1, 1, '2022-12-29 12:32:10', '2022-12-30 13:30:41'),
+(146, 110, 'MH-AA146', 'P-1', NULL, 0, 1, 1, '2022-12-29 12:32:11', '2022-12-30 13:30:41'),
+(147, 111, 'MH-AA147', 'P-1', NULL, 0, 1, 1, '2022-12-29 12:32:11', '2022-12-30 13:30:41'),
+(148, 112, 'MH-AA148', 'P-1', NULL, 0, 1, 1, '2022-12-29 12:32:11', '2022-12-30 13:30:41'),
+(149, 113, 'MH-AA149', 'P-1', NULL, 0, 1, 1, '2022-12-29 12:32:11', '2022-12-30 13:30:41'),
+(150, 114, 'MH-AA150', 'P-1', NULL, 0, 1, 1, '2022-12-29 12:32:11', '2022-12-30 13:30:41'),
+(151, 115, 'MH-AA151', 'P-1', NULL, 0, 1, 1, '2022-12-29 12:32:11', '2022-12-30 13:30:41'),
+(152, 116, 'MH-AA152', 'P-1', NULL, 0, 1, 1, '2022-12-29 12:32:11', '2022-12-30 13:30:41'),
+(153, 116, 'MH-AA153', 'P-2', NULL, 0, 1, 1, '2022-12-29 12:32:11', '2022-12-30 13:30:41'),
+(154, 116, 'MH-AA154', 'P-3', NULL, 0, 1, 1, '2022-12-29 12:32:11', '2022-12-30 13:30:41'),
+(155, 116, 'MH-AA155', 'P-4', NULL, 0, 1, 1, '2022-12-29 12:32:12', '2022-12-30 13:30:41'),
+(156, 116, 'MH-AA156', 'P-5', NULL, 0, 1, 1, '2022-12-29 12:32:12', '2022-12-30 13:30:41'),
+(157, 117, 'MH-AA157', 'P-1', NULL, 0, 1, 1, '2022-12-29 12:32:12', '2022-12-30 13:30:41'),
+(158, 118, 'MH-AA158', 'P-1', NULL, 0, 1, 1, '2022-12-29 12:32:12', '2022-12-30 13:30:41'),
+(159, 119, 'MH-AA159', 'P-1', NULL, 0, 1, 1, '2022-12-29 12:32:12', '2022-12-30 13:30:41'),
+(160, 120, 'MH-AA160', 'P-1', NULL, 0, 1, 1, '2022-12-29 12:32:12', '2022-12-30 13:30:41'),
+(161, 121, 'MH-AA161', 'P-1', NULL, 0, 1, 1, '2022-12-29 12:32:12', '2022-12-30 13:30:41'),
+(162, 122, 'MH-AA162', 'P-1', NULL, 0, 1, 1, '2022-12-29 12:32:12', '2022-12-30 13:30:41'),
+(163, 123, 'MH-AA163', 'P-1', NULL, 0, 1, 1, '2022-12-29 12:32:12', '2022-12-30 13:30:41'),
+(164, 124, 'MH-AA164', 'P-1', NULL, 0, 1, 1, '2022-12-29 12:32:13', '2022-12-30 13:30:41'),
+(165, 125, 'MH-AA165', 'P-1', NULL, 0, 1, 1, '2022-12-29 12:32:13', '2022-12-30 13:30:41'),
+(166, 126, 'MH-AA166', 'P-1', NULL, 0, 1, 1, '2022-12-29 12:32:13', '2022-12-30 13:30:41'),
+(167, 127, 'MH-AA167', 'P-1', NULL, 0, 1, 1, '2022-12-29 12:32:13', '2022-12-30 13:30:41'),
+(168, 128, 'MH-AA168', 'P-1', NULL, 0, 1, 1, '2022-12-29 12:32:14', '2022-12-30 13:30:41'),
+(169, 129, 'MH-AA169', 'P-1', NULL, 0, 1, 1, '2022-12-29 12:32:15', '2022-12-30 13:30:41'),
+(170, 130, 'MH-AA170', 'P-1', NULL, 0, 1, 1, '2022-12-29 12:32:15', '2022-12-30 13:30:41'),
+(171, 131, 'MH-AA171', 'P-1', NULL, 0, 1, 1, '2022-12-29 12:32:15', '2022-12-30 13:30:41'),
+(172, 132, 'MH-AA172', 'P-1', NULL, 0, 1, 1, '2022-12-29 12:32:15', '2022-12-30 13:30:41'),
+(173, 133, 'MH-AA173', 'P-1', NULL, 0, 1, 1, '2022-12-29 12:32:15', '2022-12-30 13:30:41'),
+(174, 134, 'MH-AA174', 'P-1', NULL, 0, 1, 1, '2022-12-29 12:32:15', '2022-12-30 13:30:41'),
+(175, 135, 'MH-AA175', 'P-1', NULL, 0, 1, 1, '2022-12-29 12:32:15', '2022-12-30 13:30:41'),
+(176, 136, 'MH-AA176', 'P-1', NULL, 0, 1, 1, '2022-12-29 12:32:16', '2022-12-30 13:30:41'),
+(177, 137, 'MH-AA177', 'P-1', NULL, 0, 1, 1, '2022-12-29 12:32:16', '2022-12-30 13:30:41'),
+(178, 138, 'MH-AA178', 'P-1', NULL, 0, 1, 1, '2022-12-29 12:32:16', '2022-12-30 13:30:41'),
+(179, 139, 'MH-AA179', 'P-1', NULL, 0, 1, 1, '2022-12-29 12:32:16', '2022-12-30 13:30:41'),
+(180, 140, 'MH-AA180', 'P-1', NULL, 0, 1, 1, '2022-12-29 12:32:16', '2022-12-30 13:30:41'),
+(181, 141, 'MH-AA181', 'P-1', NULL, 0, 1, 1, '2022-12-29 12:32:16', '2022-12-30 13:30:41'),
+(182, 142, 'MH-AA182', 'P-1', NULL, 0, 1, 1, '2022-12-29 12:32:16', '2022-12-30 13:30:41'),
+(183, 143, 'MH-AA183', 'P-1', NULL, 0, 1, 1, '2022-12-29 12:32:17', '2022-12-30 13:30:41'),
+(184, 144, 'MH-AA184', 'P-1', NULL, 0, 1, 1, '2022-12-29 12:32:17', '2022-12-30 13:30:41'),
+(185, 145, 'MH-AA185', 'P-1', NULL, 0, 1, 1, '2022-12-29 12:32:17', '2022-12-30 13:30:41'),
+(186, 146, 'MH-AA186', 'P-1', NULL, 0, 1, 1, '2022-12-29 12:32:17', '2022-12-30 13:30:41'),
+(187, 147, 'MH-AA187', 'P-1', NULL, 0, 1, 1, '2022-12-29 12:32:17', '2022-12-30 13:30:41'),
+(188, 148, 'MH-AA188', 'P-1', NULL, 0, 1, 1, '2022-12-29 12:32:17', '2022-12-30 13:30:41'),
+(189, 149, 'MH-AA189', 'P-1', NULL, 0, 1, 1, '2022-12-29 12:32:17', '2022-12-30 13:30:41'),
+(190, 150, 'MH-AA190', 'P-1', NULL, 0, 1, 1, '2022-12-29 12:32:17', '2022-12-30 13:30:41'),
+(191, 151, 'MH-AA191', 'P-1', NULL, 0, 1, 1, '2022-12-29 12:32:17', '2022-12-30 13:30:41'),
+(192, 152, 'MH-AA192', 'P-1', NULL, 0, 1, 1, '2022-12-29 12:32:18', '2022-12-30 13:30:41'),
+(193, 153, 'MH-AA193', 'P-1', NULL, 0, 1, 1, '2022-12-29 12:32:18', '2022-12-30 13:30:41'),
+(194, 154, 'MH-AA194', 'P-1', NULL, 0, 1, 1, '2022-12-29 12:32:18', '2022-12-30 13:30:41'),
+(195, 155, 'MH-AA195', 'P-1', NULL, 0, 1, 1, '2022-12-29 12:32:18', '2022-12-30 13:30:41'),
+(196, 156, 'MH-AA196', 'P-1', NULL, 0, 1, 1, '2022-12-29 12:32:18', '2022-12-30 13:30:41'),
+(197, 157, 'MH-AA197', 'P-1', NULL, 0, 1, 1, '2022-12-29 12:32:18', '2022-12-30 13:30:41'),
+(198, 158, 'MH-AA198', 'P-1', NULL, 0, 1, 1, '2022-12-29 12:32:18', '2022-12-30 13:30:41'),
+(199, 159, 'MH-AA199', 'P-1', NULL, 0, 1, 1, '2022-12-29 12:32:18', '2022-12-30 13:30:41'),
+(200, 160, 'MH-AA200', 'P-1', NULL, 0, 1, 1, '2022-12-29 12:32:18', '2022-12-30 13:30:41'),
+(201, 161, 'MH-AA201', 'P-1', NULL, 0, 1, 1, '2022-12-29 12:32:18', '2022-12-30 13:30:41'),
+(202, 162, 'MH-AA202', 'P-1', NULL, 0, 1, 1, '2022-12-29 12:32:18', '2022-12-30 13:30:41'),
+(203, 163, 'MH-AA203', 'P-1', NULL, 0, 1, 1, '2022-12-29 12:32:18', '2022-12-30 13:30:41'),
+(204, 164, 'MH-AA204', 'P-1', NULL, 0, 1, 1, '2022-12-29 12:32:19', '2022-12-30 13:30:41'),
+(205, 165, 'MH-AA205', 'P-1', NULL, 0, 1, 1, '2022-12-29 12:32:19', '2022-12-30 13:30:41'),
+(206, 166, 'MH-AA206', 'P-1', NULL, 0, 1, 1, '2022-12-29 12:32:19', '2022-12-30 13:30:41'),
+(207, 167, 'MH-AA207', 'P-1', NULL, 0, 1, 1, '2022-12-29 12:32:19', '2022-12-30 13:30:41'),
+(208, 168, 'MH-AA208', 'P-1', NULL, 0, 1, 1, '2022-12-29 12:32:19', '2022-12-30 13:30:41'),
+(209, 169, 'MH-AA209', 'P-1', NULL, 0, 1, 1, '2022-12-29 12:32:19', '2022-12-30 13:30:41'),
+(210, 170, 'MH-AA210', 'P-1', NULL, 0, 1, 1, '2022-12-29 12:32:19', '2022-12-30 13:30:41'),
+(211, 171, 'MH-AA211', 'P-1', NULL, 0, 1, 1, '2022-12-29 12:32:19', '2022-12-30 13:30:41'),
+(212, 172, 'MH-AA212', 'P-1', NULL, 0, 1, 1, '2022-12-29 12:32:20', '2022-12-30 13:30:41'),
+(213, 173, 'MH-AA213', 'P-1', NULL, 0, 1, 1, '2022-12-29 12:32:20', '2022-12-30 13:30:41'),
+(214, 174, 'MH-AA214', 'P-1', NULL, 0, 1, 1, '2022-12-29 12:32:20', '2022-12-30 13:30:41'),
+(215, 175, 'MH-AA215', 'P-1', NULL, 0, 1, 1, '2022-12-29 12:32:20', '2022-12-30 13:30:41'),
+(216, 176, 'MH-AA216', 'P-1', NULL, 0, 1, 1, '2022-12-29 12:32:20', '2022-12-30 13:30:41'),
+(217, 177, 'MH-AA217', 'P-1', NULL, 0, 1, 1, '2022-12-29 12:32:20', '2022-12-30 13:30:41'),
+(218, 178, 'MH-AA218', 'P-1', NULL, 0, 1, 1, '2022-12-29 12:32:20', '2022-12-30 13:30:41'),
+(219, 179, 'MH-AA219', 'P-1', NULL, 0, 1, 1, '2022-12-29 12:32:20', '2022-12-30 13:30:41'),
+(220, 180, 'MH-AA220', 'P-1', NULL, 0, 1, 1, '2022-12-29 12:32:21', '2022-12-30 13:30:41'),
+(221, 181, 'MH-AA221', 'P-1', NULL, 0, 1, 1, '2022-12-29 12:32:21', '2022-12-30 13:30:41'),
+(222, 182, 'MH-AA222', 'P-1', NULL, 0, 1, 1, '2022-12-29 12:32:21', '2022-12-30 13:30:41'),
+(223, 183, 'MH-AA223', 'P-1', NULL, 0, 1, 1, '2022-12-29 12:32:21', '2022-12-30 13:30:41'),
+(224, 184, 'MH-AA224', 'P-1', NULL, 0, 1, 1, '2022-12-29 12:32:21', '2022-12-30 13:30:41'),
+(225, 185, 'MH-AA225', 'P-1', NULL, 0, 1, 1, '2022-12-29 12:32:21', '2022-12-30 13:30:41'),
+(226, 186, 'MH-AA226', 'P-1', NULL, 0, 1, 1, '2022-12-29 12:32:21', '2022-12-30 13:30:41'),
+(227, 187, 'MH-AA227', 'P-1', NULL, 0, 1, 1, '2022-12-29 12:32:21', '2022-12-30 13:30:41'),
+(228, 188, 'MH-AA228', 'P-1', NULL, 0, 1, 1, '2022-12-29 12:32:22', '2022-12-30 13:30:41'),
+(229, 189, 'MH-AA229', 'P-1', NULL, 0, 1, 1, '2022-12-29 12:32:22', '2022-12-30 13:30:41'),
+(230, 190, 'MH-AA230', 'P-1', NULL, 0, 1, 1, '2022-12-29 12:32:22', '2022-12-30 13:30:41'),
+(231, 191, 'MH-AA231', 'P-1', NULL, 0, 1, 1, '2022-12-29 12:32:22', '2022-12-30 13:30:41'),
+(232, 192, 'MH-AA232', 'P-1', NULL, 0, 1, 1, '2022-12-29 12:32:22', '2022-12-30 13:30:41'),
+(233, 193, 'MH-AA233', 'P-1', NULL, 0, 1, 1, '2022-12-29 12:32:22', '2022-12-30 13:30:41'),
+(234, 194, 'MH-AA234', 'P-1', NULL, 0, 1, 1, '2022-12-29 12:32:22', '2022-12-30 13:30:41'),
+(235, 195, 'MH-AA235', 'P-1', NULL, 0, 1, 1, '2022-12-29 12:32:22', '2022-12-30 13:30:41'),
+(236, 196, 'MH-AA236', 'P-1', NULL, 0, 1, 1, '2022-12-29 12:32:22', '2022-12-30 13:30:41'),
+(237, 197, 'MH-AA237', 'P-1', NULL, 0, 1, 1, '2022-12-29 12:32:22', '2022-12-30 13:30:41'),
+(238, 198, 'MH-AA238', 'P-1', NULL, 0, 1, 1, '2022-12-29 12:32:22', '2022-12-30 13:30:41'),
+(239, 199, 'MH-AA239', 'P-1', NULL, 0, 1, 1, '2022-12-29 12:32:23', '2022-12-30 13:30:41'),
+(240, 200, 'MH-AA240', 'P-1', NULL, 0, 1, 1, '2022-12-29 12:32:23', '2022-12-30 13:30:41'),
+(241, 201, 'MH-AA241', 'P-1', NULL, 0, 1, 1, '2022-12-29 12:32:23', '2022-12-30 13:30:41'),
+(242, 202, 'MH-AA242', 'P-1', NULL, 0, 1, 1, '2022-12-29 12:32:23', '2022-12-30 13:30:41'),
+(243, 203, 'MH-AA243', 'P-1', NULL, 0, 1, 1, '2022-12-29 12:32:23', '2022-12-30 13:30:41'),
+(244, 204, 'MH-AA244', 'P-1', NULL, 0, 1, 1, '2022-12-29 12:32:23', '2022-12-30 13:30:41'),
+(245, 205, 'MH-AA245', 'P-1', NULL, 0, 1, 1, '2022-12-29 12:32:23', '2022-12-30 13:30:41'),
+(246, 206, 'MH-AA246', 'P-1', NULL, 0, 1, 1, '2022-12-29 12:32:23', '2022-12-30 13:30:41'),
+(247, 207, 'MH-AA247', 'P-1', NULL, 0, 1, 1, '2022-12-29 12:32:23', '2022-12-30 13:30:41'),
+(248, 208, 'MH-AA248', 'P-1', NULL, 0, 1, 1, '2022-12-29 12:32:23', '2022-12-30 13:30:41'),
+(249, 209, 'MH-AA249', 'P-1', NULL, 0, 1, 1, '2022-12-29 12:32:24', '2022-12-30 13:30:41'),
+(250, 210, 'MH-AA250', 'P-1', NULL, 0, 1, 1, '2022-12-29 12:32:24', '2022-12-30 13:30:41'),
+(251, 211, 'MH-AA251', 'P-1', NULL, 0, 1, 1, '2022-12-29 12:32:24', '2022-12-30 13:30:41'),
+(252, 212, 'MH-AA252', 'P-1', NULL, 0, 1, 1, '2022-12-29 12:32:24', '2022-12-30 13:30:41'),
+(253, 213, 'MH-AA253', 'P-1', NULL, 0, 1, 1, '2022-12-29 12:32:24', '2022-12-30 13:30:41'),
+(254, 214, 'MH-AA254', 'P-1', NULL, 0, 1, 1, '2022-12-29 12:32:24', '2022-12-30 13:30:41'),
+(255, 215, 'MH-AA255', 'P-1', NULL, 0, 1, 1, '2022-12-29 12:32:24', '2022-12-30 13:30:41'),
+(256, 216, 'MH-AA256', 'P-1', NULL, 0, 1, 1, '2022-12-29 12:32:24', '2022-12-30 13:30:41'),
+(257, 217, 'MH-AA257', 'P-1', NULL, 0, 1, 1, '2022-12-29 12:32:24', '2022-12-30 13:30:41'),
+(258, 218, 'MH-AA258', 'P-1', NULL, 0, 1, 1, '2022-12-29 12:32:24', '2022-12-30 13:30:41'),
+(259, 219, 'MH-AA259', 'P-1', NULL, 0, 1, 1, '2022-12-29 12:32:24', '2022-12-30 13:30:41'),
+(260, 220, 'MH-AA260', 'P-1', NULL, 0, 1, 1, '2022-12-29 12:32:25', '2022-12-30 13:30:41'),
+(261, 221, 'MH-AA261', 'P-1', NULL, 0, 1, 1, '2022-12-29 12:32:25', '2022-12-30 13:30:41'),
+(262, 222, 'MH-AA262', 'P-1', NULL, 0, 1, 1, '2022-12-29 12:32:25', '2022-12-30 13:30:41'),
+(263, 223, 'MH-AA263', 'P-1', NULL, 0, 1, 1, '2022-12-29 12:32:25', '2022-12-30 13:30:41'),
+(264, 224, 'MH-AA264', 'P-1', NULL, 0, 1, 1, '2022-12-29 12:32:25', '2022-12-30 13:30:41'),
+(265, 225, 'MH-AA265', 'P-1', NULL, 0, 1, 1, '2022-12-29 12:32:25', '2022-12-30 13:30:41'),
+(266, 226, 'MH-AA266', 'P-1', NULL, 0, 1, 1, '2022-12-29 12:32:26', '2022-12-30 13:30:41'),
+(267, 227, 'MH-AA267', 'P-1', NULL, 0, 1, 1, '2022-12-29 12:32:26', '2022-12-30 13:30:41'),
+(268, 228, 'MH-AA268', 'P-1', NULL, 0, 1, 1, '2022-12-29 12:32:26', '2022-12-30 13:30:41'),
+(269, 229, 'MH-AA269', 'P-1', NULL, 0, 1, 1, '2022-12-29 12:32:26', '2022-12-30 13:30:41'),
+(270, 230, 'MH-AA270', 'P-1', NULL, 0, 1, 1, '2022-12-29 12:32:26', '2022-12-30 13:30:41'),
+(271, 231, 'MH-AA271', 'P-1', NULL, 0, 1, 1, '2022-12-29 12:32:26', '2022-12-30 13:30:41'),
+(272, 232, 'MH-AA272', 'P-1', NULL, 0, 1, 1, '2022-12-29 12:32:26', '2022-12-30 13:30:41'),
+(273, 233, 'MH-AA273', 'P-1', NULL, 0, 1, 1, '2022-12-29 12:32:26', '2022-12-30 13:30:41'),
+(274, 234, 'MH-AA274', 'P-1', NULL, 0, 1, 1, '2022-12-29 12:32:26', '2022-12-30 13:30:41'),
+(275, 235, 'MH-AA275', 'P-1', NULL, 0, 1, 1, '2022-12-29 12:32:26', '2022-12-30 13:30:41'),
+(276, 236, 'MH-AA276', 'P-1', NULL, 0, 1, 1, '2022-12-29 12:32:26', '2022-12-30 13:30:41'),
+(277, 237, 'MH-AA277', 'P-1', NULL, 0, 1, 1, '2022-12-29 12:32:27', '2022-12-30 13:30:41'),
+(278, 238, 'MH-AA278', 'P-1', NULL, 0, 1, 1, '2022-12-29 12:32:27', '2022-12-30 13:30:41'),
+(279, 239, 'MH-AA279', 'P-1', NULL, 0, 1, 1, '2022-12-29 12:32:27', '2022-12-30 13:30:41'),
+(280, 240, 'MH-AA280', 'P-1', NULL, 0, 1, 1, '2022-12-29 12:32:27', '2022-12-30 13:30:41'),
+(281, 241, 'MH-AA281', 'P-1', NULL, 0, 1, 1, '2022-12-29 12:32:27', '2022-12-30 13:30:41'),
+(282, 242, 'MH-AA282', 'P-1', NULL, 0, 1, 1, '2022-12-29 12:32:27', '2022-12-30 13:30:41'),
+(283, 243, 'MH-AA283', 'P-1', NULL, 0, 1, 1, '2022-12-29 12:32:27', '2022-12-30 13:30:41'),
+(284, 244, 'MH-AA284', 'P-1', NULL, 0, 1, 1, '2022-12-29 12:32:27', '2022-12-30 13:30:41'),
+(285, 245, 'MH-AA285', 'P-1', NULL, 0, 1, 1, '2022-12-29 12:32:28', '2022-12-30 13:30:41'),
+(286, 246, 'MH-AA286', 'P-1', NULL, 0, 1, 1, '2022-12-29 12:32:28', '2022-12-30 13:30:41'),
+(287, 247, 'MH-AA287', 'P-1', NULL, 0, 1, 1, '2022-12-29 12:32:28', '2022-12-30 13:30:41'),
+(288, 248, 'MH-AA288', 'P-1', NULL, 0, 1, 1, '2022-12-29 12:32:28', '2022-12-30 13:30:41'),
+(289, 249, 'MH-AA289', 'P-1', NULL, 0, 1, 1, '2022-12-29 12:32:28', '2022-12-30 13:30:41'),
+(290, 250, 'MH-AA290', 'P-1', NULL, 0, 1, 1, '2022-12-29 12:32:28', '2022-12-30 13:30:41'),
+(291, 251, 'MH-AA291', 'P-1', NULL, 0, 1, 1, '2022-12-29 12:32:28', '2022-12-30 13:30:41'),
+(292, 252, 'MH-AA292', 'P-1', NULL, 0, 1, 1, '2022-12-29 12:32:28', '2022-12-30 13:30:41'),
+(293, 253, 'MH-AA293', 'P-1', NULL, 0, 1, 1, '2022-12-29 12:32:28', '2022-12-30 13:30:41'),
+(294, 254, 'MH-AA294', 'P-1', NULL, 0, 1, 1, '2022-12-29 12:32:29', '2022-12-30 13:30:41'),
+(295, 255, 'MH-AA295', 'P-1', NULL, 0, 1, 1, '2022-12-29 12:32:29', '2022-12-30 13:30:41'),
+(296, 256, 'MH-AA296', 'P-1', NULL, 0, 1, 1, '2022-12-29 12:32:29', '2022-12-30 13:30:41'),
+(297, 257, 'MH-AA297', 'P-1', NULL, 0, 1, 1, '2022-12-29 12:32:29', '2022-12-30 13:30:41'),
+(298, 258, 'MH-AA298', 'P-1', NULL, 0, 1, 1, '2022-12-29 12:32:29', '2022-12-30 13:30:41'),
+(299, 259, 'MH-AA299', 'P-1', NULL, 0, 1, 1, '2022-12-29 12:32:29', '2022-12-30 13:30:41'),
+(300, 260, 'MH-AA300', 'P-1', NULL, 0, 1, 1, '2022-12-29 12:32:29', '2022-12-30 13:30:41'),
+(301, 261, 'MH-AA301', 'P-1', NULL, 0, 1, 1, '2022-12-29 12:32:29', '2022-12-30 13:30:41'),
+(302, 262, 'MH-AA302', 'P-1', NULL, 0, 1, 1, '2022-12-29 12:32:29', '2022-12-30 13:30:41'),
+(303, 263, 'MH-AA303', 'P-1', NULL, 0, 1, 1, '2022-12-29 12:32:30', '2022-12-30 13:30:41'),
+(304, 264, 'MH-AA304', 'P-1', NULL, 0, 1, 1, '2022-12-29 12:32:30', '2022-12-30 13:30:41'),
+(305, 265, 'MH-AA305', 'P-1', NULL, 0, 1, 1, '2022-12-29 12:32:30', '2022-12-30 13:30:41'),
+(306, 266, 'MH-AA306', 'P-1', NULL, 0, 1, 1, '2022-12-29 12:32:30', '2022-12-30 13:30:41'),
+(307, 267, 'MH-AA307', 'P-1', NULL, 0, 1, 1, '2022-12-29 12:32:30', '2022-12-30 13:30:41'),
+(308, 268, 'MH-AA308', 'P-1', NULL, 0, 1, 1, '2022-12-29 12:32:30', '2022-12-30 13:30:41'),
+(309, 269, 'MH-AA309', 'P-1', NULL, 0, 1, 1, '2022-12-29 12:32:30', '2022-12-30 13:30:41'),
+(310, 270, 'MH-AA310', 'P-1', NULL, 0, 1, 1, '2022-12-29 12:32:30', '2022-12-30 13:30:41'),
+(311, 271, 'MH-AA311', 'P-1', NULL, 0, 1, 1, '2022-12-29 12:32:30', '2022-12-30 13:30:41'),
+(312, 272, 'MH-AA312', 'P-1', NULL, 0, 1, 1, '2022-12-29 12:32:31', '2022-12-30 13:30:41'),
+(313, 273, 'MH-AA313', 'P-1', NULL, 0, 1, 1, '2022-12-29 12:32:31', '2022-12-30 13:30:41'),
+(314, 274, 'MH-AA314', 'P-1', NULL, 0, 1, 1, '2022-12-29 12:32:31', '2022-12-30 13:30:41'),
+(315, 275, 'MH-AA315', 'P-1', NULL, 0, 1, 1, '2022-12-29 12:32:31', '2022-12-30 13:30:41'),
+(316, 276, 'MH-AA316', 'P-1', NULL, 0, 1, 1, '2022-12-29 12:32:31', '2022-12-30 13:30:41'),
+(317, 277, 'MH-AA317', 'P-1', NULL, 0, 1, 1, '2022-12-29 12:32:31', '2022-12-30 13:30:41'),
+(318, 278, 'MH-AA318', 'P-1', NULL, 0, 1, 1, '2022-12-29 12:32:31', '2022-12-30 13:30:41'),
+(319, 279, 'MH-AA319', 'P-1', NULL, 0, 1, 1, '2022-12-29 12:32:31', '2022-12-30 13:30:41'),
+(320, 280, 'MH-AA320', 'P-1', NULL, 0, 1, 1, '2022-12-29 12:32:31', '2022-12-30 13:30:41'),
+(321, 281, 'MH-AA321', 'P-1', NULL, 0, 1, 1, '2022-12-29 12:32:31', '2022-12-30 13:30:41'),
+(322, 282, 'MH-AA322', 'P-1', NULL, 0, 1, 1, '2022-12-29 12:32:32', '2022-12-30 13:30:41'),
+(323, 283, 'MH-AA323', 'P-1', NULL, 0, 1, 1, '2022-12-29 12:32:32', '2022-12-30 13:30:41'),
+(324, 284, 'MH-AA324', 'P-1', NULL, 0, 1, 1, '2022-12-29 12:32:32', '2022-12-30 13:30:41'),
+(325, 285, 'MH-AA325', 'P-1', NULL, 0, 1, 1, '2022-12-29 12:32:32', '2022-12-30 13:30:41'),
+(326, 286, 'MH-AA326', 'P-1', NULL, 0, 1, 1, '2022-12-29 12:32:32', '2022-12-30 13:30:41'),
+(327, 287, 'MH-AA327', 'P-1', NULL, 0, 1, 1, '2022-12-29 12:32:32', '2022-12-30 13:30:41'),
+(328, 288, 'MH-AA328', 'P-1', NULL, 0, 1, 1, '2022-12-29 12:32:32', '2022-12-30 13:30:41'),
+(329, 289, 'MH-AA329', 'P-1', NULL, 0, 1, 1, '2022-12-29 12:32:32', '2022-12-30 13:30:41'),
+(330, 290, 'MH-AA330', 'P-1', NULL, 0, 1, 1, '2022-12-29 12:32:33', '2022-12-30 13:30:41'),
+(331, 291, 'MH-AA331', 'P-1', NULL, 0, 1, 1, '2022-12-29 12:32:33', '2022-12-30 13:30:41'),
+(332, 292, 'MH-AA332', 'P-1', NULL, 0, 1, 1, '2022-12-29 12:32:33', '2022-12-30 13:30:41'),
+(333, 293, 'MH-AA333', 'P-1', NULL, 0, 1, 1, '2022-12-29 12:32:33', '2022-12-30 13:30:41'),
+(334, 294, 'MH-AA334', 'P-1', NULL, 0, 1, 1, '2022-12-29 12:32:33', '2022-12-30 13:30:41'),
+(335, 295, 'MH-AA335', 'P-1', NULL, 0, 1, 1, '2022-12-29 12:32:33', '2022-12-30 13:30:41'),
+(336, 296, 'MH-AA336', 'P-1', NULL, 0, 1, 1, '2022-12-29 12:32:33', '2022-12-30 13:30:41'),
+(337, 297, 'MH-AA337', 'P-1', NULL, 0, 1, 1, '2022-12-29 12:32:33', '2022-12-30 13:30:41'),
+(338, 298, 'MH-AA338', 'P-1', NULL, 0, 1, 1, '2022-12-29 12:32:33', '2022-12-30 13:30:41'),
+(339, 299, 'MH-AA339', 'P-1', NULL, 0, 1, 1, '2022-12-29 12:32:34', '2022-12-30 13:30:41'),
+(340, 300, 'MH-AA340', 'P-1', NULL, 0, 1, 1, '2022-12-29 12:32:34', '2022-12-30 13:30:41'),
+(341, 301, 'MH-AA341', 'P-1', NULL, 0, 1, 1, '2022-12-29 12:32:34', '2022-12-30 13:30:41'),
+(342, 302, 'MH-AA342', 'P-1', NULL, 0, 1, 1, '2022-12-29 12:32:34', '2022-12-30 13:30:41'),
+(343, 303, 'MH-AA343', 'P-1', NULL, 0, 1, 1, '2022-12-29 12:32:34', '2022-12-30 13:30:41'),
+(344, 304, 'MH-AA344', 'P-1', NULL, 0, 1, 1, '2022-12-29 12:32:34', '2022-12-30 13:30:41'),
+(345, 305, 'MH-AA345', 'P-1', NULL, 0, 1, 1, '2022-12-29 12:32:34', '2022-12-30 13:30:41'),
+(346, 306, 'MH-AA346', 'P-1', NULL, 0, 1, 1, '2022-12-29 12:32:34', '2022-12-30 13:30:41'),
+(347, 307, 'MH-AA347', 'P-1', NULL, 0, 1, 1, '2022-12-29 12:32:34', '2022-12-30 13:30:41'),
+(348, 308, 'MH-AA348', 'P-1', NULL, 0, 1, 1, '2022-12-29 12:32:35', '2022-12-30 13:30:41'),
+(349, 309, 'MH-AA349', 'P-1', NULL, 0, 1, 1, '2022-12-29 12:32:35', '2022-12-30 13:30:41'),
+(350, 310, 'MH-AA350', 'P-1', NULL, 0, 1, 1, '2022-12-29 12:32:35', '2022-12-30 13:30:41'),
+(351, 311, 'MH-AA351', 'P-1', NULL, 0, 1, 1, '2022-12-29 12:32:35', '2022-12-30 13:30:41'),
+(352, 312, 'MH-AA352', 'P-1', NULL, 0, 1, 1, '2022-12-29 12:32:35', '2022-12-30 13:30:41'),
+(353, 313, 'MH-AA353', 'P-1', NULL, 0, 1, 1, '2022-12-29 12:32:35', '2022-12-30 13:30:41'),
+(354, 314, 'MH-AA354', 'P-1', NULL, 0, 1, 1, '2022-12-29 12:32:35', '2022-12-30 13:30:41'),
+(355, 315, 'MH-AA355', 'P-1', NULL, 0, 1, 1, '2022-12-29 12:32:35', '2022-12-30 13:30:41'),
+(356, 316, 'MH-AA356', 'P-1', NULL, 0, 1, 1, '2022-12-29 12:32:36', '2022-12-30 13:30:41'),
+(357, 317, 'MH-AA357', 'P-1', NULL, 0, 1, 1, '2022-12-29 12:32:36', '2022-12-30 13:30:41'),
+(358, 318, 'MH-AA358', 'P-1', NULL, 0, 1, 1, '2022-12-29 12:32:36', '2022-12-30 13:30:41'),
+(359, 319, 'MH-AA359', 'P-1', NULL, 0, 1, 1, '2022-12-29 12:32:36', '2022-12-30 13:30:41'),
+(360, 320, 'MH-AA360', 'P-1', NULL, 0, 1, 1, '2022-12-29 12:32:36', '2022-12-30 13:30:41'),
+(361, 321, 'MH-AA361', 'P-1', NULL, 0, 1, 1, '2022-12-29 12:32:36', '2022-12-30 13:30:41'),
+(362, 322, 'MH-AA362', 'P-1', NULL, 0, 1, 1, '2022-12-29 12:32:36', '2022-12-30 13:30:41'),
+(363, 323, 'MH-AA363', 'P-1', NULL, 0, 1, 1, '2022-12-29 12:32:37', '2022-12-30 13:30:41'),
+(364, 324, 'MH-AA364', 'P-1', NULL, 0, 1, 1, '2022-12-29 12:32:37', '2022-12-30 13:30:41'),
+(365, 325, 'MH-AA365', 'P-1', NULL, 0, 1, 1, '2022-12-29 12:32:37', '2022-12-30 13:30:41'),
+(366, 326, 'MH-AA366', 'P-1', NULL, 0, 1, 1, '2022-12-29 12:32:37', '2022-12-30 13:30:41'),
+(367, 327, 'MH-AA367', 'P-1', NULL, 0, 1, 1, '2022-12-29 12:32:37', '2022-12-30 13:30:41'),
+(368, 328, 'MH-AA368', 'P-1', NULL, 0, 1, 1, '2022-12-29 12:32:37', '2022-12-30 13:30:41'),
+(369, 329, 'MH-AA369', 'P-1', NULL, 0, 1, 1, '2022-12-29 12:32:37', '2022-12-30 13:30:41'),
+(370, 330, 'MH-AA370', 'P-1', NULL, 0, 1, 1, '2022-12-29 12:32:37', '2022-12-30 13:30:41'),
+(371, 331, 'MH-AA371', 'P-1', NULL, 0, 1, 1, '2022-12-29 12:32:37', '2022-12-30 13:30:41'),
+(372, 332, 'MH-AA372', 'P-1', NULL, 0, 1, 1, '2022-12-29 12:32:38', '2022-12-30 13:30:41'),
+(373, 333, 'MH-AA373', 'P-1', NULL, 0, 1, 1, '2022-12-29 12:32:38', '2022-12-30 13:30:41'),
+(374, 334, 'MH-AA374', 'P-1', NULL, 0, 1, 1, '2022-12-29 12:32:38', '2022-12-30 13:30:41'),
+(375, 335, 'MH-AA375', 'P-1', NULL, 0, 1, 1, '2022-12-29 12:32:38', '2022-12-30 13:30:41'),
+(376, 336, 'MH-AA376', 'P-1', NULL, 0, 1, 1, '2022-12-29 12:32:38', '2022-12-30 13:30:41'),
+(377, 337, 'MH-AA377', 'P-1', NULL, 0, 1, 1, '2022-12-29 12:32:38', '2022-12-30 13:30:41'),
+(378, 338, 'MH-AA378', 'P-1', NULL, 0, 1, 1, '2022-12-29 12:32:38', '2022-12-30 13:30:41'),
+(379, 339, 'MH-AA379', 'P-1', NULL, 0, 1, 1, '2022-12-29 12:32:38', '2022-12-30 13:30:41'),
+(380, 340, 'MH-AA380', 'P-1', NULL, 0, 1, 1, '2022-12-29 12:32:38', '2022-12-30 13:30:41'),
+(381, 341, 'MH-AA381', 'P-1', NULL, 0, 1, 1, '2022-12-29 12:32:39', '2022-12-30 13:30:41'),
+(382, 342, 'MH-AA382', 'P-1', NULL, 0, 1, 1, '2022-12-29 12:32:39', '2022-12-30 13:30:41'),
+(383, 343, 'MH-AA383', 'P-1', NULL, 0, 1, 1, '2022-12-29 12:32:39', '2022-12-30 13:30:41'),
+(384, 344, 'MH-AA384', 'P-1', NULL, 0, 1, 1, '2022-12-29 12:32:39', '2022-12-30 13:30:41'),
+(385, 345, 'MH-AA385', 'P-1', NULL, 0, 1, 1, '2022-12-29 12:32:39', '2022-12-30 13:30:41'),
+(386, 346, 'MH-AA386', 'P-1', NULL, 0, 1, 1, '2022-12-29 12:32:39', '2022-12-30 13:30:41'),
+(387, 347, 'MH-AA387', 'P-1', NULL, 0, 1, 1, '2022-12-29 12:32:39', '2022-12-30 13:30:41'),
+(388, 348, 'MH-AA388', 'P-1', NULL, 0, 1, 1, '2022-12-29 12:32:39', '2022-12-30 13:30:41'),
+(389, 349, 'MH-AA389', 'P-1', NULL, 0, 1, 1, '2022-12-29 12:32:40', '2022-12-30 13:30:41'),
+(390, 350, 'MH-AA390', 'P-1', NULL, 0, 1, 1, '2022-12-29 12:32:40', '2022-12-30 13:30:41'),
+(391, 351, 'MH-AA391', 'P-1', NULL, 0, 1, 1, '2022-12-29 12:32:40', '2022-12-30 13:30:41'),
+(392, 352, 'MH-AA392', 'P-1', NULL, 0, 1, 1, '2022-12-29 12:32:40', '2022-12-30 13:30:41'),
+(393, 353, 'MH-AA393', 'P-1', NULL, 0, 1, 1, '2022-12-29 12:32:40', '2022-12-30 13:30:41'),
+(394, 354, 'MH-AA394', 'P-1', NULL, 0, 1, 1, '2022-12-29 12:32:40', '2022-12-30 13:30:41'),
+(395, 355, 'MH-AA395', 'P-1', NULL, 0, 1, 1, '2022-12-29 12:32:40', '2022-12-30 13:30:41'),
+(396, 356, 'MH-AA396', 'P-1', NULL, 0, 1, 1, '2022-12-29 12:32:40', '2022-12-30 13:30:41'),
+(397, 357, 'MH-AA397', 'P-1', NULL, 0, 1, 1, '2022-12-29 12:32:40', '2022-12-30 13:30:41'),
+(398, 358, 'MH-AA398', 'P-1', NULL, 0, 1, 1, '2022-12-29 12:32:40', '2022-12-30 13:30:41'),
+(399, 359, 'MH-AA399', 'P-1', NULL, 0, 1, 1, '2022-12-29 12:32:40', '2022-12-30 13:30:41'),
+(400, 360, 'MH-AA400', 'P-1', NULL, 0, 1, 1, '2022-12-29 12:32:41', '2022-12-30 13:30:41'),
+(401, 361, 'MH-AA401', 'P-1', NULL, 0, 1, 1, '2022-12-29 12:32:41', '2022-12-30 13:30:41'),
+(402, 362, 'MH-AA402', 'P-1', NULL, 0, 1, 1, '2022-12-29 12:32:41', '2022-12-30 13:30:41'),
+(403, 363, 'MH-AA403', 'P-1', NULL, 0, 1, 1, '2022-12-29 12:32:41', '2022-12-30 13:30:41'),
+(404, 364, 'MH-AA404', 'P-1', NULL, 0, 1, 1, '2022-12-29 12:32:41', '2022-12-30 13:30:41'),
+(405, 365, 'MH-AA405', 'P-1', NULL, 0, 1, 1, '2022-12-29 12:32:41', '2022-12-30 13:30:41'),
+(406, 366, 'MH-AA406', 'P-1', NULL, 0, 1, 1, '2022-12-29 12:32:41', '2022-12-30 13:30:41'),
+(407, 367, 'MH-AA407', 'P-1', NULL, 0, 1, 1, '2022-12-29 12:32:41', '2022-12-30 13:30:41'),
+(408, 368, 'MH-AA408', 'P-1', NULL, 0, 1, 1, '2022-12-29 12:32:41', '2022-12-30 13:30:41'),
+(409, 369, 'MH-AA409', 'P-1', NULL, 0, 1, 1, '2022-12-29 12:32:42', '2022-12-30 13:30:41'),
+(410, 370, 'MH-AA410', 'P-1', NULL, 0, 1, 1, '2022-12-29 12:32:42', '2022-12-30 13:30:41'),
+(411, 371, 'MH-AA411', 'P-1', NULL, 0, 1, 1, '2022-12-29 12:32:42', '2022-12-30 13:30:41'),
+(412, 372, 'MH-AA412', 'P-1', NULL, 0, 1, 1, '2022-12-29 12:32:42', '2022-12-30 13:30:41'),
+(413, 373, 'MH-AA413', 'P-1', NULL, 0, 1, 1, '2022-12-29 12:32:42', '2022-12-30 13:30:41'),
+(414, 374, 'MH-AA414', 'P-1', NULL, 0, 1, 1, '2022-12-29 12:32:42', '2022-12-30 13:30:41'),
+(415, 375, 'MH-AA415', 'P-1', NULL, 0, 1, 1, '2022-12-29 12:32:42', '2022-12-30 13:30:41'),
+(416, 376, 'MH-AA416', 'P-1', NULL, 0, 1, 1, '2022-12-29 12:32:42', '2022-12-30 13:30:41'),
+(417, 377, 'MH-AA417', 'P-1', NULL, 0, 1, 1, '2022-12-29 12:32:43', '2022-12-30 13:30:41'),
+(418, 378, 'MH-AA418', 'P-1', NULL, 0, 1, 1, '2022-12-29 12:32:43', '2022-12-30 13:30:41'),
+(419, 379, 'MH-AA419', 'P-1', NULL, 0, 1, 1, '2022-12-29 12:32:43', '2022-12-30 13:30:41'),
+(420, 380, 'MH-AA420', 'P-1', NULL, 0, 1, 1, '2022-12-29 12:32:43', '2022-12-30 13:30:41'),
+(421, 381, 'MH-AA421', 'P-1', NULL, 0, 1, 1, '2022-12-29 12:32:43', '2022-12-30 13:30:41'),
+(422, 382, 'MH-AA422', 'P-1', NULL, 0, 1, 1, '2022-12-29 12:32:43', '2022-12-30 13:30:41'),
+(423, 383, 'MH-AA423', 'P-1', NULL, 0, 1, 1, '2022-12-29 12:32:43', '2022-12-30 13:30:41'),
+(424, 384, 'MH-AA424', 'P-1', NULL, 0, 1, 1, '2022-12-29 12:32:43', '2022-12-30 13:30:41'),
+(425, 385, 'MH-AA425', 'P-1', NULL, 0, 1, 1, '2022-12-29 12:32:43', '2022-12-30 13:30:41'),
+(426, 386, 'MH-AA426', 'P-1', NULL, 0, 1, 1, '2022-12-29 12:32:44', '2022-12-30 13:30:41'),
+(427, 387, 'MH-AA427', 'P-1', NULL, 0, 1, 1, '2022-12-29 12:32:44', '2022-12-30 13:30:41'),
+(428, 388, 'MH-AA428', 'P-1', NULL, 0, 1, 1, '2022-12-29 12:32:44', '2022-12-30 13:30:41'),
+(429, 389, 'MH-AA429', 'P-1', NULL, 0, 1, 1, '2022-12-29 12:32:44', '2022-12-30 13:30:41'),
+(430, 390, 'MH-AA430', 'P-1', NULL, 0, 1, 1, '2022-12-29 12:32:44', '2022-12-30 13:30:41'),
+(431, 391, 'MH-AA431', 'P-1', NULL, 0, 1, 1, '2022-12-29 12:32:44', '2022-12-30 13:30:41'),
+(432, 392, 'MH-AA432', 'P-1', NULL, 0, 1, 1, '2022-12-29 12:32:45', '2022-12-30 13:30:41'),
+(433, 393, 'MH-AA433', 'P-1', NULL, 0, 1, 1, '2022-12-29 12:32:45', '2022-12-30 13:30:41'),
+(434, 394, 'MH-AA434', 'P-1', NULL, 0, 1, 1, '2022-12-29 12:32:45', '2022-12-30 13:30:41'),
+(435, 395, 'MH-AA435', 'P-1', NULL, 0, 1, 1, '2022-12-29 12:32:45', '2022-12-30 13:30:41'),
+(436, 396, 'MH-AA436', 'P-1', NULL, 0, 1, 1, '2022-12-29 12:32:45', '2022-12-30 13:30:41'),
+(437, 397, 'MH-AA437', 'P-1', NULL, 0, 1, 1, '2022-12-29 12:32:45', '2022-12-30 13:30:41'),
+(438, 398, 'MH-AA438', 'P-1', NULL, 0, 1, 1, '2022-12-29 12:32:45', '2022-12-30 13:30:41'),
+(439, 399, 'MH-AA439', 'P-1', NULL, 0, 1, 1, '2022-12-29 12:32:46', '2022-12-30 13:30:41'),
+(440, 400, 'MH-AA440', 'P-1', NULL, 0, 1, 1, '2022-12-29 12:32:46', '2022-12-30 13:30:41'),
+(441, 401, 'MH-AA441', 'P-1', NULL, 0, 1, 1, '2022-12-29 12:32:46', '2022-12-30 13:30:41'),
+(442, 402, 'MH-AA442', 'P-1', NULL, 0, 1, 1, '2022-12-29 12:32:46', '2022-12-30 13:30:41'),
+(443, 403, 'MH-AA443', 'P-1', NULL, 0, 1, 1, '2022-12-29 12:32:46', '2022-12-30 13:30:41'),
+(444, 404, 'MH-AA444', 'P-1', NULL, 0, 1, 1, '2022-12-29 12:32:46', '2022-12-30 13:30:41'),
+(445, 405, 'MH-AA445', 'P-1', NULL, 0, 1, 1, '2022-12-29 12:32:46', '2022-12-30 13:30:41'),
+(446, 406, 'MH-AA446', 'P-1', NULL, 0, 1, 1, '2022-12-29 12:32:46', '2022-12-30 13:30:41'),
+(447, 407, 'MH-AA447', 'P-1', NULL, 0, 1, 1, '2022-12-29 12:32:47', '2022-12-30 13:30:41'),
+(448, 408, 'MH-AA448', 'P-1', NULL, 0, 1, 1, '2022-12-29 12:32:47', '2022-12-30 13:30:41'),
+(449, 409, 'MH-AA449', 'P-1', NULL, 0, 1, 1, '2022-12-29 12:32:47', '2022-12-30 13:30:41'),
+(450, 410, 'MH-AA450', 'P-1', NULL, 0, 1, 1, '2022-12-29 12:32:47', '2022-12-30 13:30:41'),
+(451, 411, 'MH-AA451', 'P-1', NULL, 0, 1, 1, '2022-12-29 12:32:48', '2022-12-30 13:30:41'),
+(452, 412, 'MH-AA452', 'P-1', NULL, 0, 1, 1, '2022-12-29 12:32:48', '2022-12-30 13:30:41'),
+(453, 413, 'MH-AA453', 'P-1', NULL, 0, 1, 1, '2022-12-29 12:32:48', '2022-12-30 13:30:41'),
+(454, 414, 'MH-AA454', 'P-1', NULL, 0, 1, 1, '2022-12-29 12:32:48', '2022-12-30 13:30:41'),
+(455, 415, 'MH-AA455', 'P-1', NULL, 0, 1, 1, '2022-12-29 12:32:48', '2022-12-30 13:30:41'),
+(456, 416, 'MH-AA456', 'P-1', NULL, 0, 1, 1, '2022-12-29 12:32:48', '2022-12-30 13:30:41'),
+(457, 417, 'MH-AA457', 'P-1', NULL, 0, 1, 1, '2022-12-29 12:32:48', '2022-12-30 13:30:41'),
+(458, 418, 'MH-AA458', 'P-1', NULL, 0, 1, 1, '2022-12-29 12:32:48', '2022-12-30 13:30:41'),
+(459, 419, 'MH-AA459', 'P-1', NULL, 0, 1, 1, '2022-12-29 12:32:49', '2022-12-30 13:30:41'),
+(460, 420, 'MH-AA460', 'P-1', NULL, 0, 1, 1, '2022-12-29 12:32:49', '2022-12-30 13:30:41'),
+(461, 421, 'MH-AA461', 'P-1', NULL, 0, 1, 1, '2022-12-29 12:32:49', '2022-12-30 13:30:41'),
+(462, 422, 'MH-AA462', 'P-1', NULL, 0, 1, 1, '2022-12-29 12:32:49', '2022-12-30 13:30:41'),
+(463, 423, 'MH-AA463', 'P-1', NULL, 0, 1, 1, '2022-12-29 12:32:49', '2022-12-30 13:30:41'),
+(464, 424, 'MH-AA464', 'P-1', NULL, 0, 1, 1, '2022-12-29 12:32:49', '2022-12-30 13:30:41'),
+(465, 425, 'MH-AA465', 'P-1', NULL, 0, 1, 1, '2022-12-29 12:32:49', '2022-12-30 13:30:41'),
+(466, 426, 'MH-AA466', 'P-1', NULL, 0, 1, 1, '2022-12-29 12:32:49', '2022-12-30 13:30:41'),
+(467, 427, 'MH-AA467', 'P-1', NULL, 0, 1, 1, '2022-12-29 12:32:49', '2022-12-30 13:30:41'),
+(468, 428, 'MH-AA468', 'P-1', NULL, 0, 1, 1, '2022-12-29 12:32:49', '2022-12-30 13:30:41'),
+(469, 429, 'MH-AA469', 'P-1', NULL, 0, 1, 1, '2022-12-29 12:32:50', '2022-12-30 13:30:41'),
+(470, 430, 'MH-AA470', 'P-1', NULL, 0, 1, 1, '2022-12-29 12:32:50', '2022-12-30 13:30:41'),
+(471, 431, 'MH-AA471', 'P-1', NULL, 0, 1, 1, '2022-12-29 12:32:50', '2022-12-30 13:30:41'),
+(472, 432, 'MH-AA472', 'P-1', NULL, 0, 1, 1, '2022-12-29 12:32:50', '2022-12-30 13:30:41'),
+(473, 433, 'MH-AA473', 'P-1', NULL, 0, 1, 1, '2022-12-29 12:32:50', '2022-12-30 13:30:41'),
+(474, 434, 'MH-AA474', 'P-1', NULL, 0, 1, 1, '2022-12-29 12:32:50', '2022-12-30 13:30:41'),
+(475, 435, 'MH-AA475', 'P-1', NULL, 1, 1, 1, '2022-12-29 12:32:50', '2022-12-30 13:30:41'),
+(476, 436, 'MH-AA476', 'P-1', NULL, 0, 1, 1, '2023-01-12 12:31:29', '2023-01-12 12:31:29');
 
 -- --------------------------------------------------------
 
@@ -52848,7 +54041,8 @@ INSERT INTO `tbl_user_type` (`id`, `user_type`, `status`, `created_at`, `updated
 (10, 'User', 1, '2022-12-02 12:35:03', '2022-12-02 12:35:03'),
 (11, 'Admin Verifier', 1, '2022-12-02 12:35:03', '2022-12-02 12:35:03'),
 (12, 'Mis Admin', 1, '2022-12-02 12:35:03', '2022-12-02 12:35:03'),
-(13, 'Developer', 1, '2022-12-02 12:35:03', '2022-12-02 12:35:03');
+(13, 'Developer', 0, '2022-12-02 12:35:03', '2023-01-09 11:43:35'),
+(14, 'POS Verifier', 1, '2023-01-09 11:43:52', '2023-01-09 11:43:52');
 
 -- --------------------------------------------------------
 
@@ -52878,6 +54072,31 @@ INSERT INTO `tbl_user_wallet` (`id`, `fk_user_id`, `amount`, `status`, `created_
 -- --------------------------------------------------------
 
 --
+-- Table structure for table `tbl_vehicle_type`
+--
+
+CREATE TABLE `tbl_vehicle_type` (
+  `id` bigint(20) NOT NULL,
+  `vehicle_type` varchar(100) DEFAULT NULL,
+  `status` int(11) NOT NULL DEFAULT 1,
+  `del_status` int(11) NOT NULL DEFAULT 1,
+  `created_at` datetime NOT NULL DEFAULT current_timestamp(),
+  `updated_at` datetime NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp()
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+--
+-- Dumping data for table `tbl_vehicle_type`
+--
+
+INSERT INTO `tbl_vehicle_type` (`id`, `vehicle_type`, `status`, `del_status`, `created_at`, `updated_at`) VALUES
+(1, 'Two wheeler', 1, 1, '2023-01-09 12:26:33', '2023-01-09 12:54:53'),
+(2, 'Three wheeler', 1, 1, '2023-01-09 12:51:12', '2023-01-09 12:54:48'),
+(3, 'Four wheeler', 1, 1, '2023-01-09 12:54:36', '2023-01-09 15:54:55'),
+(4, 'Truck Or Vans', 1, 1, '2023-01-09 12:55:10', '2023-01-09 15:54:58');
+
+-- --------------------------------------------------------
+
+--
 -- Table structure for table `tbl_vendor`
 --
 
@@ -52900,7 +54119,15 @@ ALTER TABLE `pa_users`
   ADD KEY `f_ciusers` (`firstName`,`lastName`,`email`,`phoneNo`),
   ADD KEY `address` (`address`),
   ADD KEY `id` (`id`),
-  ADD KEY `userName` (`userName`);
+  ADD KEY `userName` (`userName`),
+  ADD KEY `user_type` (`user_type`),
+  ADD KEY `pos_device_id` (`pos_device_id`);
+
+--
+-- Indexes for table `tbl_blogs`
+--
+ALTER TABLE `tbl_blogs`
+  ADD PRIMARY KEY (`id`);
 
 --
 -- Indexes for table `tbl_bonus`
@@ -52957,6 +54184,15 @@ ALTER TABLE `tbl_device`
   ADD PRIMARY KEY (`id`),
   ADD KEY `id` (`id`),
   ADD KEY `device_id` (`device_id`);
+
+--
+-- Indexes for table `tbl_duty_allocation`
+--
+ALTER TABLE `tbl_duty_allocation`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `id` (`id`),
+  ADD KEY `fk_place_id` (`fk_place_id`),
+  ADD KEY `fk_verifier_id` (`fk_verifier_id`);
 
 --
 -- Indexes for table `tbl_extension_booking`
@@ -53016,6 +54252,12 @@ ALTER TABLE `tbl_parking_place_status`
   ADD KEY `place_status` (`place_status`);
 
 --
+-- Indexes for table `tbl_parking_place_vehicle_type`
+--
+ALTER TABLE `tbl_parking_place_vehicle_type`
+  ADD PRIMARY KEY (`id`);
+
+--
 -- Indexes for table `tbl_parking_price_type`
 --
 ALTER TABLE `tbl_parking_price_type`
@@ -53041,6 +54283,63 @@ ALTER TABLE `tbl_place_device_mapped`
   ADD KEY `id` (`id`),
   ADD KEY `fk_parking_place_id` (`fk_parking_place_id`),
   ADD KEY `fk_device_id` (`fk_device_id`);
+
+--
+-- Indexes for table `tbl_place_traffic`
+--
+ALTER TABLE `tbl_place_traffic`
+  ADD PRIMARY KEY (`id`);
+
+--
+-- Indexes for table `tbl_pos_booking`
+--
+ALTER TABLE `tbl_pos_booking`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `id` (`id`),
+  ADD KEY `fk_place_id` (`fk_place_id`),
+  ADD KEY `fk_verifier_id` (`fk_verifier_id`),
+  ADD KEY `fk_vehicle_type_id` (`fk_vehicle_type_id`),
+  ADD KEY `fk_device_id` (`fk_device_id`),
+  ADD KEY `fk_lang_id` (`fk_lang_id`),
+  ADD KEY `car_no` (`car_no`),
+  ADD KEY `phone_no` (`phone_no`),
+  ADD KEY `from_date` (`from_date`),
+  ADD KEY `to_date` (`to_date`),
+  ADD KEY `from_time` (`from_time`),
+  ADD KEY `to_time` (`to_time`),
+  ADD KEY `total_hours` (`total_hours`),
+  ADD KEY `price` (`price`),
+  ADD KEY `latitude` (`latitude`(768)),
+  ADD KEY `longitude` (`longitude`(768)),
+  ADD KEY `IP` (`IP`(768)),
+  ADD KEY `Mac_address` (`Mac_address`(768));
+
+--
+-- Indexes for table `tbl_pos_device`
+--
+ALTER TABLE `tbl_pos_device`
+  ADD PRIMARY KEY (`id`);
+
+--
+-- Indexes for table `tbl_pos_device_map`
+--
+ALTER TABLE `tbl_pos_device_map`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `id` (`id`),
+  ADD KEY `fk_place_id` (`fk_place_id`),
+  ADD KEY `device_id` (`device_id`);
+
+--
+-- Indexes for table `tbl_pos_duty_allocation`
+--
+ALTER TABLE `tbl_pos_duty_allocation`
+  ADD PRIMARY KEY (`id`);
+
+--
+-- Indexes for table `tbl_pos_verifier_logged_in`
+--
+ALTER TABLE `tbl_pos_verifier_logged_in`
+  ADD PRIMARY KEY (`id`);
 
 --
 -- Indexes for table `tbl_slot_info`
@@ -53089,6 +54388,12 @@ ALTER TABLE `tbl_user_wallet`
   ADD KEY `amount` (`amount`);
 
 --
+-- Indexes for table `tbl_vehicle_type`
+--
+ALTER TABLE `tbl_vehicle_type`
+  ADD PRIMARY KEY (`id`);
+
+--
 -- Indexes for table `tbl_vendor`
 --
 ALTER TABLE `tbl_vendor`
@@ -53104,13 +54409,19 @@ ALTER TABLE `tbl_vendor`
 -- AUTO_INCREMENT for table `pa_users`
 --
 ALTER TABLE `pa_users`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
+
+--
+-- AUTO_INCREMENT for table `tbl_blogs`
+--
+ALTER TABLE `tbl_blogs`
+  MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
 
 --
 -- AUTO_INCREMENT for table `tbl_bonus`
 --
 ALTER TABLE `tbl_bonus`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
 
 --
 -- AUTO_INCREMENT for table `tbl_booking`
@@ -53146,7 +54457,13 @@ ALTER TABLE `tbl_countries`
 -- AUTO_INCREMENT for table `tbl_device`
 --
 ALTER TABLE `tbl_device`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=11;
+
+--
+-- AUTO_INCREMENT for table `tbl_duty_allocation`
+--
+ALTER TABLE `tbl_duty_allocation`
+  MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
 
 --
 -- AUTO_INCREMENT for table `tbl_extension_booking`
@@ -53164,7 +54481,7 @@ ALTER TABLE `tbl_extension_price_charges`
 -- AUTO_INCREMENT for table `tbl_hours_price_slab`
 --
 ALTER TABLE `tbl_hours_price_slab`
-  MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
+  MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
 
 --
 -- AUTO_INCREMENT for table `tbl_master_stages`
@@ -53176,13 +54493,19 @@ ALTER TABLE `tbl_master_stages`
 -- AUTO_INCREMENT for table `tbl_parking_place`
 --
 ALTER TABLE `tbl_parking_place`
-  MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+  MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=437;
 
 --
 -- AUTO_INCREMENT for table `tbl_parking_place_status`
 --
 ALTER TABLE `tbl_parking_place_status`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
+
+--
+-- AUTO_INCREMENT for table `tbl_parking_place_vehicle_type`
+--
+ALTER TABLE `tbl_parking_place_vehicle_type`
+  MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 
 --
 -- AUTO_INCREMENT for table `tbl_parking_price_type`
@@ -53200,13 +54523,49 @@ ALTER TABLE `tbl_payment`
 -- AUTO_INCREMENT for table `tbl_place_device_mapped`
 --
 ALTER TABLE `tbl_place_device_mapped`
+  MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=27;
+
+--
+-- AUTO_INCREMENT for table `tbl_place_traffic`
+--
+ALTER TABLE `tbl_place_traffic`
   MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT;
+
+--
+-- AUTO_INCREMENT for table `tbl_pos_booking`
+--
+ALTER TABLE `tbl_pos_booking`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+
+--
+-- AUTO_INCREMENT for table `tbl_pos_device`
+--
+ALTER TABLE `tbl_pos_device`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+
+--
+-- AUTO_INCREMENT for table `tbl_pos_device_map`
+--
+ALTER TABLE `tbl_pos_device_map`
+  MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+
+--
+-- AUTO_INCREMENT for table `tbl_pos_duty_allocation`
+--
+ALTER TABLE `tbl_pos_duty_allocation`
+  MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
+
+--
+-- AUTO_INCREMENT for table `tbl_pos_verifier_logged_in`
+--
+ALTER TABLE `tbl_pos_verifier_logged_in`
+  MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 
 --
 -- AUTO_INCREMENT for table `tbl_slot_info`
 --
 ALTER TABLE `tbl_slot_info`
-  MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
+  MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=477;
 
 --
 -- AUTO_INCREMENT for table `tbl_states`
@@ -53230,12 +54589,18 @@ ALTER TABLE `tbl_user_car_details`
 -- AUTO_INCREMENT for table `tbl_user_type`
 --
 ALTER TABLE `tbl_user_type`
-  MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=14;
+  MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=15;
 
 --
 -- AUTO_INCREMENT for table `tbl_user_wallet`
 --
 ALTER TABLE `tbl_user_wallet`
+  MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
+
+--
+-- AUTO_INCREMENT for table `tbl_vehicle_type`
+--
+ALTER TABLE `tbl_vehicle_type`
   MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
 
 --
