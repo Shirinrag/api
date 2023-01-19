@@ -512,9 +512,8 @@ class User_api extends REST_Controller {
 		    	$booking_to_time = $this->input->post('booking_to_time');
 		    	$longitude = $this->input->post('longitude');
 		    	$latitude = $this->input->post('latitude');
-		    	// $reserve_from_time = $this->input->post('reserve_from_time');
-		    	// $reserve_to_time = $this->input->post('reserve_to_time');
-
+		    	$total_hours = $this->input->post('total_hours');
+	
 		    	if(empty($fk_user_id)){
 		    		$response['code']=201;
 		    		$response['status']=false;
@@ -547,11 +546,34 @@ class User_api extends REST_Controller {
 		    		$response['code']=201;
 		    		$response['status']=false;
 		    		$response['message']= "Longitude  is required";
+		    	}else if(empty($total_hours)){
+		    		$response['code']=201;
+		    		$response['status']=false;
+		    		$response['message']= "Total hours is required";
 		    	}else{
 		    		$delay_time1 = rand(100000, 800000);
                 	$delay_time = rand(1000000, 1500000) + $delay_time1;	
                 	
-                	$slot_info = $this->model->selectWhereData('tbl_slot_info',array('id'=>$slot_id,'del_status'=>1,'isBlocked'=>1));
+                	// $slot_info = $this->model->selectWhereData('tbl_sensor',array('id'=>$slot_id,'del_status'=>1,'isBlocked'=>1));
+                	$sensor_data = $this->model->CountWhereRecord('tbl_sensor', array('fk_slot_id'=>$fk_slot_id,'fk_place_id'=>$fk_place_id));
+                	if($sensor_data==1){
+                		$reserved_slot_info = $this->model->CountWhereRecord('tbl_booking', array('fk_slot_id'=>$fk_slot_id,'fk_place_id'=>$fk_place_id,'booking_from_date'=>$from_date,'booking_to_date'=>$to_date,'booking_from_time'=>$from_time,'booking_to_time'=>$to_time));
+                		if($reserved_slot_info==0){
+                			$user_wallet_data = $this->model->selectWhereData('tbl_user_wallet',array('fk_user_id'=>$fk_user_id),array('amount'));
+                			if(!empty($user_wallet_data['amount'])){
+                				$reserve_from_time= date('H:i:s',strtotime($from_time . ' -10 minutes'));
+                				$reserve_to_time= date('H:i:s',strtotime($to_time . ' +0 minutes'));
+                				
+                			}else{
+                				$response['message'] ="Insufficent Balance Kindly refill your wallet.";
+                				$response['code']=201;
+                			}
+                		}else{
+                			$response['message'] ="This slot is already booked";
+                			$response['code']=201;
+                		}
+                		
+                	}
 		    	}
 		}else {
             $response['code'] = REST_Controller::HTTP_UNAUTHORIZED;

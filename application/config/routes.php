@@ -171,5 +171,5 @@ $route['get-all-price-data-on-id'] = 'pos_api/get_all_price_data_on_id';
 $route['check-in-data'] = 'pos_api/check_in';
 $route['check-out-data'] = 'pos_api/check_out';
 $route['logout-data'] = 'pos_api/logout';
-$route['logout-data'] = 'pos_api/logout';
+$route['pos-report-data'] = 'pos_api/pos_report_data';
 

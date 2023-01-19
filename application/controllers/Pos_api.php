@@ -622,7 +622,7 @@ class Pos_api extends REST_Controller {
                 $booking_data = $this->pos_model->pos_report($place_id,$from_date,$to_date);
                 $response['code'] = REST_Controller::HTTP_OK;
                 $response['status'] = true;
-                $response['message'] = 'Logout Successfully';
+                $response['message'] = 'success';
                 $response['booking_data'] = $booking_data;
             }
         }else{

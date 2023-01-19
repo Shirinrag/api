@@ -33,3 +33,7 @@ ALTER TABLE `pa_users` CHANGE `pos_device_id` `pos_device_id` BIGINT NULL DEFAUL
 
 --17/01/2023
 ALTER TABLE `tbl_pos_booking` ADD `book_status` INT NULL DEFAULT NULL COMMENT '1. Check-in \r\n2. Check-out' AFTER `longitude`;
+
+--19/01/2023
+
+ALTER TABLE `tbl_sensor` CHANGE `sensor_time` `sensor_time` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP;
