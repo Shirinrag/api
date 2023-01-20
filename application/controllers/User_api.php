@@ -113,6 +113,15 @@ class User_api extends REST_Controller {
             						'amount'=>$bonus_amount['bonus_amount']
             					);
             					$this->model->insertData('tbl_user_wallet',$user_wallet_data);
+
+            					$user_wallet_history = array(
+            						'fk_user_id'=>$inserted_id,
+            						'add_amount'=>$bonus_amount['bonus_amount'],
+            						'total_amount'=>$bonus_amount['bonus_amount'],
+            						'fk_payment_type_id'=>1
+            					);
+            					$this->model->insertData('tbl_user_wallet_history',$user_wallet_history);
+
             					$user_data = $this->model->selectWhereData('pa_users',array('id'=>$inserted_id),array('*'));
             					$response['code'] = REST_Controller::HTTP_OK;
                                 $response['status'] = true;
@@ -241,12 +250,16 @@ class User_api extends REST_Controller {
     	$validate = validateToken();
         if ($validate) {
 		    	$user_id = $this->input->post('user_id');
+		    	$fk_vehicle_type_id = $this->input->post('fk_vehicle_type_id');
 		    	$car_no = $this->input->post('car_no');
 		    	if(empty($user_id)){
 		    		$response['message'] = "User Id is required";
 		    		$response['code'] = 201;
 		    	}else if(empty($car_no)){
 		    		$response['message'] = "Car No is required";
+		    		$response['code'] = 201;
+		    	}else if(empty($fk_vehicle_type_id)){
+		    		$response['message'] = "Vehicle Type is required";
 		    		$response['code'] = 201;
 		    	}else{
 		   			$check_user_car_count = $this->model->CountWhereRecord('tbl_user_car_details', array('car_number'=>$car_no,'status'=>1));
@@ -257,7 +270,8 @@ class User_api extends REST_Controller {
     				}else{
     					$curl_data = array(
     						'fk_user_id' =>$user_id,
-    						'car_number' =>$car_no
+    						'car_number' =>$car_no,
+    						'fk_vehicle_type_id'=>$fk_vehicle_type_id
     					);
     					$this->model->insertData('tbl_user_car_details',$curl_data);
 
@@ -551,28 +565,103 @@ class User_api extends REST_Controller {
 		    		$response['status']=false;
 		    		$response['message']= "Total hours is required";
 		    	}else{
-		    		$delay_time1 = rand(100000, 800000);
-                	$delay_time = rand(1000000, 1500000) + $delay_time1;	
-                	
-                	// $slot_info = $this->model->selectWhereData('tbl_sensor',array('id'=>$slot_id,'del_status'=>1,'isBlocked'=>1));
+		    		// echo '<pre>'; print_r($from_time);
+		    		// $delay_time1 = rand(100000, 800000);
+        //         	$delay_time = rand(1000000, 1500000) + $delay_time1;		
+                	$this->load->model('user_model');
                 	$sensor_data = $this->model->CountWhereRecord('tbl_sensor', array('fk_slot_id'=>$fk_slot_id,'fk_place_id'=>$fk_place_id));
                 	if($sensor_data==1){
-                		$reserved_slot_info = $this->model->CountWhereRecord('tbl_booking', array('fk_slot_id'=>$fk_slot_id,'fk_place_id'=>$fk_place_id,'booking_from_date'=>$from_date,'booking_to_date'=>$to_date,'booking_from_time'=>$from_time,'booking_to_time'=>$to_time));
+                		$reserved_slot_info = $this->model->CountWhereRecord('tbl_booking', array('fk_slot_id'=>$fk_slot_id,'fk_place_id'=>$fk_place_id,'booking_from_date'=>$booking_from_date,'booking_to_date'=>$booking_to_date,'booking_from_time'=>$booking_from_time,'booking_to_time'=>$booking_to_time));
+                		// echo '<pre>'; print_r($reserved_slot_info); exit;
                 		if($reserved_slot_info==0){
                 			$user_wallet_data = $this->model->selectWhereData('tbl_user_wallet',array('fk_user_id'=>$fk_user_id),array('amount'));
                 			if(!empty($user_wallet_data['amount'])){
-                				$reserve_from_time= date('H:i:s',strtotime($from_time . ' -10 minutes'));
-                				$reserve_to_time= date('H:i:s',strtotime($to_time . ' +0 minutes'));
-                				
-                			}else{
-                				$response['message'] ="Insufficent Balance Kindly refill your wallet.";
+                				$vehicle_type_id = $this->model->selectWhereData('tbl_user_car_details',array('id'=>$fk_car_id),array('fk_vehicle_type_id'));
+                				$cost = $this->user_model->get_rate($total_hours,$vehicle_type_id['fk_vehicle_type_id'],$fk_place_id);
+
+                				if($user_wallet_data['amount'] < $cost['cost']){
+                					$response['message'] ="Insufficient Balance";
+                					$response['code']=201;
+                				}else{
+
+                						$reserve_from_time= date('H:i:s',strtotime($booking_from_time .'-10 minutes'));
+                						
+                						
+		                				$reserve_to_time= date('H:i:s',strtotime($booking_to_time . ' +0 minutes'));
+		                				$booking_data = $this->user_model->get_last_booking_id();
+		                				if(empty($booking_data)){
+		                					$new_booking_id  = 'PAB00000001';
+		                				}else{
+		                						// $booking_data = $this->user_model->get_last_booking_id();
+		                						$explode = explode("B",$booking_data['booking_id']);
+		                                        $count = 8-strlen($explode[1]+1);
+		                                        $bookingId_rep =$explode[1]+1;                                                                              
+		                                        for($i=0;$i<$count;$i++){
+		                                            $bookingId_rep='0'.$bookingId_rep;
+		                                        }
+		                                        $new_booking_id = 'PAB'.$bookingId_rep;
+		                				}
+
+		                				$curl_data = array(
+		                					'booking_id'=> $new_booking_id,
+		                					'fk_user_id'=> $fk_user_id,
+		                					'fk_car_id'=> $fk_car_id,
+		                					'fk_place_id'=> $fk_place_id,
+		                					'fk_slot_id' => $fk_slot_id,
+		                					'fk_verifier_id'=>$fk_verifier_id,
+		                					'fk_booking_type_id'=> $fk_booking_type_id,
+		                					'booking_from_date' =>$booking_from_date,
+		                					'booking_to_date' => $booking_to_date,
+		                					'booking_from_time' => $booking_from_time,
+		                					'booking_to_time' => $booking_to_time,
+		                					'reserve_from_time' => $reserve_from_time,
+		                					'reserve_to_time' => $reserve_to_time,
+		                					'fk_booking_type_id'=>1,
+		                				);
+		    							$last_inserted_id =  $this->model->insertData('tbl_booking',$curl_data);
+		                				   							    							
+		    							$payment_data = array(
+		    								'fk_booking_id'=>$last_inserted_id,
+		    								'fk_user_id'=>$fk_user_id,
+		    								'amount'=>$cost['cost'],
+		    								'total_amount'=>$cost['cost'],
+		    							);
+		    							$this->model->insertData('tbl_payment',$payment_data);
+
+		    							$deactive_used_status = array('used_status'=>0);
+		    							$this->model->updateData('tbl_user_wallet_history',$deactive_used_status,array('fk_user_id'=>$fk_user_id));
+
+		    							$insert_user_wallet_history = array(
+		    								'fk_user_id'=>$fk_user_id,
+		    								'deduct_amount'=>$cost['cost'],
+		    								'total_amount'=>$user_wallet_data['amount'] - $cost['cost'],
+		    								'fk_payment_type_id'=>3
+		    							);
+		    							$this->model->insertData('tbl_user_wallet_history',$insert_user_wallet_history);
+
+		    							$update_wallet_data = array(
+		    								'amount'=>$user_wallet_data['amount'] - $cost['cost'],
+		    							);
+		    							$this->model->updateData('tbl_user_wallet',$update_wallet_data,array('fk_user_id'=>$fk_user_id));
+		    							$booking_status = array(
+		    								'fk_booking_id'=>$last_inserted_id,
+		    								'fk_status_id'=>1,
+		    								'used_status'=>1
+		    							);
+		    							$this->model->insertData('tbl_booking_status',$booking_status);
+
+		    							$response['code'] = REST_Controller::HTTP_OK;
+				                        $response['status'] = true;
+				    					$response['message'] = 'success';
+		                		}
+		                	}else{
+                				$response['message'] ="Insufficient Balance Kindly refill your wallet.";
                 				$response['code']=201;
-                			}
+		                	}
                 		}else{
                 			$response['message'] ="This slot is already booked";
                 			$response['code']=201;
-                		}
-                		
+                		}              		
                 	}
 		    	}
 		}else {

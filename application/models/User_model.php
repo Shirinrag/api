@@ -117,4 +117,26 @@ class User_model extends CI_Model {
         $result = $query->row_array();
         return $result;
 	}
+	public function get_last_booking_id()
+	{
+		$this->db->select('booking_id');
+        $this->db->from('tbl_booking');
+        $this->db->like('booking_id', "PAB");
+        $query = $this->db->get();
+        return $query->row_array();
+	}
+	public function get_rate($total_hours='',$fk_vehicle_type_id="",$fk_place_id="")
+    {
+       	$this->db->select('cost');
+       	$this->db->from('tbl_hours_price_slab');
+       	$this->db->where('fk_vehicle_type_id',$fk_vehicle_type_id);
+       	$this->db->where('fk_place_id',$fk_place_id);
+       // $this->db->where('from_km >=', $total_hours);
+        $this->db->where((int) $total_hours.' BETWEEN from_hours AND from_hours');
+        // $this->db->where('status','1');
+       // $this->db->order_by('to_km',"ASC");
+        $query = $this->db->get();
+        $result = $query->row_array();
+        return $result;
+    }
 }
