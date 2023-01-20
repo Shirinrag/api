@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Jan 18, 2023 at 08:25 AM
+-- Generation Time: Jan 20, 2023 at 01:42 PM
 -- Server version: 10.4.24-MariaDB
 -- PHP Version: 7.4.29
 
@@ -75,7 +75,8 @@ INSERT INTO `pa_users` (`id`, `userName`, `firstName`, `lastName`, `email`, `pho
 (3, 'akashyadav', 'Akash', 'Yadav', 'yadavakash50894@gmail.com', '9517418495', NULL, 'WU1tajQ4QWtobDBxYk9BY1c2b2NkWWdlMTJuZ2VweU1JMTU0Wktobkhwbz0=', NULL, 1, 3, 1, 0, 0, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 1, 0, NULL, NULL, 1, '2022-12-23 11:48:19', '2022-12-23 11:48:19'),
 (4, 'shamimshaikh', 'Shamim', 'Shaikh', 'shamimakhtarshaikh85@gmail.com', '9076607607	', NULL, 'WU1tajQ4QWtobDBxYk9BY1c2b2NkWWdlMTJuZ2VweU1JMTU0Wktobkhwbz0=', NULL, 1, 3, 1, 0, 0, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 1, 0, NULL, NULL, 1, '2022-12-23 11:49:22', '2022-12-23 11:49:22'),
 (5, 'sheshnathgiri', 'Sheshnath', 'Giri', 'sheshnathgiri7@gmail.com', '7408525925', NULL, 'WU1tajQ4QWtobDBxYk9BY1c2b2NkWWdlMTJuZ2VweU1JMTU0Wktobkhwbz0=', NULL, 1, 3, 1, 0, 0, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 1, 0, NULL, NULL, 1, '2022-12-23 11:50:25', '2022-12-23 11:50:25'),
-(6, 'shirinr', 'Shirin', 'Singh', 'shirin@stzsoft.com', '8010597075', NULL, 'WHc5dFJ1WE9iVjdYOStpR2E1c05hQT09', NULL, 1, 14, 1, 0, 0, NULL, NULL, NULL, NULL, 'uploads/655239_social_icons_set_new_3_generated.jpg', 'uploads/268064_11.png', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 1, 0, NULL, NULL, 1, '2023-01-16 11:37:41', '2023-01-16 11:37:41');
+(6, 'shirinr', 'Shirin', 'Singh', 'shirin@stzsoft.com', '8010597075', NULL, 'WHc5dFJ1WE9iVjdYOStpR2E1c05hQT09', NULL, 1, 14, 1, 0, 0, NULL, NULL, NULL, NULL, 'uploads/655239_social_icons_set_new_3_generated.jpg', 'uploads/268064_11.png', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 1, 0, NULL, NULL, 1, '2023-01-16 11:37:41', '2023-01-16 11:37:41'),
+(7, 'ShirinRagbansingh', 'Shirin', 'Ragbansingh', 'shirin@stzsoft.com', '8010597076', NULL, NULL, NULL, 1, 10, 1, 0, 0, NULL, NULL, NULL, 'uploads/453959_13.jpg', NULL, NULL, NULL, '', NULL, NULL, NULL, NULL, NULL, '8010597076PAUser', 1, 0, NULL, NULL, 1, '2023-01-20 10:31:47', '2023-01-20 10:31:47');
 
 -- --------------------------------------------------------
 
@@ -149,6 +150,15 @@ CREATE TABLE `tbl_booking` (
   `updated_at` datetime NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
+--
+-- Dumping data for table `tbl_booking`
+--
+
+INSERT INTO `tbl_booking` (`id`, `booking_id`, `fk_user_id`, `fk_car_id`, `fk_place_id`, `fk_slot_id`, `fk_verifier_id`, `fk_booking_type_id`, `booking_from_date`, `booking_to_date`, `booking_from_time`, `booking_to_time`, `reserve_from_time`, `reserve_to_time`, `status`, `created_at`, `updated_at`) VALUES
+(1, 'PAB00000001', 7, 1, 436, 476, NULL, 1, '2023-01-20', '2023-01-20', '02:00:00', '04:00:00', '11:42:07', '11:52:07', 1, '2023-01-20 16:22:07', '2023-01-20 16:22:07'),
+(2, 'PAB00000002', 7, 1, 436, 476, NULL, 1, '2023-01-20', '2023-01-20', '16:32:00', '18:00:00', '11:53:22', '12:03:22', 1, '2023-01-20 16:33:22', '2023-01-20 16:33:22'),
+(3, 'PAB00000002', 7, 1, 436, 476, NULL, 1, '2023-01-20', '2023-01-20', '16:32:00', '18:00:00', '16:22:00', '18:00:00', 1, '2023-01-20 16:36:31', '2023-01-20 16:36:31');
+
 -- --------------------------------------------------------
 
 --
@@ -159,9 +169,19 @@ CREATE TABLE `tbl_booking_status` (
   `id` int(11) NOT NULL,
   `fk_booking_id` int(11) DEFAULT NULL,
   `fk_status_id` int(11) DEFAULT NULL,
+  `used_status` int(11) DEFAULT NULL,
   `created_at` datetime NOT NULL DEFAULT current_timestamp(),
   `updated_at` datetime NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+--
+-- Dumping data for table `tbl_booking_status`
+--
+
+INSERT INTO `tbl_booking_status` (`id`, `fk_booking_id`, `fk_status_id`, `used_status`, `created_at`, `updated_at`) VALUES
+(1, 1, 1, 1, '2023-01-20 16:22:07', '2023-01-20 16:22:07'),
+(2, 2, 1, 1, '2023-01-20 16:33:22', '2023-01-20 16:33:22'),
+(3, 3, 1, 1, '2023-01-20 16:36:31', '2023-01-20 16:36:31');
 
 -- --------------------------------------------------------
 
@@ -185,6 +205,22 @@ INSERT INTO `tbl_booking_type` (`id`, `type`, `status`, `created_at`, `updated_a
 (1, 'Daily', 1, '2022-12-01 17:11:59', '2022-12-01 17:11:59'),
 (2, 'Passes', 1, '2022-12-01 17:13:08', '2022-12-01 17:13:08'),
 (3, 'Premium', 1, '2022-12-01 17:13:45', '2022-12-01 17:13:45');
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `tbl_booking_verify`
+--
+
+CREATE TABLE `tbl_booking_verify` (
+  `id` bigint(20) NOT NULL,
+  `fk_booking_id` int(11) DEFAULT NULL,
+  `fk_verifier_id` int(11) DEFAULT NULL,
+  `fk_booking_type_id` int(11) DEFAULT NULL,
+  `verify_status` int(11) DEFAULT NULL,
+  `created_at` datetime NOT NULL DEFAULT current_timestamp(),
+  `updated_at` datetime NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp()
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 -- --------------------------------------------------------
 
@@ -48559,9 +48595,9 @@ INSERT INTO `tbl_hours_price_slab` (`id`, `fk_place_id`, `fk_vehicle_type_id`, `
 (2, 436, 1, 1, 2, 2, 1, '2023-01-12 12:31:29', '2023-01-12 12:31:29'),
 (3, 436, 1, 2, 3, 5, 1, '2023-01-12 12:31:29', '2023-01-12 12:31:29'),
 (4, 436, 1, 3, 4, 6, 1, '2023-01-12 12:31:29', '2023-01-12 12:31:29'),
-(5, 436, 2, 0, 1, 10, 1, '2023-01-12 12:31:29', '2023-01-12 12:31:29'),
-(6, 436, 2, 1, 2, 20, 1, '2023-01-12 12:31:29', '2023-01-12 12:31:29'),
-(7, 436, 2, 2, 3, 30, 1, '2023-01-12 12:31:29', '2023-01-12 12:31:29');
+(5, 436, 3, 0, 1, 10, 1, '2023-01-12 12:31:29', '2023-01-20 13:02:42'),
+(6, 436, 3, 1, 2, 20, 1, '2023-01-12 12:31:29', '2023-01-20 13:02:46'),
+(7, 436, 3, 2, 3, 25, 1, '2023-01-12 12:31:29', '2023-01-20 16:09:05');
 
 -- --------------------------------------------------------
 
@@ -49154,6 +49190,40 @@ CREATE TABLE `tbl_payment` (
   `updated_at` datetime NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
+--
+-- Dumping data for table `tbl_payment`
+--
+
+INSERT INTO `tbl_payment` (`id`, `fk_booking_id`, `fk_user_id`, `amount`, `charges`, `total_amount`, `created_at`, `updated_at`) VALUES
+(1, 1, 7, 25, NULL, 25, '2023-01-20 16:22:07', '2023-01-20 16:22:07'),
+(2, 2, 7, 25, NULL, 25, '2023-01-20 16:33:22', '2023-01-20 16:33:22'),
+(3, 3, 7, 25, NULL, 25, '2023-01-20 16:36:31', '2023-01-20 16:36:31');
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `tbl_payment_type`
+--
+
+CREATE TABLE `tbl_payment_type` (
+  `id` bigint(20) NOT NULL,
+  `payment_type` varchar(100) DEFAULT NULL,
+  `status` int(11) NOT NULL DEFAULT 1,
+  `created_at` datetime NOT NULL DEFAULT current_timestamp(),
+  `updated_at` datetime NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp()
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+--
+-- Dumping data for table `tbl_payment_type`
+--
+
+INSERT INTO `tbl_payment_type` (`id`, `payment_type`, `status`, `created_at`, `updated_at`) VALUES
+(1, 'Bonus Amount', 1, '2023-01-20 11:20:24', '2023-01-20 11:20:24'),
+(2, 'User Added', 1, '2023-01-20 11:20:24', '2023-01-20 11:20:24'),
+(3, 'Deducted', 1, '2023-01-20 11:20:24', '2023-01-20 11:20:24'),
+(4, 'Refunded', 1, '2023-01-20 11:20:24', '2023-01-20 11:20:24'),
+(5, 'Penalty', 1, '2023-01-20 11:20:24', '2023-01-20 11:20:24');
+
 -- --------------------------------------------------------
 
 --
@@ -49198,7 +49268,8 @@ INSERT INTO `tbl_place_device_mapped` (`id`, `fk_parking_place_id`, `fk_device_i
 (23, 1, 2, '2022-12-21 17:09:21', '2022-12-21 17:09:21'),
 (24, 1, 3, '2022-12-21 17:09:21', '2022-12-21 17:09:21'),
 (25, 1, 4, '2022-12-21 17:09:21', '2022-12-21 17:09:21'),
-(26, 1, 5, '2022-12-21 17:09:21', '2022-12-21 17:09:21');
+(26, 1, 5, '2022-12-21 17:09:21', '2022-12-21 17:09:21'),
+(27, 436, 1, '2023-01-20 16:15:19', '2023-01-20 16:15:19');
 
 -- --------------------------------------------------------
 
@@ -49230,8 +49301,8 @@ CREATE TABLE `tbl_pos_booking` (
   `fk_lang_id` int(11) DEFAULT NULL,
   `car_no` varchar(100) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
   `phone_no` varchar(20) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
-  `from_date` date DEFAULT NULL,
-  `to_date` date DEFAULT NULL,
+  `from_date` varchar(100) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `to_date` varchar(100) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
   `from_time` time DEFAULT NULL,
   `to_time` time DEFAULT NULL,
   `total_hours` varchar(50) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
@@ -49250,9 +49321,9 @@ CREATE TABLE `tbl_pos_booking` (
 --
 
 INSERT INTO `tbl_pos_booking` (`id`, `fk_place_id`, `fk_verifier_id`, `fk_vehicle_type_id`, `fk_device_id`, `fk_lang_id`, `car_no`, `phone_no`, `from_date`, `to_date`, `from_time`, `to_time`, `total_hours`, `price`, `latitude`, `longitude`, `book_status`, `IP`, `Mac_address`, `created_at`, `updated_at`) VALUES
-(1, 1, 6, 1, 1, 2, 'KA 19P 8488', '', '0000-00-00', '0000-00-00', '00:00:01', '00:00:00', '', 0, '19.128484389229634', '72.9256605528929', 1, NULL, '11111', '2023-01-17 12:50:54', '2023-01-17 12:50:54'),
-(2, 1, 6, 1, 1, 2, 'KA 19P 8488', '', '0000-00-00', '0000-00-00', '00:00:01', '00:00:02', '1', 20, '19.128484389229634', '72.9256605528929', 1, NULL, '11111', '2023-01-17 12:53:54', '2023-01-17 12:53:54'),
-(3, 1, 6, 1, 1, 2, 'KA 19P 8488', '', '0000-00-00', '0000-00-00', '00:00:01', '00:00:02', '1', 20, '19.128484389229634', '72.9256605528929', 1, NULL, '11111', '2023-01-17 14:00:41', '2023-01-17 14:00:41');
+(1, 1, 6, 1, 1, 2, 'KA 19P 8488', '', '17/01/2023', '17/01/2023', '00:00:01', '00:00:00', '', 0, '19.128484389229634', '72.9256605528929', 1, NULL, '11111', '2023-01-17 12:50:54', '2023-01-18 18:35:15'),
+(2, 1, 6, 1, 1, 2, 'KA 19P 8488', '', '17/01/2023', '17/01/2023', '00:00:01', '00:00:02', '1', 20, '19.128484389229634', '72.9256605528929', 1, NULL, '11111', '2023-01-17 12:53:54', '2023-01-18 18:35:18'),
+(3, 1, 6, 1, 1, 2, 'KA 19P 8488', '', '17/01/2023', '17/01/2023', '00:00:01', '00:00:02', '1', 20, '19.128484389229634', '72.9256605528929', 1, NULL, '11111', '2023-01-17 14:00:41', '2023-01-18 18:35:20');
 
 -- --------------------------------------------------------
 
@@ -49350,6 +49421,31 @@ CREATE TABLE `tbl_pos_verifier_logged_in` (
 INSERT INTO `tbl_pos_verifier_logged_in` (`id`, `fk_pos_verifier_id`, `fk_device_id`, `status`, `created_at`, `updated_at`) VALUES
 (1, 6, 2, 2, '2023-01-17 17:21:05', '2023-01-18 10:35:36'),
 (2, 6, 1, 1, '2023-01-18 10:36:15', '2023-01-18 10:36:15');
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `tbl_sensor`
+--
+
+CREATE TABLE `tbl_sensor` (
+  `id` bigint(20) NOT NULL,
+  `fk_place_id` int(11) DEFAULT NULL,
+  `fk_slot_id` int(11) DEFAULT NULL,
+  `sensor_time` datetime NOT NULL DEFAULT current_timestamp(),
+  `battery_voltage` int(11) DEFAULT NULL,
+  `status` int(11) DEFAULT NULL,
+  `created_at` datetime NOT NULL DEFAULT current_timestamp(),
+  `updated_at` datetime NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp()
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+--
+-- Dumping data for table `tbl_sensor`
+--
+
+INSERT INTO `tbl_sensor` (`id`, `fk_place_id`, `fk_slot_id`, `sensor_time`, `battery_voltage`, `status`, `created_at`, `updated_at`) VALUES
+(1, 1, 1, '2023-01-19 10:31:57', 1, 1, '2023-01-19 10:31:57', '2023-01-19 10:33:18'),
+(2, 436, 476, '2023-01-20 13:36:23', 1, 1, '2023-01-20 13:36:23', '2023-01-20 13:36:33');
 
 -- --------------------------------------------------------
 
@@ -49850,7 +49946,7 @@ INSERT INTO `tbl_slot_info` (`id`, `fk_place_id`, `slot_name`, `display_id`, `fk
 (473, 433, 'MH-AA473', 'P-1', NULL, 0, 1, 1, '2022-12-29 12:32:50', '2022-12-30 13:30:41'),
 (474, 434, 'MH-AA474', 'P-1', NULL, 0, 1, 1, '2022-12-29 12:32:50', '2022-12-30 13:30:41'),
 (475, 435, 'MH-AA475', 'P-1', NULL, 1, 1, 1, '2022-12-29 12:32:50', '2022-12-30 13:30:41'),
-(476, 436, 'MH-AA476', 'P-1', NULL, 0, 1, 1, '2023-01-12 12:31:29', '2023-01-12 12:31:29');
+(476, 436, 'MH-AA476', 'P-1', 1, 1, 1, 1, '2023-01-12 12:31:29', '2023-01-20 16:15:19');
 
 -- --------------------------------------------------------
 
@@ -53996,6 +54092,7 @@ INSERT INTO `tbl_status_master` (`id`, `status`, `created_at`, `updated_at`) VAL
 CREATE TABLE `tbl_user_car_details` (
   `id` bigint(20) NOT NULL,
   `fk_user_id` int(11) DEFAULT NULL,
+  `fk_vehicle_type_id` int(11) DEFAULT NULL,
   `car_number` varchar(100) DEFAULT NULL,
   `status` int(11) NOT NULL DEFAULT 1,
   `created_at` datetime NOT NULL DEFAULT current_timestamp(),
@@ -54006,9 +54103,9 @@ CREATE TABLE `tbl_user_car_details` (
 -- Dumping data for table `tbl_user_car_details`
 --
 
-INSERT INTO `tbl_user_car_details` (`id`, `fk_user_id`, `car_number`, `status`, `created_at`, `updated_at`) VALUES
-(1, 2323, 'MH 02 VD 2636', 1, '2022-12-01 15:52:35', '2022-12-01 16:06:42'),
-(2, 2324, 'MH 02 VD 2622', 1, '2022-12-02 10:52:53', '2022-12-02 10:54:20');
+INSERT INTO `tbl_user_car_details` (`id`, `fk_user_id`, `fk_vehicle_type_id`, `car_number`, `status`, `created_at`, `updated_at`) VALUES
+(1, 7, 3, 'MH 02 VD 2636', 1, '2022-12-01 15:52:35', '2023-01-20 13:02:22'),
+(2, 7, 3, 'MH 02 VD 2622', 1, '2022-12-02 10:52:53', '2023-01-20 13:02:25');
 
 -- --------------------------------------------------------
 
@@ -54067,7 +54164,37 @@ INSERT INTO `tbl_user_wallet` (`id`, `fk_user_id`, `amount`, `status`, `created_
 (1, 2324, 25, 1, '2022-12-02 10:52:53', '2022-12-02 10:52:53'),
 (2, 2325, NULL, 1, '2022-12-12 11:15:15', '2022-12-12 11:15:15'),
 (3, 2326, NULL, 1, '2022-12-12 11:17:36', '2022-12-12 11:17:36'),
-(4, 2327, NULL, 1, '2022-12-12 11:18:39', '2022-12-12 11:18:39');
+(4, 2327, NULL, 1, '2022-12-12 11:18:39', '2022-12-12 11:18:39'),
+(5, 7, 125, 1, '2023-01-20 10:31:47', '2023-01-20 16:36:31');
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `tbl_user_wallet_history`
+--
+
+CREATE TABLE `tbl_user_wallet_history` (
+  `id` bigint(20) NOT NULL,
+  `fk_user_id` int(11) DEFAULT NULL,
+  `add_amount` int(11) DEFAULT NULL,
+  `deduct_amount` int(11) DEFAULT NULL,
+  `total_amount` int(11) DEFAULT NULL,
+  `used_status` int(11) NOT NULL DEFAULT 1,
+  `fk_payment_type_id` int(11) DEFAULT NULL,
+  `transac_id` longtext DEFAULT NULL,
+  `created_at` datetime NOT NULL DEFAULT current_timestamp(),
+  `updated_at` datetime NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp()
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+--
+-- Dumping data for table `tbl_user_wallet_history`
+--
+
+INSERT INTO `tbl_user_wallet_history` (`id`, `fk_user_id`, `add_amount`, `deduct_amount`, `total_amount`, `used_status`, `fk_payment_type_id`, `transac_id`, `created_at`, `updated_at`) VALUES
+(1, 7, 200, NULL, 200, 0, 1, NULL, '2023-01-20 11:44:44', '2023-01-20 16:20:51'),
+(7, 7, NULL, 25, 175, 0, 3, NULL, '2023-01-20 16:22:07', '2023-01-20 16:33:22'),
+(8, 7, NULL, 25, 150, 0, 3, NULL, '2023-01-20 16:33:22', '2023-01-20 16:36:31'),
+(9, 7, NULL, 25, 125, 1, 3, NULL, '2023-01-20 16:36:31', '2023-01-20 16:36:31');
 
 -- --------------------------------------------------------
 
@@ -54163,6 +54290,12 @@ ALTER TABLE `tbl_booking_type`
   ADD PRIMARY KEY (`id`),
   ADD KEY `id` (`id`),
   ADD KEY `type` (`type`);
+
+--
+-- Indexes for table `tbl_booking_verify`
+--
+ALTER TABLE `tbl_booking_verify`
+  ADD PRIMARY KEY (`id`);
 
 --
 -- Indexes for table `tbl_cities`
@@ -54276,6 +54409,15 @@ ALTER TABLE `tbl_payment`
   ADD KEY `total_amount` (`total_amount`);
 
 --
+-- Indexes for table `tbl_payment_type`
+--
+ALTER TABLE `tbl_payment_type`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `id` (`id`),
+  ADD KEY `payment_type` (`payment_type`),
+  ADD KEY `status` (`status`);
+
+--
 -- Indexes for table `tbl_place_device_mapped`
 --
 ALTER TABLE `tbl_place_device_mapped`
@@ -54342,6 +54484,12 @@ ALTER TABLE `tbl_pos_verifier_logged_in`
   ADD PRIMARY KEY (`id`);
 
 --
+-- Indexes for table `tbl_sensor`
+--
+ALTER TABLE `tbl_sensor`
+  ADD PRIMARY KEY (`id`);
+
+--
 -- Indexes for table `tbl_slot_info`
 --
 ALTER TABLE `tbl_slot_info`
@@ -54388,6 +54536,19 @@ ALTER TABLE `tbl_user_wallet`
   ADD KEY `amount` (`amount`);
 
 --
+-- Indexes for table `tbl_user_wallet_history`
+--
+ALTER TABLE `tbl_user_wallet_history`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `id` (`id`),
+  ADD KEY `fk_user_id` (`fk_user_id`),
+  ADD KEY `add_amount` (`add_amount`),
+  ADD KEY `deduct_amount` (`deduct_amount`),
+  ADD KEY `used_status` (`used_status`),
+  ADD KEY `total_amount` (`total_amount`),
+  ADD KEY `fk_payment_type_id` (`fk_payment_type_id`);
+
+--
 -- Indexes for table `tbl_vehicle_type`
 --
 ALTER TABLE `tbl_vehicle_type`
@@ -54409,7 +54570,7 @@ ALTER TABLE `tbl_vendor`
 -- AUTO_INCREMENT for table `pa_users`
 --
 ALTER TABLE `pa_users`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
 
 --
 -- AUTO_INCREMENT for table `tbl_blogs`
@@ -54427,19 +54588,25 @@ ALTER TABLE `tbl_bonus`
 -- AUTO_INCREMENT for table `tbl_booking`
 --
 ALTER TABLE `tbl_booking`
-  MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT;
+  MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
 
 --
 -- AUTO_INCREMENT for table `tbl_booking_status`
 --
 ALTER TABLE `tbl_booking_status`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
 
 --
 -- AUTO_INCREMENT for table `tbl_booking_type`
 --
 ALTER TABLE `tbl_booking_type`
   MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+
+--
+-- AUTO_INCREMENT for table `tbl_booking_verify`
+--
+ALTER TABLE `tbl_booking_verify`
+  MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT for table `tbl_cities`
@@ -54517,13 +54684,19 @@ ALTER TABLE `tbl_parking_price_type`
 -- AUTO_INCREMENT for table `tbl_payment`
 --
 ALTER TABLE `tbl_payment`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+
+--
+-- AUTO_INCREMENT for table `tbl_payment_type`
+--
+ALTER TABLE `tbl_payment_type`
+  MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
 
 --
 -- AUTO_INCREMENT for table `tbl_place_device_mapped`
 --
 ALTER TABLE `tbl_place_device_mapped`
-  MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=27;
+  MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=28;
 
 --
 -- AUTO_INCREMENT for table `tbl_place_traffic`
@@ -54562,6 +54735,12 @@ ALTER TABLE `tbl_pos_verifier_logged_in`
   MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 
 --
+-- AUTO_INCREMENT for table `tbl_sensor`
+--
+ALTER TABLE `tbl_sensor`
+  MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+
+--
 -- AUTO_INCREMENT for table `tbl_slot_info`
 --
 ALTER TABLE `tbl_slot_info`
@@ -54595,7 +54774,13 @@ ALTER TABLE `tbl_user_type`
 -- AUTO_INCREMENT for table `tbl_user_wallet`
 --
 ALTER TABLE `tbl_user_wallet`
-  MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
+  MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
+
+--
+-- AUTO_INCREMENT for table `tbl_user_wallet_history`
+--
+ALTER TABLE `tbl_user_wallet_history`
+  MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=10;
 
 --
 -- AUTO_INCREMENT for table `tbl_vehicle_type`
