@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Jan 20, 2023 at 01:42 PM
+-- Generation Time: Jan 21, 2023 at 11:08 AM
 -- Server version: 10.4.24-MariaDB
 -- PHP Version: 7.4.29
 
@@ -77,6 +77,20 @@ INSERT INTO `pa_users` (`id`, `userName`, `firstName`, `lastName`, `email`, `pho
 (5, 'sheshnathgiri', 'Sheshnath', 'Giri', 'sheshnathgiri7@gmail.com', '7408525925', NULL, 'WU1tajQ4QWtobDBxYk9BY1c2b2NkWWdlMTJuZ2VweU1JMTU0Wktobkhwbz0=', NULL, 1, 3, 1, 0, 0, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 1, 0, NULL, NULL, 1, '2022-12-23 11:50:25', '2022-12-23 11:50:25'),
 (6, 'shirinr', 'Shirin', 'Singh', 'shirin@stzsoft.com', '8010597075', NULL, 'WHc5dFJ1WE9iVjdYOStpR2E1c05hQT09', NULL, 1, 14, 1, 0, 0, NULL, NULL, NULL, NULL, 'uploads/655239_social_icons_set_new_3_generated.jpg', 'uploads/268064_11.png', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 1, 0, NULL, NULL, 1, '2023-01-16 11:37:41', '2023-01-16 11:37:41'),
 (7, 'ShirinRagbansingh', 'Shirin', 'Ragbansingh', 'shirin@stzsoft.com', '8010597076', NULL, NULL, NULL, 1, 10, 1, 0, 0, NULL, NULL, NULL, 'uploads/453959_13.jpg', NULL, NULL, NULL, '', NULL, NULL, NULL, NULL, NULL, '8010597076PAUser', 1, 0, NULL, NULL, 1, '2023-01-20 10:31:47', '2023-01-20 10:31:47');
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `tbl_about_us`
+--
+
+CREATE TABLE `tbl_about_us` (
+  `id` int(11) NOT NULL,
+  `about_us` longtext DEFAULT NULL,
+  `status` int(11) NOT NULL DEFAULT 1,
+  `created_at` datetime NOT NULL DEFAULT current_timestamp(),
+  `updated_at` datetime NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp()
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 -- --------------------------------------------------------
 
@@ -157,7 +171,8 @@ CREATE TABLE `tbl_booking` (
 INSERT INTO `tbl_booking` (`id`, `booking_id`, `fk_user_id`, `fk_car_id`, `fk_place_id`, `fk_slot_id`, `fk_verifier_id`, `fk_booking_type_id`, `booking_from_date`, `booking_to_date`, `booking_from_time`, `booking_to_time`, `reserve_from_time`, `reserve_to_time`, `status`, `created_at`, `updated_at`) VALUES
 (1, 'PAB00000001', 7, 1, 436, 476, NULL, 1, '2023-01-20', '2023-01-20', '02:00:00', '04:00:00', '11:42:07', '11:52:07', 1, '2023-01-20 16:22:07', '2023-01-20 16:22:07'),
 (2, 'PAB00000002', 7, 1, 436, 476, NULL, 1, '2023-01-20', '2023-01-20', '16:32:00', '18:00:00', '11:53:22', '12:03:22', 1, '2023-01-20 16:33:22', '2023-01-20 16:33:22'),
-(3, 'PAB00000002', 7, 1, 436, 476, NULL, 1, '2023-01-20', '2023-01-20', '16:32:00', '18:00:00', '16:22:00', '18:00:00', 1, '2023-01-20 16:36:31', '2023-01-20 16:36:31');
+(3, 'PAB00000002', 7, 1, 436, 476, NULL, 1, '2023-01-20', '2023-01-20', '16:32:00', '18:00:00', '16:22:00', '18:00:00', 1, '2023-01-20 16:36:31', '2023-01-20 16:36:31'),
+(4, 'PAB00000002', 7, 1, 436, 476, NULL, 1, '0000-00-00', '2023-01-21', '08:45:00', '10:45:00', '08:35:00', '10:45:00', 1, '2023-01-21 08:46:26', '2023-01-21 08:46:26');
 
 -- --------------------------------------------------------
 
@@ -181,7 +196,8 @@ CREATE TABLE `tbl_booking_status` (
 INSERT INTO `tbl_booking_status` (`id`, `fk_booking_id`, `fk_status_id`, `used_status`, `created_at`, `updated_at`) VALUES
 (1, 1, 1, 1, '2023-01-20 16:22:07', '2023-01-20 16:22:07'),
 (2, 2, 1, 1, '2023-01-20 16:33:22', '2023-01-20 16:33:22'),
-(3, 3, 1, 1, '2023-01-20 16:36:31', '2023-01-20 16:36:31');
+(3, 3, 1, 1, '2023-01-20 16:36:31', '2023-01-20 16:36:31'),
+(4, 4, 1, 1, '2023-01-21 08:46:26', '2023-01-21 08:46:26');
 
 -- --------------------------------------------------------
 
@@ -49197,7 +49213,8 @@ CREATE TABLE `tbl_payment` (
 INSERT INTO `tbl_payment` (`id`, `fk_booking_id`, `fk_user_id`, `amount`, `charges`, `total_amount`, `created_at`, `updated_at`) VALUES
 (1, 1, 7, 25, NULL, 25, '2023-01-20 16:22:07', '2023-01-20 16:22:07'),
 (2, 2, 7, 25, NULL, 25, '2023-01-20 16:33:22', '2023-01-20 16:33:22'),
-(3, 3, 7, 25, NULL, 25, '2023-01-20 16:36:31', '2023-01-20 16:36:31');
+(3, 3, 7, 25, NULL, 25, '2023-01-20 16:36:31', '2023-01-20 16:36:31'),
+(4, 4, 7, 25, NULL, 25, '2023-01-21 08:46:26', '2023-01-21 08:46:26');
 
 -- --------------------------------------------------------
 
@@ -49445,7 +49462,8 @@ CREATE TABLE `tbl_sensor` (
 
 INSERT INTO `tbl_sensor` (`id`, `fk_place_id`, `fk_slot_id`, `sensor_time`, `battery_voltage`, `status`, `created_at`, `updated_at`) VALUES
 (1, 1, 1, '2023-01-19 10:31:57', 1, 1, '2023-01-19 10:31:57', '2023-01-19 10:33:18'),
-(2, 436, 476, '2023-01-20 13:36:23', 1, 1, '2023-01-20 13:36:23', '2023-01-20 13:36:33');
+(2, 436, 476, '2023-01-20 13:36:23', 1, 1, '2023-01-20 13:36:23', '2023-01-20 13:36:33'),
+(3, 436, 476, '2023-01-21 08:42:58', 1, 1, '2023-01-21 08:42:58', '2023-01-21 08:42:58');
 
 -- --------------------------------------------------------
 
@@ -54086,6 +54104,29 @@ INSERT INTO `tbl_status_master` (`id`, `status`, `created_at`, `updated_at`) VAL
 -- --------------------------------------------------------
 
 --
+-- Table structure for table `tbl_terms_condition`
+--
+
+CREATE TABLE `tbl_terms_condition` (
+  `id` bigint(20) NOT NULL,
+  `terms_type` int(11) DEFAULT NULL COMMENT '1. User App\r\n2. Verifier APP\r\n3. Vendor App',
+  `terms_condition` longtext DEFAULT NULL,
+  `created_at` datetime NOT NULL DEFAULT current_timestamp(),
+  `updated_at` datetime NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp()
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+--
+-- Dumping data for table `tbl_terms_condition`
+--
+
+INSERT INTO `tbl_terms_condition` (`id`, `terms_type`, `terms_condition`, `created_at`, `updated_at`) VALUES
+(1, 1, '<h2>ParkingAdda Work</h2><ol><li><strong>TERMS OF CONTRACT</strong></li><li><strong>ACCEPTANCE</strong></li><li><strong>HARDWARE, SOFTWARE, FACILITIES</strong><ul><li>To provide install necessary complete hardware and software solutions, such as but not limited to boom barriers, auto pay station, devices, port-cabins, switches, gateway, guidance system, for on street, off street and multi-level parking system.</li><li>Provide Parking Management and Parking Guidance System to direct drivers to available through parking slots Smart Parking Smart Phone Application.</li><li>Provide and install necessary signage which also includes variable message sign boards for guidance to public regarding availability of parking spaces other necessary information.</li><li>Install, operate and maintain an IT system, for parking fee payments, monitoring, and enforcement. Procure software hardware for the processing of customer payments via credit card, net banking, mobile-based banking systems, other media; the impetus is on cashless payment system at all the parking lots.</li><li>Smart Parking Smart Phone Application for parking services: App shall show the available slot on real time basis, booking of parking space, payment mechanism through various modes of payment, reservation for specially-able citizens, facility for extension of pre-booked parking space.</li><li>Procure hardware software to aid in the planning monitoring of enforcement activities.</li><li>Establish the required facilities, equipment, information systems for the operations of the Parking System.</li></ul></li><li><strong>OPERATIONS</strong><ul><li>ParkingAdda will develop modify, from time to time, a detailed operating plan (“Operating Plan”) for the Parking System. The Operating Plan will detail all aspects of operations including but not Limited to bring, signage, geometric design (i.e. delineation of free parking, paid parking, no-parking areas), fee collection, enforcement, facility maintenance, customer service procedures.</li><li>ParkingAdda also will prepare detailed Parking Management Plans for all on-street, off-street and multilevel sites assigned to ParkingAdda.</li><li>ParkingAdda will be responsible for complete operations and maintenance of all the parking spaces.</li><li>Collect customer payments toward User Accounts via cashless payment system</li><li>Collect applicable Parking Fees using an IT-based system (Cashless Payment System) from all users who park their vehicles in on-street, off-street and multilevel parking sites assigned to ParkingAdda. ParkingAdda will not collect cash or other forms of direct payment on the street.</li><li>Unique identification of each vehicle entering any of the parking lots through bar-coded tickets, RFID/Smart Cards/QR Coded entry NFC enabled etc. as applicable.</li><li>Enlist trained professionals and verifiers to operate the Parking System. ParkingAdda will prepare a Human Resources Plan specifying how personnel will be trained</li><li>Bear all expenses towards operation of the Parking System through the entire period and not claim any additional expenses.</li><li>Using the data generated through the parking solution software for analytics purposes, such as time based (hourly/daily/weekly/monthly/annually) trends, area specific trends, vehicle (car–SUV/sedan/hatchback, etc.) specific trends, usage vacancy periods, premium parking demand and, etc., for the purpose of better management of parking.</li></ul></li><li><strong>OPERATING MANUAL</strong><ul><li>Parking Design</li><li>Procedures for determining parking no-parking areas.</li><li>Customer information</li><li>System logo, slogan, other bring elements. Guidelines for the placement of static dynamic signage.</li><li>Signage design, including specifications for layout, colour typeface.</li><li>Specifications for pavement curb markings, including layout, colour, and typeface.</li><li>Fee collection procedures (cashless payment system)</li><li>Enforcement procedures (Physical &amp; Technology enabled)</li><li>Maintenance procedures for on-street, Off street and multi-level elements and hardware other equipment</li><li>IT system communication protocols</li><li>Data security.</li></ul></li><li><strong>PARKING MANAGEMENT PLANS</strong><ul><li>Clear designation of Parking Facilities</li><li>The layout orientation of parking slots, including the type of vehicle permitted</li><li>Applicable Parking Fees as listed on the Smart Phone App</li><li>Sufficient bay size to facilitate the length, width, head room opening of doors based on the corresponding vehicle</li></ul></li><li><strong>USER ACCOUNTS</strong><ul><li>Ability to open an account online, through a smart phone app, or at a customer service kiosk</li><li>Required data to open an account include the user‟s name, mobile number and vehicle license plate number(s)</li><li>Ability to recharge the account using cashless payment system.</li></ul></li><li><strong>FEE PAYMENT SYSTEM</strong><ul><li>Register the beginning end of a Parking Event through a text message or through a Smartphone application.</li><li>Send an alert when the duration of the Parking Event is about to exceed the user’s balance.</li><li>Send a response/confirmation message for all user actions</li><li>Handle transactions by users with User Accounts</li><li>Have the ability to differentiate charges based on:<ul><li>Duration of the Parking Event</li><li>ParkingAdda will not carry out direct cash collection from Users.</li></ul></li></ul></li><li><strong>CASHLESS PAYMENT SYSTEM</strong><ul><li>The software should process cashless payment transactions. Transaction can either be initiated via attendant via the Internet or mobiles devices.</li><li>Pay-By-Phone (Smart Phone App) - Cashless parking is a quick secure way to pay for parking if you do not have to use the cash. A Pay-By-Phone Smart Phone Application will be developed, so that User will use their mobile phone instead of paying in cash the payment is made using their registered credit or debit card by registering on Pay-By-Phone Smart Phone Application or even without registering on Pay-By-Phone app by using guest check-out directly by paying the parking charges.</li><li>Third Party Mobile Wallets (UPI) For Eg. (BHIM,Free Charge, Paytm,Gpay,PhonePe etc.)</li></ul></li><li><strong>ENFORCEMENT SYSTEM&nbsp;</strong><ul><li>Car clamps to be attached on illegal parking in our Paid Parking Lots, in private properties.</li><li>For any violations in on street parkings, offstreet parking, or private property, relevant parking authorities shall be intimated.</li><li>After a period of 24hours since the violation, respective city traffic authority shall be intimated to tow the vehicle away</li><li>Enforcement teams shall be designated area wise round the clock.</li></ul></li><li><strong>VERIFICATION SYSTEM</strong><ul><li>Conduct checks for a sample of vehicles in all Paid Parking Lots through verifiers who will be instated at all designated parking spots. The checks should be carried out at least every 20 minutes will rely on verification of the vehicle license plate number. The system will create a record for every vehicle observed with details such as the time of observation license plate number</li><li>Install vehicle detection sensors for all on street, off street and in multi-level parkings to track monitor the arrival departure of every vehicle that parks in a designated Parking Slot send real-time information to the enforcement team when required on such Parking Events</li><li>If a vehicle in an on-street, off-street and multi-level parking is found to be unpaid, the System will immediately record the violation in the IT system place a fine on the vehicle record. ParkingAdda will take photos to document the location license plate of the vehicle. ParkingAdda will record the violation Recording of the violation immobilisation will occur after a grace period of 15mins from observation. If the vehicle user pays the Parking Fee via designated cashless payment mode (UPI) before the end of the grace period, the System will not record a violation. The System shall also send information of violations along with the photograph of the violation along with the license plate of the vehicle.</li><li>The enforcements authorities should be informed within 1 hour of the violation occurring along with the photographs of the violation, photo of the licence plate and details of the vehicle.</li><li>Necessary information regarding vehicles towed by the concerned authorities will be updated on the Smart Parking App web portal immediately. Additionally, information regarding details of towed vehicles shall be available to users through a dedicated helpline number. The dedicated helpline will be operated by ParkingAdda</li></ul></li><li><strong>OWNERSHIP OF IP</strong></li><li><strong>TERMINATION</strong></li><li><strong>DISCLAIMER AND LIABILITY</strong></li><li><strong>GOVERNING LAW</strong></li><li><strong>INDEMNITY</strong></li><li><strong>CONTACT US</strong></li></ol>', '2023-01-21 11:31:43', '2023-01-21 14:40:42'),
+(2, 2, '<h2>ParkingAdda Work</h2><ol><li><strong>TERMS OF CONTRACT</strong></li><li><strong>ACCEPTANCE</strong></li><li><strong>HARDWARE, SOFTWARE, FACILITIES</strong><ul><li>To provide install necessary complete hardware and software solutions, such as but not limited to boom barriers, auto pay station, devices, port-cabins, switches, gateway, guidance system, for on street, off street and multi-level parking system.</li><li>Provide Parking Management and Parking Guidance System to direct drivers to available through parking slots Smart Parking Smart Phone Application.</li><li>Provide and install necessary signage which also includes variable message sign boards for guidance to public regarding availability of parking spaces other necessary information.</li><li>Install, operate and maintain an IT system, for parking fee payments, monitoring, and enforcement. Procure software hardware for the processing of customer payments via credit card, net banking, mobile-based banking systems, other media; the impetus is on cashless payment system at all the parking lots.</li><li>Smart Parking Smart Phone Application for parking services: App shall show the available slot on real time basis, booking of parking space, payment mechanism through various modes of payment, reservation for specially-able citizens, facility for extension of pre-booked parking space.</li><li>Procure hardware software to aid in the planning monitoring of enforcement activities.</li><li>Establish the required facilities, equipment, information systems for the operations of the Parking System.</li></ul></li><li><strong>OPERATIONS</strong><ul><li>ParkingAdda will develop modify, from time to time, a detailed operating plan (“Operating Plan”) for the Parking System. The Operating Plan will detail all aspects of operations including but not Limited to bring, signage, geometric design (i.e. delineation of free parking, paid parking, no-parking areas), fee collection, enforcement, facility maintenance, customer service procedures.</li><li>ParkingAdda also will prepare detailed Parking Management Plans for all on-street, off-street and multilevel sites assigned to ParkingAdda.</li><li>ParkingAdda will be responsible for complete operations and maintenance of all the parking spaces.</li><li>Collect customer payments toward User Accounts via cashless payment system</li><li>Collect applicable Parking Fees using an IT-based system (Cashless Payment System) from all users who park their vehicles in on-street, off-street and multilevel parking sites assigned to ParkingAdda. ParkingAdda will not collect cash or other forms of direct payment on the street.</li><li>Unique identification of each vehicle entering any of the parking lots through bar-coded tickets, RFID/Smart Cards/QR Coded entry NFC enabled etc. as applicable.</li><li>Enlist trained professionals and verifiers to operate the Parking System. ParkingAdda will prepare a Human Resources Plan specifying how personnel will be trained</li><li>Bear all expenses towards operation of the Parking System through the entire period and not claim any additional expenses.</li><li>Using the data generated through the parking solution software for analytics purposes, such as time based (hourly/daily/weekly/monthly/annually) trends, area specific trends, vehicle (car–SUV/sedan/hatchback, etc.) specific trends, usage vacancy periods, premium parking demand and, etc., for the purpose of better management of parking.</li></ul></li><li><strong>OPERATING MANUAL</strong><ul><li>Parking Design</li><li>Procedures for determining parking no-parking areas.</li><li>Customer information</li><li>System logo, slogan, other bring elements. Guidelines for the placement of static dynamic signage.</li><li>Signage design, including specifications for layout, colour typeface.</li><li>Specifications for pavement curb markings, including layout, colour, and typeface.</li><li>Fee collection procedures (cashless payment system)</li><li>Enforcement procedures (Physical &amp; Technology enabled)</li><li>Maintenance procedures for on-street, Off street and multi-level elements and hardware other equipment</li><li>IT system communication protocols</li><li>Data security.</li></ul></li><li><strong>PARKING MANAGEMENT PLANS</strong><ul><li>Clear designation of Parking Facilities</li><li>The layout orientation of parking slots, including the type of vehicle permitted</li><li>Applicable Parking Fees as listed on the Smart Phone App</li><li>Sufficient bay size to facilitate the length, width, head room opening of doors based on the corresponding vehicle</li></ul></li><li><strong>USER ACCOUNTS</strong><ul><li>Ability to open an account online, through a smart phone app, or at a customer service kiosk</li><li>Required data to open an account include the user‟s name, mobile number and vehicle license plate number(s)</li><li>Ability to recharge the account using cashless payment system.</li></ul></li><li><strong>FEE PAYMENT SYSTEM</strong><ul><li>Register the beginning end of a Parking Event through a text message or through a Smartphone application.</li><li>Send an alert when the duration of the Parking Event is about to exceed the user’s balance.</li><li>Send a response/confirmation message for all user actions</li><li>Handle transactions by users with User Accounts</li><li>Have the ability to differentiate charges based on:<ul><li>Duration of the Parking Event</li><li>ParkingAdda will not carry out direct cash collection from Users.</li></ul></li></ul></li><li><strong>CASHLESS PAYMENT SYSTEM</strong><ul><li>The software should process cashless payment transactions. Transaction can either be initiated via attendant via the Internet or mobiles devices.</li><li>Pay-By-Phone (Smart Phone App) - Cashless parking is a quick secure way to pay for parking if you do not have to use the cash. A Pay-By-Phone Smart Phone Application will be developed, so that User will use their mobile phone instead of paying in cash the payment is made using their registered credit or debit card by registering on Pay-By-Phone Smart Phone Application or even without registering on Pay-By-Phone app by using guest check-out directly by paying the parking charges.</li><li>Third Party Mobile Wallets (UPI) For Eg. (BHIM,Free Charge, Paytm,Gpay,PhonePe etc.)</li></ul></li><li><strong>ENFORCEMENT SYSTEM&nbsp;</strong><ul><li>Car clamps to be attached on illegal parking in our Paid Parking Lots, in private properties.</li><li>For any violations in on street parkings, offstreet parking, or private property, relevant parking authorities shall be intimated.</li><li>After a period of 24hours since the violation, respective city traffic authority shall be intimated to tow the vehicle away</li><li>Enforcement teams shall be designated area wise round the clock.</li></ul></li><li><strong>VERIFICATION SYSTEM</strong><ul><li>Conduct checks for a sample of vehicles in all Paid Parking Lots through verifiers who will be instated at all designated parking spots. The checks should be carried out at least every 20 minutes will rely on verification of the vehicle license plate number. The system will create a record for every vehicle observed with details such as the time of observation license plate number</li><li>Install vehicle detection sensors for all on street, off street and in multi-level parkings to track monitor the arrival departure of every vehicle that parks in a designated Parking Slot send real-time information to the enforcement team when required on such Parking Events</li><li>If a vehicle in an on-street, off-street and multi-level parking is found to be unpaid, the System will immediately record the violation in the IT system place a fine on the vehicle record. ParkingAdda will take photos to document the location license plate of the vehicle. ParkingAdda will record the violation Recording of the violation immobilisation will occur after a grace period of 15mins from observation. If the vehicle user pays the Parking Fee via designated cashless payment mode (UPI) before the end of the grace period, the System will not record a violation. The System shall also send information of violations along with the photograph of the violation along with the license plate of the vehicle.</li><li>The enforcements authorities should be informed within 1 hour of the violation occurring along with the photographs of the violation, photo of the licence plate and details of the vehicle.</li><li>Necessary information regarding vehicles towed by the concerned authorities will be updated on the Smart Parking App web portal immediately. Additionally, information regarding details of towed vehicles shall be available to users through a dedicated helpline number. The dedicated helpline will be operated by ParkingAdda</li></ul></li><li><strong>OWNERSHIP OF IP</strong></li><li><strong>TERMINATION</strong></li><li><strong>DISCLAIMER AND LIABILITY</strong></li><li><strong>GOVERNING LAW</strong></li><li><strong>INDEMNITY</strong></li><li><strong>CONTACT US</strong></li></ol>', '2023-01-21 11:31:43', '2023-01-21 14:46:24'),
+(3, 3, '<h2>ParkingAdda Work</h2><ol><li><strong>TERMS OF CONTRACT</strong></li><li><strong>ACCEPTANCE</strong></li><li><strong>HARDWARE, SOFTWARE, FACILITIES</strong><ul><li>To provide install necessary complete hardware and software solutions, such as but not limited to boom barriers, auto pay station, devices, port-cabins, switches, gateway, guidance system, for on street, off street and multi-level parking system.</li><li>Provide Parking Management and Parking Guidance System to direct drivers to available through parking slots Smart Parking Smart Phone Application.</li><li>Provide and install necessary signage which also includes variable message sign boards for guidance to public regarding availability of parking spaces other necessary information.</li><li>Install, operate and maintain an IT system, for parking fee payments, monitoring, and enforcement. Procure software hardware for the processing of customer payments via credit card, net banking, mobile-based banking systems, other media; the impetus is on cashless payment system at all the parking lots.</li><li>Smart Parking Smart Phone Application for parking services: App shall show the available slot on real time basis, booking of parking space, payment mechanism through various modes of payment, reservation for specially-able citizens, facility for extension of pre-booked parking space.</li><li>Procure hardware software to aid in the planning monitoring of enforcement activities.</li><li>Establish the required facilities, equipment, information systems for the operations of the Parking System.</li></ul></li><li><strong>OPERATIONS</strong><ul><li>ParkingAdda will develop modify, from time to time, a detailed operating plan (“Operating Plan”) for the Parking System. The Operating Plan will detail all aspects of operations including but not Limited to bring, signage, geometric design (i.e. delineation of free parking, paid parking, no-parking areas), fee collection, enforcement, facility maintenance, customer service procedures.</li><li>ParkingAdda also will prepare detailed Parking Management Plans for all on-street, off-street and multilevel sites assigned to ParkingAdda.</li><li>ParkingAdda will be responsible for complete operations and maintenance of all the parking spaces.</li><li>Collect customer payments toward User Accounts via cashless payment system</li><li>Collect applicable Parking Fees using an IT-based system (Cashless Payment System) from all users who park their vehicles in on-street, off-street and multilevel parking sites assigned to ParkingAdda. ParkingAdda will not collect cash or other forms of direct payment on the street.</li><li>Unique identification of each vehicle entering any of the parking lots through bar-coded tickets, RFID/Smart Cards/QR Coded entry NFC enabled etc. as applicable.</li><li>Enlist trained professionals and verifiers to operate the Parking System. ParkingAdda will prepare a Human Resources Plan specifying how personnel will be trained</li><li>Bear all expenses towards operation of the Parking System through the entire period and not claim any additional expenses.</li><li>Using the data generated through the parking solution software for analytics purposes, such as time based (hourly/daily/weekly/monthly/annually) trends, area specific trends, vehicle (car–SUV/sedan/hatchback, etc.) specific trends, usage vacancy periods, premium parking demand and, etc., for the purpose of better management of parking.</li></ul></li><li><strong>OPERATING MANUAL</strong><ul><li>Parking Design</li><li>Procedures for determining parking no-parking areas.</li><li>Customer information</li><li>System logo, slogan, other bring elements. Guidelines for the placement of static dynamic signage.</li><li>Signage design, including specifications for layout, colour typeface.</li><li>Specifications for pavement curb markings, including layout, colour, and typeface.</li><li>Fee collection procedures (cashless payment system)</li><li>Enforcement procedures (Physical &amp; Technology enabled)</li><li>Maintenance procedures for on-street, Off street and multi-level elements and hardware other equipment</li><li>IT system communication protocols</li><li>Data security.</li></ul></li><li><strong>PARKING MANAGEMENT PLANS</strong><ul><li>Clear designation of Parking Facilities</li><li>The layout orientation of parking slots, including the type of vehicle permitted</li><li>Applicable Parking Fees as listed on the Smart Phone App</li><li>Sufficient bay size to facilitate the length, width, head room opening of doors based on the corresponding vehicle</li></ul></li><li><strong>USER ACCOUNTS</strong><ul><li>Ability to open an account online, through a smart phone app, or at a customer service kiosk</li><li>Required data to open an account include the user‟s name, mobile number and vehicle license plate number(s)</li><li>Ability to recharge the account using cashless payment system.</li></ul></li><li><strong>FEE PAYMENT SYSTEM</strong><ul><li>Register the beginning end of a Parking Event through a text message or through a Smartphone application.</li><li>Send an alert when the duration of the Parking Event is about to exceed the user’s balance.</li><li>Send a response/confirmation message for all user actions</li><li>Handle transactions by users with User Accounts</li><li>Have the ability to differentiate charges based on:<ul><li>Duration of the Parking Event</li><li>ParkingAdda will not carry out direct cash collection from Users.</li></ul></li></ul></li><li><strong>CASHLESS PAYMENT SYSTEM</strong><ul><li>The software should process cashless payment transactions. Transaction can either be initiated via attendant via the Internet or mobiles devices.</li><li>Pay-By-Phone (Smart Phone App) - Cashless parking is a quick secure way to pay for parking if you do not have to use the cash. A Pay-By-Phone Smart Phone Application will be developed, so that User will use their mobile phone instead of paying in cash the payment is made using their registered credit or debit card by registering on Pay-By-Phone Smart Phone Application or even without registering on Pay-By-Phone app by using guest check-out directly by paying the parking charges.</li><li>Third Party Mobile Wallets (UPI) For Eg. (BHIM,Free Charge, Paytm,Gpay,PhonePe etc.)</li></ul></li><li><strong>ENFORCEMENT SYSTEM&nbsp;</strong><ul><li>Car clamps to be attached on illegal parking in our Paid Parking Lots, in private properties.</li><li>For any violations in on street parkings, offstreet parking, or private property, relevant parking authorities shall be intimated.</li><li>After a period of 24hours since the violation, respective city traffic authority shall be intimated to tow the vehicle away</li><li>Enforcement teams shall be designated area wise round the clock.</li></ul></li><li><strong>VERIFICATION SYSTEM</strong><ul><li>Conduct checks for a sample of vehicles in all Paid Parking Lots through verifiers who will be instated at all designated parking spots. The checks should be carried out at least every 20 minutes will rely on verification of the vehicle license plate number. The system will create a record for every vehicle observed with details such as the time of observation license plate number</li><li>Install vehicle detection sensors for all on street, off street and in multi-level parkings to track monitor the arrival departure of every vehicle that parks in a designated Parking Slot send real-time information to the enforcement team when required on such Parking Events</li><li>If a vehicle in an on-street, off-street and multi-level parking is found to be unpaid, the System will immediately record the violation in the IT system place a fine on the vehicle record. ParkingAdda will take photos to document the location license plate of the vehicle. ParkingAdda will record the violation Recording of the violation immobilisation will occur after a grace period of 15mins from observation. If the vehicle user pays the Parking Fee via designated cashless payment mode (UPI) before the end of the grace period, the System will not record a violation. The System shall also send information of violations along with the photograph of the violation along with the license plate of the vehicle.</li><li>The enforcements authorities should be informed within 1 hour of the violation occurring along with the photographs of the violation, photo of the licence plate and details of the vehicle.</li><li>Necessary information regarding vehicles towed by the concerned authorities will be updated on the Smart Parking App web portal immediately. Additionally, information regarding details of towed vehicles shall be available to users through a dedicated helpline number. The dedicated helpline will be operated by ParkingAdda</li></ul></li><li><strong>OWNERSHIP OF IP</strong></li><li><strong>TERMINATION</strong></li><li><strong>DISCLAIMER AND LIABILITY</strong></li><li><strong>GOVERNING LAW</strong></li><li><strong>INDEMNITY</strong></li><li><strong>CONTACT US</strong></li></ol>', '2023-01-21 11:31:43', '2023-01-21 14:49:51');
+
+-- --------------------------------------------------------
+
+--
 -- Table structure for table `tbl_user_car_details`
 --
 
@@ -54165,7 +54206,7 @@ INSERT INTO `tbl_user_wallet` (`id`, `fk_user_id`, `amount`, `status`, `created_
 (2, 2325, NULL, 1, '2022-12-12 11:15:15', '2022-12-12 11:15:15'),
 (3, 2326, NULL, 1, '2022-12-12 11:17:36', '2022-12-12 11:17:36'),
 (4, 2327, NULL, 1, '2022-12-12 11:18:39', '2022-12-12 11:18:39'),
-(5, 7, 125, 1, '2023-01-20 10:31:47', '2023-01-20 16:36:31');
+(5, 7, 100, 1, '2023-01-20 10:31:47', '2023-01-21 08:46:26');
 
 -- --------------------------------------------------------
 
@@ -54194,7 +54235,8 @@ INSERT INTO `tbl_user_wallet_history` (`id`, `fk_user_id`, `add_amount`, `deduct
 (1, 7, 200, NULL, 200, 0, 1, NULL, '2023-01-20 11:44:44', '2023-01-20 16:20:51'),
 (7, 7, NULL, 25, 175, 0, 3, NULL, '2023-01-20 16:22:07', '2023-01-20 16:33:22'),
 (8, 7, NULL, 25, 150, 0, 3, NULL, '2023-01-20 16:33:22', '2023-01-20 16:36:31'),
-(9, 7, NULL, 25, 125, 1, 3, NULL, '2023-01-20 16:36:31', '2023-01-20 16:36:31');
+(9, 7, NULL, 25, 125, 0, 3, NULL, '2023-01-20 16:36:31', '2023-01-21 08:46:26'),
+(10, 7, NULL, 25, 100, 1, 3, NULL, '2023-01-21 08:46:26', '2023-01-21 08:46:26');
 
 -- --------------------------------------------------------
 
@@ -54249,6 +54291,12 @@ ALTER TABLE `pa_users`
   ADD KEY `userName` (`userName`),
   ADD KEY `user_type` (`user_type`),
   ADD KEY `pos_device_id` (`pos_device_id`);
+
+--
+-- Indexes for table `tbl_about_us`
+--
+ALTER TABLE `tbl_about_us`
+  ADD PRIMARY KEY (`id`);
 
 --
 -- Indexes for table `tbl_blogs`
@@ -54510,6 +54558,15 @@ ALTER TABLE `tbl_status_master`
   ADD KEY `status` (`status`);
 
 --
+-- Indexes for table `tbl_terms_condition`
+--
+ALTER TABLE `tbl_terms_condition`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `id` (`id`),
+  ADD KEY `terms_type` (`terms_type`),
+  ADD KEY `terms_condition` (`terms_condition`(768));
+
+--
 -- Indexes for table `tbl_user_car_details`
 --
 ALTER TABLE `tbl_user_car_details`
@@ -54573,6 +54630,12 @@ ALTER TABLE `pa_users`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
 
 --
+-- AUTO_INCREMENT for table `tbl_about_us`
+--
+ALTER TABLE `tbl_about_us`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+
+--
 -- AUTO_INCREMENT for table `tbl_blogs`
 --
 ALTER TABLE `tbl_blogs`
@@ -54588,13 +54651,13 @@ ALTER TABLE `tbl_bonus`
 -- AUTO_INCREMENT for table `tbl_booking`
 --
 ALTER TABLE `tbl_booking`
-  MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+  MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
 
 --
 -- AUTO_INCREMENT for table `tbl_booking_status`
 --
 ALTER TABLE `tbl_booking_status`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
 
 --
 -- AUTO_INCREMENT for table `tbl_booking_type`
@@ -54684,7 +54747,7 @@ ALTER TABLE `tbl_parking_price_type`
 -- AUTO_INCREMENT for table `tbl_payment`
 --
 ALTER TABLE `tbl_payment`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
 
 --
 -- AUTO_INCREMENT for table `tbl_payment_type`
@@ -54738,7 +54801,7 @@ ALTER TABLE `tbl_pos_verifier_logged_in`
 -- AUTO_INCREMENT for table `tbl_sensor`
 --
 ALTER TABLE `tbl_sensor`
-  MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+  MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
 
 --
 -- AUTO_INCREMENT for table `tbl_slot_info`
@@ -54757,6 +54820,12 @@ ALTER TABLE `tbl_states`
 --
 ALTER TABLE `tbl_status_master`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
+
+--
+-- AUTO_INCREMENT for table `tbl_terms_condition`
+--
+ALTER TABLE `tbl_terms_condition`
+  MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
 
 --
 -- AUTO_INCREMENT for table `tbl_user_car_details`
@@ -54780,7 +54849,7 @@ ALTER TABLE `tbl_user_wallet`
 -- AUTO_INCREMENT for table `tbl_user_wallet_history`
 --
 ALTER TABLE `tbl_user_wallet_history`
-  MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=10;
+  MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=11;
 
 --
 -- AUTO_INCREMENT for table `tbl_vehicle_type`

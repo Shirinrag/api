@@ -65,8 +65,8 @@ $route['user-wallet'] = 'user_api/user_wallet';
 $route['place-list'] = 'user_api/place_list';
 $route['place-details-on-id'] = 'user_api/place_details_on_id';
 $route['place-traffic'] = 'user_api/place_traffic';
-$route['place-booking'] = 'user_api/place_booking';
-
+$route['place-traffic'] = 'user_api/place_traffic';
+$route['user-terms-condition'] = 'user_api/user_terms_condition';
 
 // =============Super Admin API=============================
 $route['loggedin-data'] = 'common/login_data';
@@ -162,6 +162,11 @@ $route['delete-pos-duty-allocation'] = 'superadmin_api/delete_pos_duty_allocatio
 $route['add-pos-device'] = 'superadmin_api/add_pos_device';
 $route['display-all-pos-device-data'] = 'superadmin_api/display_all_pos_device_data';
 $route['update-pos-device-status'] = 'superadmin_api/update_pos_device_status';
+//================================Terms & Condition=====================================
+$route['user-terms-n-condition'] = 'superadmin_api/user_terms_n_condition';
+$route['verifier-terms-n-condition'] = 'superadmin_api/verifier_terms_n_condition';
+$route['vendor-terms-n-condition'] = 'superadmin_api/vendor_terms_n_condition';
+$route['update-terms-n-condition'] = 'superadmin_api/update_terms_n_condition';
 
 // ============================= POS API=====================================
 $route['register-pos-verifier'] = 'pos_api/register_pos_verifier';

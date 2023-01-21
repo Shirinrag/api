@@ -2255,7 +2255,7 @@ class Superadmin_api extends REST_Controller {
         echo json_encode($response);   
     }
     public function update_pos_device_status_post()
-      {
+    {
         $response = array('code' => - 1, 'status' => false, 'message' => '');
         $validate = validateToken();
         if($validate){
@@ -2278,5 +2278,86 @@ class Superadmin_api extends REST_Controller {
             $response['code'] = 204;
         }
         echo json_encode($response);
-      }
+    }
+
+    public function user_terms_n_condition_get()
+    {
+        $response = array('code' => - 1, 'status' => false, 'message' => '');
+        $validate = validateToken();
+        if($validate){
+         
+                $user_terms_n_condition = $this->model->selectWhereData('tbl_terms_condition',array('terms_type'=>1),array('*'));
+                $response['message'] = 'success';
+                $response['code'] = 200;
+                $response['status'] = true;
+                $response['user_terms_n_condition'] = $user_terms_n_condition;
+        } else {
+            $response['message'] = 'Invalid Request';
+            $response['code'] = 204;
+        }
+        echo json_encode($response);
+    }
+    public function verifier_terms_n_condition_get()
+    {
+        $response = array('code' => - 1, 'status' => false, 'message' => '');
+        $validate = validateToken();
+        if($validate){
+           
+            $verifier_terms_n_condition = $this->model->selectWhereData('tbl_terms_condition',array('terms_type'=>2),array('*'));
+            $response['message'] = 'success';
+            $response['code'] = 200;
+            $response['status'] = true;
+            $response['verifier_terms_n_condition'] = $verifier_terms_n_condition;
+           
+        } else {
+            $response['message'] = 'Invalid Request';
+            $response['code'] = 204;
+        }
+        echo json_encode($response);
+    }
+    public function vendor_terms_n_condition_get()
+    {
+        $response = array('code' => - 1, 'status' => false, 'message' => '');
+        $validate = validateToken();
+        if($validate){
+                $vendor_terms_n_condition = $this->model->selectWhereData('tbl_terms_condition',array('terms_type'=>3),array('*'));
+                $response['message'] = 'success';
+                $response['code'] = 200;
+                $response['status'] = true;
+                $response['vendor_terms_n_condition'] = $vendor_terms_n_condition;
+        } else {
+            $response['message'] = 'Invalid Request';
+            $response['code'] = 204;
+        }
+        echo json_encode($response);
+    }
+    public function update_terms_n_condition_post()
+    {
+        $response = array('code' => - 1, 'status' => false, 'message' => '');
+        $validate = validateToken();
+        if($validate){
+                $id = $this->input->post('id');
+                $terms_condition = $this->input->post('terms_condition');
+                if(empty($id)){
+                    $response['message']= "Id is required";
+                    $response['code']=201;
+                }else if(empty($terms_condition)){
+                    $response['message']= "Terms & Condition is required";
+                    $response['code']=201;
+                }else{
+                    $curl_data=array(
+                        'terms_condition' => $terms_condition
+                    );
+                    $this->model->updateData('tbl_terms_condition',$curl_data,array('id'=>$id));
+                    $response['status'] = true;
+                    $response['code'] = 200;
+                    $response['message'] = 'Terms & Condition Updated Successfully';
+                }
+                
+        } else {
+            $response['message'] = 'Invalid Request';
+            $response['code'] = 204;
+        }
+        echo json_encode($response);
+    }
 }

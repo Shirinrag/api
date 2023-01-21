@@ -150,7 +150,6 @@ class User_api extends REST_Controller {
         	}else{
         		$check_user_count = $this->model->CountWhereRecord('pa_users', array('phoneNo'=>$phone_no,'isActive'=>1));
 				if($check_user_count == 0){
-
         			$response['code'] = 201;
         			$response['status'] = false;
         			$response['message'] = 'Contact No does not exist.';            					
@@ -510,6 +509,22 @@ class User_api extends REST_Controller {
         }
         echo json_encode($response);
     }
+    public function user_terms_condition_get()
+    {
+    	$response = array('code' => - 1, 'status' => false, 'message' => '');
+        $validate = validateToken();
+        if ($validate) {
+                $user_terms_condition = $this->model->selectWhereData('tbl_terms_condition',array('terms_type'=>1),array('terms_condition'));
+                $response['code'] = REST_Controller::HTTP_OK;
+                $response['status'] = true;
+                $response['message'] = 'success';
+                $response['user_terms_condition'] = $user_terms_condition;
+        } else {
+            $response['code'] = REST_Controller::HTTP_UNAUTHORIZED;
+            $response['message'] = 'Unauthorised';
+        }
+        echo json_encode($response);
+    }
     public function place_booking_post()
     {
     	$response = array('code' => - 1, 'status' => false, 'message' => '');
@@ -564,16 +579,14 @@ class User_api extends REST_Controller {
 		    		$response['code']=201;
 		    		$response['status']=false;
 		    		$response['message']= "Total hours is required";
-		    	}else{
-		    		// echo '<pre>'; print_r($from_time);
-		    		// $delay_time1 = rand(100000, 800000);
-        //         	$delay_time = rand(1000000, 1500000) + $delay_time1;		
+		    	}else{	
                 	$this->load->model('user_model');
                 	$sensor_data = $this->model->CountWhereRecord('tbl_sensor', array('fk_slot_id'=>$fk_slot_id,'fk_place_id'=>$fk_place_id));
-                	if($sensor_data==1){
-                		$reserved_slot_info = $this->model->CountWhereRecord('tbl_booking', array('fk_slot_id'=>$fk_slot_id,'fk_place_id'=>$fk_place_id,'booking_from_date'=>$booking_from_date,'booking_to_date'=>$booking_to_date,'booking_from_time'=>$booking_from_time,'booking_to_time'=>$booking_to_time));
-                		// echo '<pre>'; print_r($reserved_slot_info); exit;
-                		if($reserved_slot_info==0){
+                	if($sensor_data>0){
+                		// $reserved_slot_info = $this->model->CountWhereRecord('tbl_booking', array('fk_slot_id'=>$fk_slot_id,'fk_place_id'=>$fk_place_id,'booking_from_date'=>$booking_from_date,'booking_to_date'=>$booking_to_date,'booking_from_time'=>$booking_from_time,'booking_to_time'=>$booking_to_time));
+                		$reserved_slot_info = $this->model->selectWhereData('tbl_booking', array('fk_slot_id'=>$fk_slot_id,'fk_place_id'=>$fk_place_id,'booking_from_date'=>$booking_from_date,'booking_to_date'=>$booking_to_date,'booking_from_time'=>$booking_from_time),array('booking_to_time'));
+
+                		if($booking_from_time > $reserved_slot_info['booking_to_time']){
                 			$user_wallet_data = $this->model->selectWhereData('tbl_user_wallet',array('fk_user_id'=>$fk_user_id),array('amount'));
                 			if(!empty($user_wallet_data['amount'])){
                 				$vehicle_type_id = $this->model->selectWhereData('tbl_user_car_details',array('id'=>$fk_car_id),array('fk_vehicle_type_id'));
@@ -583,10 +596,7 @@ class User_api extends REST_Controller {
                 					$response['message'] ="Insufficient Balance";
                 					$response['code']=201;
                 				}else{
-
-                						$reserve_from_time= date('H:i:s',strtotime($booking_from_time .'-10 minutes'));
-                						
-                						
+                						$reserve_from_time= date('H:i:s',strtotime($booking_from_time .'-10 minutes'));              						               						
 		                				$reserve_to_time= date('H:i:s',strtotime($booking_to_time . ' +0 minutes'));
 		                				$booking_data = $this->user_model->get_last_booking_id();
 		                				if(empty($booking_data)){
@@ -659,7 +669,7 @@ class User_api extends REST_Controller {
                 				$response['code']=201;
 		                	}
                 		}else{
-                			$response['message'] ="This slot is already booked";
+                			$response['message'] ="This slot is already booked until the"." ".$reserved_slot_info['booking_to_time'];
                 			$response['code']=201;
                 		}              		
                 	}
