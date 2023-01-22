@@ -813,7 +813,9 @@ class Superadmin_api extends REST_Controller {
                     $parking_place = $this->superadmin_model->get_parking_place_details_on_id($id);
                     $state_details = $this->model->selectWhereData('tbl_states',array('country_id'=>$parking_place['fk_country_id']),array('id','name'),false);
                     $city_details = $this->model->selectWhereData('tbl_cities',array('state_id'=>$parking_place['fk_state_id']),array('id','name'),false);
-                    $hour_price_slab_on_place_id = $this->model->selectWhereData('tbl_hours_price_slab',array('fk_place_id'=>$id),array('*',"id as hour_price_slab_id"),false);
+
+                    // $hour_price_slab_on_place_id = $this->model->selectWhereData('tbl_hours_price_slab',array('fk_place_id'=>$id),array('*',"id as hour_price_slab_id"),false);
+                     $hour_price_slab_on_place_id = $this->superadmin_model->get_hour_price_slab($id);
                     $slot_info_on_place_id = $this->model->selectWhereData('tbl_slot_info',array('fk_place_id'=>$id,'del_status'=>1),array('*',"id as slot_info_id",),false);
                     foreach ($slot_info_on_place_id as $slot_info_on_place_id_key => $slot_info_on_place_id_row) {
                         $device_data = $this->model->selectWhereData('tbl_device',array(),array('id','device_id'),false,array('id',"ASC"));
@@ -823,6 +825,8 @@ class Superadmin_api extends REST_Controller {
                         }
                     }
                     $parking_place_vehicle_type = $this->model->selectWhereData('tbl_parking_place_vehicle_type',array('fk_place_id'=>$id),array('*',"id as parking_place_vehicle_type_id"),false);
+                    $selected_parking_place_vehicle_type = $this->model->selectWhereData('tbl_parking_place_vehicle_type',array('fk_place_id'=>$id),array("GROUP_CONCAT(id) as parking_place_vehicle_type_id"),true,'','fk_place_id');
+                    $vehicle_type = $this->model->selectWhereData('tbl_vehicle_type',array('del_status'=>1,'status'=>1),array('id','vehicle_type'),false);
                     $response['code'] = REST_Controller::HTTP_OK;
                     $response['status'] = true;
                     $response['message'] = 'success';
@@ -833,6 +837,8 @@ class Superadmin_api extends REST_Controller {
                     $response['city_details'] = $city_details;
                     $response['device_data'] = $device_data;
                     $response['parking_place_vehicle_type'] = $parking_place_vehicle_type;
+                    $response['selected_parking_place_vehicle_type'] = $selected_parking_place_vehicle_type;
+                    $response['vehicle_type'] = $vehicle_type;
                 }
         }else {
             $response['code'] = REST_Controller::HTTP_UNAUTHORIZED;

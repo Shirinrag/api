@@ -186,5 +186,17 @@ class Superadmin_model extends CI_Model {
         $result = $query->result_array();
         return $result;
     }
+    public function get_hour_price_slab($id='')
+    {
+        $this->db->simple_query('SET SESSION group_concat_max_len=15000');
+        $this->db->select('GROUP_CONCAT(tbl_hours_price_slab.id) as id,GROUP_CONCAT(tbl_hours_price_slab.from_hours) as from_hours,GROUP_CONCAT(tbl_hours_price_slab.to_hours) as to_hours,GROUP_CONCAT(tbl_hours_price_slab.cost) as cost,tbl_hours_price_slab.fk_vehicle_type_id,tbl_vehicle_type.vehicle_type');
+       $this->db->from('tbl_hours_price_slab');
+       $this->db->join('tbl_vehicle_type','tbl_hours_price_slab.fk_vehicle_type_id=tbl_vehicle_type.id','left');
+       $this->db->where('tbl_hours_price_slab.fk_place_id',$id);
+       $this->db->group_by('tbl_hours_price_slab.fk_vehicle_type_id');
+        $query = $this->db->get();
+        $result = $query->result_array();
+        return $result;
+    }
 }
 	

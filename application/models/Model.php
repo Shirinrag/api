@@ -175,7 +175,7 @@ class Model extends CI_Model {
 		}
 	}
 
-	function selectWhereData($tableName,$whereData,$fields='*',$row = true,$order_by='',$group_by=''){
+	function selectWhereData($tableName='',$whereData='',$fields='*',$row = true,$order_by='',$group_by=''){
 		if (isset($tableName)&&isset($whereData)) {
 			$this->db->trans_start();	
 			$this->db->select($fields);
@@ -204,7 +204,7 @@ class Model extends CI_Model {
 			return false;
 		}
 	}
-	function selectDataNotIn($tableName,$selectField,$notInClmName,$notInData)
+	function selectDataNotIn($tableName,$selectField='',$notInClmName='',$notInData='')
 	{		
 		if (isset($tableName)) {
 			
