@@ -825,7 +825,7 @@ class Superadmin_api extends REST_Controller {
                         }
                     }
                     $parking_place_vehicle_type = $this->model->selectWhereData('tbl_parking_place_vehicle_type',array('fk_place_id'=>$id),array('*',"id as parking_place_vehicle_type_id"),false);
-                    $selected_parking_place_vehicle_type = $this->model->selectWhereData('tbl_parking_place_vehicle_type',array('fk_place_id'=>$id),array("GROUP_CONCAT(id) as parking_place_vehicle_type_id"),true,'','fk_place_id');
+                    $selected_parking_place_vehicle_type = $this->model->selectWhereData('tbl_parking_place_vehicle_type',array('fk_place_id'=>$id),array("GROUP_CONCAT(fk_vehicle_type_id) as fk_vehicle_type_id"),true,'','fk_place_id');
                     $vehicle_type = $this->model->selectWhereData('tbl_vehicle_type',array('del_status'=>1,'status'=>1),array('id','vehicle_type'),false);
                     $response['code'] = REST_Controller::HTTP_OK;
                     $response['status'] = true;
@@ -874,8 +874,9 @@ class Superadmin_api extends REST_Controller {
                 $to_hours = $this->input->post('to_hours');
                 $to_hours = json_decode($to_hours,true);                
                 $price = $this->input->post('price');
-                $price = json_decode($price,true);                
-
+                $price = json_decode($price,true); 
+                $fk_vehicle_type = $this->input->post('fk_vehicle_type');
+                $fk_vehicle_type = json_decode($fk_vehicle_type,true);
                 if(empty($fk_vendor_id)){
                     $response['message'] = "First Name is required";
                     $response['code'] = 201;
@@ -933,27 +934,31 @@ class Superadmin_api extends REST_Controller {
                             'ext_price'=>$ext_price,
                         );
                         $this->model->updateData('tbl_parking_place',$curl_data,array('id'=>$id));
+                       
                         if($from_hours!= "" && $to_hours !="" && !empty($price)){
                             foreach ($from_hours as $from_hours_key => $from_hours_rows) {
-                                if(empty($hour_price_slab_id[$from_hours_key])){
-                                    $insert_price_data = array(
-                                        'fk_place_id' =>$id,
-                                        'from_hours' =>$from_hours_rows,
-                                        'to_hours' =>$to_hours[$from_hours_key],
-                                        'cost' =>$price[$from_hours_key],
-                                    );
-                                    $this->model->insertData('tbl_hours_price_slab',$insert_price_data);  
-                                }else{
-                                    $update_price_data = array(
-                                        'from_hours' =>$from_hours_rows,
-                                        'to_hours' =>$to_hours[$from_hours_key],
-                                        'cost' =>$price[$from_hours_key],
-                                    );
-                                    $this->model->updateData('tbl_hours_price_slab',$update_price_data,array('id'=>$hour_price_slab_id[$from_hours_key]));  
-                                }
-                                
+                                foreach($from_hours_rows as $from_hours_rows_key => $from_hours_rows_rows){                                   
+                                        if(empty($hour_price_slab_id[$from_hours_key][$from_hours_rows_key])){
+                                 
+                                            $insert_price_data = array(
+                                                'fk_place_id' =>$id,
+                                                 'fk_vehicle_type_id'=>$from_hours_rows[$from_hours_key],
+                                                'from_hours' =>$from_hours_rows_rows,
+                                                'to_hours' =>$to_hours[$from_hours_key][$from_hours_rows_key],
+                                                'cost' =>$price[$from_hours_key][$from_hours_rows_key],
+                                            );
+                                            $this->model->insertData('tbl_hours_price_slab',$insert_price_data); 
+                                    }else{                                 
+                                        $update_price_data = array(
+                                            'from_hours' =>$from_hours_rows_rows,
+                                            'to_hours' =>$to_hours[$from_hours_key][$from_hours_rows_key],
+                                            'cost' =>$price[$from_hours_key][$from_hours_rows_key],
+                                        );
+                                        $this->model->updateData('tbl_hours_price_slab',$update_price_data,array('id'=>$hour_price_slab_id[$from_hours_key][$from_hours_rows_key])); 
+                                }                                
                             }
                         }
+                    }
                         $prefix = $this->model->selectWhereData('tbl_states',array('id'=>$fk_state_id),array('prefix'));
                        
                         if($slots_data['slots'] < $slots){                           
