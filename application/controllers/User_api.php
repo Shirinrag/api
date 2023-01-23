@@ -662,7 +662,7 @@ class User_api extends REST_Controller {
 
 		    							$response['code'] = REST_Controller::HTTP_OK;
 				                        $response['status'] = true;
-				    					$response['message'] = 'success';
+				    					$response['message'] = 'Parking Slot Booked Successfully ';
 		                		}
 		                	}else{
                 				$response['message'] ="Insufficient Balance Kindly refill your wallet.";
@@ -679,5 +679,34 @@ class User_api extends REST_Controller {
             $response['message'] = 'Unauthorised';
         }
         echo json_encode($response);
+    }
+
+    public function fcm_notification($value='')
+    {
+    	define('API_ACCESS_KEY','AAAAVmWHGa8:APA91bHuVMV-6txudhc8FXcln825nV2rsxPO7o89mkvCoHFjxfdwyLNCKeDHnU6ZT8eh3GOHDBflGNUolTb0J9MpQvcsgRiAKjx5NHnlJRUzLeQHOKLkeYnGXJ9etQjHZKMGNunrxU-1');
+
+    	$fcmUrl = 'https://fcm.googleapis.com/fcm/send';
+
+    	$notification = array('body' => $message,'title' =>$title ,'message' =>  $message, 'content_available' => 1,'is_background' =>  false);
+        $extraNotificationData = $notification;
+        $fcmNotification = [
+                 'to' => '/topics/' .$fire_base,
+                 'notification' => $extraNotificationData,
+        ];          
+       	$headers = [
+           'Authorization: key=' . API_ACCESS_KEY,
+           'Content-Type: application/json'
+       	];
+
+       	   $ch = curl_init();
+		   curl_setopt($ch, CURLOPT_URL,$fcmUrl);
+		   curl_setopt($ch, CURLOPT_POST, true);
+		   curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
+		   curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+		   curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+		   curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($fcmNotification));
+		   $result = curl_exec($ch);                              
+		   curl_close($ch);
+
     }
 }
