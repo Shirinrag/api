@@ -125,6 +125,8 @@ $route['update-price-type-data'] = 'superadmin_api/update_price_type_data';
 // ================================== Mapped Device ====================================
 $route['save-mapped-device'] = 'superadmin_api/save_mapped_device';
 $route['update-machine-device-status'] = 'superadmin_api/update_machine_device_status';
+$route['delete-slots-device-status'] = 'superadmin_api/delete_slots_device_status';
+
 // ============================== Dashboard ==========================================
 $route['dashboard-data'] = 'superadmin_api/dashboard';
 // ============================ Duty Allocation =====================================

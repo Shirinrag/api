@@ -134,6 +134,7 @@ class Superadmin_model extends CI_Model {
     {
     	$this->db->select('id');
     	$this->db->from('tbl_slot_info');
+        $this->db->where('del_status',1);
     	$this->db->order_by('id','DESC');
   		$this->db->limit($slots);
   		$query = $this->db->get();

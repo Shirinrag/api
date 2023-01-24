@@ -209,10 +209,14 @@ class Pos_api extends REST_Controller {
                     );
                     $login_info = $this->model->selectWhereData('pa_users',$login_credentials_data,'*');
 
+
                     $pos_device_id = $this->model->selectWhereData('tbl_pos_device',array('pos_device_id'=>$device_id),array('id'));
 
+                    $place_id = $this->model->selectWhereData('tbl_pos_duty_allocation',array('fk_device_id'=>$pos_device_id['id'],'date'=>date('d/m/Y')),array('fk_place_id'));
+                    // echo '<pre>'; print_r($place_id); exit;
+                    $login_info['place_id']= $place_id['fk_place_id'];
                     $verify_device_id = $this->model->CountWhereRecord('tbl_pos_verifier_logged_in', array('fk_pos_verifier_id'=>$login_info['id'],'fk_device_id !='=>$pos_device_id['id'],'status'=>1));
-                    // echo '<pre>'; print_r($verify_device_id); exit;
+            
                         if($verify_device_id > 0){
                             if($lang_id==1){
                                 $response['message'] = "You are already logged in on another device. If you want to login from this device. please logout from another device";

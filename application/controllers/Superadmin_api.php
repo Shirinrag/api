@@ -934,34 +934,80 @@ class Superadmin_api extends REST_Controller {
                             'ext_price'=>$ext_price,
                         );
                         $this->model->updateData('tbl_parking_place',$curl_data,array('id'=>$id));
-                       
-                        if($from_hours!= "" && $to_hours !="" && !empty($price)){
-                            foreach ($from_hours as $from_hours_key => $from_hours_rows) {
-                                foreach($from_hours_rows as $from_hours_rows_key => $from_hours_rows_rows){                                   
-                                        if(empty($hour_price_slab_id[$from_hours_key][$from_hours_rows_key])){
-                                 
-                                            $insert_price_data = array(
-                                                'fk_place_id' =>$id,
-                                                 'fk_vehicle_type_id'=>$from_hours_rows[$from_hours_key],
-                                                'from_hours' =>$from_hours_rows_rows,
-                                                'to_hours' =>$to_hours[$from_hours_key][$from_hours_rows_key],
-                                                'cost' =>$price[$from_hours_key][$from_hours_rows_key],
-                                            );
-                                            $this->model->insertData('tbl_hours_price_slab',$insert_price_data); 
-                                    }else{                                 
+
+                        $previous_vehicle_type = $this->model->selectWhereData('tbl_parking_place_vehicle_type',array('fk_place_id'=>$id),array('GROUP_CONCAT(fk_vehicle_type_id) as fk_vehicle_type_id'),true,'','fk_place_id');
+                        $previous_vehicle_type_1 = explode(",",$previous_vehicle_type['fk_vehicle_type_id']);
+                        // $new_vehicle_info=[];
+                        $delete_vehicle_info=array_diff($previous_vehicle_type_1,$fk_vehicle_type);
+                        $new_vehicle_info=array_diff($fk_vehicle_type,$previous_vehicle_type_1);
+                        if (!empty($new_vehicle_info)) {
+                           foreach ($new_vehicle_info as $new_vehicle_info_key => $new_vehicle_info_row) {
+                               $insert_data = array(
+                                    'fk_place_id'=>$id,
+                                    'fk_vehicle_type_id'=>$new_vehicle_info_row
+                               );
+                               $this->model->insertData('tbl_parking_place_vehicle_type',$insert_data);
+                                $from_hours_1 = @$from_hours[$new_vehicle_info_row];
+                                $to_hours_1 = @$to_hours[$new_vehicle_info_row];
+                                $cost_1 = @$price[$new_vehicle_info_row];
+                                foreach ($from_hours_1 as $from_hours_1_key => $from_hours_1_row) {
+                                     $insert_price_data = array(
+                                            'from_hours' =>$from_hours_1_row,
+                                            'to_hours' =>@$to_hours_1[$from_hours_1_key],
+                                            'cost' =>@$cost_1[$from_hours_1_key],
+                                            'fk_place_id'=>$id,
+                                            'fk_vehicle_type_id'=>$new_vehicle_info_row
+                                    );
+                                     $this->model->insertData('tbl_hours_price_slab',$insert_price_data);
+                                }                              
+                               unset($fk_vehicle_type,$new_vehicle_info_key);
+                           }
+                        }                     
+                        
+                        if (!empty($fk_vehicle_type)) {
+                           foreach ($fk_vehicle_type as $fk_vehicle_type_key => $fk_vehicle_type_row) {
+                                $from_hours_1 = @$from_hours[$fk_vehicle_type_row];
+                                $to_hours_1 = @$to_hours[$fk_vehicle_type_row];
+                                $cost_1 = @$price[$fk_vehicle_type_row];
+
+                                foreach ($from_hours_1 as $from_hours_1_key => $from_hours_1_row) {
+                                    $slab_id = $hour_price_slab_id[$fk_vehicle_type_row][$from_hours_1_key];
+                                    if(!empty($slab_id)){
                                         $update_price_data = array(
-                                            'from_hours' =>$from_hours_rows_rows,
-                                            'to_hours' =>$to_hours[$from_hours_key][$from_hours_rows_key],
-                                            'cost' =>$price[$from_hours_key][$from_hours_rows_key],
+                                            'from_hours' =>$from_hours_1_row,
+                                            'to_hours' =>@$to_hours_1[$from_hours_1_key],
+                                            'cost' =>@$cost_1[$from_hours_1_key],
                                         );
-                                        $this->model->updateData('tbl_hours_price_slab',$update_price_data,array('id'=>$hour_price_slab_id[$from_hours_key][$from_hours_rows_key])); 
-                                }                                
-                            }
+                                        $this->model->updateData('tbl_hours_price_slab',$update_price_data,array('id'=>$slab_id));
+                                    
+                                    } else {
+                                        $insert_price_data = array(
+                                            'from_hours' =>$from_hours_1_row,
+                                            'to_hours' =>@$to_hours_1[$from_hours_1_key],
+                                            'cost' =>@$cost_1[$from_hours_1_key],
+                                            'fk_place_id'=>$id,
+                                            'fk_vehicle_type_id'=>$fk_vehicle_type_row
+                                    );
+                                     $this->model->insertData('tbl_hours_price_slab',$insert_price_data);
+                                    }                                    
+                             
+                                }
+                                
+                           }
+                          
+
                         }
-                    }
+                        if(!empty($delete_vehicle_info)){
+                            foreach ($delete_vehicle_info as $delete_vehicle_info_key => $delete_vehicle_info_row) {
+                                    $this->model->direct_delete('tbl_parking_place_vehicle_type',array('fk_place_id'=>$id,'fk_vehicle_type_id'=>$delete_vehicle_info_row));
+                                    $this->model->direct_delete('tbl_hours_price_slab',array('fk_place_id'=>$id,'fk_vehicle_type_id'=>$delete_vehicle_info_row));
+
+                            }
+                        }                       
                         $prefix = $this->model->selectWhereData('tbl_states',array('id'=>$fk_state_id),array('prefix'));
                        
-                        if($slots_data['slots'] < $slots){                           
+                        if($slots_data['slots'] < $slots){   
+
                             for ($i=$slots_data['slots']; $i < $slots; $i++) {
                                     $this->load->model('superadmin_model');
                                     $count = $this->superadmin_model->get_count_slot_name($prefix['prefix']);
@@ -982,22 +1028,27 @@ class Superadmin_api extends REST_Controller {
                                         );
                                         $this->model->insertData('tbl_slot_info',$insert_slot_info_data);  
                             }
-                        }else{
-                            if($slots_data['slots'] > $slots){
-                               $this->load->model('superadmin_model');
-                               $active_count_slots = $this->superadmin_model->get_count_slot_id();
-                               $final_count = $active_count_slots['total'] - $slots;
-                               $slots_id = $this->superadmin_model->get_slot_id($final_count);
-                              
-                               foreach ($slots_id as $slots_id_key => $slots_id_row) {
-                                  $update_status = array(
-                                        'del_status' => 0,
-                                        'fk_machine_status'=>0
-                                  );
-                                    $this->model->updateData('tbl_slot_info',$update_status,array('id'=>$slots_id_row['id']));
-                               }
-                            }
                         }
+                        // else{
+                        //     if($slots_data['slots'] > $slots){
+                        //        $this->load->model('superadmin_model');
+                        //        $active_count_slots = $this->superadmin_model->get_count_slot_id();
+                        //        echo '<pre>'; print_r($active_count_slots); 
+
+                        //        $final_count = $active_count_slots['total'] - $slots;
+                        //        echo '<pre>'; print_r($final_count); exit;
+                        //        $slots_id = $this->superadmin_model->get_slot_id($final_count);
+                        //        // print_r($slots_id);
+                        //        exit;
+                        //        // foreach ($slots_id as $slots_id_key => $slots_id_row) {
+                        //        //    $update_status = array(
+                        //        //          'del_status' => 0,
+                        //        //          'fk_machine_status'=>0
+                        //        //    );
+                        //        //      $this->model->updateData('tbl_slot_info',$update_status,array('id'=>$slots_id_row['id']));
+                        //        // }
+                        //     }
+                        // }
                         
                         $response['code'] = REST_Controller::HTTP_OK;
                         $response['status'] = true;
@@ -1497,6 +1548,38 @@ class Superadmin_api extends REST_Controller {
                 );
                 $this->model->updateData('tbl_slot_info',$update_data, array('id'=>$id));
                 $response['message'] = 'success';
+                $response['code'] = 200;
+                $response['status'] = true;
+            }
+        } else {
+            $response['message'] = 'Invalid Request';
+            $response['code'] = 204;
+        }
+        echo json_encode($response);
+    }
+    public function delete_slots_device_status_post()
+    {
+        $response = array('code' => - 1, 'status' => false, 'message' => '');
+        $validate = validateToken();
+        if($validate){
+            $id = $this->input->post('id');
+            $status=$this->input->post('status');
+            $place_id=$this->input->post('place_id');
+            if (empty($id)) {
+                $response['message'] = 'id is required';
+                $response['code'] = 201;
+            } else {
+                $update_data = array(
+                    'del_status'=>$status,
+                );
+
+                $this->model->updateData('tbl_slot_info',$update_data, array('id'=>$id));
+                $count = $this->model->CountWhereInRecord('tbl_slot_info',array('del_status'=>1,'fk_place_id'=>$place_id));
+                
+                $update_data=array('slots'=>$count);
+                $this->model->updateData('tbl_parking_place',$update_data,array('id'=>$place_id));
+
+                $response['message'] = 'Slot Deleted Successfully';
                 $response['code'] = 200;
                 $response['status'] = true;
             }
