@@ -208,13 +208,10 @@ class Pos_api extends REST_Controller {
                       "password" => $encryptedpassword
                     );
                     $login_info = $this->model->selectWhereData('pa_users',$login_credentials_data,'*');
-
-
                     $pos_device_id = $this->model->selectWhereData('tbl_pos_device',array('pos_device_id'=>$device_id),array('id'));
-
                     $place_id = $this->model->selectWhereData('tbl_pos_duty_allocation',array('fk_device_id'=>$pos_device_id['id'],'date'=>date('d/m/Y')),array('fk_place_id'));
                     // echo '<pre>'; print_r($place_id); exit;
-                    $login_info['place_id']= $place_id['fk_place_id'];
+                    
                     $verify_device_id = $this->model->CountWhereRecord('tbl_pos_verifier_logged_in', array('fk_pos_verifier_id'=>$login_info['id'],'fk_device_id !='=>$pos_device_id['id'],'status'=>1));
             
                         if($verify_device_id > 0){
@@ -233,7 +230,7 @@ class Pos_api extends REST_Controller {
                                     'status'=>1
                                 );
                                  $this->model->insertData('tbl_pos_verifier_logged_in',$curl_data);
-
+                                 $login_info['place_id']= $place_id['fk_place_id'];
                                 $response['code'] = REST_Controller::HTTP_OK;;
                                 $response['status'] = true;
                                 $response['message'] = 'success';
@@ -630,6 +627,24 @@ class Pos_api extends REST_Controller {
                 $response['booking_data'] = $booking_data;
             }
         }else{
+            $response['code'] = REST_Controller::HTTP_UNAUTHORIZED;
+            $response['message'] = 'Unauthorised';
+        }
+        echo json_encode($response);
+    }
+
+    public function display_all_pos_booking_data_get()
+    {
+        $response = array('code' => - 1, 'status' => false, 'message' => '');
+        $validate = validateToken();
+        if ($validate) {
+                $this->load->model('pos_model');
+                $pos_booking_data = $this->pos_model->display_all_pos_booking_data();
+                $response['code'] = REST_Controller::HTTP_OK;
+                $response['status'] = true;
+                $response['message'] = 'success';
+                $response['pos_booking_data'] = $pos_booking_data;
+        } else {
             $response['code'] = REST_Controller::HTTP_UNAUTHORIZED;
             $response['message'] = 'Unauthorised';
         }

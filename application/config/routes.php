@@ -164,6 +164,9 @@ $route['delete-pos-duty-allocation'] = 'superadmin_api/delete_pos_duty_allocatio
 $route['add-pos-device'] = 'superadmin_api/add_pos_device';
 $route['display-all-pos-device-data'] = 'superadmin_api/display_all_pos_device_data';
 $route['update-pos-device-status'] = 'superadmin_api/update_pos_device_status';
+// ============================ POS Booking History====================================
+$route['display-all-pos-booking-data'] = 'pos_api/display_all_pos_booking_data';
+
 //================================Terms & Condition=====================================
 $route['user-terms-n-condition'] = 'superadmin_api/user_terms_n_condition';
 $route['verifier-terms-n-condition'] = 'superadmin_api/verifier_terms_n_condition';

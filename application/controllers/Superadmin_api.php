@@ -724,22 +724,49 @@ class Superadmin_api extends REST_Controller {
                                     'fk_place_id' =>$last_inserted_id,
                                     'fk_vehicle_type_id'=>$fk_vehicle_type_row
                                 );
-                                $this->model->insertData('tbl_parking_place_vehicle_type',$insert_vehicle_type_data);  
+                                    
+                                $this->model->insertData('tbl_parking_place_vehicle_type',$insert_vehicle_type_data); 
+                                $from_hours_1 = @$from_hours[$fk_vehicle_type_row];
+                                $to_hours_1 = @$to_hours[$fk_vehicle_type_row];
+                                $cost_1 = @$price[$fk_vehicle_type_row];
+                               
+                                foreach ($from_hours_1 as $from_hours_1_key => $from_hours_1_row) {
+                                     $insert_price_data = array(
+                                            'from_hours' =>$from_hours_1_row,
+                                            'to_hours' =>@$to_hours_1[$from_hours_1_key],
+                                            'cost' =>@$cost_1[$from_hours_1_key],
+                                            'fk_place_id'=>$last_inserted_id,
+                                            'fk_vehicle_type_id'=>$fk_vehicle_type_row
+                                    );
+                                     $this->model->insertData('tbl_hours_price_slab',$insert_price_data);
+                                //  
+
+                                // foreach ($from_hours_1 as $from_hours_1_key => $from_hours_1_row) {
+                                //      $insert_price_data = array(
+                                //             'from_hours' =>$from_hours_1_row,
+                                //             'to_hours' =>@$to_hours_1[$from_hours_1_key],
+                                //             'cost' =>@$cost_1[$from_hours_1_key],
+                                //             'fk_place_id'=>$id,
+                                //             'fk_vehicle_type_id'=>$new_vehicle_info_row
+                                //     );
+                                //      $this->model->insertData('tbl_hours_price_slab',$insert_price_data);
+                                // }                              
                             }
                         }                                                     
-                        if($from_hours!= "" && $to_hours !="" && !empty($price)){
-                            foreach ($from_hours as $from_hours_key => $from_hours_rows) {
-                                 foreach($from_hours_rows as $from_hours_rows_key => $from_hours_rows_rows){
-                                    $insert_price_data = array(
-                                    'fk_place_id' =>$last_inserted_id,
-                                    'from_hours' =>$from_hours_rows_rows,
-                                    'to_hours' =>$to_hours[$from_hours_key][$from_hours_rows_key],
-                                    'cost' =>$price[$from_hours_key][$from_hours_rows_key],
-                                    'fk_vehicle_type_id'=>$from_hours_rows[$from_hours_key]
-                                );
-                                $this->model->insertData('tbl_hours_price_slab',$insert_price_data);  
-                                }                                     
-                            }
+                        // if($from_hours!= "" && $to_hours !="" && !empty($price)){
+                        //     foreach ($from_hours as $from_hours_key => $from_hours_rows) {
+                        //          foreach($from_hours_rows as $from_hours_rows_key => $from_hours_rows_rows){
+                        //             $insert_price_data = array(
+                        //             // 'fk_place_id' =>$last_inserted_id,
+                        //             'from_hours' =>$from_hours_rows_rows,
+                        //             'to_hours' =>$to_hours[$from_hours_key][$from_hours_rows_key],
+                        //             'cost' =>$price[$from_hours_key][$from_hours_rows_key],
+                        //             'fk_vehicle_type_id'=>$from_hours_rows
+                        //         );
+                        //             echo '<pre>'; print_r($$from_hours); exit;
+                        //         // $this->model->insertData('tbl_hours_price_slab',$insert_price_data);  
+                        //         }                                     
+                        //     }
                         }
                         $prefix = $this->model->selectWhereData('tbl_states',array('id'=>$fk_state_id),array('prefix'));
                         for ($i=0; $i < $slots; $i++) { 
@@ -877,6 +904,7 @@ class Superadmin_api extends REST_Controller {
                 $price = json_decode($price,true); 
                 $fk_vehicle_type = $this->input->post('fk_vehicle_type');
                 $fk_vehicle_type = json_decode($fk_vehicle_type,true);
+                $per_hour_charges = $this->input->post('per_hour_charges');
                 if(empty($fk_vendor_id)){
                     $response['message'] = "First Name is required";
                     $response['code'] = 201;
@@ -932,6 +960,7 @@ class Superadmin_api extends REST_Controller {
                             'fk_place_status_id'=>$fk_place_status_id,
                             'fk_parking_price_type'=>$fk_parking_price_type,
                             'ext_price'=>$ext_price,
+                            'per_hour_charges'=>$per_hour_charges
                         );
                         $this->model->updateData('tbl_parking_place',$curl_data,array('id'=>$id));
 
@@ -989,13 +1018,9 @@ class Superadmin_api extends REST_Controller {
                                             'fk_vehicle_type_id'=>$fk_vehicle_type_row
                                     );
                                      $this->model->insertData('tbl_hours_price_slab',$insert_price_data);
-                                    }                                    
-                             
-                                }
-                                
-                           }
-                          
-
+                                    }                                 
+                                }                                
+                           }                         
                         }
                         if(!empty($delete_vehicle_info)){
                             foreach ($delete_vehicle_info as $delete_vehicle_info_key => $delete_vehicle_info_row) {
