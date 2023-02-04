@@ -84,6 +84,7 @@ class User_api extends REST_Controller {
                     			$response['status'] = false;
                     			$response['message'] = 'Contact No is Already exist.';            					
             				}else{
+
             					$user_type = $this->model->selectWhereData('tbl_user_type',array('user_type'=>"User"),array('id'));
             					$curl_data =  array(
             						'firstName' => $first_name,
@@ -587,8 +588,8 @@ class User_api extends REST_Controller {
                 		$reserved_slot_info = $this->model->selectWhereData('tbl_booking', array('fk_slot_id'=>$fk_slot_id,'fk_place_id'=>$fk_place_id,'booking_from_date'=>$booking_from_date,'booking_to_date'=>$booking_to_date,'booking_from_time'=>$booking_from_time),array('booking_to_time'));
 
                 		if($booking_from_time > $reserved_slot_info['booking_to_time']){
-                			$user_wallet_data = $this->model->selectWhereData('tbl_user_wallet',array('fk_user_id'=>$fk_user_id),array('amount'));
-                			if(!empty($user_wallet_data['amount'])){
+	                			$user_wallet_data = $this->model->selectWhereData('tbl_user_wallet',array('fk_user_id'=>$fk_user_id),array('amount'));
+	                			if(!empty($user_wallet_data['amount'])){
                 				$vehicle_type_id = $this->model->selectWhereData('tbl_user_car_details',array('id'=>$fk_car_id),array('fk_vehicle_type_id'));
                 				$cost = $this->user_model->get_rate($total_hours,$vehicle_type_id['fk_vehicle_type_id'],$fk_place_id);
 
@@ -599,6 +600,7 @@ class User_api extends REST_Controller {
                 						$reserve_from_time= date('H:i:s',strtotime($booking_from_time .'-10 minutes'));              						               						
 		                				$reserve_to_time= date('H:i:s',strtotime($booking_to_time . ' +0 minutes'));
 		                				$booking_data = $this->user_model->get_last_booking_id();
+		                				// echo '<pre>'; print_r($booking_data); exit;
 		                				if(empty($booking_data)){
 		                					$new_booking_id  = 'PAB00000001';
 		                				}else{
@@ -627,6 +629,7 @@ class User_api extends REST_Controller {
 		                					'reserve_from_time' => $reserve_from_time,
 		                					'reserve_to_time' => $reserve_to_time,
 		                					'fk_booking_type_id'=>1,
+		                					'total_hours' => $total_hours
 		                				);
 		    							$last_inserted_id =  $this->model->insertData('tbl_booking',$curl_data);
 		                				   							    							
@@ -675,6 +678,136 @@ class User_api extends REST_Controller {
                 	}
 		    	}
 		}else {
+            $response['code'] = REST_Controller::HTTP_UNAUTHORIZED;
+            $response['message'] = 'Unauthorised';
+        }
+        echo json_encode($response);
+    }
+
+    public function extend_place_booking_post()
+    {
+    	$response = array('code' => - 1, 'status' => false, 'message' => '');
+        $validate = validateToken();
+        if ($validate) {
+                $place_id = $this->input->post('place_id');
+                $user_id = $this->input->post('user_id');
+                $id = $this->input->post('id');
+                $from_time = $this->input->post('from_time');
+                $to_time = $this->input->post('to_time');
+                $from_date = $this->input->post('from_date');
+                $to_date = $this->input->post('to_date');
+                $no_of_hours = $this->input->post('no_of_hours');
+                
+                if(empty($place_id)){
+                	$response['code']= 201;
+                	$response['message'] = "Place Id is required";
+                }else if(empty($user_id)){
+                	$response['code']= 201;
+                	$response['message'] = "User Id is required";
+                }else if(empty($id)){
+                	$response['code']= 201;
+                	$response['message'] = "Booking Id is required";
+                }else if(empty($from_time)){
+                	$response['code']= 201;
+                	$response['message'] = "From Time is required";
+                }else if(empty($to_time)){
+                	$response['code']= 201;
+                	$response['message'] = "To Time is required";
+                }else if(empty($from_date)){
+                	$response['code']= 201;
+                	$response['message'] = "From Date is required";
+                }else if(empty($to_date)){
+                	$response['code']= 201;
+                	$response['message'] = "To Date is required";
+                }else if(empty($no_of_hours)){
+                	$response['code']= 201;
+                	$response['message'] = "No of hours is required";
+                }else{
+                	$this->load->model('user_model');
+                	$booking_details = $this->model->selectWhereData('tbl_booking',array('id'=>$id),array('*')); 
+
+                	$booking_id = $booking_details['booking_id'];
+
+                	$vehicle_type_id = $this->model->selectWhereData('tbl_user_car_details',array('id'=>$booking_details['fk_car_id']),array('fk_vehicle_type_id'));
+                	$cost = $this->user_model->get_rate($no_of_hours,$vehicle_type_id['fk_vehicle_type_id'],$place_id);
+                	$ext_per_hour = $this->model->selectWhereData('tbl_parking_place',array('id'=>$place_id),array('ext_price','per_hour_charges'));
+
+                	if(!empty($ext_per_hour['per_hour_charges'])){
+                		$new_cost = $no_of_hours * $ext_per_hour['per_hour_charges'];
+                	}else{
+                		$new_cost = $cost['cost'] + (($cost['cost'] * $ext_per_hour['ext_price']) / 100);
+                	}          	
+                	
+		            $user_wallet_data = $this->model->selectWhereData('tbl_user_wallet',array('fk_user_id'=>$fk_user_id),array('amount'));
+	                if($user_wallet_data['amount'] < $new_cost){
+						$reserve_from_time= date('H:i:s',strtotime($from_time .'+0 minutes'));
+						$reserve_to_time= date('H:i:s',strtotime($to_time . ' +0 minutes'));
+						$last_ext_booking = $this->user_model->get_last_ext_booking_id();
+          				if(empty($last_ext_booking)){
+        					$new_ext_booking  = 'EXT' . '1';
+        				}else{
+    						$explode = explode("T",$last_ext_booking['booking_ext_replace']);
+                            $count = $explode[1] + 1;
+            				$new_ext_booking = 'EXT' . $count;
+        				}
+        				$curl_data = array(
+    						'fk_booking_id' => $id,
+    						'fk_place_id' => $place_id,
+    						'fk_user_id' => $fk_user_id,
+    						'booking_ext_replace' => $new_ext_booking,
+    						'booking_from_date' => $from_date,
+    						'booking_to_date' => $to_date,
+    						'booking_from_time' => $from_time,
+    						'booking_to_time' => $to_time,
+    						'reserve_from_time' => $reserve_from_time,
+    						'reserve_to_time' => $reserve_to_time,
+        				);
+        				$last_inserted_id = $this->model->insertData('tbl_extension_booking',$curl_data);
+
+        				$payment_data = array(
+							'fk_booking_id'=>$id,
+							'fk_ext_booking_id'=>$last_inserted_id,
+							'fk_user_id'=>$fk_user_id,
+							'amount'=>$cost['cost'],
+							'charges'=>(($cost['cost'] * $ext_per_hour['ext_price']) / 100),
+							'total_amount'=>$new_cost,
+						);
+						$this->model->insertData('tbl_payment',$payment_data);
+
+        				$deactive_used_status = array('used_status'=>0);
+						$this->model->updateData('tbl_user_wallet_history',$deactive_used_status,array('fk_user_id'=>$fk_user_id));
+
+						$insert_user_wallet_history = array(
+							'fk_user_id'=>$fk_user_id,
+							'deduct_amount'=>$new_cost,
+							'total_amount'=>$user_wallet_data['amount'] - $new_cost,
+							'fk_payment_type_id'=>3
+						);
+						$this->model->insertData('tbl_user_wallet_history',$insert_user_wallet_history);
+
+						$update_wallet_data = array(
+							'amount'=>$user_wallet_data['amount'] - $new_cost,
+						);
+						$this->model->updateData('tbl_user_wallet',$update_wallet_data,array('fk_user_id'=>$fk_user_id));
+						$booking_status = array(
+							'fk_booking_id'=>$id,
+							'fk_status_id'=> 1,
+							'used_status'=> 1,
+						);
+						$this->model->insertData('tbl_booking_status',$booking_status);  
+                	}else{
+                		$response['message'] ="Insufficient Balance";
+                		$response['code'] = 201;
+                	}
+
+
+	              	$response['code'] = REST_Controller::HTTP_OK;
+                	$response['status'] = true;
+                	$response['message'] = 'success';
+                }
+                
+                
+        } else {
             $response['code'] = REST_Controller::HTTP_UNAUTHORIZED;
             $response['message'] = 'Unauthorised';
         }

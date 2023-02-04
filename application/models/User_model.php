@@ -122,6 +122,8 @@ class User_model extends CI_Model {
 		$this->db->select('booking_id');
         $this->db->from('tbl_booking');
         $this->db->like('booking_id', "PAB");
+        $this->db->order_by('id',"DESC");
+        $this->db->limit(1);
         $query = $this->db->get();
         return $query->row_array();
 	}
@@ -132,11 +134,22 @@ class User_model extends CI_Model {
        	$this->db->where('fk_vehicle_type_id',$fk_vehicle_type_id);
        	$this->db->where('fk_place_id',$fk_place_id);
        // $this->db->where('from_km >=', $total_hours);
-        $this->db->where((int) $total_hours.' BETWEEN from_hours AND from_hours');
+        $this->db->where((int) $total_hours.' BETWEEN from_hours AND to_hours');
         // $this->db->where('status','1');
        // $this->db->order_by('to_km',"ASC");
         $query = $this->db->get();
         $result = $query->row_array();
         return $result;
     }
+
+    public function get_last_ext_booking_id()
+	{
+			$this->db->select('booking_ext_replace');
+        $this->db->from('tbl_extension_booking');
+        $this->db->like('booking_ext_replace', "EXT");
+        $this->db->order_by('id',"DESC");
+        $this->db->limit(1);
+        $query = $this->db->get();
+        return $query->row_array();
+	}
 }

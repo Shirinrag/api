@@ -65,8 +65,9 @@ $route['user-wallet'] = 'user_api/user_wallet';
 $route['place-list'] = 'user_api/place_list';
 $route['place-details-on-id'] = 'user_api/place_details_on_id';
 $route['place-traffic'] = 'user_api/place_traffic';
-$route['place-traffic'] = 'user_api/place_traffic';
+$route['place-booking'] = 'user_api/place_booking';
 $route['user-terms-condition'] = 'user_api/user_terms_condition';
+$route['extend-place-booking'] = 'user_api/extend_place_booking';
 
 // =============Super Admin API=============================
 $route['loggedin-data'] = 'common/login_data';
