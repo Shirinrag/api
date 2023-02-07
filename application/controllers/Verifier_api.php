@@ -28,7 +28,7 @@ class Verifier_api extends REST_Controller {
         $response = array('status' => false, 'msg' => 'Oops! Please try again later.', 'code' => 200);
         echo json_encode($response);
     }
-    public function login_pos_verifier_post()
+    public function login_verifier_post()
     {
         	$response = array('code' => - 1, 'status' => false, 'message' => '');
             $username = $this->input->post('username');           
@@ -53,20 +53,14 @@ class Verifier_api extends REST_Controller {
                       "password" => $encryptedpassword
                     );
                     $login_info = $this->model->selectWhereData('pa_users',$login_credentials_data,'*');
-                    $verify_device_id = $this->model->CountWhereRecord('tbl_pos_verifier_logged_in', array('fk_pos_verifier_id'=>$login_info['id'],'fk_device_id !='=>$pos_device_id['id'],'status'=>1));
-                        if($verify_device_id > 0){
-                            $response['message'] = "You are already logged in on another device. If you want to login from this device. please logout from another device";
-                            
-                            $response['code']=201;
-                        }else{
+                 
                             if(!empty($login_info)){
-
                                 $curl_data =array(
-                                    'fk_pos_verifier_id' =>$login_info['id'],
-                                    'fk_device_id'=>$pos_device_id['id'],
+                                    'fk_verifier_id' =>$login_info['id'],
+                                    'login_time'=>date("Y-m-d H:i:s"),
                                     'status'=>1
                                 );
-                                 $this->model->insertData('tbl_pos_verifier_logged_in',$curl_data);
+                                 $this->model->insertData('tbl_verifier_login',$curl_data);
 
                                 $response['code'] = REST_Controller::HTTP_OK;;
                                 $response['status'] = true;
@@ -77,8 +71,7 @@ class Verifier_api extends REST_Controller {
                                 $response['status'] = "wrong_password";
                                 $response['message'] = 'Incorrect Password';
                                 
-                            }      
-                        }                    
+                            }                   
                 }  else {
                     $response['code'] = 201;
                     $response['message'] = 'Incorrect Username';
@@ -88,28 +81,25 @@ class Verifier_api extends REST_Controller {
             } 
         echo json_encode($response);
     }
-      
+
     public function logout_post()
     {
         $response = array('code' => - 1, 'status' => false, 'message' => '');
         $validate = validateToken();
         if ($validate) {
             
-            $fk_pos_verifier_id = $this->input->post('fk_verifier_id');
-            $device_id = $this->input->post('device_id');
-            $lang_id = $this->input->post('lang_id');
-            if(empty($fk_pos_verifier_id)){
+            $fk_verifier_id = $this->input->post('fk_verifier_id');
+           
+            if(empty($fk_verifier_id)){
                 $response['message']= "Verifier Id is required";
                 $response['code'] = 201;
-            }else if(empty($device_id)){
-                $response['message']= "Device Id is required";
-                $response['code'] = 201;
             }else{
-                $pos_device_id = $this->model->selectWhereData('tbl_pos_device',array('pos_device_id'=>$device_id),array('id'));
+                $pos_device_id = $this->model->selectWhereData('tbl_verifier_login',array('status'=>1),array('id'));
                 $curl_data = array(
-                    'status'=> 2
+                    'status'=> 2,
+                    'logout_time'=>date("Y-m-d H:i:s"),
                 );
-                $this->model->updateData('tbl_pos_verifier_logged_in',$curl_data,array('fk_pos_verifier_id'=> $fk_pos_verifier_id,'fk_device_id'=> $pos_device_id['id'],));
+                $this->model->updateData('tbl_verifier_login',$curl_data,array('fk_verifier_id'=> $fk_verifier_id));
                 $response['code'] = REST_Controller::HTTP_OK;
                 $response['status'] = true;
                 if($lang_id==1){
@@ -125,5 +115,122 @@ class Verifier_api extends REST_Controller {
         echo json_encode($response);
     }
 
+    public function verify_booking_post()
+    {
+        $response = array('code' => - 1, 'status' => false, 'message' => '');
+        $validate = validateToken();
+        if ($validate) {
+            $booking_id = $this->input->post('booking_id');
+            $verifier_id = $this->input->post('verifier_id');
+            $booking_type = $this->input->post('booking_type');
+            $verify_status = $this->input->post('verify_status');
+
+            if(empty($booking_id)){
+                $response['message'] = "Booking Id is required";
+                $response['code']= 201;
+            }elseif(empty($verifier_id)){
+                $response['message'] = "Verifier Id is required";
+                $response['code']= 201;
+            }else if(empty($booking_type)){
+                $response['message'] = "Booking Type is required";
+                $response['code']= 201;
+            }else if(empty($verify_status)){
+                $response['message'] = "Verify Status is required";
+                $response['code']= 201;
+            }else{
+                 $curl_data = array(
+                    'fk_booking_id' =>$booking_id,
+                    'fk_verifier_id'=> $verifier_id,
+                    'fk_booking_type_id'=> $booking_type,
+                    'verify_status' => $verify_status,
+                 );
+                 $this->model->insertData('tbl_booking_verify',$curl_data);
+
+                 $booking_unique_id = $this->model->selectWhereData('tbl_booking',array('id'=>$booking_id),array('booking_id'));
+                 $check_in_booking = array(
+                    'fk_booking_id'=> $booking_id,
+                    'check_in' => date("Y-m-d H:i:s"),
+                    'fk_verifier_id'=> $verifier_id,
+                    'fk_booking_check_type' => 1
+                 );
+                 $this->model->insertData('tbl_booking_check_in_out',$check_in_booking);
+                 
+                 $response['code'] = REST_Controller::HTTP_OK;
+                 $response['status'] = true;
+                 $response['message'] = "Your Booking'". $booking_unique_id['booking_id'] ."' is successfully verified by our Guid. '.'🚗😃 ";
+            }
+        }else{
+             $response['code'] = REST_Controller::HTTP_UNAUTHORIZED;
+             $response['message'] = 'Unauthorised';
+        }
+        echo json_encode($response);
+    }
+
+    public function verifier_booking_issue_raised_post()
+    {
+        $response = array('code' => - 1, 'status' => false, 'message' => '');
+        $validate = validateToken();
+        if ($validate) {
+            $verifier_id = $this->input->post('verifier_id');
+            $place_id = $this->input->post('place_id');
+            $slot_id = $this->input->post('slot_id');
+            $booking_id = $this->input->post('booking_id');
+            $complaint_id = $this->input->post('complaint_id');
+            $complaint_text = $this->input->post('complaint_text');
+            $issue_image = $this->input->post('issue_image');
+
+            if(empty($verifier_id)){
+                $response['message'] = "Verifier Id is required";
+                $response['code'] = 201;
+            }else if(empty($place_id)){
+                $response['message'] = "Place Id is required";
+                $response['code'] = 201;
+            }else if(empty($slot_id)){
+                $response['message'] = "Slot Id is required";
+                $response['code'] = 201;
+            }else if(empty($booking_id)){
+                $response['message'] = "Booking Id is required";
+                $response['code'] = 201;
+            }else if(empty($complaint_id)){
+                $response['message'] = "Complaint Id is required";
+                $response['code'] = 201;
+            }else if(empty($complaint_text)){
+                $response['message'] = "Comlaint Text is required";
+                $response['code'] = 201;
+            }else{
+                $is_file = true;
+                    if (!empty($_FILES['issue_image']['name'])) {
+                        $image = trim($_FILES['issue_image']['name']);
+                        $image = preg_replace('/\s/', '_', $image);
+                        $cat_image = mt_rand(100000, 999999) . '_' . $image;
+                        $config['upload_path'] = './uploads/complaint/';
+                        $config['file_name'] = $cat_image;
+                        $config['overwrite'] = TRUE;
+                        $config["allowed_types"] = 'gif|jpg|jpeg|png|bmp';
+                        $this->load->library('upload', $config);
+                        $this->upload->initialize($config);
+                        if (!$this->upload->do_upload('issue_image')) {
+                            $is_file = false;
+                            $errors = $this->upload->display_errors();
+                            $response['code'] = 201;
+                            $response['message'] = $errors;
+                        } else {
+                            $issue_image = 'uploads/complaint/' . $cat_image;
+
+                            $curl_data = array(
+                                
+                            );
+                        }
+                    }
+                    if ($is_file) {
+                    }
+            }
+
+        }else{
+             $response['code'] = REST_Controller::HTTP_UNAUTHORIZED;
+             $response['message'] = 'Unauthorised';
+        }
+        echo json_encode($response);
+    }
    
 }

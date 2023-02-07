@@ -52,7 +52,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 $route['default_controller'] = 'welcome';
 $route['404_override'] = '';
 $route['translate_uri_dashes'] = FALSE;
-
+// ====================User App API=======================================================
 $route['register-user'] = 'user_api/register_user';
 $route['login-data'] = 'user_api/login';
 $route['update-user-profile'] = 'user_api/update_user_profile';
@@ -68,6 +68,12 @@ $route['place-traffic'] = 'user_api/place_traffic';
 $route['place-booking'] = 'user_api/place_booking';
 $route['user-terms-condition'] = 'user_api/user_terms_condition';
 $route['extend-place-booking'] = 'user_api/extend_place_booking';
+
+// ============================= Verifier App API=============================================
+
+$route['login-verifier'] = 'verifier_api/login_verifier';
+$route['verify-booking'] = 'verifier_api/verify_booking';
+
 
 // =============Super Admin API=============================
 $route['loggedin-data'] = 'common/login_data';
