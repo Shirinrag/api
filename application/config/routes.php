@@ -68,8 +68,12 @@ $route['place-traffic'] = 'user_api/place_traffic';
 $route['place-booking'] = 'user_api/place_booking';
 $route['user-terms-condition'] = 'user_api/user_terms_condition';
 $route['extend-place-booking'] = 'user_api/extend_place_booking';
-
-// ============================= Verifier App API=============================================
+$route['booking-cancel'] = 'user_api/booking_cancel';
+$route['delete-user-account'] = 'user_api/delete_user_account';
+$route['add-place-suggestion'] = 'user_api/add_place_suggestion';
+$route['user-complaint'] = 'user_api/user_complaint';
+$route['apply-for-vendor'] = 'user_api/apply_for_vendor';
+// ============================= Verifier App API=========================================
 
 $route['login-verifier'] = 'verifier_api/login_verifier';
 $route['verify-booking'] = 'verifier_api/verify_booking';

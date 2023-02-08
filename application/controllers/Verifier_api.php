@@ -175,7 +175,6 @@ class Verifier_api extends REST_Controller {
             $place_id = $this->input->post('place_id');
             $slot_id = $this->input->post('slot_id');
             $booking_id = $this->input->post('booking_id');
-            $complaint_id = $this->input->post('complaint_id');
             $complaint_text = $this->input->post('complaint_text');
             $issue_image = $this->input->post('issue_image');
 
@@ -190,9 +189,6 @@ class Verifier_api extends REST_Controller {
                 $response['code'] = 201;
             }else if(empty($booking_id)){
                 $response['message'] = "Booking Id is required";
-                $response['code'] = 201;
-            }else if(empty($complaint_id)){
-                $response['message'] = "Complaint Id is required";
                 $response['code'] = 201;
             }else if(empty($complaint_text)){
                 $response['message'] = "Comlaint Text is required";
@@ -216,13 +212,22 @@ class Verifier_api extends REST_Controller {
                             $response['message'] = $errors;
                         } else {
                             $issue_image = 'uploads/complaint/' . $cat_image;
-
-                            $curl_data = array(
-                                
-                            );
                         }
                     }
                     if ($is_file) {
+                        $curl_data = array(
+                            'fk_verifier_id'=>$verifier_id,
+                            'fk_place_id' =>$place_id,
+                            'fk_booking_id'=>$booking_id,
+                            'fk_slot_id'=>$slot_id,
+                            'complaint_text'=>$complaint_text,
+                            'source'=>1,
+                            'image'=>$issue_image,
+                        );
+                        $this->model->insertData('tbl_verifier_complaint',$curl_data);
+                        $response['code'] = REST_Controller::HTTP_OK;
+                        $response['status'] = true;
+                        $response['message']= "Complaint Raised Successfully";
                     }
             }
 

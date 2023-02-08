@@ -795,18 +795,14 @@ class User_api extends REST_Controller {
 							'used_status'=> 1,
 						);
 						$this->model->insertData('tbl_booking_status',$booking_status);  
+						$response['code'] = REST_Controller::HTTP_OK;
+                		$response['status'] = true;
+                		$response['message'] = 'success';
                 	}else{
                 		$response['message'] ="Insufficient Balance";
                 		$response['code'] = 201;
-                	}
-
-
-	              	$response['code'] = REST_Controller::HTTP_OK;
-                	$response['status'] = true;
-                	$response['message'] = 'success';
-                }
-                
-                
+                	}	              	
+                }              
         } else {
             $response['code'] = REST_Controller::HTTP_UNAUTHORIZED;
             $response['message'] = 'Unauthorised';
@@ -814,6 +810,246 @@ class User_api extends REST_Controller {
         echo json_encode($response);
     }
 
+    public function booking_cancel_post()
+    {
+    	$response = array('code' => - 1, 'status' => false, 'message' => '');
+        $validate = validateToken();
+        if ($validate) {
+        	$booking_id = $this->input->post('booking_id');
+        	
+        	if(empty($booking_id)){
+        		$response['message'] = "Booking Id is required";
+        		$response['code'] = 201;
+        	}else{
+        		$booking_data = $this->model->selectWhereData('tbl_booking',array('id'=>$booking_id),array('booking_from_time','fk_user_id'));
+
+        		$booking_from_time= date('H:i:s',strtotime($booking_data['booking_from_time'] .'-60 minutes'));
+        		$current_time = date('H:i:s');
+        		if($current_time <= $booking_from_time){
+        			$last_booking_status = $this->model->selectWhereData('tbl_booking_status',array('fk_booking_id'=>$booking_id,'status'=>1),array('id'));
+        			$update_status = array('used_status'=> 0);
+        			$this->model->updateData('tbl_booking_status',$update_status,array('id'=>$last_booking_status['id']));	
+        			$insert_data = array(
+        				'fk_booking_id'=>$booking_id,
+        				'fk_status_id'=>3,
+        				'used_status'=>1
+        			);
+        			$this->model->insertData('tbl_booking_status',$insert_data);
+        			// $previous_user_amount = $this->model->selectWhereData('tbl_user_wallet',array('fk_user_id'=>$booking_data['fk_user_id']),array('amount'));
+        			$previous_user_wallet_history = $this->model->selectWhereData('tbl_user_wallet_history',array('fk_user_id'=>$booking_data['fk_user_id'],'used_status'=>'1'),array('total_amount','id'));
+
+        			$update_wallet_data = array('used_status'=>'0');
+        			$this->model->updateData('tbl_user_wallet_history',$update_wallet_data,array('id'=>$previous_user_wallet_history['id']));
+        			$prevoius_booking_amount = $this->model->selectWhereData('tbl_payment',array('fk_booking_id'=>$booking_id),array('amount'));
+
+        			$new_amount = $prevoius_booking_amount['amount'] + $previous_user_wallet_history['total_amount'];
+
+        			$insert_amount_wallet_history = array(
+        				'fk_user_id'=>$booking_data['fk_user_id'],
+        				'add_amount'=>$new_amount,
+        				'total_amount'=>$new_amount,
+        				'used_status'=>1
+        			); 
+        			$this->model->insertData('tbl_user_wallet_history',$insert_user_wallet_history);
+        			$update_user_wallet = array('amount'=>$new_amount);
+        			$this->model->updateData('tbl_user_wallet',$update_user_wallet,array('fk_user_id'=>$booking_data['fk_user_id']));
+        			$response['code'] = REST_Controller::HTTP_OK;
+                	$response['status'] = true;
+                	$response['message'] = 'Booking Cancelled Successfully';
+
+        		}else{
+        			$response['message'] = "You cannot cancel the booking";
+        			$response['code']= 201;
+        		}       		
+        	}
+        }else {
+            $response['code'] = REST_Controller::HTTP_UNAUTHORIZED;
+            $response['message'] = 'Unauthorised';
+        }
+        echo json_encode($response);
+    }
+
+    public function delete_user_account_post()
+    {
+    	$response = array('code' => - 1, 'status' => false, 'message' => '');
+    	$validate = validateToken();
+        if ($validate) {
+		    	$user_id = $this->input->post('user_id');
+		    	if(empty($user_id)){
+		    		$response['message'] = "User Id is required";
+		    		$response['code'] = 201;
+		    	}else{
+		    		$curl_data = array('isActive'=>0);
+		    		$this->model->updateData('pa_users',$curl_data,array('id'=>$user_id));
+                    $response['code'] = REST_Controller::HTTP_OK;
+                    $response['status'] = true;
+					$response['message'] = 'Account Deleted Successfully';
+                   
+    			}
+		}else {
+            $response['code'] = REST_Controller::HTTP_UNAUTHORIZED;
+            $response['message'] = 'Unauthorised';
+        }
+        echo json_encode($response);
+    }
+
+    public function add_place_suggestion()
+    {
+    	$response = array('code' => - 1, 'status' => false, 'message' => '');
+    	$validate = validateToken();
+        if ($validate) {
+		    	$fk_user_id = $this->input->post('fk_user_id');
+		    	$place_name = $this->input->post('place_name');
+		    	$address = $this->input->post('address');
+		    	$landmark = $this->input->post('landmark');
+		    	$place_image = $this->input->post('place_image');
+		    	$latitude = $this->input->post('latitude');
+		    	$longitude = $this->input->post('longitude');
+		    	if(empty($fk_user_id)){
+		    		$response['message'] = "User Id is required";
+		    		$response['code'] = 201;
+		    	}else if(empty($place_name)){
+		    		$response['message'] = "Place Name is required";
+		    		$response['code'] = 201;
+		    	}else if(empty($address)){
+		    		$response['message'] = "Address is required";
+		    		$response['code'] = 201;
+		    	}else if(empty($landmark)){
+		    		$response['message'] = "Ladmark is required";
+		    		$response['code'] = 201;
+		    	}else if(empty($latitude)){
+		    		$response['message'] = "Latitude is required";
+		    		$response['code'] = 201;
+		    	}else if(empty($longitude)){
+		    		$response['message'] = "Longitude is required";
+		    		$response['code'] = 201;
+		    	}else{
+		    		$is_file = true;
+		    		$profile_image1 ="";
+                    if (!empty($_FILES['place_image']['name'])) {
+                        $image = trim($_FILES['place_image']['name']);
+                        $image = preg_replace('/\s/', '_', $image);
+                        $cat_image = mt_rand(100000, 999999) . '_' . $image;
+                        $config['upload_path'] = './uploads/place_image/';
+                        $config['file_name'] = $cat_image;
+                        $config['overwrite'] = TRUE;
+                        $config["allowed_types"] = 'gif|jpg|jpeg|png|bmp';
+                        $this->load->library('upload', $config);
+                        $this->upload->initialize($config);
+                        if (!$this->upload->do_upload('place_image')) {
+                            $is_file = false;
+                            $errors = $this->upload->display_errors();
+                            $response['code'] = 201;
+                            $response['message'] = $errors;
+                        } else {
+                            	$place_image = 'uploads/place_image/' . $cat_image;
+                        }
+                    }
+            		if ($is_file) {
+            			$curl_data = array(
+            				'place_name'=> $place_name,
+            				'fk_user_id' => $fk_user_id,
+            				'address' => $address,
+            				'landmark' =>$landmark,
+            				'latitude' =>$latitude,
+            				'longitude'=>$longitude,
+            				'image'=>$place_image
+            			);
+            			$this->model->insertData('tbl_place_suggestion',$curl_data);		    		
+	                    $response['code'] = REST_Controller::HTTP_OK;
+	                    $response['status'] = true;
+						$response['message'] = 'Place Inserted Successfully';
+					}
+                   
+    			}
+		}else {
+            $response['code'] = REST_Controller::HTTP_UNAUTHORIZED;
+            $response['message'] = 'Unauthorised';
+        }
+        echo json_encode($response);
+    }
+
+    public function user_complaint_post()
+    {
+    	$response = array('code' => - 1, 'status' => false, 'message' => '');
+    	$validate = validateToken();
+        if ($validate) {
+		    	$fk_user_id = $this->input->post('fk_user_id');
+		    	$fk_place_id = $this->input->post('fk_place_id');
+		    	$topic = $this->input->post('topic');
+		    	$description = $this->input->post('description');
+		    	if(empty($fk_user_id)){
+		    		$response['message'] = "User Id is required";
+		    		$response['code'] = 201;
+		    	}else if(empty($fk_place_id)){
+		    		$response['message'] = "Place Id is required";
+		    		$response['code'] = 201;
+		    	}else if(empty($topic)){
+		    		$response['message'] = "Topic is required";
+		    		$response['code'] = 201;
+		    	}else if(empty($description)){
+		    		$response['message'] = "Description is required";
+		    		$response['code'] = 201;
+		    	}else{
+		    		$curl_data = array(
+		    			'fk_user_id' => $fk_user_id,
+		    			'fk_place_id' => $fk_place_id,
+		    			'topic' => $topic,
+		    			'description'=>$description
+		    		);
+		    		$this->model->insertData('tbl_user_complaint',$curl_data);
+                    $response['code'] = REST_Controller::HTTP_OK;
+                    $response['status'] = true;
+					$response['message'] = 'Complaint Register Successfully';
+                   
+    			}
+		}else {
+            $response['code'] = REST_Controller::HTTP_UNAUTHORIZED;
+            $response['message'] = 'Unauthorised';
+        }
+        echo json_encode($response);
+    }
+
+    public function apply_for_vendor_post()
+    {
+    	$response = array('code' => - 1, 'status' => false, 'message' => '');
+    	$validate = validateToken();
+        if ($validate) {
+		    	$name = $this->input->post('name');
+		    	$address = $this->input->post('address');
+		    	$landmark = $this->input->post('landmark');
+		    	$apply_type = $this->input->post('apply_type');
+		    	if(empty($name)){
+		    		$response['message'] = "Name is required";
+		    		$response['code'] = 201;
+		    	}else if(empty($address)){
+		    		$response['message'] = "Address is required";
+		    		$response['code'] = 201;
+		    	}else if(empty($landmark)){
+		    		$response['message'] = "Landmark is required";
+		    		$response['code'] = 201;
+		    	}else if(empty($apply_type)){
+		    		$response['message'] = "Apply Type is required";
+		    		$response['code'] = 201;
+		    	}else{
+		    		$curl_data = array(
+		    			'name' => $name,
+		    			'address' => $address,
+		    			'landmark' => $landmark,
+		    			'apply_type'=>$apply_type
+		    		);
+		    		$this->model->insertData('tbl_apply_for_vendor',$curl_data);
+                    $response['code'] = REST_Controller::HTTP_OK;
+                    $response['status'] = true;
+					$response['message'] = 'Application Submitted Successfully';
+                   
+    			}
+		}else {
+            $response['code'] = REST_Controller::HTTP_UNAUTHORIZED;
+            $response['message'] = 'Unauthorised';
+        }
+        echo json_encode($response);
+    }
     public function fcm_notification($value='')
     {
     	define('API_ACCESS_KEY','AAAAVmWHGa8:APA91bHuVMV-6txudhc8FXcln825nV2rsxPO7o89mkvCoHFjxfdwyLNCKeDHnU6ZT8eh3GOHDBflGNUolTb0J9MpQvcsgRiAKjx5NHnlJRUzLeQHOKLkeYnGXJ9etQjHZKMGNunrxU-1');
