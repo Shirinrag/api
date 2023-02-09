@@ -152,4 +152,9 @@ class User_model extends CI_Model {
         $query = $this->db->get();
         return $query->row_array();
 	}
+
+	public function booking_list($place_id='')
+	{
+		// code...
+	}
 }

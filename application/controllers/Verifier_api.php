@@ -102,11 +102,7 @@ class Verifier_api extends REST_Controller {
                 $this->model->updateData('tbl_verifier_login',$curl_data,array('fk_verifier_id'=> $fk_verifier_id));
                 $response['code'] = REST_Controller::HTTP_OK;
                 $response['status'] = true;
-                if($lang_id==1){
-                        $response['message'] = 'Logout Successfully';
-                }else {
-                    $response['message'] = 'लॉगआउट सफलतापूर्वक';
-                }
+                $response['message'] = 'Logout Successfully';
             }            
         }else{
              $response['code'] = REST_Controller::HTTP_UNAUTHORIZED;
@@ -234,6 +230,31 @@ class Verifier_api extends REST_Controller {
         }else{
              $response['code'] = REST_Controller::HTTP_UNAUTHORIZED;
              $response['message'] = 'Unauthorised';
+        }
+        echo json_encode($response);
+    }
+    public function booking_list()
+    {
+       $response = array('code' => - 1, 'status' => false, 'message' => '');
+        $validate = validateToken();
+        if ($validate) {
+                $place_id = $this->input->post('place_id');
+                if(empty($place_id)){
+                    $response['message'] = "Place Id is required";
+                    $response['code'] = 201;
+                }else{
+                        $this->load->model('user_model');
+                        $booking = $this->user_model->booking_list($place_id);
+
+                        $response['code'] = REST_Controller::HTTP_OK;
+                        $response['status'] = true;
+                        $response['message'] = 'success';
+                        $response['booking_data'] = $booking;
+                   
+                }
+        }else {
+            $response['code'] = REST_Controller::HTTP_UNAUTHORIZED;
+            $response['message'] = 'Unauthorised';
         }
         echo json_encode($response);
     }
