@@ -639,7 +639,11 @@ class User_api extends REST_Controller {
 		    								'amount'=>$cost['cost'],
 		    								'total_amount'=>$cost['cost'],
 		    							);
-		    							$this->model->insertData('tbl_payment',$payment_data);
+		    							$last_payment_inserted_id =$this->model->insertData('tbl_payment',$payment_data);
+
+		    							$update_payment_id = array('fk_payment_id'=> $last_payment_inserted_id);
+
+		    							$this->model->updateData('tbl_booking',$update_payment_id,array('id'=>$last_inserted_id));
 
 		    							$deactive_used_status = array('used_status'=>0);
 		    							$this->model->updateData('tbl_user_wallet_history',$deactive_used_status,array('fk_user_id'=>$fk_user_id));
@@ -772,7 +776,11 @@ class User_api extends REST_Controller {
 							'charges'=>(($cost['cost'] * $ext_per_hour['ext_price']) / 100),
 							'total_amount'=>$new_cost,
 						);
-						$this->model->insertData('tbl_payment',$payment_data);
+						$last_payment_inserted_id = $this->model->insertData('tbl_payment',$payment_data);
+
+						$update_payment_id = array('fk_payment_id'=> $last_payment_inserted_id);
+		    							
+		    			$this->model->updateData('tbl_extension_booking',$update_payment_id,array('id'=>$last_inserted_id));
 
         				$deactive_used_status = array('used_status'=>0);
 						$this->model->updateData('tbl_user_wallet_history',$deactive_used_status,array('fk_user_id'=>$fk_user_id));

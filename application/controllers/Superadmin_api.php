@@ -2479,4 +2479,22 @@ class Superadmin_api extends REST_Controller {
         }
         echo json_encode($response);
     }
+
+    public function display_all_suggested_parking_place_data_get()
+    {
+        $response = array('code' => - 1, 'status' => false, 'message' => '');
+        $validate = validateToken();
+        if ($validate) {
+            $this->load->model('superadmin_model');
+                $suggested_place = $this->model->selectWhereData('tbl_place_suggestion',array(),array('*'),false,array('id',"desc"));
+                $response['code'] = REST_Controller::HTTP_OK;
+                $response['status'] = true;
+                $response['message'] = 'success';
+                $response['suggested_place'] = $suggested_place;
+        } else {
+            $response['code'] = REST_Controller::HTTP_UNAUTHORIZED;
+            $response['message'] = 'Unauthorised';
+        }
+        echo json_encode($response);   
+    }
 }

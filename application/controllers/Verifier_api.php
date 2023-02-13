@@ -233,7 +233,7 @@ class Verifier_api extends REST_Controller {
         }
         echo json_encode($response);
     }
-    public function booking_list()
+    public function booking_list_post()
     {
        $response = array('code' => - 1, 'status' => false, 'message' => '');
         $validate = validateToken();
@@ -244,17 +244,33 @@ class Verifier_api extends REST_Controller {
                     $response['code'] = 201;
                 }else{
                         $this->load->model('user_model');
-                        $booking = $this->user_model->booking_list($place_id);
+                        $ongoing_unverified_booking_list = $this->user_model->ongoing_unverified_booking_list($place_id);
+                        $ongoing_verified_booking_list = $this->user_model->ongoing_verified_booking_list($place_id);
+                        $complete_booking = $this->user_model->complete_booking_list($place_id);
+                        $history_booking = $this->user_model->history_booking_list($place_id);
 
                         $response['code'] = REST_Controller::HTTP_OK;
                         $response['status'] = true;
                         $response['message'] = 'success';
-                        $response['booking_data'] = $booking;
-                   
+                        $response['ongoing_unverified_booking_list'] = $ongoing_unverified_booking_list;
+                        $response['ongoing_verified_booking_list'] = $ongoing_verified_booking_list;
+                        $response['complete_booking'] = $complete_booking;
+                        $response['history_booking'] = $history_booking;                  
                 }
         }else {
             $response['code'] = REST_Controller::HTTP_UNAUTHORIZED;
             $response['message'] = 'Unauthorised';
+        }
+        echo json_encode($response);
+    }
+    public function booking_details()
+    {
+        $response = array('code' => - 1, 'status' => false, 'message' => '');
+        $validate = validateToken();
+        if ($validate) {
+        }else{
+             $response['code'] = REST_Controller::HTTP_UNAUTHORIZED;
+             $response['message'] = 'Unauthorised';
         }
         echo json_encode($response);
     }
