@@ -687,7 +687,6 @@ class User_api extends REST_Controller {
         }
         echo json_encode($response);
     }
-
     public function extend_place_booking_post()
     {
     	$response = array('code' => - 1, 'status' => false, 'message' => '');
@@ -817,7 +816,6 @@ class User_api extends REST_Controller {
         }
         echo json_encode($response);
     }
-
     public function booking_cancel_post()
     {
     	$response = array('code' => - 1, 'status' => false, 'message' => '');
@@ -876,7 +874,6 @@ class User_api extends REST_Controller {
         }
         echo json_encode($response);
     }
-
     public function delete_user_account_post()
     {
     	$response = array('code' => - 1, 'status' => false, 'message' => '');
@@ -900,7 +897,6 @@ class User_api extends REST_Controller {
         }
         echo json_encode($response);
     }
-
     public function add_place_suggestion()
     {
     	$response = array('code' => - 1, 'status' => false, 'message' => '');
@@ -976,7 +972,6 @@ class User_api extends REST_Controller {
         }
         echo json_encode($response);
     }
-
     public function user_complaint_post()
     {
     	$response = array('code' => - 1, 'status' => false, 'message' => '');
@@ -1017,7 +1012,6 @@ class User_api extends REST_Controller {
         }
         echo json_encode($response);
     }
-
     public function apply_for_vendor_post()
     {
     	$response = array('code' => - 1, 'status' => false, 'message' => '');
@@ -1057,6 +1051,65 @@ class User_api extends REST_Controller {
             $response['message'] = 'Unauthorised';
         }
         echo json_encode($response);
+    }
+   public function place_slot_price_post()
+    {
+    	$response = array('code' => - 1, 'status' => false, 'message' => '');
+    	$validate = validateToken();
+        if ($validate) {
+        	$id = $this->input->post('id');
+        	$from_date = $this->input->post('from_date');
+        	$to_date = $this->input->post('to_date');
+        	$from_time = $this->input->post('from_time');
+        	$to_time = $this->input->post('to_time');
+        	$total_hours = $this->input->post('total_hours');
+        	$fk_vehicle_type_id = $this->input->post('fk_vehicle_type_id');
+        	if(empty($id)){
+        		$response['message'] = "Id is required";
+		    	$response['code'] = 201;
+        	}else if(empty($from_date)){
+        		$response['message'] = "From Date is required";
+		    	$response['code'] = 201;
+        	}else if(empty($to_date)){
+        		$response['message'] = "To Date is required";
+		    	$response['code'] = 201;
+        	}else if(empty($from_time)){
+        		$response['message'] = "From Time is required";
+		    	$response['code'] = 201;
+        	}else if(empty($to_time)){
+        		$response['message'] = "To time is required";
+		    	$response['code'] = 201;
+        	}else if(empty($total_hours)){
+        		$response['message'] = "Total Hours is required";
+		    	$response['code'] = 201;
+        	}else if(empty($fk_vehicle_type_id)){
+        		$response['message'] = "Vehicle Type is required";
+		    	$response['code'] = 201;
+        	}else{
+        		$this->load->model('user_model');
+	
+			    $cost = $this->user_model->get_rate($total_hours,$fk_vehicle_type_id,$id);
+			 //   $slot_info = $this->user_model->get_slot_details($id,$from_date,$to_date,$from_time,$to_time);
+			    $slot_info = $this->model->selectWhereData('tbl_slot_info',array('del_status'=>1,'fk_place_id'=>$id),array('*'),false);
+			    foreach($slot_info as $slot_info_key => $slot_info_row){
+			        $slot_status = $this->user_model->get_slot_details($slot_info_row['id'],$from_date,$to_date,$from_time,$to_time);
+			        $slot_info[ $slot_info_key]['status'] = $slot_status['status'];
+			    }
+			    
+			 //   print_r($data);die;
+				$response['code'] = REST_Controller::HTTP_OK;
+	            $response['status'] = true;
+				$response['message'] = 'success';
+				
+				$response['slot_info'] = $slot_info;
+				$response['price'] = @$cost['cost'];
+        	}        	
+		}else {
+            $response['code'] = REST_Controller::HTTP_UNAUTHORIZED;
+            $response['message'] = 'Unauthorised';
+        }
+        echo json_encode($response);
+
     }
     public function fcm_notification($value='')
     {

@@ -82,7 +82,7 @@ class Verifier_api extends REST_Controller {
         echo json_encode($response);
     }
 
-    public function logout_post()
+    public function logout_verifier_post()
     {
         $response = array('code' => - 1, 'status' => false, 'message' => '');
         $validate = validateToken();
@@ -263,14 +263,66 @@ class Verifier_api extends REST_Controller {
         }
         echo json_encode($response);
     }
-    public function booking_details()
+    public function booking_details_post()
     {
         $response = array('code' => - 1, 'status' => false, 'message' => '');
         $validate = validateToken();
         if ($validate) {
+            $id = $this->input->post('id');
+            if(empty($id)){
+                $response['message'] = "Id is required";
+                $response['code']=201;
+            }else{
+                $this->load->model('user_model');
+                $booking_details = $this->user_model->booking_details_on_id($id);
+
+                $response['code'] = REST_Controller::HTTP_OK;
+                $response['status'] = true;
+                $response['message'] = 'success';
+                $response['booking_details_data'] = $booking_details;
+            }
         }else{
              $response['code'] = REST_Controller::HTTP_UNAUTHORIZED;
              $response['message'] = 'Unauthorised';
+        }
+        echo json_encode($response);
+    }
+    public function get_all_price_details_post()
+    {
+        $response = array('code' => - 1, 'status' => false, 'message' => '');
+        $validate = validateToken();
+        if ($validate) {
+            // $fk_vehicle_type_id = $this->input->post('fk_vehicle_type_id');
+            $fk_place_id = $this->input->post('fk_place_id');
+
+            if(empty($fk_place_id)){
+                $response['message'] = "Place id is required";
+                $response['code'] = 201;
+            }else{
+                $two_wheller_price_slab = $this->model->selectWhereData('tbl_hours_price_slab',array('fk_place_id'=>$fk_place_id,'fk_vehicle_type_id'=>1,'del_status'=>1),array('*'),false);
+                $three_wheller_price_slab = $this->model->selectWhereData('tbl_hours_price_slab',array('fk_place_id'=>$fk_place_id,'fk_vehicle_type_id'=>2,'del_status'=>1),array('*'),false);
+                $four_wheller_price_slab = $this->model->selectWhereData('tbl_hours_price_slab',array('fk_place_id'=>$fk_place_id,'fk_vehicle_type_id'=>3,'del_status'=>1),array('*'),false);
+                $truck_van_wheller_price_slab = $this->model->selectWhereData('tbl_hours_price_slab',array('fk_place_id'=>$fk_place_id,'fk_vehicle_type_id'=>4,'del_status'=>1),array('*'),false);
+
+                $response['code'] = REST_Controller::HTTP_OK;
+                $response['status'] = true;
+                $response['message'] = 'success';
+                if(!empty($two_wheller_price_slab)){
+                    $response['two_wheller_price_slab'] = $two_wheller_price_slab;
+                }
+                if(!empty($three_wheller_price_slab)){
+                       $response['three_wheller_price_slab'] = $three_wheller_price_slab;
+                }
+                if(!empty($four_wheller_price_slab)){
+                       $response['four_wheller_price_slab'] = $four_wheller_price_slab;
+                }
+                if(!empty($truck_van_wheller_price_slab)){
+                       $response['truck_van_wheller_price_slab'] = $truck_van_wheller_price_slab;
+                }
+            }           
+        }else {
+            $response['code'] = REST_Controller::HTTP_UNAUTHORIZED;
+            $response['message'] = 'Unauthorised';
         }
         echo json_encode($response);
     }

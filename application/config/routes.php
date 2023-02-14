@@ -73,10 +73,15 @@ $route['delete-user-account'] = 'user_api/delete_user_account';
 $route['add-place-suggestion'] = 'user_api/add_place_suggestion';
 $route['user-complaint'] = 'user_api/user_complaint';
 $route['apply-for-vendor'] = 'user_api/apply_for_vendor';
+$route['place-slot-price'] = 'user_api/place_slot_price';
 // ============================= Verifier App API=========================================
 
 $route['login-verifier'] = 'verifier_api/login_verifier';
 $route['verify-booking'] = 'verifier_api/verify_booking';
+$route['logout-verifier'] = 'verifier_api/logout_verifier';
+$route['verifier-booking-issue-raised'] = 'verifier_api/verifier_booking_issue_raised';
+$route['booking-list'] = 'verifier_api/booking_list';
+$route['get-all-price-details'] = 'verifier_api/get_all_price_details';
 
 
 // =============Super Admin API=============================
