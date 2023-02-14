@@ -326,8 +326,7 @@ class Verifier_api extends REST_Controller {
         }
         echo json_encode($response);
     }
-
-    public function extend_place_booking_post()
+    public function verifier_extend_place_booking_post()
     {
         $response = array('code' => - 1, 'status' => false, 'message' => '');
         $validate = validateToken();

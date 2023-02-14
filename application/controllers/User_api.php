@@ -138,7 +138,6 @@ class User_api extends REST_Controller {
         }
         echo json_encode($response);
     }
-
     public function login_post()
     {
     	$response = array('code' => - 1, 'status' => false, 'message' => '');
@@ -1052,7 +1051,7 @@ class User_api extends REST_Controller {
         }
         echo json_encode($response);
     }
-   public function place_slot_price_post()
+   	public function place_slot_price_post()
     {
     	$response = array('code' => - 1, 'status' => false, 'message' => '');
     	$validate = validateToken();
