@@ -210,22 +210,25 @@ class User_model extends CI_Model {
 
 	public function get_slot_details($id="",$from_date="",$to_date="",$from_time="",$to_time="")
 	{
+		$from_time = date('H:i:s', strtotime($from_time));
+	   $to_time = date('H:i:s', strtotime($to_time));
 		$this->db->select('tbl_booking.booking_id,tbl_booking_status.fk_status_id,tbl_status_master.status');
 		$this->db->from('tbl_booking');
 		$this->db->join('tbl_booking_status','tbl_booking_status.fk_booking_id=tbl_booking.id','left');
 		$this->db->join('tbl_status_master','tbl_booking_status.fk_status_id=tbl_status_master.id','left');
 		// 		$this->db->join('tbl_extension_booking','tbl_extension_booking.fk_booking_id=tbl_booking.id','left');
 		$this->db->where('tbl_booking.fk_slot_id',$id);
-		$this->db->or_where('tbl_booking.booking_from_date',$from_date);
-		$this->db->or_where('tbl_booking.booking_to_date',$to_date);
-		$this->db->or_where('tbl_booking.booking_from_time',$from_time);
-		$this->db->or_where('tbl_booking.booking_to_time',$to_time);
+		$this->db->where('tbl_booking.booking_from_date',$from_date);
+		$this->db->where('tbl_booking.booking_to_date',$to_date);
+		// $this->db->or_where('tbl_booking.booking_from_time',$from_time);
+		 $this->db->where('tbl_booking.booking_to_time <=',$from_time);
+		
 		// 		$this->db->or_where('tbl_extension_booking.booking_from_date',$from_date);
 		// 		$this->db->or_where('tbl_extension_booking.booking_to_date',$to_date);
 		// 		$this->db->or_where('tbl_extension_booking.booking_from_time',$from_time);
 		// 		$this->db->or_where('tbl_extension_booking.booking_to_time',$to_time);
 		$query = $this->db->get();
-      return $query->row_array();
+      return $query->result_array();
 	}
 	
 }

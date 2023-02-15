@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Feb 08, 2023 at 01:58 PM
+-- Generation Time: Feb 15, 2023 at 02:30 PM
 -- Server version: 10.4.24-MariaDB
 -- PHP Version: 7.4.29
 
@@ -171,6 +171,8 @@ CREATE TABLE `tbl_booking` (
   `fk_slot_id` int(11) DEFAULT NULL,
   `fk_verifier_id` int(11) DEFAULT NULL,
   `fk_booking_type_id` int(11) DEFAULT NULL,
+  `fk_payment_id` int(11) DEFAULT NULL,
+  `fk_verify_booking_status` int(11) NOT NULL DEFAULT 2,
   `booking_from_date` date DEFAULT NULL,
   `booking_to_date` date DEFAULT NULL,
   `booking_from_time` time DEFAULT NULL,
@@ -187,13 +189,18 @@ CREATE TABLE `tbl_booking` (
 -- Dumping data for table `tbl_booking`
 --
 
-INSERT INTO `tbl_booking` (`id`, `booking_id`, `fk_user_id`, `fk_car_id`, `fk_place_id`, `fk_slot_id`, `fk_verifier_id`, `fk_booking_type_id`, `booking_from_date`, `booking_to_date`, `booking_from_time`, `booking_to_time`, `reserve_from_time`, `reserve_to_time`, `total_hours`, `status`, `created_at`, `updated_at`) VALUES
-(1, 'PAB00000001', 7, 1, 436, 476, NULL, 1, '2023-01-20', '2023-01-20', '02:00:00', '04:00:00', '11:42:07', '11:52:07', NULL, 1, '2023-01-20 16:22:07', '2023-01-20 16:22:07'),
-(2, 'PAB00000002', 7, 1, 436, 476, NULL, 1, '2023-01-20', '2023-01-20', '16:32:00', '18:00:00', '11:53:22', '12:03:22', NULL, 1, '2023-01-20 16:33:22', '2023-01-20 16:33:22'),
-(3, 'PAB00000003', 7, 1, 436, 476, NULL, 1, '2023-01-20', '2023-01-20', '16:32:00', '18:00:00', '16:22:00', '18:00:00', NULL, 1, '2023-01-20 16:36:31', '2023-02-02 11:09:10'),
-(4, 'PAB00000004', 7, 1, 436, 476, NULL, 1, '0000-00-00', '2023-01-21', '08:45:00', '10:45:00', '08:35:00', '10:45:00', NULL, 1, '2023-01-21 08:46:26', '2023-02-02 11:09:16'),
-(5, 'PAB00000005', 7, 1, 436, 476, NULL, 1, '2023-02-02', '2023-02-02', '08:45:00', '10:45:00', '08:35:00', '10:45:00', NULL, 1, '2023-02-02 11:04:25', '2023-02-02 11:09:23'),
-(6, 'PAB00000006', 7, 1, 436, 476, NULL, 1, '2023-02-02', '2023-02-02', '11:45:00', '12:45:00', '11:35:00', '12:45:00', 1, 1, '2023-02-02 11:08:55', '2023-02-02 13:30:34');
+INSERT INTO `tbl_booking` (`id`, `booking_id`, `fk_user_id`, `fk_car_id`, `fk_place_id`, `fk_slot_id`, `fk_verifier_id`, `fk_booking_type_id`, `fk_payment_id`, `fk_verify_booking_status`, `booking_from_date`, `booking_to_date`, `booking_from_time`, `booking_to_time`, `reserve_from_time`, `reserve_to_time`, `total_hours`, `status`, `created_at`, `updated_at`) VALUES
+(1, 'PAB00000001', 7, 1, 436, 476, NULL, 1, NULL, 0, '2023-01-20', '2023-01-20', '02:00:00', '04:00:00', '11:42:07', '11:52:07', NULL, 1, '2023-01-20 16:22:07', '2023-01-20 16:22:07'),
+(2, 'PAB00000002', 7, 1, 436, 476, NULL, 1, NULL, 0, '2023-01-20', '2023-01-20', '16:32:00', '18:00:00', '11:53:22', '12:03:22', NULL, 1, '2023-01-20 16:33:22', '2023-01-20 16:33:22'),
+(3, 'PAB00000003', 7, 1, 436, 476, NULL, 1, NULL, 0, '2023-01-20', '2023-01-20', '16:32:00', '18:00:00', '16:22:00', '18:00:00', NULL, 1, '2023-01-20 16:36:31', '2023-02-02 11:09:10'),
+(4, 'PAB00000004', 7, 1, 436, 476, NULL, 1, NULL, 0, '0000-00-00', '2023-01-21', '08:45:00', '10:45:00', '08:35:00', '10:45:00', NULL, 1, '2023-01-21 08:46:26', '2023-02-02 11:09:16'),
+(5, 'PAB00000005', 7, 1, 436, 476, NULL, 1, NULL, 0, '2023-02-02', '2023-02-02', '08:45:00', '10:45:00', '08:35:00', '10:45:00', NULL, 1, '2023-02-02 11:04:25', '2023-02-02 11:09:23'),
+(6, 'PAB00000006', 7, 1, 436, 476, NULL, 1, NULL, 0, '2023-02-02', '2023-02-02', '11:45:00', '12:45:00', '11:35:00', '12:45:00', 1, 1, '2023-02-02 11:08:55', '2023-02-02 13:30:34'),
+(7, 'PAB00000007', 7, 38, 436, 476, NULL, 1, 7, 2, '2023-02-14', '2023-02-14', '11:10:00', '12:10:00', '11:00:00', '12:10:00', 1, 1, '2023-02-15 11:33:03', '2023-02-15 18:18:44'),
+(10, 'PAB00000008', 7, 38, 436, 476, NULL, 1, 10, 1, '2023-02-15', '2023-02-15', '11:10:00', '12:10:00', '11:00:00', '12:10:00', 1, 1, '2023-02-15 11:43:18', '2023-02-15 15:14:26'),
+(11, 'PAB00000009', 7, 11111, 436, 476, NULL, 1, 11, 2, '2023-02-15', '2023-02-15', '12:15:00', '13:10:00', '12:00:00', '13:10:00', 1, 1, '2023-02-15 15:04:56', '2023-02-15 18:03:09'),
+(12, 'PAB00000010', 7, 39, 436, 476, NULL, 1, 12, 2, '2023-02-15', '2023-02-15', '13:15:00', '14:15:00', '13:05:00', '14:15:00', 2, 1, '2023-02-15 15:05:36', '2023-02-15 18:03:10'),
+(13, 'PAB00000011', 7, 38, 436, 477, NULL, 1, 13, 2, '2023-02-15', '2023-02-15', '17:15:00', '18:15:00', '17:05:00', '18:15:00', 1, 1, '2023-02-15 17:12:25', '2023-02-15 18:03:12');
 
 -- --------------------------------------------------------
 
@@ -283,7 +290,14 @@ INSERT INTO `tbl_booking_status` (`id`, `fk_booking_id`, `fk_status_id`, `used_s
 (3, 3, 1, 1, '2023-01-20 16:36:31', '2023-01-20 16:36:31'),
 (4, 4, 1, 1, '2023-01-21 08:46:26', '2023-01-21 08:46:26'),
 (5, 5, 1, 1, '2023-02-02 11:04:25', '2023-02-02 11:04:25'),
-(6, 6, 1, 1, '2023-02-02 11:08:56', '2023-02-02 11:08:56');
+(6, 6, 1, 1, '2023-02-02 11:08:56', '2023-02-02 11:08:56'),
+(7, 7, 1, 1, '2023-02-15 11:33:03', '2023-02-15 11:33:03'),
+(8, 8, 1, 1, '2023-02-15 11:34:04', '2023-02-15 11:34:04'),
+(9, 9, 1, 1, '2023-02-15 11:40:24', '2023-02-15 11:40:24'),
+(10, 10, 1, 1, '2023-02-15 11:43:18', '2023-02-15 11:43:18'),
+(11, 11, 1, 1, '2023-02-15 15:04:56', '2023-02-15 15:04:56'),
+(12, 12, 1, 1, '2023-02-15 15:05:36', '2023-02-15 15:05:36'),
+(13, 13, 1, 1, '2023-02-15 17:12:25', '2023-02-15 17:12:25');
 
 -- --------------------------------------------------------
 
@@ -48644,6 +48658,7 @@ CREATE TABLE `tbl_extension_booking` (
   `fk_booking_id` int(11) DEFAULT NULL,
   `fk_place_id` int(11) DEFAULT NULL,
   `fk_user_id` int(11) DEFAULT NULL,
+  `fk_payment_id` int(11) DEFAULT NULL,
   `booking_ext_replace` varchar(100) DEFAULT NULL COMMENT 'EXT = extend\r\nR = replace',
   `booking_from_date` date DEFAULT NULL,
   `booking_to_date` date DEFAULT NULL,
@@ -48787,7 +48802,7 @@ INSERT INTO `tbl_parking_place` (`id`, `fk_vendor_id`, `fk_country_id`, `fk_stat
 (31, 2, 101, 22, 2707, 'Runwal Anthonia, LBS Road, Mulund ', 'RUNWAL ANTHURIUM, 404, Gemini, Lal Bahadur Shastri Rd, Veena Nagar, Mulund West, Mumbai, Maharashtra 400080', 400080, '19.1815409', '72.9468068', 1, 3, 1, 10, NULL, '0', 1, '2022-12-29 12:32:01', '2022-12-29 12:32:01'),
 (32, 2, 101, 22, 2707, 'Vashi Sector 30A, Tunga Hotel', 'Bhagwan Mahaveer Rd, Sector 30A, Vashi, Navi Mumbai, Maharashtra 400703', 400703, '19.0667377', '72.9987426', 1, 3, 1, 10, NULL, '0', 1, '2022-12-29 12:32:01', '2022-12-29 12:32:01'),
 (33, 2, 101, 22, 2707, 'GN vidya Marg, Near Jimmy Boy Restaurant, Stockholding and SBI Main Branch', '16-29, G Vaidya Rd, Kala Ghoda, Fort, Mumbai, Maharashtra 400001', 400001, '18.9305392', '72.8348386', 1, 3, 1, 10, NULL, '0', 1, '2022-12-29 12:32:01', '2022-12-29 12:32:01'),
-(34, 2, 101, 22, 2707, 'Regal Cinema, Kala Ghoda, Fort', 'WRGJ+5RP, SP Mukherjee Chowk, Kala Ghoda, Fort, Mumbai, Maharashtra 400001', 400001, '18.9254317', '72.8320962', 1, 3, 1, 10, NULL, '0', 1, '2022-12-29 12:32:01', '2022-12-29 12:32:01'),
+(34, 2, 101, 22, 2707, 'Regal Cinema, Kala Ghoda, Fort', 'WRGJ+5RP, SP Mukherjee Chowk, Kala Ghoda, Fort, Mumbai, Maharashtra 400001', 400001, '18.9254317', '72.8320962', 3, 3, 1, 10, 0, '0', 1, '2022-12-29 12:32:01', '2023-02-08 18:43:36'),
 (35, 2, 101, 22, 2707, 'Behind Taj Hotel, Mahakavi Bhushan Marg', 'B K Boman Behram Marg, Apollo Bandar, Colaba, Mumbai, Maharashtra 400001', 400001, '18.9226679', '72.833065', 1, 3, 1, 10, NULL, '0', 1, '2022-12-29 12:32:01', '2022-12-29 12:32:01'),
 (36, 2, 101, 22, 2707, 'Mahindra Office, Opp. Pizza Express, Colaba', 'Chhatrapati Shivaji Maharaj Marg, Apollo Bandar, Colaba, Mumbai, Maharashtra 400001', 400001, '18.9236555', '72.8332248', 1, 3, 1, 10, NULL, '0', 1, '2022-12-29 12:32:01', '2022-12-29 12:32:01'),
 (37, 2, 101, 22, 2707, 'Starbucks, Near Diplomat, Colaba', 'BEST Marg, Apollo Bandar, Colaba, Mumbai, Maharashtra 400001', 400001, '18.9213949', '72.8325339', 1, 3, 1, 10, NULL, '0', 1, '2022-12-29 12:32:01', '2022-12-29 12:32:01'),
@@ -49191,7 +49206,7 @@ INSERT INTO `tbl_parking_place` (`id`, `fk_vendor_id`, `fk_country_id`, `fk_stat
 (433, 2, 101, 22, 2707, 'Bayroute Powai - Free Valet', 'Transocean House Lake Boulevard Road, Hiranandani Business Park, Powai, Mumbai, Maharashtra 400076', 400076, '19.1201698', '72.9070085', 1, 5, 4, 10, NULL, '0', 1, '2022-12-29 12:32:50', '2022-12-29 12:32:50'),
 (434, 2, 101, 22, 2707, 'Lodha Heaven, Near Kopar Road, Dombivli', 'Lodha Heaven, Shastri Nagar, Dombivli West, Maharashtra 421202', 421202, '19.217557907104', '73.085029602051', 1, 3, 3, 10, NULL, '0', 1, '2022-12-29 12:32:50', '2022-12-29 12:32:50'),
 (435, 2, 101, 22, 2707, 'Metro Cinema Pay & Park, Dhobi Talao, New Marine Lines', 'Metro House, Cinema Ln, Dhobi Talao, New Marine Lines, Marine Lines, Mumbai, Maharashtra 400020', 400020, '18.942831039429', '72.828956604004', 1, 3, 3, 10, NULL, '0', 1, '2022-12-29 12:32:50', '2022-12-29 12:32:50'),
-(436, 2, 101, 22, 2707, 'NSE BKCaAA', 'test', 400051, '25.28704728025247', ' 51.51610505350684', 4, 1, 1, 10, 0, '0', 1, '2023-01-12 12:31:29', '2023-01-24 15:37:03'),
+(436, 2, 101, 22, 2707, 'NSE BKCaAA', 'test', 400051, '25.28704728025247', ' 51.51610505350684', 6, 1, 1, 10, 0, '0', 1, '2023-01-12 12:31:29', '2023-02-09 12:06:38'),
 (437, 2, 101, 22, 2707, 'Pay and Park, Near Rolex Shopping center, Opp. BMC Maternity Hospital, Goregaon West', 'Bandu Gore Marg, Kakaji Nagar, Jawahar Nagar, Goregaon West, Mumbai, Maharashtra 400062', 400062, '19.1651211', '72.8472713', 2, 1, 2, 10, 0, '0', 1, '2023-01-25 12:18:45', '2023-01-25 12:18:45');
 
 -- --------------------------------------------------------
@@ -49301,7 +49316,14 @@ INSERT INTO `tbl_payment` (`id`, `fk_booking_id`, `fk_ext_booking_id`, `fk_user_
 (3, 3, NULL, 7, 25, NULL, 25, '2023-01-20 16:36:31', '2023-01-20 16:36:31'),
 (4, 4, NULL, 7, 25, NULL, 25, '2023-01-21 08:46:26', '2023-01-21 08:46:26'),
 (5, 5, NULL, 7, 25, NULL, 25, '2023-02-02 11:04:25', '2023-02-02 11:04:25'),
-(6, 6, NULL, 7, 15, NULL, 15, '2023-02-02 11:08:55', '2023-02-02 13:33:51');
+(6, 6, NULL, 7, 15, NULL, 15, '2023-02-02 11:08:55', '2023-02-02 13:33:51'),
+(7, 7, NULL, 7, NULL, NULL, NULL, '2023-02-15 11:33:03', '2023-02-15 11:33:03'),
+(8, 8, NULL, 7, NULL, NULL, NULL, '2023-02-15 11:34:04', '2023-02-15 11:34:04'),
+(9, 9, NULL, 7, NULL, NULL, NULL, '2023-02-15 11:40:24', '2023-02-15 11:40:24'),
+(10, 10, NULL, 7, NULL, NULL, NULL, '2023-02-15 11:43:18', '2023-02-15 11:43:18'),
+(11, 11, NULL, 7, NULL, NULL, NULL, '2023-02-15 15:04:56', '2023-02-15 15:04:56'),
+(12, 12, NULL, 7, NULL, NULL, NULL, '2023-02-15 15:05:36', '2023-02-15 15:05:36'),
+(13, 13, NULL, 7, NULL, NULL, NULL, '2023-02-15 17:12:25', '2023-02-15 17:12:25');
 
 -- --------------------------------------------------------
 
@@ -49583,7 +49605,10 @@ INSERT INTO `tbl_sensor` (`id`, `fk_place_id`, `fk_slot_id`, `sensor_time`, `bat
 (1, 1, 1, '2023-01-19 10:31:57', 1, 1, '2023-01-19 10:31:57', '2023-01-19 10:33:18'),
 (2, 436, 476, '2023-01-20 13:36:23', 1, 1, '2023-01-20 13:36:23', '2023-01-20 13:36:33'),
 (3, 436, 476, '2023-01-21 08:42:58', 1, 1, '2023-01-21 08:42:58', '2023-01-21 08:42:58'),
-(4, 436, 476, '2023-02-02 11:02:08', 1, 1, '2023-02-02 11:02:08', '2023-02-02 11:02:08');
+(4, 436, 476, '2023-02-02 11:02:08', 1, 1, '2023-02-02 11:02:08', '2023-02-02 11:02:08'),
+(5, 436, 476, '2023-02-14 11:31:50', 1, 1, '2023-02-14 11:31:50', '2023-02-14 11:31:50'),
+(6, 436, 476, '2023-02-15 11:33:25', 1, 1, '2023-02-15 11:33:25', '2023-02-15 11:33:25'),
+(7, 436, 477, '2023-02-15 17:12:21', 1, 1, '2023-02-15 17:12:21', '2023-02-15 17:12:21');
 
 -- --------------------------------------------------------
 
@@ -50085,12 +50110,16 @@ INSERT INTO `tbl_slot_info` (`id`, `fk_place_id`, `slot_name`, `display_id`, `fk
 (474, 434, 'MH-AA474', 'P-1', NULL, 0, 1, 1, '2022-12-29 12:32:50', '2023-01-24 13:57:09'),
 (475, 435, 'MH-AA475', 'P-1', NULL, 0, 1, 1, '2022-12-29 12:32:50', '2023-01-24 13:57:09'),
 (476, 436, 'MH-AA476', 'P-1', 1, 0, 1, 1, '2023-01-12 12:31:29', '2023-01-24 15:28:36'),
-(477, 436, 'MH-AA477', 'P-2', NULL, 0, 1, 1, '2023-01-24 12:53:11', '2023-01-24 15:28:34'),
+(477, 436, 'MH-AA477', 'P-2', 2, 0, 1, 1, '2023-01-24 12:53:11', '2023-02-15 17:11:52'),
 (478, 436, 'MH-AA478', 'P-3', NULL, 0, 1, 1, '2023-01-24 12:53:11', '2023-01-24 15:36:27'),
 (484, 436, 'MH-AA479', 'P-4', NULL, 0, 1, 1, '2023-01-24 13:47:50', '2023-01-24 15:36:25'),
 (485, 436, 'MH-AA480', 'P-5', NULL, 0, 1, 0, '2023-01-24 13:47:50', '2023-01-24 15:37:03'),
 (486, 437, 'MH-AA480', 'P-1', NULL, 0, 1, 1, '2023-01-25 12:18:45', '2023-01-25 12:18:45'),
-(487, 437, 'MH-AA481', 'P-2', NULL, 0, 1, 1, '2023-01-25 12:18:45', '2023-01-25 12:18:45');
+(487, 437, 'MH-AA481', 'P-2', NULL, 0, 1, 1, '2023-01-25 12:18:45', '2023-01-25 12:18:45'),
+(488, 34, 'MH-AA482', 'P-2', NULL, 0, 1, 1, '2023-02-08 18:43:36', '2023-02-08 18:43:36'),
+(489, 34, 'MH-AA483', 'P-3', NULL, 0, 1, 1, '2023-02-08 18:43:36', '2023-02-08 18:43:36'),
+(490, 436, 'MH-AA484', 'P-5', NULL, 0, 1, 1, '2023-02-09 12:06:38', '2023-02-09 12:06:38'),
+(491, 436, 'MH-AA485', 'P-6', NULL, 0, 1, 1, '2023-02-09 12:06:38', '2023-02-09 12:06:38');
 
 -- --------------------------------------------------------
 
@@ -54383,7 +54412,14 @@ INSERT INTO `tbl_user_wallet_history` (`id`, `fk_user_id`, `add_amount`, `deduct
 (9, 7, NULL, 25, 125, 0, 3, NULL, '2023-01-20 16:36:31', '2023-01-21 08:46:26'),
 (10, 7, NULL, 25, 100, 0, 3, NULL, '2023-01-21 08:46:26', '2023-02-02 11:04:25'),
 (11, 7, NULL, 25, 75, 0, 3, NULL, '2023-02-02 11:04:25', '2023-02-02 11:08:55'),
-(12, 7, NULL, 15, 60, 1, 3, NULL, '2023-02-02 11:08:56', '2023-02-02 13:35:17');
+(12, 7, NULL, 15, 60, 0, 3, NULL, '2023-02-02 11:08:56', '2023-02-15 11:33:03'),
+(13, 7, NULL, NULL, 60, 0, 3, NULL, '2023-02-15 11:33:03', '2023-02-15 11:34:04'),
+(14, 7, NULL, NULL, 60, 0, 3, NULL, '2023-02-15 11:34:04', '2023-02-15 11:40:24'),
+(15, 7, NULL, NULL, 60, 0, 3, NULL, '2023-02-15 11:40:24', '2023-02-15 11:43:18'),
+(16, 7, NULL, NULL, 60, 0, 3, NULL, '2023-02-15 11:43:18', '2023-02-15 15:04:56'),
+(17, 7, NULL, NULL, 60, 0, 3, NULL, '2023-02-15 15:04:56', '2023-02-15 15:05:36'),
+(18, 7, NULL, NULL, 60, 0, 3, NULL, '2023-02-15 15:05:36', '2023-02-15 17:12:25'),
+(19, 7, NULL, NULL, 60, 1, 3, NULL, '2023-02-15 17:12:25', '2023-02-15 17:12:25');
 
 -- --------------------------------------------------------
 
@@ -54605,7 +54641,9 @@ ALTER TABLE `tbl_extension_booking`
   ADD KEY `booking_from_time` (`booking_from_time`),
   ADD KEY `booking_to_time` (`booking_to_time`),
   ADD KEY `reserve_from_time` (`reserve_from_time`),
-  ADD KEY `reserve_to_time` (`reserve_to_time`);
+  ADD KEY `reserve_to_time` (`reserve_to_time`),
+  ADD KEY `fk_place_id` (`fk_place_id`),
+  ADD KEY `fk_payment_id` (`fk_payment_id`);
 
 --
 -- Indexes for table `tbl_hours_price_slab`
@@ -54915,7 +54953,7 @@ ALTER TABLE `tbl_bonus`
 -- AUTO_INCREMENT for table `tbl_booking`
 --
 ALTER TABLE `tbl_booking`
-  MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
+  MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=14;
 
 --
 -- AUTO_INCREMENT for table `tbl_booking_checkout_status`
@@ -54939,7 +54977,7 @@ ALTER TABLE `tbl_booking_check_type`
 -- AUTO_INCREMENT for table `tbl_booking_status`
 --
 ALTER TABLE `tbl_booking_status`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=14;
 
 --
 -- AUTO_INCREMENT for table `tbl_booking_type`
@@ -55023,7 +55061,7 @@ ALTER TABLE `tbl_parking_price_type`
 -- AUTO_INCREMENT for table `tbl_payment`
 --
 ALTER TABLE `tbl_payment`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=14;
 
 --
 -- AUTO_INCREMENT for table `tbl_payment_type`
@@ -55083,13 +55121,13 @@ ALTER TABLE `tbl_pos_verifier_logged_in`
 -- AUTO_INCREMENT for table `tbl_sensor`
 --
 ALTER TABLE `tbl_sensor`
-  MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
+  MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
 
 --
 -- AUTO_INCREMENT for table `tbl_slot_info`
 --
 ALTER TABLE `tbl_slot_info`
-  MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=488;
+  MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=492;
 
 --
 -- AUTO_INCREMENT for table `tbl_states`
@@ -55137,7 +55175,7 @@ ALTER TABLE `tbl_user_wallet`
 -- AUTO_INCREMENT for table `tbl_user_wallet_history`
 --
 ALTER TABLE `tbl_user_wallet_history`
-  MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=13;
+  MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=20;
 
 --
 -- AUTO_INCREMENT for table `tbl_vehicle_type`

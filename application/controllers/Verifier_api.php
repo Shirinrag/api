@@ -151,6 +151,7 @@ class Verifier_api extends REST_Controller {
                  );
                  $this->model->insertData('tbl_booking_check_in_out',$check_in_booking);
                  
+                 $this->model->updateData('tbl_booking',array('fk_verify_booking_status'=>1),array('id'=>$booking_id));
                  $response['code'] = REST_Controller::HTTP_OK;
                  $response['status'] = true;
                  $response['message'] = "Your Booking'". $booking_unique_id['booking_id'] ."' is successfully verified by our Guid. '.'🚗😃 ";
