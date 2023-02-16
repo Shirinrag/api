@@ -26,5 +26,25 @@ function hits($link,$request,$token='',$type = 1)
         curl_close($ch);
         return $response1;
     }
+
+    function razor_pay($payment_id, $data) {
+        $url = 'https://api.razorpay.com/v1/orders';
+        // $razorpay_live_key = "rzp_live_go5tICS12in2BY";
+        //             $razorpay_test_key = "rzp_test_25fQbysZaqmc6L";
+        $key_id = "IOckcq2jVhfmvm";
+        $key_secret = "rzp_test_25fQbysZaqmc6L";
+        $params = http_build_query($data);
+        //cURL Request
+        $ch = curl_init();
+        //set the url, number of POST vars, POST data
+        curl_setopt($ch, CURLOPT_URL, $url);
+        curl_setopt($ch, CURLOPT_USERPWD, $key_id . ':' . $key_secret);
+        curl_setopt($ch, CURLOPT_TIMEOUT, 60);
+        curl_setopt($ch, CURLOPT_POST, 1);
+        curl_setopt($ch, CURLOPT_POSTFIELDS, $params);
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+        curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, true);
+        return $ch;
+    }
 } 
 

@@ -334,7 +334,7 @@ class Pos_api extends REST_Controller {
             $price = $this->input->post('price');
             $latitude = $this->input->post('latitude');
             $longitude = $this->input->post('longitude');
-            $Mac_address = $this->input->post('Mac_address');
+            // $Mac_address = $this->input->post('Mac_address');
             $book_status = $this->input->post('book_status');
             $device_id = $this->input->post('device_id');
 
@@ -387,9 +387,6 @@ class Pos_api extends REST_Controller {
             }else if(empty($book_status)){
                 $response['message'] ="Check-in Status is required";
                 $response['code'] =201;
-            }else if(empty($Mac_address)){
-                $response['message'] ="Mac Address is required";
-                $response['code'] =201;
             }else if(empty($device_id)){
                 $response['message'] ="Device is required";
                 $response['code'] =201;
@@ -413,7 +410,6 @@ class Pos_api extends REST_Controller {
                     'latitude'=>$latitude,
                     'longitude'=>$longitude,
                     'book_status'=>$book_status,
-                    'Mac_address' =>$Mac_address,
                 );
                 $this->model->insertData('tbl_pos_booking',$curl_data);
                 $response['code'] = REST_Controller::HTTP_OK;
@@ -450,7 +446,6 @@ class Pos_api extends REST_Controller {
             $price = $this->input->post('price');
             $latitude = $this->input->post('latitude');
             $longitude = $this->input->post('longitude');
-            $Mac_address = $this->input->post('Mac_address');
             $book_status = $this->input->post('book_status');
             $device_id = $this->input->post('device_id');
 
@@ -524,9 +519,6 @@ class Pos_api extends REST_Controller {
             }else if(empty($book_status)){
                 $response['message'] ="Check-in Status is required";
                 $response['code'] =201;
-            }else if(empty($Mac_address)){
-                $response['message'] ="Mac Address is required";
-                $response['code'] =201;
             }else if(empty($device_id)){
                 $response['message'] ="Device is required";
                 $response['code'] =201;
@@ -549,8 +541,7 @@ class Pos_api extends REST_Controller {
                     'price'=>$price,
                     'latitude'=>$latitude,
                     'longitude'=>$longitude,
-                    'book_status'=>$book_status,
-                    'Mac_address' =>$Mac_address,
+                    'book_status'=>$book_status,                    
                 );
                 $this->model->insertData('tbl_pos_booking',$curl_data);
                 $response['code'] = REST_Controller::HTTP_OK;

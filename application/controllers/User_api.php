@@ -1052,11 +1052,10 @@ class User_api extends REST_Controller {
         }
         echo json_encode($response);
     }
-   public function place_slot_price_post()
+   	public function place_slot_price_post()
     {
     	$response = array('code' => - 1, 'status' => false, 'message' => '');
     	$validate = validateToken();
-        // $validate = true;
         if ($validate) {
 	        $id = $this->input->post('id');
 	        $from_date = $this->input->post('from_date');
@@ -1091,57 +1090,47 @@ class User_api extends REST_Controller {
 	        	$cost = $this->user_model->get_rate($total_hours,$fk_vehicle_type_id,$id);
 	            $from_time = date('H:i:s', strtotime($from_time));
 	            $to_time = date('H:i:s', strtotime($to_time));
-				//   $slot_info = $this->user_model->get_slot_details($id,$from_date,$to_date,$from_time,$to_time);
 				$available_slots = [];
 				$reserved_slots = [];
 				$not_working_slots = [];
 				$parked_slots = [];
+				$working_slots_data_1 = [];
+				$working_slots_data = $this->model->selectWhereData('tbl_sensor',array('fk_place_id'=>$id),array('fk_slot_id'),false,array('id','DESC'),'fk_slot_id');
+				foreach ($working_slots_data as $working_slots_data_key => $working_slots_data_row) {
+					$working_slots_data_1[] = $working_slots_data_row['fk_slot_id'];
+				}
+				$working_slots_data_1 = array_unique($working_slots_data_1,TRUE);
 	   			$slot_info = $this->model->selectWhereData('tbl_slot_info',array('del_status'=>1,'fk_place_id'=>$id),array('*'),false);
 	   			foreach($slot_info as $slot_info_key => $slot_info_row){
-	       			// $slot_status = $this->user_model->get_slot_details($slot_info_row['id'],$from_date,$to_date,$from_time,$to_time);
-	       			// $slot_info[ $slot_info_key]['status'] = $slot_status['status'];
-
-	       			$fk_verify_booking_status = $this->model->selectWhereData('tbl_booking',array('fk_verify_booking_status'=>1,'fk_slot_id'=>$slot_info_row['id'],'booking_from_date'=>$from_date,'booking_to_date'=>$to_date,'booking_to_time'=>$from_time),array('fk_verify_booking_status'));
-
-	       			$fk_verify_booking_status1 = $this->model->selectWhereData('tbl_booking',array('fk_verify_booking_status'=>2,'fk_slot_id'=>$slot_info_row['id'],'booking_from_date'=>$from_date,'booking_to_date'=>$to_date,'booking_to_time'=>$from_time),array('fk_verify_booking_status'));
+	 
+	       			$slots_status = $this->model->selectWhereData('tbl_booking',array('fk_slot_id'=>$slot_info_row['id'],'booking_from_date'=>$from_date,'booking_to_date'=>$to_date,'booking_to_time'=>$from_time),array('fk_verify_booking_status'));      			
 	       			
-	       			$available_slots_status = $this->model->selectWhereData('tbl_booking',array('fk_verify_booking_status != '=>2,'fk_verify_booking_status != '=>1,'fk_slot_id'=>$slot_info_row['id'],'booking_from_date'=>$from_date,'booking_to_date'=>$to_date,'booking_to_time'=>$from_time),array('fk_verify_booking_status'));
-	       			
-	       			
-	       			
-	       			$slot_info[$slot_info_key]['fk_verify_booking_status'] = $fk_verify_booking_status['fk_verify_booking_status'];	
+	       			if($slots_status['fk_verify_booking_status']==1){
+	       				$slot_info[$slot_info_key]['fk_verify_booking_status'] = $slots_status['fk_verify_booking_status'];	
 
-	       			if($fk_verify_booking_status['fk_verify_booking_status']){
-
-	       				$slot_info[$slot_info_key]['fk_verify_booking_status'] = $fk_verify_booking_status['fk_verify_booking_status'];	
-
-	       				$slot_info[$slot_info_key]['color_hexcode'] = "#FF0000";
+	       				// $slot_info[$slot_info_key]['color_hexcode'] = "#FF0000";
  	       				$parked_slots[] = $slot_info[$slot_info_key];
-	       			} 
+	       			}else if($slots_status['fk_verify_booking_status']==2){
+	       				$slot_info[$slot_info_key]['fk_verify_booking_status'] = $slots_status['fk_verify_booking_status'];	
 
-	       			if($fk_verify_booking_status1['fk_verify_booking_status']){
-	       				$slot_info[$slot_info_key]['fk_verify_booking_status'] = $fk_verify_booking_status1['fk_verify_booking_status'];	
-
-	       				$slot_info[$slot_info_key]['color_hexcode'] = "#FFA500";
+	       				// $slot_info[$slot_info_key]['color_hexcode'] = "#FFA500";
 	       				$reserved_slots[] = $slot_info[$slot_info_key];
-	       			}
-	       			if(empty($available_slots_status['fk_verify_booking_status'])){
-
-	       				$slot_info[$slot_info_key]['fk_verify_booking_status'] = $available_slots_status['fk_verify_booking_status'];	
-
-	       				$slot_info[$slot_info_key]['color_hexcode'] = "#00FF00";
+	       			}else if(empty($slots_status['fk_verify_booking_status']) && in_array($slot_info[$slot_info_key]['id'],$working_slots_data_1)){
+	       				// $slot_info[$slot_info_key]['color_hexcode'] = "#00FF00";
 	       				$available_slots[] = $slot_info[$slot_info_key];
-	       			}
-
-	   			}   						
+	       			} else {
+	       				// $slot_info[$slot_info_key]['color_hexcode'] = "#808080";
+	       				$not_working_slots[] = $slot_info[$slot_info_key];
+	       			}      			
+	   			}   	
 
 				$response['code'] = REST_Controller::HTTP_OK;
 				$response['status'] = true;
 				$response['message'] = 'success';
-
 				$response['parked_slots'] = $parked_slots;
 				$response['reserved_slots'] = $reserved_slots;
 				$response['available_slots'] = $available_slots;
+				$response['not_working_slots'] = $not_working_slots;
 				$response['price'] = @$cost['cost'];
         	}        
 		}else {
