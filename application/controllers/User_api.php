@@ -332,7 +332,7 @@ class User_api extends REST_Controller {
 		    		$response['message'] = "User Id is required";
 		    		$response['code'] = 201;
 		    	}else{
-		    		$car_list = $this->model->selectWhereData('tbl_user_car_details',array('fk_user_id'=>$user_id,'status'=>1),array('id','car_number'),false);
+		    		$car_list = $this->model->selectWhereData('tbl_user_car_details',array('fk_user_id'=>$user_id,'status'=>1),array('id','car_number','fk_vehicle_type_id'),false);
 		    		if(!empty($car_list)){
 		    			$response['code'] = REST_Controller::HTTP_OK;
                         $response['status'] = true;
@@ -1138,9 +1138,20 @@ class User_api extends REST_Controller {
             $response['message'] = 'Unauthorised';
         }
         echo json_encode($response);
-
     }
-
+    public function user_wallet_rechange_post()
+    {
+    	$response = array('code' => - 1, 'status' => false, 'message' => '');
+    	$validate = validateToken();
+        if ($validate) {
+	        $user_id = $this->input->post('user_id');
+	        $amount = $this->input->post('amount');
+	    }else{
+	    	$response['code'] = REST_Controller::HTTP_UNAUTHORIZED;
+            $response['message'] = 'Unauthorised';
+	    }
+	     echo json_encode($response);
+    }
     public function fcm_notification($value='')
     {
     	define('API_ACCESS_KEY','AAAAVmWHGa8:APA91bHuVMV-6txudhc8FXcln825nV2rsxPO7o89mkvCoHFjxfdwyLNCKeDHnU6ZT8eh3GOHDBflGNUolTb0J9MpQvcsgRiAKjx5NHnlJRUzLeQHOKLkeYnGXJ9etQjHZKMGNunrxU-1');

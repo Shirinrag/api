@@ -27,10 +27,8 @@ function hits($link,$request,$token='',$type = 1)
         return $response1;
     }
 
-    function razor_pay($payment_id, $data) {
+    function razor_pay($data) {
         $url = 'https://api.razorpay.com/v1/orders';
-        // $razorpay_live_key = "rzp_live_go5tICS12in2BY";
-        //             $razorpay_test_key = "rzp_test_25fQbysZaqmc6L";
         $key_id = "IOckcq2jVhfmvm";
         $key_secret = "rzp_test_25fQbysZaqmc6L";
         $params = http_build_query($data);
