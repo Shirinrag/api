@@ -74,6 +74,7 @@ $route['add-place-suggestion'] = 'user_api/add_place_suggestion';
 $route['user-complaint'] = 'user_api/user_complaint';
 $route['apply-for-vendor'] = 'user_api/apply_for_vendor';
 $route['place-slot-price'] = 'user_api/place_slot_price';
+$route['get-extend-booking-price'] = 'user_api/get_extend_booking_price';
 // ============================= Verifier App API=========================================
 
 $route['login-verifier'] = 'verifier_api/login_verifier';

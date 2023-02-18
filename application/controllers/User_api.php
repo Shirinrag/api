@@ -1139,6 +1139,38 @@ class User_api extends REST_Controller {
         }
         echo json_encode($response);
     }
+    public function get_extend_booking_price_post()
+    {
+    	$response = array('code' => - 1, 'status' => false, 'message' => '');
+    	$validate = validateToken();
+        if ($validate) {
+	        $place_id = $this->input->post('place_id');
+	        $total_hours = $this->input->post('total_hours');
+	        $user_id = $this->input->post('user_id');
+	        if(empty($place_id)){
+	        	$response['message'] = "Place Id is required";
+	    		$response['code'] = 201;
+	        }else if(empty($total_hours)){
+	        	$response['message'] = "total_hours is required";
+	    		$response['code'] = 201;
+	        }else if(empty($user_id)){
+	        	$response['message'] = "User Id is required";
+	    		$response['code'] = 201;
+	        }else{
+	        	$this->load->model('user_model');
+	        	$vehicle_type_id = $this->model->selectWhereData('tbl_user_car_details',array('fk_user_id'=>$user_id),array('fk_vehicle_type_id'));
+	        	$cost = $this->user_model->get_rate($total_hours,$vehicle_type_id['fk_vehicle_type_id'],$fk_place_id);
+	        	$response['code'] = REST_Controller::HTTP_OK;
+				$response['status'] = true;
+				$response['message'] = 'success';
+				$response['cost'] = $cost;
+	        }
+	    }else{
+	    	$response['code'] = REST_Controller::HTTP_UNAUTHORIZED;
+            $response['message'] = 'Unauthorised';
+	    }
+	     echo json_encode($response);
+    }
     public function user_wallet_rechange_post()
     {
     	$response = array('code' => - 1, 'status' => false, 'message' => '');
