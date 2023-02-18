@@ -82,6 +82,8 @@ $route['logout-verifier'] = 'verifier_api/logout_verifier';
 $route['verifier-booking-issue-raised'] = 'verifier_api/verifier_booking_issue_raised';
 $route['booking-list'] = 'verifier_api/booking_list';
 $route['get-all-price-details'] = 'verifier_api/get_all_price_details';
+$route['verifier-dashboard'] = 'verifier_api/verifier_dashboard';
+$route['not-verified-and-followup-booking'] = 'verifier_api/not_verified_and_followup_booking';
 
 
 // =============Super Admin API=============================

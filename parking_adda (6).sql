@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Feb 15, 2023 at 02:30 PM
+-- Generation Time: Feb 18, 2023 at 11:40 AM
 -- Server version: 10.4.24-MariaDB
 -- PHP Version: 7.4.29
 
@@ -211,6 +211,7 @@ INSERT INTO `tbl_booking` (`id`, `booking_id`, `fk_user_id`, `fk_car_id`, `fk_pl
 CREATE TABLE `tbl_booking_checkout_status` (
   `id` bigint(20) NOT NULL,
   `checkout_status` text DEFAULT NULL,
+  `status` int(11) NOT NULL DEFAULT 1,
   `created_at` datetime NOT NULL DEFAULT current_timestamp(),
   `updated_at` datetime NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
@@ -219,11 +220,11 @@ CREATE TABLE `tbl_booking_checkout_status` (
 -- Dumping data for table `tbl_booking_checkout_status`
 --
 
-INSERT INTO `tbl_booking_checkout_status` (`id`, `checkout_status`, `created_at`, `updated_at`) VALUES
-(1, 'No Action', '2023-02-07 15:36:52', '2023-02-07 15:36:52'),
-(2, 'Early', '2023-02-07 15:36:52', '2023-02-07 15:36:52'),
-(3, 'Regular', '2023-02-07 15:37:10', '2023-02-07 15:37:10'),
-(4, 'Late', '2023-02-07 15:37:10', '2023-02-07 15:37:10');
+INSERT INTO `tbl_booking_checkout_status` (`id`, `checkout_status`, `status`, `created_at`, `updated_at`) VALUES
+(1, 'No Action', 0, '2023-02-07 15:36:52', '2023-02-18 13:56:36'),
+(2, 'Early', 1, '2023-02-07 15:36:52', '2023-02-07 15:36:52'),
+(3, 'Regular', 1, '2023-02-07 15:37:10', '2023-02-07 15:37:10'),
+(4, 'Late', 1, '2023-02-07 15:37:10', '2023-02-07 15:37:10');
 
 -- --------------------------------------------------------
 
@@ -48645,7 +48646,8 @@ CREATE TABLE `tbl_duty_allocation` (
 INSERT INTO `tbl_duty_allocation` (`id`, `fk_place_id`, `fk_verifier_id`, `date`, `del_status`, `created_at`, `updated_at`) VALUES
 (1, 1, 3, '26/12/2022', 0, '2022-12-26 11:42:47', '2022-12-26 13:46:19'),
 (2, 1, 3, '27/12/2022', 1, '2022-12-26 11:42:47', '2022-12-26 11:42:47'),
-(3, 1, 3, '28/12/2022', 1, '2022-12-26 11:42:47', '2022-12-26 11:42:47');
+(3, 1, 3, '28/12/2022', 1, '2022-12-26 11:42:47', '2022-12-26 11:42:47'),
+(4, 1, 3, '18/02/2023', 1, '2023-02-18 12:42:37', '2023-02-18 12:42:37');
 
 -- --------------------------------------------------------
 
@@ -55013,7 +55015,7 @@ ALTER TABLE `tbl_device`
 -- AUTO_INCREMENT for table `tbl_duty_allocation`
 --
 ALTER TABLE `tbl_duty_allocation`
-  MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+  MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
 
 --
 -- AUTO_INCREMENT for table `tbl_extension_booking`

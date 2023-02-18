@@ -110,7 +110,6 @@ class Verifier_api extends REST_Controller {
         }
         echo json_encode($response);
     }
-
     public function verify_booking_post()
     {
         $response = array('code' => - 1, 'status' => false, 'message' => '');
@@ -162,7 +161,6 @@ class Verifier_api extends REST_Controller {
         }
         echo json_encode($response);
     }
-
     public function verifier_booking_issue_raised_post()
     {
         $response = array('code' => - 1, 'status' => false, 'message' => '');
@@ -459,6 +457,101 @@ class Verifier_api extends REST_Controller {
             $response['message'] = 'Unauthorised';
         }
         echo json_encode($response);
+    }
+    public function verifier_dashboard_post()
+    {
+        $response = array('code' => - 1, 'status' => false, 'message' => '');
+        $validate = validateToken();
+        if ($validate) {
+            $verifier_id = $this->input->post('verifier_id');
+            $user_type = $this->input->post('user_type');
+            $place_id = $this->input->post('place_id');
+            if(empty($verifier_id)){
+                $response['message'] = "Verifier Id is required";
+                $response['code'] = 201;
+            }else if(empty($user_type)){
+                $response['message'] = "Role Id is required";
+                $response['code'] = 201;
+            }else{
+                $this->load->model('verifier_model');
+                $place_details = $this->verifier_model->place_details($verifier_id,$place_id,$user_type);
+                $checkout_status = $this->model->selectWhereData('tbl_booking_checkout_status',array('status'=>1),array('id','checkout_status'),false);
+                $response['code'] = REST_Controller::HTTP_OK;
+                $response['status'] = true;
+                $response['message'] = 'success';
+                $response['place_details'] = $place_details;
+                $response['checkout_status'] = $checkout_status;
+            }
+
+        }else{
+             $response['code'] = REST_Controller::HTTP_UNAUTHORIZED;
+             $response['message'] = 'Unauthorised';
+        }
+        echo json_encode($response);
+    }
+    public function not_verified_and_followup_booking_post()
+    {
+        $response = array('code' => - 1, 'status' => false, 'message' => '');
+        $validate = validateToken();
+        if ($validate) {
+            $verifier_id = $this->input->post('verifier_id');
+            // $user_type = $this->input->post('user_type');
+            $place_id = $this->input->post('place_id');
+            if(empty($verifier_id)){
+                $response['message'] = "Verifier Id is required";
+                $response['code'] = 201;
+            }else if(empty($place_id)){
+                $response['message'] = "Place Id is required";
+                $response['code'] = 201;
+            }else{
+                $this->load->model('verifier_model');
+                $not_verified_booking_list = $this->verifier_model->not_verified_booking_list($verifier_id,$place_id);
+                $response['code'] = REST_Controller::HTTP_OK;
+                $response['status'] = true;
+                $response['message'] = 'success';
+                $response['not_verified_booking_list'] = $not_verified_booking_list;
+            }
+
+        }else{
+             $response['code'] = REST_Controller::HTTP_UNAUTHORIZED;
+             $response['message'] = 'Unauthorised';
+        }
+        echo json_encode($response);
+    }
+
+    public function check_out_booking_post()
+    {
+        $response = array('code' => - 1, 'status' => false, 'message' => '');
+        $validate = validateToken();
+        if ($validate) {
+            $verifier_id = $this->input->post('verifier_id');
+            $checkout_status = $this->input->post('checkout_status');
+            $id = $this->input->post('id');
+            if(empty($verifier_id)){
+                $response['message'] = "Verifier Id is required";
+                $response['code'] = 201;
+            }else if(empty($id)){
+                $response['message'] = "Id is required";
+                $response['code'] = 201;
+            }else if(empty($checkout_status)){
+                $response['message'] = "Checkout Status is required";
+                $response['code'] = 201;
+            }else{
+                $this->load->model('verifier_model');
+                $place_details = $this->verifier_model->place_details($verifier_id,$place_id,$user_type);
+                $checkout_status = $this->model->selectWhereData('tbl_booking_checkout_status',array('status'=>1),array('id','checkout_status'),false);
+                $response['code'] = REST_Controller::HTTP_OK;
+                $response['status'] = true;
+                $response['message'] = 'success';
+                $response['place_details'] = $place_details;
+                $response['checkout_status'] = $checkout_status;
+            }
+
+        }else{
+             $response['code'] = REST_Controller::HTTP_UNAUTHORIZED;
+             $response['message'] = 'Unauthorised';
+        }
+        echo json_encode($response);   
     }
    
 }
