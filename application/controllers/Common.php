@@ -44,7 +44,6 @@ class Common extends REST_Controller {
                 $referral_code = $this->input->post('referral_code');
                 $device_type = $this->input->post('device_type');
                 $password = $this->input->post('password');
-
                 if(empty($first_name)){
                     $response['message'] = "First Name is required";
                     $response['code'] = 201;
@@ -55,47 +54,46 @@ class Common extends REST_Controller {
                     $response['message'] = "Phone No is required";
                     $response['code'] = 201;
                 }else{
-                            $check_user_count = $this->model->CountWhereRecord('pa_users', array('phoneNo'=>$phone_no,'isActive'=>1));
-                            if($check_user_count > 0){
-                                $response['code'] = 201;
-                                $response['status'] = false;
-                                $response['message'] = 'Contact No is Already exist.';                     
-                            }else{
-                                $user_type = $this->model->selectWhereData('tbl_user_type',array('user_type'=>"Super Admin"),array('id'));
-                                $curl_data =  array(
-                                    'firstName' => $first_name,
-                                    'lastName' =>  $last_name,
-                                    'email' => $email,
-                                    'phoneNo' => $phone_no,
-                                    'address' => $address,
-                                    'image' => $profile_image,
-                                    'referal_code' => $referral_code,
-                                    'userName' => $first_name.$last_name,
-                                    'device_type' =>$device_type,
-                                    // 'notifn_topic' => $phone_no."PAUser",
-                                    'user_type'=>$user_type['id']
-                                );
-                                $inserted_id = $this->model->insertData('pa_users',$curl_data);
-                                if(!empty($car_no)){
-                                    $insert_car_data = array(
-                                        'fk_user_id' =>$inserted_id,
-                                        'car_number' =>$car_no
-                                    );
-                                    $this->model->insertData('tbl_user_car_details',$insert_car_data);
-                                }                           
-                                $bonus_amount = $this->model->selectWhereData('tbl_bonus',array('status'=>'1'),array('bonus_amount'));
-                                $user_wallet_data = array(
-                                    'fk_user_id'=>$inserted_id,
-                                    'amount'=>$bonus_amount['bonus_amount']
-                                );
-                                $this->model->insertData('tbl_user_wallet',$user_wallet_data);
-                                $user_data = $this->model->selectWhereData('pa_users',array('id'=>$inserted_id),array('*'));
-                                $response['code'] = REST_Controller::HTTP_OK;
-                                $response['status'] = true;
-                                $response['message'] = 'Register Successfully';
-                                $response['data'] = $user_data;
-                            }
-
+                    $check_user_count = $this->model->CountWhereRecord('pa_users', array('phoneNo'=>$phone_no,'isActive'=>1));
+                    if($check_user_count > 0){
+                        $response['code'] = 201;
+                        $response['status'] = false;
+                        $response['message'] = 'Contact No is Already exist.';                     
+                    }else{
+                        $user_type = $this->model->selectWhereData('tbl_user_type',array('user_type'=>"Super Admin"),array('id'));
+                        $curl_data =  array(
+                            'firstName' => $first_name,
+                            'lastName' =>  $last_name,
+                            'email' => $email,
+                            'phoneNo' => $phone_no,
+                            'address' => $address,
+                            'image' => $profile_image,
+                            'referal_code' => $referral_code,
+                            'userName' => $first_name.$last_name,
+                            'device_type' =>$device_type,
+                            // 'notifn_topic' => $phone_no."PAUser",
+                            'user_type'=>$user_type['id']
+                        );
+                        $inserted_id = $this->model->insertData('pa_users',$curl_data);
+                        if(!empty($car_no)){
+                            $insert_car_data = array(
+                                'fk_user_id' =>$inserted_id,
+                                'car_number' =>$car_no
+                            );
+                            $this->model->insertData('tbl_user_car_details',$insert_car_data);
+                        }                           
+                        $bonus_amount = $this->model->selectWhereData('tbl_bonus',array('status'=>'1'),array('bonus_amount'));
+                        $user_wallet_data = array(
+                            'fk_user_id'=>$inserted_id,
+                            'amount'=>$bonus_amount['bonus_amount']
+                        );
+                        $this->model->insertData('tbl_user_wallet',$user_wallet_data);
+                        $user_data = $this->model->selectWhereData('pa_users',array('id'=>$inserted_id),array('*'));
+                        $response['code'] = REST_Controller::HTTP_OK;
+                        $response['status'] = true;
+                        $response['message'] = 'Register Successfully';
+                        $response['data'] = $user_data;
+                    }
                 }
         }else {
             $response['code'] = REST_Controller::HTTP_UNAUTHORIZED;
@@ -103,7 +101,6 @@ class Common extends REST_Controller {
         }
         echo json_encode($response);
     }
-
     public function login_data_post()
     {
         $response = array('code' => - 1, 'status' => false, 'message' => '');
@@ -149,7 +146,6 @@ class Common extends REST_Controller {
         $validate = validateToken();
         if ($validate) {
             $user_type = $this->model->selectWhereData('tbl_user_type',array('status'=>1),array('id','user_type'),false);
-
             $response['code'] = REST_Controller::HTTP_OK;
             $response['status'] = true;
             $response['message'] = 'success';
@@ -171,7 +167,6 @@ class Common extends REST_Controller {
             $price_type = $this->model->selectWhereData('tbl_parking_price_type',array('status'=>1),array('id','price_type'),false);
             $vendor = $this->model->selectWhereData('pa_users',array('isActive'=>1,'del_status'=>1,'user_type'=>5),array('id','firstName','lastName'),false);
             $vehicle_data = $this->model->selectWhereData('tbl_vehicle_type',array('del_status'=>1,'status'=>1),array('id','vehicle_type'),false);
-
             $response['code'] = REST_Controller::HTTP_OK;
             $response['status'] = true;
             $response['message'] = 'success';
@@ -193,7 +188,6 @@ class Common extends REST_Controller {
         if ($validate) {
             $country_id = $this->input->post('country_id');
             $state = $this->model->selectWhereData('tbl_states',array('status'=>1,'country_id'=>$country_id),array('id','name'),false);
-
             $response['code'] = REST_Controller::HTTP_OK;
             $response['status'] = true;
             $response['message'] = 'success';
@@ -211,7 +205,6 @@ class Common extends REST_Controller {
         if ($validate) {
             $state_id = $this->input->post('state_id');
             $city_data = $this->model->selectWhereData('tbl_cities',array('status'=>1,'state_id'=>$state_id),array('id','name'),false);
-
             $response['code'] = REST_Controller::HTTP_OK;
             $response['status'] = true;
             $response['message'] = 'success';
@@ -222,5 +215,4 @@ class Common extends REST_Controller {
         }
         echo json_encode($response);
     }
-
 }

@@ -75,8 +75,9 @@ $route['user-complaint'] = 'user_api/user_complaint';
 $route['apply-for-vendor'] = 'user_api/apply_for_vendor';
 $route['place-slot-price'] = 'user_api/place_slot_price';
 $route['get-extend-booking-price'] = 'user_api/get_extend_booking_price';
-// ============================= Verifier App API=========================================
-
+$route['user-wallet-create-order'] = 'user_api/user_wallet_create_order';
+$route['check-payment-status-order-id'] = 'user_api/check_payment_status_order_id';
+// ============================= Verifier App API=====================================
 $route['login-verifier'] = 'verifier_api/login_verifier';
 $route['verify-booking'] = 'verifier_api/verify_booking';
 $route['logout-verifier'] = 'verifier_api/logout_verifier';
@@ -85,8 +86,10 @@ $route['booking-list'] = 'verifier_api/booking_list';
 $route['get-all-price-details'] = 'verifier_api/get_all_price_details';
 $route['verifier-dashboard'] = 'verifier_api/verifier_dashboard';
 $route['not-verified-and-followup-booking'] = 'verifier_api/not_verified_and_followup_booking';
-
-
+$route['check-out-booking'] = 'verifier_api/check_out_booking';
+$route['booking-details'] = 'verifier_api/booking_details';
+$route['verifier-extend-place-booking'] = 'verifier_api/verifier_extend_place_booking';
+$route['booking-confirmation'] = 'verifier_api/booking_confirmation';
 // =============Super Admin API=============================
 $route['loggedin-data'] = 'common/login_data';
 $route['get-all-user-type'] = 'common/get_all_user_type';
@@ -167,7 +170,6 @@ $route['update-vehicle-type-data'] = 'superadmin_api/update_vehicle_type_data';
 $route['delete-vehicle-type'] = 'superadmin_api/delete_vehicle_type';
 // =============================== POS Mapped Device====================================
 $route['get-vehicle-details'] = 'superadmin_api/get_vehicle_details';
-
 $route['get-pos-map-data'] = 'superadmin_api/get_pos_map_data';
 $route['add-pos-device-map'] = 'superadmin_api/add_pos_device_mapped';
 $route['display-all-pos-device-map-data'] = 'superadmin_api/display_all_pos_device_map_data';
@@ -185,17 +187,13 @@ $route['display-all-pos-device-data'] = 'superadmin_api/display_all_pos_device_d
 $route['update-pos-device-status'] = 'superadmin_api/update_pos_device_status';
 // ============================ POS Booking History====================================
 $route['display-all-pos-booking-data'] = 'pos_api/display_all_pos_booking_data';
-
 //================================Terms & Condition=====================================
 $route['user-terms-n-condition'] = 'superadmin_api/user_terms_n_condition';
 $route['verifier-terms-n-condition'] = 'superadmin_api/verifier_terms_n_condition';
 $route['vendor-terms-n-condition'] = 'superadmin_api/vendor_terms_n_condition';
 $route['update-terms-n-condition'] = 'superadmin_api/update_terms_n_condition';
-
 // ==================================== Suggested Parking Place===========================
 $route['display-all-suggested-parking-place_data'] = 'superadmin_api/display_all_suggested_parking_place_data';
-
-
 // ============================= POS API=====================================
 $route['register-pos-verifier'] = 'pos_api/register_pos_verifier';
 $route['login-pos-verifier'] = 'pos_api/login_pos_verifier';

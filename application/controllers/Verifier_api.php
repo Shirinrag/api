@@ -33,17 +33,14 @@ class Verifier_api extends REST_Controller {
         	$response = array('code' => - 1, 'status' => false, 'message' => '');
             $username = $this->input->post('username');           
             $password = $this->input->post('password');           
-            $device_id = $this->input->post('device_id');
-            if (empty($username)) {
-                
+            // $device_id = $this->input->post('device_id');
+
+            if (empty($username)) {                
                 $response['message'] = 'username is required.';
                 $response['code'] = 201;
             } else if (empty($password)) {                
                 $response['message'] = 'Password is required.';
                 $response['code'] = 201;
-            } else if(empty($device_id)){
-                $response['message'] ="Device Id is required";
-                $response['code'] =201;
             }else {
                 $encryptedpassword = dec_enc('encrypt',$password);
                 $check_username_count = $this->model->CountWhereRecord('pa_users',array('username'=>$username));
@@ -60,7 +57,7 @@ class Verifier_api extends REST_Controller {
                                     'login_time'=>date("Y-m-d H:i:s"),
                                     'status'=>1
                                 );
-                                 $this->model->insertData('tbl_verifier_login',$curl_data);
+                                 $this->model->insertData('tbl_verifier_logged_in',$curl_data);
 
                                 $response['code'] = REST_Controller::HTTP_OK;;
                                 $response['status'] = true;
@@ -81,7 +78,6 @@ class Verifier_api extends REST_Controller {
             } 
         echo json_encode($response);
     }
-
     public function logout_verifier_post()
     {
         $response = array('code' => - 1, 'status' => false, 'message' => '');
@@ -94,12 +90,12 @@ class Verifier_api extends REST_Controller {
                 $response['message']= "Verifier Id is required";
                 $response['code'] = 201;
             }else{
-                $pos_device_id = $this->model->selectWhereData('tbl_verifier_login',array('status'=>1),array('id'));
+                $pos_device_id = $this->model->selectWhereData('tbl_verifier_logged_in',array('status'=>1),array('id'));
                 $curl_data = array(
                     'status'=> 2,
                     'logout_time'=>date("Y-m-d H:i:s"),
                 );
-                $this->model->updateData('tbl_verifier_login',$curl_data,array('fk_verifier_id'=> $fk_verifier_id));
+                $this->model->updateData('tbl_verifier_logged_in',$curl_data,array('fk_verifier_id'=> $fk_verifier_id));
                 $response['code'] = REST_Controller::HTTP_OK;
                 $response['status'] = true;
                 $response['message'] = 'Logout Successfully';
@@ -518,40 +514,69 @@ class Verifier_api extends REST_Controller {
         }
         echo json_encode($response);
     }
-
     public function check_out_booking_post()
     {
         $response = array('code' => - 1, 'status' => false, 'message' => '');
         $validate = validateToken();
         if ($validate) {
-            $verifier_id = $this->input->post('verifier_id');
+           
             $checkout_status = $this->input->post('checkout_status');
-            $id = $this->input->post('id');
-            if(empty($verifier_id)){
-                $response['message'] = "Verifier Id is required";
-                $response['code'] = 201;
-            }else if(empty($id)){
+            $checkout_time = $this->input->post('checkout_time');
+            $id = $this->input->post('id'); // tbl_booking auto increment id
+            if(empty($id)){
                 $response['message'] = "Id is required";
                 $response['code'] = 201;
             }else if(empty($checkout_status)){
                 $response['message'] = "Checkout Status is required";
                 $response['code'] = 201;
+            }else if(empty($checkout_time)){
+                $response['message'] = "Checkout Time is required";
+                $response['code'] = 201;
             }else{
-                $this->load->model('verifier_model');
-                $place_details = $this->verifier_model->place_details($verifier_id,$place_id,$user_type);
-                $checkout_status = $this->model->selectWhereData('tbl_booking_checkout_status',array('status'=>1),array('id','checkout_status'),false);
+                $curl_data= array(
+                    'fk_booking_check_type'=>2,
+                    'fk_booking_checkout_status'=>$checkout_status,
+                    'check_out'=>date("Y-m-d H:i:s"),
+                );
+                $this->model->updateData('tbl_booking_check_in_out',$curl_data,array('fk_booking_id'=>$id));              
                 $response['code'] = REST_Controller::HTTP_OK;
                 $response['status'] = true;
-                $response['message'] = 'success';
-                $response['place_details'] = $place_details;
-                $response['checkout_status'] = $checkout_status;
+                $response['message'] = 'Checked Out Successfully';             
             }
-
         }else{
              $response['code'] = REST_Controller::HTTP_UNAUTHORIZED;
              $response['message'] = 'Unauthorised';
         }
         echo json_encode($response);   
+    }
+    // This booking_confirmation api is for huma place 
+    public function booking_confirmation_post()
+    {
+        $response = array('code' => - 1, 'status' => false, 'message' => '');
+        $validate = validateToken();
+        if ($validate) {
+            $id = $this->input->post('id'); // tbl_booking auto increment id
+            $confirmation_status = $this->input->post('confirmation_status'); // 1 : Approve, 2: Rejected
+            if(empty($id)){
+                $response['message'] = "Id is required";
+                $response['code'] = 201;
+            }else if(empty($confirmation_status)){
+                $response['message'] = "Confirmation Status is required";
+                $response['code'] = 201;
+            }else{
+                $curl_data= array(
+                    'confirmation_status'=> $confirmation_status
+                );
+                $this->model->updateData('tbl_booking',$curl_data,array('id'=>$id));
+                $response['code'] = REST_Controller::HTTP_OK;
+                $response['status'] = true;
+                $response['message'] = 'Booking Confirmation Done Successfully';
+            }
+        }else{
+             $response['code'] = REST_Controller::HTTP_UNAUTHORIZED;
+             $response['message'] = 'Unauthorised';
+        }
+        echo json_encode($response);    
     }
    
 }

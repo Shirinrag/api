@@ -4,7 +4,7 @@ ini_set("memory_limit", "-1");
 require APPPATH . '/libraries/REST_Controller.php';
 
 class Pos_api extends REST_Controller {
-	public function __construct() {
+    public function __construct() {
         parent::__construct();
         header('Access-Control-Allow-Origin: *');
         header('Access-Control-Allow-Credentials: true');
@@ -12,7 +12,6 @@ class Pos_api extends REST_Controller {
         header('Content-Type: text/html; charset=utf-8');
         header('Content-Type: application/json; charset=utf-8'); 
     }
-
    /*200 = OK
     201 = Bad Request (Required param is missing)
     202 = No Valid Auth key
@@ -24,7 +23,7 @@ class Pos_api extends REST_Controller {
     208 = Curl Failed
     209 = Curl UNAUTHORIZED
     */ 
-	public function index() {
+    public function index() {
         $response = array('status' => false, 'msg' => 'Oops! Please try again later.', 'code' => 200);
         echo json_encode($response);
     }
@@ -41,6 +40,8 @@ class Pos_api extends REST_Controller {
                 $username = $this->input->post('username');
                 $device_id = $this->input->post('device_id');
                 $lang_id = $this->input->post('lang_id');
+                $pan_card= $this->input->post('pan_card');
+                 $aadhaar_card= $this->input->post('aadhaar_card');
                 if(empty($first_name)){
                     $response['message'] = "First Name is required";
                     $response['code'] = 201;
@@ -62,8 +63,7 @@ class Pos_api extends REST_Controller {
                 }else if(empty($device_id)){
                     $response['message'] = "Device Id is required";
                     $response['code'] = 201;
-                }else{
-                   
+                }else{                   
                     $check_mobile_no_count = $this->model->CountWhereRecord('pa_users', array('phoneNo'=>$mobile_no,'isActive'=>1,'user_type'=>14));
                     $check_user_name_count = $this->model->CountWhereRecord('pa_users', array('username'=>$username,'isActive'=>1,'user_type'=>14));
                      if($check_mobile_no_count > 0){
@@ -85,7 +85,7 @@ class Pos_api extends REST_Controller {
                         }
                         $response['error_status'] = 'username';       
                     }else{
-                        $verify_device_id = $this->model->CountWhereRecord('tbl_pos_device_map', array('device_id'=>$device_id));
+                        $verify_device_id = $this->model->CountWhereRecord('tbl_pos_device', array('pos_device_id'=>$device_id));
                         if($verify_device_id > 0){
                                 $is_signature_file = true;
                                 if (!empty($_FILES['pan_card']['name'])) {
@@ -163,20 +163,24 @@ class Pos_api extends REST_Controller {
                         }else{
                             $response['code'] = 201;
                             $response['status'] = false;
-                            $response['message'] = 'डिवाइस आईडी मेल नहीं खाती';
+                            if($lang_id==1){
+                                $response['message'] = 'Device Id does not exist';
+                            }else{
+                                $response['message'] = 'डिवाइस आईडी मेल नहीं खाती';
+                            }
                         }
                     }
                 }
-                    	
+                        
         }else {
             $response['code'] = REST_Controller::HTTP_UNAUTHORIZED;
             $response['message'] = 'Unauthorised';
         }
         echo json_encode($response);
     }
-    public function login_pos_verifier_post()
+   public function login_pos_verifier_post()
     {
-        	$response = array('code' => - 1, 'status' => false, 'message' => '');
+            $response = array('code' => - 1, 'status' => false, 'message' => '');
             $username = $this->input->post('username');           
             $password = $this->input->post('password');
             $lang_id = $this->input->post('lang_id');
@@ -208,12 +212,12 @@ class Pos_api extends REST_Controller {
                       "password" => $encryptedpassword
                     );
                     $login_info = $this->model->selectWhereData('pa_users',$login_credentials_data,'*');
+
+
                     $pos_device_id = $this->model->selectWhereData('tbl_pos_device',array('pos_device_id'=>$device_id),array('id'));
-                    $place_id = $this->model->selectWhereData('tbl_pos_duty_allocation',array('fk_device_id'=>$pos_device_id['id'],'date'=>date('d/m/Y')),array('fk_place_id'));
-                    // echo '<pre>'; print_r($place_id); exit;
-                    
-                    $verify_device_id = $this->model->CountWhereRecord('tbl_pos_verifier_logged_in', array('fk_pos_verifier_id'=>$login_info['id'],'fk_device_id !='=>$pos_device_id['id'],'status'=>1));
-            
+
+                    $place_id = $this->model->selectWhereData('tbl_pos_duty_allocation',array('fk_device_id'=>$pos_device_id['id'],'date'=>date('d/m/Y')),array('fk_place_id'));                  
+                    $verify_device_id = $this->model->CountWhereRecord('tbl_pos_verifier_logged_in', array('fk_pos_verifier_id'=>$login_info['id'],'fk_device_id !='=>$pos_device_id['id'],'status'=>1));            
                         if($verify_device_id > 0){
                             if($lang_id==1){
                                 $response['message'] = "You are already logged in on another device. If you want to login from this device. please logout from another device";
@@ -230,7 +234,8 @@ class Pos_api extends REST_Controller {
                                     'status'=>1
                                 );
                                  $this->model->insertData('tbl_pos_verifier_logged_in',$curl_data);
-                                 $login_info['place_id']= $place_id['fk_place_id'];
+                                $login_info['place_id']= @$place_id['fk_place_id'];
+                                
                                 $response['code'] = REST_Controller::HTTP_OK;;
                                 $response['status'] = true;
                                 $response['message'] = 'success';
@@ -260,11 +265,10 @@ class Pos_api extends REST_Controller {
     }
     public function get_all_vehicle_type_get()
     {
-    	$response = array('code' => - 1, 'status' => false, 'message' => '');
+        $response = array('code' => - 1, 'status' => false, 'message' => '');
         $validate = validateToken();
         if ($validate) {
             $vehicle_type = $this->model->selectWhereData('tbl_vehicle_type',array('del_status'=>1,'status'=>1),array('id','vehicle_type'),false);
-
             $response['code'] = REST_Controller::HTTP_OK;
             $response['status'] = true;
             $response['message'] = 'success';
@@ -277,24 +281,21 @@ class Pos_api extends REST_Controller {
     }
     public function get_all_price_data_on_id_post()
     {
-    	$response = array('code' => - 1, 'status' => false, 'message' => '');
+        $response = array('code' => - 1, 'status' => false, 'message' => '');
         $validate = validateToken();
         if ($validate) {
-        	// $fk_vehicle_type_id = $this->input->post('fk_vehicle_type_id');
-        	$fk_place_id = $this->input->post('fk_place_id');
-
-        	if(empty($fk_place_id)){
-        		$response['message'] = "Place id is required";
-        		$response['code'] = 201;
-        	}else{
+            $fk_place_id = $this->input->post('fk_place_id');
+            if(empty($fk_place_id)){
+                $response['message'] = "Place id is required";
+                $response['code'] = 201;
+            }else{
                 $two_wheller_price_slab = $this->model->selectWhereData('tbl_hours_price_slab',array('fk_place_id'=>$fk_place_id,'fk_vehicle_type_id'=>1,'del_status'=>1),array('*'),false);
                 $three_wheller_price_slab = $this->model->selectWhereData('tbl_hours_price_slab',array('fk_place_id'=>$fk_place_id,'fk_vehicle_type_id'=>2,'del_status'=>1),array('*'),false);
                 $four_wheller_price_slab = $this->model->selectWhereData('tbl_hours_price_slab',array('fk_place_id'=>$fk_place_id,'fk_vehicle_type_id'=>3,'del_status'=>1),array('*'),false);
-        		$truck_van_wheller_price_slab = $this->model->selectWhereData('tbl_hours_price_slab',array('fk_place_id'=>$fk_place_id,'fk_vehicle_type_id'=>4,'del_status'=>1),array('*'),false);
-
-	            $response['code'] = REST_Controller::HTTP_OK;
-	            $response['status'] = true;
-	            $response['message'] = 'success';
+                $truck_van_wheller_price_slab = $this->model->selectWhereData('tbl_hours_price_slab',array('fk_place_id'=>$fk_place_id,'fk_vehicle_type_id'=>4,'del_status'=>1),array('*'),false);
+                $response['code'] = REST_Controller::HTTP_OK;
+                $response['status'] = true;
+                $response['message'] = 'success';
                 if(!empty($two_wheller_price_slab)){
                     $response['two_wheller_price_slab'] = $two_wheller_price_slab;
                 }
@@ -307,7 +308,7 @@ class Pos_api extends REST_Controller {
                 if(!empty($truck_van_wheller_price_slab)){
                        $response['truck_van_wheller_price_slab'] = $truck_van_wheller_price_slab;
                 }
-        	}           
+            }           
         }else {
             $response['code'] = REST_Controller::HTTP_UNAUTHORIZED;
             $response['message'] = 'Unauthorised';
@@ -334,10 +335,8 @@ class Pos_api extends REST_Controller {
             $price = $this->input->post('price');
             $latitude = $this->input->post('latitude');
             $longitude = $this->input->post('longitude');
-            // $Mac_address = $this->input->post('Mac_address');
             $book_status = $this->input->post('book_status');
             $device_id = $this->input->post('device_id');
-
             if(empty($fk_lang_id)){
                 $response['message'] ="Language Id is required";
                 $response['code'] =201;
@@ -392,7 +391,6 @@ class Pos_api extends REST_Controller {
                 $response['code'] =201;
             }else{
                 $pos_device_id = $this->model->selectWhereData('tbl_pos_device',array('pos_device_id'=>$device_id),array('id'));
-
                 $curl_data=array(
                     'fk_place_id'=>$fk_place_id,
                     'fk_verifier_id' =>$fk_verifier_id,
@@ -414,7 +412,7 @@ class Pos_api extends REST_Controller {
                 $this->model->insertData('tbl_pos_booking',$curl_data);
                 $response['code'] = REST_Controller::HTTP_OK;
                 $response['status'] = true;
-                if($lang_id==1){
+                if($fk_lang_id==1){
                     $response['message'] = 'Checked-in Successfully';
                 }else{
                     $response['message'] = 'चेक-इन सफलतापूर्वक';
@@ -448,7 +446,6 @@ class Pos_api extends REST_Controller {
             $longitude = $this->input->post('longitude');
             $book_status = $this->input->post('book_status');
             $device_id = $this->input->post('device_id');
-
             if(empty($fk_lang_id)){
                 $response['message'] ="Language Id is required";
                 $response['code'] =201;
@@ -524,7 +521,6 @@ class Pos_api extends REST_Controller {
                 $response['code'] =201;
             }else{
                $pos_device_id = $this->model->selectWhereData('tbl_pos_device',array('pos_device_id'=>$device_id),array('id'));
-
                 $curl_data=array(
                     'fk_place_id'=>$fk_place_id,
                     'fk_verifier_id' =>$fk_verifier_id,
@@ -541,12 +537,12 @@ class Pos_api extends REST_Controller {
                     'price'=>$price,
                     'latitude'=>$latitude,
                     'longitude'=>$longitude,
-                    'book_status'=>$book_status,                    
+                    'book_status'=>$book_status,
                 );
                 $this->model->insertData('tbl_pos_booking',$curl_data);
                 $response['code'] = REST_Controller::HTTP_OK;
                 $response['status'] = true;
-                if($lang_id==1){
+                if($fk_lang_id==1){
                     $response['message'] = 'Checked-out Successfully';
                 }else{
                     $response['message'] = 'चेक-आउट सफलतापूर्वक';
@@ -563,8 +559,7 @@ class Pos_api extends REST_Controller {
     {
         $response = array('code' => - 1, 'status' => false, 'message' => '');
         $validate = validateToken();
-        if ($validate) {
-            
+        if ($validate) {            
             $fk_pos_verifier_id = $this->input->post('fk_verifier_id');
             $device_id = $this->input->post('device_id');
             $lang_id = $this->input->post('lang_id');
@@ -594,7 +589,6 @@ class Pos_api extends REST_Controller {
         }
         echo json_encode($response);
     }
-
     public function pos_report_data_post()
     {
         $response = array('code' => - 1, 'status' => false, 'message' => '');
@@ -618,24 +612,6 @@ class Pos_api extends REST_Controller {
                 $response['booking_data'] = $booking_data;
             }
         }else{
-            $response['code'] = REST_Controller::HTTP_UNAUTHORIZED;
-            $response['message'] = 'Unauthorised';
-        }
-        echo json_encode($response);
-    }
-
-    public function display_all_pos_booking_data_get()
-    {
-        $response = array('code' => - 1, 'status' => false, 'message' => '');
-        $validate = validateToken();
-        if ($validate) {
-                $this->load->model('pos_model');
-                $pos_booking_data = $this->pos_model->display_all_pos_booking_data();
-                $response['code'] = REST_Controller::HTTP_OK;
-                $response['status'] = true;
-                $response['message'] = 'success';
-                $response['pos_booking_data'] = $pos_booking_data;
-        } else {
             $response['code'] = REST_Controller::HTTP_UNAUTHORIZED;
             $response['message'] = 'Unauthorised';
         }

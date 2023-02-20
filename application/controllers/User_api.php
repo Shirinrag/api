@@ -3,9 +3,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 // eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpZCI6NzMzODB9.WZOS-riRPPhTFA1-rK1lfjWPwzavYR1ZKz3xsXMJ95E
 ini_set("memory_limit", "-1");
 require APPPATH . '/libraries/REST_Controller.php';
-
 class User_api extends REST_Controller {
-
 	public function __construct() {
         parent::__construct();
         header('Access-Control-Allow-Origin: *');
@@ -14,7 +12,6 @@ class User_api extends REST_Controller {
         header('Content-Type: text/html; charset=utf-8');
         header('Content-Type: application/json; charset=utf-8'); 
     }
-
    /*200 = OK
     201 = Bad Request (Required param is missing)
     202 = No Valid Auth key
@@ -1177,6 +1174,95 @@ class User_api extends REST_Controller {
         if ($validate) {
 	        $user_id = $this->input->post('user_id');
 	        $amount = $this->input->post('amount');
+	    }else{
+	    	$response['code'] = REST_Controller::HTTP_UNAUTHORIZED;
+            $response['message'] = 'Unauthorised';
+	    }
+	     echo json_encode($response);
+    }
+        public function user_wallet_create_order_post()
+    {
+    	$response = array('code' => - 1, 'status' => false, 'message' => '');
+    	$validate = validateToken();
+    	$validate = true;
+        if ($validate) {
+	        $user_id = $this->input->post('user_id');
+	        $amount = $this->input->post('amount');
+	        if(empty($user_id)){
+	           $response['message'] = "User Id is required";
+	    	   $response['code'] = 201;
+	        }else if(empty($amount)){
+	           $response['message'] = "Amount is required";
+	    	   $response['code'] = 201;
+	        }else{
+	            $this->load->library('razorpay');
+	            $order_id = $this->razorpay->create_order($amount);
+	            $curl_data = array(
+	                'fk_user_id'=>$user_id,
+	                'order_id'=>$order_id,
+	                'amount'=>$amount,
+	            );
+	            $this->model->insertData('tbl_transcation',$curl_data);
+                $response['code'] = REST_Controller::HTTP_OK;
+				$response['status'] = true;
+				$response['message'] = 'success';
+				$response['order_id'] = $order_id;
+	       }
+	    }else{
+	    	$response['code'] = REST_Controller::HTTP_UNAUTHORIZED;
+            $response['message'] = 'Unauthorised';
+	    }
+	     echo json_encode($response);
+    }
+    
+    public function check_payment_status_order_id_post()
+    {
+    	$response = array('code' => - 1, 'status' => false, 'message' => '');
+    	$validate = validateToken();
+    	$validate = true;
+        if ($validate) {
+	        $order_id = $this->input->post('order_id');
+	        if(empty($order_id)){
+	           $response['message'] = "Order Id is required";
+	    	   $response['code'] = 201;
+	        }else{
+	            $this->load->library('razorpay');
+	            $payment_status_info = $this->razorpay->check_payment_status_order_id($order_id);
+	            if($payment_status_info['payment_status']=='success'){
+	                $update_data = array(
+	                    'payment_id'=>$payment_status_info['payment_id'],
+	                    'payment_status'=>$payment_status_info['payment_status1'],
+	                );
+	                $this->model->updateData('tbl_transcation',$update_data,array('order_id'=>$order_id));
+	                $transcation_data= $this->model->selectWhereData('tbl_transcation',array('order_id'=>$order_id),array('fk_user_id','amount'));
+	                $user_id = $transcation_data['fk_user_id'];
+	                $amount = $transcation_data['amount'];
+	                $last_total_amount = $this->model->selectWhereData('tbl_user_wallet_history',array('fk_user_id'=>$user_id,'used_status'=>1),array('total_amount'));
+	                $deactive_used_status = array('used_status'=>0);
+				    $this->model->updateData('tbl_user_wallet_history',$deactive_used_status,array('fk_user_id'=>$user_id));
+	                $indert_data = array(
+	                    'fk_user_id'=>$user_id,
+	                    'add_amount'=> $amount,
+	                    'total_amount'=> $last_total_amount['total_amount'] + $amount,
+	                    'fk_payment_type_id'=> 2
+	                );
+	                $this->model->insertData('tbl_user_wallet_history',$indert_data);
+	                $update_user_wallet = array(
+	                    'amount' => $last_total_amount['total_amount'] + $amount,
+	                );
+	                $this->model->updateData('tbl_user_wallet',$update_user_wallet,array('fk_user_id'=>$user_id));
+	                $response['code'] = REST_Controller::HTTP_OK;
+    				$response['status'] = true;
+    				$response['payment_id'] = $payment_status_info['payment_id'];
+    				$response['payment_status1'] = $payment_status_info['payment_status1'];
+    				$response['message'] = $payment_status_info['payment_message'];
+    				
+	                
+	            } else {
+	    	        $response['code'] = 201;
+	    	        $response['message'] = $payment_status_info['payment_message'];
+	            }
+	       }
 	    }else{
 	    	$response['code'] = REST_Controller::HTTP_UNAUTHORIZED;
             $response['message'] = 'Unauthorised';
