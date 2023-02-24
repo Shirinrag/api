@@ -90,6 +90,8 @@ $route['check-out-booking'] = 'verifier_api/check_out_booking';
 $route['booking-details'] = 'verifier_api/booking_details';
 $route['verifier-extend-place-booking'] = 'verifier_api/verifier_extend_place_booking';
 $route['booking-confirmation'] = 'verifier_api/booking_confirmation';
+$route['slot_status-details'] = 'verifier_api/slot_status_details';
+$route['slot_issue'] = 'verifier_api/slot_issue';
 // =============Super Admin API=============================
 $route['loggedin-data'] = 'common/login_data';
 $route['get-all-user-type'] = 'common/get_all_user_type';
@@ -186,7 +188,7 @@ $route['add-pos-device'] = 'superadmin_api/add_pos_device';
 $route['display-all-pos-device-data'] = 'superadmin_api/display_all_pos_device_data';
 $route['update-pos-device-status'] = 'superadmin_api/update_pos_device_status';
 // ============================ POS Booking History====================================
-$route['display-all-pos-booking-data'] = 'pos_api/display_all_pos_booking_data';
+$route['display-all-pos-booking-data'] = 'superadmin_api/display_all_pos_booking_data';
 //================================Terms & Condition=====================================
 $route['user-terms-n-condition'] = 'superadmin_api/user_terms_n_condition';
 $route['verifier-terms-n-condition'] = 'superadmin_api/verifier_terms_n_condition';

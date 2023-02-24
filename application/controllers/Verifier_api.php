@@ -168,6 +168,7 @@ class Verifier_api extends REST_Controller {
             $booking_id = $this->input->post('booking_id');
             $complaint_text = $this->input->post('complaint_text');
             $issue_image = $this->input->post('issue_image');
+            $fk_issue_type_id = $this->input->post('fk_issue_type_id');
 
             if(empty($verifier_id)){
                 $response['message'] = "Verifier Id is required";
@@ -214,6 +215,8 @@ class Verifier_api extends REST_Controller {
                             'complaint_text'=>$complaint_text,
                             'source'=>1,
                             'image'=>$issue_image,
+                            'fk_issue_type_id'=>$fk_issue_type_id,
+                            'issue_type' =>1,
                         );
                         $this->model->insertData('tbl_verifier_complaint',$curl_data);
                         $response['code'] = REST_Controller::HTTP_OK;
@@ -221,7 +224,6 @@ class Verifier_api extends REST_Controller {
                         $response['message']= "Complaint Raised Successfully";
                     }
             }
-
         }else{
              $response['code'] = REST_Controller::HTTP_UNAUTHORIZED;
              $response['message'] = 'Unauthorised';
@@ -243,6 +245,7 @@ class Verifier_api extends REST_Controller {
                         $ongoing_verified_booking_list = $this->user_model->ongoing_verified_booking_list($place_id);
                         $complete_booking = $this->user_model->complete_booking_list($place_id);
                         $history_booking = $this->user_model->history_booking_list($place_id);
+                        $issue_type = $this->model->selectWhereData('tbl_issue_type',array('status'=>1),array('id','issue_type'),false);
 
                         $response['code'] = REST_Controller::HTTP_OK;
                         $response['status'] = true;
@@ -250,7 +253,8 @@ class Verifier_api extends REST_Controller {
                         $response['ongoing_unverified_booking_list'] = $ongoing_unverified_booking_list;
                         $response['ongoing_verified_booking_list'] = $ongoing_verified_booking_list;
                         $response['complete_booking'] = $complete_booking;
-                        $response['history_booking'] = $history_booking;                  
+                        $response['history_booking'] = $history_booking;    
+                        $response['issue_type'] = $issue_type;              
                 }
         }else {
             $response['code'] = REST_Controller::HTTP_UNAUTHORIZED;
@@ -271,10 +275,12 @@ class Verifier_api extends REST_Controller {
                 $this->load->model('user_model');
                 $booking_details = $this->user_model->booking_details_on_id($id);
 
+
                 $response['code'] = REST_Controller::HTTP_OK;
                 $response['status'] = true;
                 $response['message'] = 'success';
                 $response['booking_details_data'] = $booking_details;
+                
             }
         }else{
              $response['code'] = REST_Controller::HTTP_UNAUTHORIZED;
@@ -578,5 +584,136 @@ class Verifier_api extends REST_Controller {
         }
         echo json_encode($response);    
     }
+    public function slot_status_details_post()
+    {
+        $response = array('code' => - 1, 'status' => false, 'message' => '');
+        $validate = validateToken();
+        if ($validate) {
+            $id = $this->input->post('id');
+            if(empty($id)){
+                $response['message'] = "Id is required";
+                $response['code'] = 201;
+            }else{
+                $this->load->model('user_model');
+                $current_time = date("H:i:s");
+                $from_date = date("Y-m-d");
+                $to_date = date("Y-m-d");
+                $from_time = date('H:i:s', strtotime($current_time));
+               
+                $available_slots = [];
+                $reserved_slots = [];
+                $not_working_slots = [];
+                $parked_slots = [];
+                $working_slots_data_1 = [];
+                $working_slots_data = $this->model->selectWhereData('tbl_sensor',array('fk_place_id'=>$id),array('fk_slot_id'),false,array('id','DESC'),'fk_slot_id');
+                foreach ($working_slots_data as $working_slots_data_key => $working_slots_data_row) {
+                    $working_slots_data_1[] = $working_slots_data_row['fk_slot_id'];
+                }
+                $working_slots_data_1 = array_unique($working_slots_data_1,TRUE);
+                $slot_info = $this->model->selectWhereData('tbl_slot_info',array('del_status'=>1,'fk_place_id'=>$id),array('*'),false);
+                foreach($slot_info as $slot_info_key => $slot_info_row){
+     
+                    $slots_status = $this->model->selectWhereData('tbl_booking',array('fk_slot_id'=>$slot_info_row['id'],'booking_from_date'=>$from_date,'booking_to_date'=>$to_date,'booking_to_time'=>$from_time),array('fk_verify_booking_status'));                 
+                    
+                    if($slots_status['fk_verify_booking_status']==1){
+                        $slot_info[$slot_info_key]['fk_verify_booking_status'] = $slots_status['fk_verify_booking_status']; 
+                        $slot_info[$slot_info_key]['color_hexcode'] = "#FF0000";
+                        $parked_slots[] = $slot_info[$slot_info_key];
+                    }else if($slots_status['fk_verify_booking_status']==2){
+                        $slot_info[$slot_info_key]['fk_verify_booking_status'] = $slots_status['fk_verify_booking_status']; 
+                        $slot_info[$slot_info_key]['color_hexcode'] = "#FFA500";
+                        $reserved_slots[] = $slot_info[$slot_info_key];
+                    }else if(empty($slots_status['fk_verify_booking_status']) && in_array($slot_info[$slot_info_key]['id'],$working_slots_data_1)){
+                        $slot_info[$slot_info_key]['color_hexcode'] = "#00FF00";
+                        $available_slots[] = $slot_info[$slot_info_key];
+                    } else {
+                        $slot_info[$slot_info_key]['color_hexcode'] = "#808080";
+                        $not_working_slots[] = $slot_info[$slot_info_key];
+                    }               
+                }       
+                $response['code'] = REST_Controller::HTTP_OK;
+                $response['status'] = true;
+                $response['message'] = 'success';
+                $response['parked_slots'] = $parked_slots;
+                $response['reserved_slots'] = $reserved_slots;
+                $response['available_slots'] = $available_slots;
+                $response['not_working_slots'] = $not_working_slots;
+            }        
+        }else {
+            $response['code'] = REST_Controller::HTTP_UNAUTHORIZED;
+            $response['message'] = 'Unauthorised';
+        }
+        echo json_encode($response);
+    }
+    public function slot_issue_post()
+    {
+        $response = array('code' => - 1, 'status' => false, 'message' => '');
+        $validate = validateToken();
+        if ($validate) {
+            $verifier_id = $this->input->post('verifier_id');
+            $place_id = $this->input->post('place_id');
+            $slot_id = $this->input->post('slot_id');
+            $complaint_text = $this->input->post('complaint_text');
+            $issue_image = $this->input->post('issue_image');
+
+            if(empty($verifier_id)){
+                $response['message'] = "Verifier Id is required";
+                $response['code'] = 201;
+            }else if(empty($place_id)){
+                $response['message'] = "Place Id is required";
+                $response['code'] = 201;
+            }else if(empty($slot_id)){
+                $response['message'] = "Slot Id is required";
+                $response['code'] = 201;
+            }else if(empty($complaint_text)){
+                $response['message'] = "Comlaint Text is required";
+                $response['code'] = 201;
+            }else{
+                $is_file = true;
+                    if (!empty($_FILES['issue_image']['name'])) {
+                        $image = trim($_FILES['issue_image']['name']);
+                        $image = preg_replace('/\s/', '_', $image);
+                        $cat_image = mt_rand(100000, 999999) . '_' . $image;
+                        $config['upload_path'] = './uploads/complaint/';
+                        $config['file_name'] = $cat_image;
+                        $config['overwrite'] = TRUE;
+                        $config["allowed_types"] = 'gif|jpg|jpeg|png|bmp';
+                        $this->load->library('upload', $config);
+                        $this->upload->initialize($config);
+                        if (!$this->upload->do_upload('issue_image')) {
+                            $is_file = false;
+                            $errors = $this->upload->display_errors();
+                            $response['code'] = 201;
+                            $response['message'] = $errors;
+                        } else {
+                            $issue_image = 'uploads/complaint/' . $cat_image;
+                        }
+                    }
+                    if ($is_file) {
+                        $curl_data = array(
+                            'fk_verifier_id'=>$verifier_id,
+                            'fk_place_id' =>$place_id,
+                            'fk_booking_id'=>$booking_id,
+                            'fk_slot_id'=>$slot_id,
+                            'complaint_text'=>$complaint_text,
+                            'source'=>1,
+                            'image'=>$issue_image,
+                            'issue_type' =>2,
+                        );
+                        $this->model->insertData('tbl_verifier_complaint',$curl_data);
+                        $response['code'] = REST_Controller::HTTP_OK;
+                        $response['status'] = true;
+                        $response['message']= "Slot Complaint Raised Successfully";
+                    }
+            }
+        }else{
+             $response['code'] = REST_Controller::HTTP_UNAUTHORIZED;
+             $response['message'] = 'Unauthorised';
+        }
+        echo json_encode($response);
+    }
+
+
+
    
 }

@@ -140,11 +140,12 @@ class User_model extends CI_Model {
         	$result = $query->row_array();
         	return $result;
     }
-   public function get_last_ext_booking_id()
+   	public function get_last_ext_booking_id($id="")
 	{
-		  $this->db->select('booking_ext_replace');
+	   $this->db->select('booking_ext_replace');
         $this->db->from('tbl_extension_booking');
         $this->db->like('booking_ext_replace', "EXT");
+        $this->db->where('fk_booking_id',$id);
         $this->db->order_by('id',"DESC");
         $this->db->limit(1);
         $query = $this->db->get();

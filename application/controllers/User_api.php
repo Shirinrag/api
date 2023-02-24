@@ -164,7 +164,6 @@ class User_api extends REST_Controller {
         }
         echo json_encode($response);
     }
-
     public function update_user_profile_post()
     {
     	$response = array('code' => - 1, 'status' => false, 'message' => '');
@@ -360,12 +359,13 @@ class User_api extends REST_Controller {
 		    	}else{
 		    		$this->load->model('user_model');
 		    		$booking_history = $this->user_model->booking_history($user_id);
-
-    					$response['code'] = REST_Controller::HTTP_OK;
-                        $response['status'] = true;
-    					$response['message'] = 'success';
-    					$response['booking_history_data'] = $booking_history;
-    				}
+		    		$issue_type = $this->model->selectWhereData('tbl_issue_type',array('status'=>1),array('id','issue_type'),false);
+					$response['code'] = REST_Controller::HTTP_OK;
+                    $response['status'] = true;
+					$response['message'] = 'success';
+					$response['booking_history_data'] = $booking_history;
+					$response['issue_type'] = $issue_type;
+    			}
 		}else {
             $response['code'] = REST_Controller::HTTP_UNAUTHORIZED;
             $response['message'] = 'Unauthorised';
@@ -389,6 +389,7 @@ class User_api extends REST_Controller {
                         $response['status'] = true;
     					$response['message'] = 'success';
     					$response['booking_details_data'] = $booking_details;
+    					
     				}
 		}else {
             $response['code'] = REST_Controller::HTTP_UNAUTHORIZED;
@@ -742,7 +743,7 @@ class User_api extends REST_Controller {
 	                if($user_wallet_data['amount'] < $new_cost){
 						$reserve_from_time= date('H:i:s',strtotime($from_time .'+0 minutes'));
 						$reserve_to_time= date('H:i:s',strtotime($to_time . ' +0 minutes'));
-						$last_ext_booking = $this->user_model->get_last_ext_booking_id();
+						$last_ext_booking = $this->user_model->get_last_ext_booking_id($id);
           				if(empty($last_ext_booking)){
         					$new_ext_booking  = 'EXT' . '1';
         				}else{
@@ -753,7 +754,7 @@ class User_api extends REST_Controller {
         				$curl_data = array(
     						'fk_booking_id' => $id,
     						'fk_place_id' => $place_id,
-    						'fk_user_id' => $fk_user_id,
+    						'fk_user_id' => $user_id,
     						'booking_ext_replace' => $new_ext_booking,
     						'booking_from_date' => $from_date,
     						'booking_to_date' => $to_date,
@@ -985,7 +986,7 @@ class User_api extends REST_Controller {
 		    		$response['message'] = "Place Id is required";
 		    		$response['code'] = 201;
 		    	}else if(empty($topic)){
-		    		$response['message'] = "Topic is required";
+		    		$response['message'] = "Issue is required";
 		    		$response['code'] = 201;
 		    	}else if(empty($description)){
 		    		$response['message'] = "Description is required";
@@ -995,13 +996,12 @@ class User_api extends REST_Controller {
 		    			'fk_user_id' => $fk_user_id,
 		    			'fk_place_id' => $fk_place_id,
 		    			'topic' => $topic,
-		    			'description'=>$description
+		    			'description'=>$description,
 		    		);
 		    		$this->model->insertData('tbl_user_complaint',$curl_data);
                     $response['code'] = REST_Controller::HTTP_OK;
                     $response['status'] = true;
-					$response['message'] = 'Complaint Register Successfully';
-                   
+					$response['message'] = 'Complaint Register Successfully';                  
     			}
 		}else {
             $response['code'] = REST_Controller::HTTP_UNAUTHORIZED;
@@ -1136,15 +1136,13 @@ class User_api extends REST_Controller {
         }
         echo json_encode($response);
     }
-    public function get_extend_booking_price_post()
+   public function get_extend_booking_price_post()
     {
     	$response = array('code' => - 1, 'status' => false, 'message' => '');
     	$validate = validateToken();
         if ($validate) {
 	        $id = $this->input->post('id');
-	        // $place_id = $this->input->post('place_id');
 	        $total_hours = $this->input->post('total_hours');
-	        // $user_id = $this->input->post('user_id');
 	        if(empty($id)){
 	        	$response['message'] = "Id Id is required";
 	    		$response['code'] = 201;
@@ -1154,12 +1152,12 @@ class User_api extends REST_Controller {
 	        }else{
 	        	$this->load->model('user_model');
 	        	$booking_details = $this->model->selectWhereData('tbl_booking',array('id'=>$id),array('fk_user_id','fk_place_id'));
-	        	$vehicle_type_id = $this->model->selectWhereData('tbl_user_car_details',array('fk_user_id'=>$booking_details['fk_user_id']),array('fk_vehicle_type_id'));
+	        	$vehicle_type_id = $this->model->selectWhereData('tbl_user_car_details',array('fk_user_id'=>$booking_details['fk_user_id'],'status'=>1),array('fk_vehicle_type_id'));
 	        	$cost = $this->user_model->get_rate($total_hours,$vehicle_type_id['fk_vehicle_type_id'],$booking_details['fk_place_id']);
 	        	$response['code'] = REST_Controller::HTTP_OK;
 				$response['status'] = true;
 				$response['message'] = 'success';
-				$response['cost'] = $cost;
+				$response['cost'] = $cost['cost'];
 	        }
 	    }else{
 	    	$response['code'] = REST_Controller::HTTP_UNAUTHORIZED;
@@ -1180,7 +1178,7 @@ class User_api extends REST_Controller {
 	    }
 	     echo json_encode($response);
     }
-        public function user_wallet_create_order_post()
+    public function user_wallet_create_order_post()
     {
     	$response = array('code' => - 1, 'status' => false, 'message' => '');
     	$validate = validateToken();
@@ -1213,8 +1211,7 @@ class User_api extends REST_Controller {
             $response['message'] = 'Unauthorised';
 	    }
 	     echo json_encode($response);
-    }
-    
+    }    
     public function check_payment_status_order_id_post()
     {
     	$response = array('code' => - 1, 'status' => false, 'message' => '');
@@ -1256,8 +1253,6 @@ class User_api extends REST_Controller {
     				$response['payment_id'] = $payment_status_info['payment_id'];
     				$response['payment_status1'] = $payment_status_info['payment_status1'];
     				$response['message'] = $payment_status_info['payment_message'];
-    				
-	                
 	            } else {
 	    	        $response['code'] = 201;
 	    	        $response['message'] = $payment_status_info['payment_message'];

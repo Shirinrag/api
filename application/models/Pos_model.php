@@ -14,6 +14,7 @@ class Pos_model extends CI_Model {
        $this->db->where('tbl_pos_booking.fk_place_id',$place_id);
        $this->db->where('tbl_pos_booking.from_date >=',$from_date);
        $this->db->where('tbl_pos_booking.from_date <=',$to_date);
+       $this->db->where('tbl_pos_booking.book_status',2);
        $this->db->order_by('tbl_pos_booking.id','DESC');
         $query = $this->db->get();
         $result = $query->result_array();

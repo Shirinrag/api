@@ -2497,4 +2497,39 @@ class Superadmin_api extends REST_Controller {
         }
         echo json_encode($response);   
     }
+    public function display_all_pos_booking_data_get()
+    {
+        $response = array('code' => - 1, 'status' => false, 'message' => '');
+        $validate = validateToken();
+        if ($validate) {
+                $this->load->model('pos_model');
+                $pos_booking_data = $this->pos_model->display_all_pos_booking_data();
+                $response['code'] = REST_Controller::HTTP_OK;
+                $response['status'] = true;
+                $response['message'] = 'success';
+                $response['pos_booking_data'] = $pos_booking_data;
+        } else {
+            $response['code'] = REST_Controller::HTTP_UNAUTHORIZED;
+            $response['message'] = 'Unauthorised';
+        }
+        echo json_encode($response);   
+    }
+    public function get_customer_support_details()
+    {
+        $response = array('code' => - 1, 'status' => false, 'message' => '');
+        $validate = validateToken();
+        if ($validate) {
+                $issue_type = $this->model->selectWhereData('tbl_issue_type',array('status'=>1),array('*'));
+                $user_list = $this->model->selectWhereData('pa_users',array('isActive'=>1,'del_status'=>1,'user_type'=>5),array('id','firstName','lastName'),false);
+                $booking_id_list = $this->model->selectWhereData('tbl_booking',array())
+                $response['code'] = REST_Controller::HTTP_OK;
+                $response['status'] = true;
+                $response['message'] = 'success';
+                $response['issue_type'] = $issue_type;
+        } else {
+            $response['code'] = REST_Controller::HTTP_UNAUTHORIZED;
+            $response['message'] = 'Unauthorised';
+        }
+        echo json_encode($response);   
+    }
 }

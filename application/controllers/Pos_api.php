@@ -446,6 +446,7 @@ class Pos_api extends REST_Controller {
             $longitude = $this->input->post('longitude');
             $book_status = $this->input->post('book_status');
             $device_id = $this->input->post('device_id');
+            $payment_type = $this->input->post('payment_type');
             if(empty($fk_lang_id)){
                 $response['message'] ="Language Id is required";
                 $response['code'] =201;
@@ -519,6 +520,13 @@ class Pos_api extends REST_Controller {
             }else if(empty($device_id)){
                 $response['message'] ="Device is required";
                 $response['code'] =201;
+            }else if(empty($payment_type)){
+                if($fk_lang_id ==1){
+                    $response['message'] ="Payment Type is required";
+                }else{
+                    $response['message'] ="भुगतान प्रकार आवश्यक है";
+                }
+                $response['code'] =201;
             }else{
                $pos_device_id = $this->model->selectWhereData('tbl_pos_device',array('pos_device_id'=>$device_id),array('id'));
                 $curl_data=array(
@@ -538,6 +546,7 @@ class Pos_api extends REST_Controller {
                     'latitude'=>$latitude,
                     'longitude'=>$longitude,
                     'book_status'=>$book_status,
+                    'payment_type'=>$payment_type
                 );
                 $this->model->insertData('tbl_pos_booking',$curl_data);
                 $response['code'] = REST_Controller::HTTP_OK;
@@ -606,10 +615,20 @@ class Pos_api extends REST_Controller {
             }else{  
                 $this->load->model('pos_model');
                 $booking_data = $this->pos_model->pos_report($place_id,$from_date,$to_date);
+                foreach ($booking_data as $booking_data_key => $booking_data_row) {
+                        if($booking_data_row['payment_type']==1){
+                            $booking_data[$booking_data_key]['payment_type_1'] = "Cash";
+                        }else if($booking_data_row['payment_type']==2){
+                            $booking_data[$booking_data_key]['payment_type_1'] = "Online";
+                        }                    
+                }
+                $total_amount = $this->model->selectWhereData('tbl_pos_booking',array('book_status'=>2),array('SUM(price) as price'));
+
                 $response['code'] = REST_Controller::HTTP_OK;
                 $response['status'] = true;
                 $response['message'] = 'success';
                 $response['booking_data'] = $booking_data;
+                $response['total_amount'] = $total_amount;
             }
         }else{
             $response['code'] = REST_Controller::HTTP_UNAUTHORIZED;
