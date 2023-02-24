@@ -6,10 +6,11 @@ class User_model extends CI_Model {
 	}
 
 	public function booking_history($user_id='')
-	{
-		$this->db->select('tbl_booking.*,tbl_extension_booking.booking_ext_replace,tbl_extension_booking.booking_from_date as ext_booking_from_date,tbl_extension_booking.booking_to_date as ext_booking_to_date,tbl_extension_booking.booking_from_time as ext_booking_from_time,tbl_extension_booking.booking_to_time as ext_booking_to_time,tbl_extension_booking.reserve_from_time as ext_reserve_from_time,tbl_extension_booking.reserve_to_time as ext_reserve_to_time,tbl_booking_status.fk_status_id,pa_users.firstName,pa_users.lastName,tbl_status_master.status as booking_status,tbl_user_car_details.car_number,tbl_parking_place.place_name,tbl_parking_place.address,tbl_parking_place.pincode,tbl_states.name as state_name,tbl_cities.name as city_name,tbl_payment.total_amount,tbl_slot_info.display_id');
+	{	
+		// tbl_extension_booking.booking_ext_replace,tbl_extension_booking.booking_from_date as ext_booking_from_date,tbl_extension_booking.booking_to_date as ext_booking_to_date,tbl_extension_booking.booking_from_time as ext_booking_from_time,tbl_extension_booking.booking_to_time as ext_booking_to_time,tbl_extension_booking.reserve_from_time as ext_reserve_from_time,tbl_extension_booking.reserve_to_time as ext_reserve_to_time,
+		$this->db->select('tbl_booking.*,tbl_booking_status.fk_status_id,pa_users.firstName,pa_users.lastName,tbl_status_master.status as booking_status,tbl_user_car_details.car_number,tbl_parking_place.place_name,tbl_parking_place.address,tbl_parking_place.pincode,tbl_states.name as state_name,tbl_cities.name as city_name,tbl_payment.total_amount,tbl_slot_info.display_id');
 		$this->db->from('tbl_booking');
-		$this->db->join('tbl_extension_booking','tbl_extension_booking.fk_booking_id=tbl_booking.id','left');
+		// $this->db->join('tbl_extension_booking','tbl_extension_booking.fk_booking_id=tbl_booking.id','left');
 		$this->db->join('tbl_booking_status','tbl_booking_status.fk_booking_id=tbl_booking.id','left');
 		$this->db->join('tbl_status_master','tbl_booking_status.fk_status_id=tbl_status_master.id','left');
 		$this->db->join('pa_users','tbl_booking.fk_user_id=pa_users.id','left');

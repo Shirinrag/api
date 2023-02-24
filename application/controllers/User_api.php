@@ -685,7 +685,7 @@ class User_api extends REST_Controller {
         }
         echo json_encode($response);
     }
-    public function extend_place_booking_post()
+     public function extend_place_booking_post()
     {
     	$response = array('code' => - 1, 'status' => false, 'message' => '');
         $validate = validateToken();
@@ -730,6 +730,7 @@ class User_api extends REST_Controller {
                 	$booking_id = $booking_details['booking_id'];
 
                 	$vehicle_type_id = $this->model->selectWhereData('tbl_user_car_details',array('id'=>$booking_details['fk_car_id']),array('fk_vehicle_type_id'));
+                		
                 	$cost = $this->user_model->get_rate($no_of_hours,$vehicle_type_id['fk_vehicle_type_id'],$place_id);
                 	$ext_per_hour = $this->model->selectWhereData('tbl_parking_place',array('id'=>$place_id),array('ext_price','per_hour_charges'));
 
@@ -738,8 +739,7 @@ class User_api extends REST_Controller {
                 	}else{
                 		$new_cost = $cost['cost'] + (($cost['cost'] * $ext_per_hour['ext_price']) / 100);
                 	}          	
-                	
-		            $user_wallet_data = $this->model->selectWhereData('tbl_user_wallet',array('fk_user_id'=>$fk_user_id),array('amount'));
+		            $user_wallet_data = $this->model->selectWhereData('tbl_user_wallet',array('fk_user_id'=>$user_id),array('amount'));
 	                if($user_wallet_data['amount'] < $new_cost){
 						$reserve_from_time= date('H:i:s',strtotime($from_time .'+0 minutes'));
 						$reserve_to_time= date('H:i:s',strtotime($to_time . ' +0 minutes'));
@@ -764,11 +764,10 @@ class User_api extends REST_Controller {
     						'reserve_to_time' => $reserve_to_time,
         				);
         				$last_inserted_id = $this->model->insertData('tbl_extension_booking',$curl_data);
-
         				$payment_data = array(
 							'fk_booking_id'=>$id,
 							'fk_ext_booking_id'=>$last_inserted_id,
-							'fk_user_id'=>$fk_user_id,
+							'fk_user_id'=>$user_id,
 							'amount'=>$cost['cost'],
 							'charges'=>(($cost['cost'] * $ext_per_hour['ext_price']) / 100),
 							'total_amount'=>$new_cost,
@@ -780,10 +779,10 @@ class User_api extends REST_Controller {
 		    			$this->model->updateData('tbl_extension_booking',$update_payment_id,array('id'=>$last_inserted_id));
 
         				$deactive_used_status = array('used_status'=>0);
-						$this->model->updateData('tbl_user_wallet_history',$deactive_used_status,array('fk_user_id'=>$fk_user_id));
+						$this->model->updateData('tbl_user_wallet_history',$deactive_used_status,array('fk_user_id'=>$user_id));
 
 						$insert_user_wallet_history = array(
-							'fk_user_id'=>$fk_user_id,
+							'fk_user_id'=>$user_id,
 							'deduct_amount'=>$new_cost,
 							'total_amount'=>$user_wallet_data['amount'] - $new_cost,
 							'fk_payment_type_id'=>3
@@ -793,7 +792,7 @@ class User_api extends REST_Controller {
 						$update_wallet_data = array(
 							'amount'=>$user_wallet_data['amount'] - $new_cost,
 						);
-						$this->model->updateData('tbl_user_wallet',$update_wallet_data,array('fk_user_id'=>$fk_user_id));
+						$this->model->updateData('tbl_user_wallet',$update_wallet_data,array('fk_user_id'=>$user_id));
 						$booking_status = array(
 							'fk_booking_id'=>$id,
 							'fk_status_id'=> 1,
