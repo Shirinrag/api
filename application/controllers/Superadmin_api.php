@@ -2514,18 +2514,20 @@ class Superadmin_api extends REST_Controller {
         }
         echo json_encode($response);   
     }
-    public function get_customer_support_details()
+    public function get_customer_support_details_get()
     {
         $response = array('code' => - 1, 'status' => false, 'message' => '');
         $validate = validateToken();
         if ($validate) {
-                $issue_type = $this->model->selectWhereData('tbl_issue_type',array('status'=>1),array('*'));
-                $user_list = $this->model->selectWhereData('pa_users',array('isActive'=>1,'del_status'=>1,'user_type'=>5),array('id','firstName','lastName'),false);
-                $booking_id_list = $this->model->selectWhereData('tbl_booking',array())
+                $issue_type = $this->model->selectWhereData('tbl_issue_type',array('status'=>1),array('id','issue_type'),false);
+                $user_list = $this->model->selectWhereData('pa_users',array('isActive'=>1,'del_status'=>1,'user_type'=>10),array('id','firstName','lastName'),false);
+                $booking_id_list = $this->model->selectWhereData('tbl_booking',array(),array('id','booking_id'),false);
                 $response['code'] = REST_Controller::HTTP_OK;
                 $response['status'] = true;
                 $response['message'] = 'success';
                 $response['issue_type'] = $issue_type;
+                $response['user_list'] = $user_list;
+                $response['booking_id_list'] = $booking_id_list;
         } else {
             $response['code'] = REST_Controller::HTTP_UNAUTHORIZED;
             $response['message'] = 'Unauthorised';

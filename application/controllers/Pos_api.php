@@ -148,7 +148,8 @@ class Pos_api extends REST_Controller {
                                             'username' =>$username,
                                             'pan_card'=> $pan_card,
                                             'aadhaar_card' =>$aadhaar_card,
-                                            'pos_device_id' => $pos_device_id['id']
+                                            'pos_device_id' => $pos_device_id['id'],
+                                            'isActive'=>0
                                         );
                                         $this->model->insertData('pa_users',$curl_data);
                                         $response['code'] = REST_Controller::HTTP_OK;

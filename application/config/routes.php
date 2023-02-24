@@ -196,6 +196,8 @@ $route['vendor-terms-n-condition'] = 'superadmin_api/vendor_terms_n_condition';
 $route['update-terms-n-condition'] = 'superadmin_api/update_terms_n_condition';
 // ==================================== Suggested Parking Place===========================
 $route['display-all-suggested-parking-place_data'] = 'superadmin_api/display_all_suggested_parking_place_data';
+// ======================================Customer Support=======================
+$route['get-customer-support-details'] = 'superadmin_api/get_customer_support_details';
 // ============================= POS API=====================================
 $route['register-pos-verifier'] = 'pos_api/register_pos_verifier';
 $route['login-pos-verifier'] = 'pos_api/login_pos_verifier';
