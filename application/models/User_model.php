@@ -135,12 +135,16 @@ class User_model extends CI_Model {
        	$this->db->from('tbl_hours_price_slab');
        	$this->db->where('fk_vehicle_type_id',$fk_vehicle_type_id);
        	$this->db->where('fk_place_id',$fk_place_id);
-         $this->db->where((int) $total_hours.' BETWEEN from_hours AND to_hours');       
-        	$query = $this->db->get();
-        	$result = $query->row_array();
-        	return $result;
+       // $this->db->where('from_km >=', $total_hours);
+        $this->db->where((int) $total_hours.' BETWEEN from_hours AND to_hours');
+        // $this->db->where('status','1');
+       // $this->db->order_by('to_km',"ASC");
+        $query = $this->db->get();
+        $result = $query->row_array();
+        return $result;
     }
-   	public function get_last_ext_booking_id($id="")
+
+    public function get_last_ext_booking_id($id="")
 	{
 	   $this->db->select('booking_ext_replace');
         $this->db->from('tbl_extension_booking');
@@ -163,6 +167,7 @@ class User_model extends CI_Model {
 		$this->db->where('tbl_status_master.id',1);
 		$query = $this->db->get();
       return $query->result_array();
+
 	}
 	public function ongoing_verified_booking_list($place_id='')
 	{
@@ -176,6 +181,7 @@ class User_model extends CI_Model {
 		$this->db->where('tbl_status_master.id',1);
 		$query = $this->db->get();
       return $query->result_array();
+
 	}
 
 	public function complete_booking_list($place_id='')

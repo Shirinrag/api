@@ -77,6 +77,7 @@ $route['place-slot-price'] = 'user_api/place_slot_price';
 $route['get-extend-booking-price'] = 'user_api/get_extend_booking_price';
 $route['user-wallet-create-order'] = 'user_api/user_wallet_create_order';
 $route['check-payment-status-order-id'] = 'user_api/check_payment_status_order_id';
+$route['notification-before-half-hours'] = 'user_api/notification_before_half_hours';
 // ============================= Verifier App API=====================================
 $route['login-verifier'] = 'verifier_api/login_verifier';
 $route['verify-booking'] = 'verifier_api/verify_booking';

@@ -11,24 +11,28 @@ class Pushnotifications {
 	public function __construct() {
 		// parent::__construct();
 		$this->CI =& get_instance();
-		$this->API_ACCESS_KEY ='AAAASeBlySQ:APA91bG5g4s-FAsFw9zfKEJ638XWzhpSGbeUa4jallP5rh0wG6dozGFrihHYj4bneh3qoGrFS74QO7Ra5l_kuTXpnH40KptG6wZvoZcGJGLBdjwMRLL8F6Ajfv9CWSRNqemDaVlvgHDB';
+		$this->API_ACCESS_KEY ='AAAA76t6JqE:APA91bFQJmeXSI-NcWbRP0aGoREfvUlF-fyEywl-7MuavHYgSdTeUWynOmVk_itfxUitP6sVj3JHP0IUDtU_oVf4wy5RpQBWP_P-qYIW9NFLBayfHc2iZT3JNuevu7_MZtj_VKsRdDgz';
 	}
 
 	public function android($user_id='',$data='') {
-		$reg_ids = [];
-		$device_key_info = $this->CI->model->selectWhereData('tbl_login',array('id'=>$user_id),array('android_device_id','ios_device_id'));
-		$android_device_id = $device_key_info['android_device_id'];
-		if(!empty($android_device_id)){
-			array_push($reg_ids,$android_device_id);
+	   // $reg_ids = [];
+		$device_key_info = $this->CI->model->selectWhereData('pa_users',array('id'=>$user_id),array('notifn_topic'));
+		$android_device_id = explode("(+91)",$device_key_info['notifn_topic']);
+	    	
+		if(!empty($android_device_id[1])){
+        // array_push($reg_ids,'/topics/'.$android_device_id[1]);
+            $reg_ids = '/topics/'.$android_device_id[1];
 		}
-		$ios_device_id = $device_key_info['ios_device_id'];
-		if(!empty($ios_device_id)){
-			array_push($reg_ids,$ios_device_id);
-		}
+	
+		// $ios_device_id = $device_key_info['ios_device_id'];
+		// if(!empty($ios_device_id)){
+		// 	array_push($reg_ids,$ios_device_id);
+		// }
         $url = 'https://fcm.googleapis.com/fcm/send';	
  		$message = array('body' => $data['message'],'title' =>$data['title'] ,'message' =>  $data['message'], 'content_available' => 1,'is_background' =>  false,'image'=>@$data['image']);
-        $arrayToSend = array('registration_ids' => $reg_ids, 'notification' => $message,'data'=>$message,'priority'=>'high');
- 		$json = json_encode($arrayToSend);
+        $arrayToSend = array('to' => $reg_ids, 'notification' => $message,'data'=>$message,'priority'=>'high');
+//  		$json = json_encode($arrayToSend,JSON_FORCE_OBJECT);
+//  		print_r($json);
         $headers = array (
             'Authorization: key=' . $this->API_ACCESS_KEY,
             'Content-Type: application/json'
@@ -37,9 +41,11 @@ class Pushnotifications {
             'registration_ids' => $reg_ids,
             'data' => $message,
         );
-        	$return_curl['curl_response'] = $this->useCurl($url, $headers, json_encode($arrayToSend));
+        // 	$return_curl['curl_response'] = $this->useCurl($url, $headers, json_encode($arrayToSend,JSON_FORCE_OBJECT));
+            $return_curl['curl_response'] = $this->useCurl($url, $headers, json_encode($arrayToSend));
         	$return_curl['registration_ids'] = $reg_ids;
         	$return_curl['arrayToSend'] = $arrayToSend;
+        // 	print_r($return_curl);die;
         	return $return_curl;
 	}
     

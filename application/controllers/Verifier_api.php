@@ -137,7 +137,7 @@ class Verifier_api extends REST_Controller {
                  );
                  $this->model->insertData('tbl_booking_verify',$curl_data);
 
-                 $booking_unique_id = $this->model->selectWhereData('tbl_booking',array('id'=>$booking_id),array('booking_id'));
+                 $booking_details = $this->model->selectWhereData('tbl_booking',array('id'=>$booking_id),array('booking_id','fk_user_id'));
                  $check_in_booking = array(
                     'fk_booking_id'=> $booking_id,
                     'check_in' => date("Y-m-d H:i:s"),
@@ -149,7 +149,10 @@ class Verifier_api extends REST_Controller {
                  $this->model->updateData('tbl_booking',array('fk_verify_booking_status'=>1),array('id'=>$booking_id));
                  $response['code'] = REST_Controller::HTTP_OK;
                  $response['status'] = true;
-                 $response['message'] = "Your Booking'". $booking_unique_id['booking_id'] ."' is successfully verified by our Guid. '.'🚗😃 ";
+                 $response['message'] = "Your Booking'". $booking_details['booking_id'] ."' is successfully verified by our Guid. '.'🚗😃 ";
+
+                $this->load->model('pushnotification_model');
+                $this->pushnotification_model->verify_booking($booking_details['fk_user_id'],$booking_details['booking_id']);
             }
         }else{
              $response['code'] = REST_Controller::HTTP_UNAUTHORIZED;
@@ -445,7 +448,10 @@ class Verifier_api extends REST_Controller {
                             'fk_status_id'=> 1,
                             'used_status'=> 1,
                         );
-                        $this->model->insertData('tbl_booking_status',$booking_status);  
+                        $this->model->insertData('tbl_booking_status',$booking_status);
+
+                        $this->load->model('pushnotification_model');
+                        $this->pushnotification_model->extended_booking_by_verifier($user_id,$booking_details['booking_id'],$new_cost);    
                         $response['code'] = REST_Controller::HTTP_OK;
                         $response['status'] = true;
                         $response['message'] = 'success';
