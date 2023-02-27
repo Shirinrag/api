@@ -2534,6 +2534,65 @@ class Superadmin_api extends REST_Controller {
         }
         echo json_encode($response);   
     }
+    public function add_complaint_details_post()
+    {
+        $response = array('code' => - 1, 'status' => false, 'message' => '');
+        $validate = validateToken();
+        if ($validate) {
+                $user_type = $this->input->post('user_type');
+                $description = $this->input->post('description');
+                $fk_booking_id = $this->input->post('fk_booking_id');
+                $contact_no = $this->input->post('contact_no');
+                $fk_user_id = $this->input->post('fk_user_id');
+                $fk_issue_type_id = $this->input->post('fk_issue_type_id');
+                if(empty($user_type)){
+                    $response['message']="User Type is required";
+                    $response['code']= 201;
+                }else if(empty($description)){
+                    $response['message']="Description is required";
+                    $response['code']= 201;
+                }else if(empty($contact_no)){
+                    $response['message']="Contact No is required";
+                    $response['code']= 201;
+                }else if(empty($fk_issue_type_id)){
+                    $response['message']="Issue Type is required";
+                    $response['code']= 201;
+                }else if(empty($fk_user_id)){
+                    $response['message']="User is required";
+                    $response['code']= 201;
+                } else{
+                    if($user_type==1){
+                        $place_id = $this->model->selectWhereData('tbl_booking',array('id'=>$fk_booking_id),array('fk_place_id'));
+                        $curl_data = array(
+                            'fk_user_id'=>$fk_user_id,
+                            'fk_place_id'=>$place_id['fk_place_id'],
+                            'fk_booking_id'=>$fk_booking_id,
+                            'topic'=>$fk_issue_type_id,
+                            'description'=>$description,
+                            'contact_no'=>$contact_no,
+                            'source_type'=>2
+                        );
+                        $this->model->insertData('tbl_user_complaint',$curl_data);
+                    }else{
+                        $curl_data = array(
+                            'user_name'=>$fk_user_id,
+                            'fk_issue_type_id'=>$fk_issue_type_id,
+                            'description'=>$description,
+                            'contact_no'=>$contact_no,
+                            'source_type'=>2
+                        );
+                        $this->model->insertData('tbl_complaint',$curl_data);
+                    }
+                    $response['code'] = REST_Controller::HTTP_OK;
+                    $response['status'] = true;
+                    $response['message'] = 'success';
+                }                
+        } else {
+            $response['code'] = REST_Controller::HTTP_UNAUTHORIZED;
+            $response['message'] = 'Unauthorised';
+        }
+        echo json_encode($response);   
+    }
 
     
 }

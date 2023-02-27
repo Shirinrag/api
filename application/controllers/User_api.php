@@ -152,6 +152,7 @@ class User_api extends REST_Controller {
         			$response['message'] = 'Contact No does not exist.';            					
 				}else{
 	        		$user_data = $this->model->selectWhereData('pa_users',array('phoneNo'=>$phone_no),array('*'));
+	        		$user_data['support_call'] = "+18008890180";
 	        		$response['code'] = REST_Controller::HTTP_OK;
 	                $response['status'] = true;
 					$response['message'] = 'Logged In Successfully';

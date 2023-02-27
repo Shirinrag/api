@@ -637,4 +637,39 @@ class Pos_api extends REST_Controller {
         }
         echo json_encode($response);
     }
+
+    public function reset_password_post()
+    {
+        $response = array('code' => - 1, 'status' => false, 'message' => '');
+        $validate = validateToken();
+        if ($validate) {            
+            $contact_no = $this->input->post('contact_no');
+            $password = $this->input->post('password');
+            $lang_id = $this->input->post('lang_id');
+            if(empty($contact_no)){
+                $response['message']= "Contact No is required";
+                $response['code'] = 201;
+            }else if(empty($password)){
+                $response['message']= "Password is required";
+                $response['code'] = 201;
+            }else if(empty($lang_id)){
+                $response['message']= "Language Id is required";
+                $response['code'] = 201;
+            }else{  
+                $curl_data = array('password' =>dec_enc('encrypt',$password));
+                $this->model->updateData('pa_users',$curl_data,array('phoneNo'=>$contact_no,'user_type'=>14));
+                $response['code'] = REST_Controller::HTTP_OK;
+                $response['status'] = true;
+                if($lang_id==1){
+                    $response['message'] = 'Password Updated Successfully';
+                }else{
+                    $response['message'] = 'पासवर्ड सफलतापूर्वक अद्यतन';
+                }
+            }
+        }else{
+            $response['code'] = REST_Controller::HTTP_UNAUTHORIZED;
+            $response['message'] = 'Unauthorised';
+        }
+        echo json_encode($response);
+    }
 }
