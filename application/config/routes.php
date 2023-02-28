@@ -200,6 +200,11 @@ $route['display-all-suggested-parking-place_data'] = 'superadmin_api/display_all
 // ======================================Customer Support=======================
 $route['get-customer-support-details'] = 'superadmin_api/get_customer_support_details';
 $route['add-complaint-details'] = 'superadmin_api/add_complaint_details';
+$route['display-all-register-user-complaint-data'] = 'superadmin_api/display_all_register_user_complaint_data';
+$route['display-all-unregister-user-complaint-data'] = 'superadmin_api/display_all_unregister_user_complaint_data';
+
+
+
 
 // ============================= POS API=====================================
 $route['register-pos-verifier'] = 'pos_api/register_pos_verifier';

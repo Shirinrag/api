@@ -199,5 +199,30 @@ class Superadmin_model extends CI_Model {
         $result = $query->result_array();
         return $result;
     }
+
+    public function display_all_register_user_complaint()
+    {
+        $this->db->select('tbl_user_complaint.*,tbl_parking_place.place_name,pa_users.firstName,pa_users.lastName,pa_users.email,tbl_booking.booking_id,tbl_booking.booking_from_date,tbl_booking.booking_to_date,tbl_booking.booking_from_time,tbl_booking.booking_to_time,tbl_issue_type.issue_type,tbl_user_car_details.car_number,tbl_slot_info.display_id');
+        $this->db->from('tbl_user_complaint');
+        $this->db->join('tbl_parking_place','tbl_user_complaint.fk_place_id=tbl_parking_place.id','left');
+        $this->db->join('pa_users','tbl_user_complaint.fk_user_id=pa_users.id','left');
+        $this->db->join('tbl_booking','tbl_user_complaint.fk_booking_id=tbl_booking.id','left');
+        $this->db->join('tbl_issue_type','tbl_user_complaint.topic=tbl_issue_type.id','left');
+        $this->db->join('tbl_user_car_details','tbl_booking.fk_car_id=tbl_user_car_details.id','left');
+        $this->db->join('tbl_slot_info','tbl_booking.fk_slot_id=tbl_slot_info.id','left');
+        $query = $this->db->get();
+        $result = $query->result_array();
+        return $result;
+    }
+
+    public function display_all_unregister_user_complaint()
+    {
+        $this->db->select('tbl_complaint.*,tbl_issue_type.issue_type');
+        $this->db->from('tbl_complaint');
+        $this->db->join('tbl_issue_type','tbl_complaint.fk_issue_type_id=tbl_issue_type.id','left');
+        $query = $this->db->get();
+        $result = $query->result_array();
+        return $result;
+    }
 }
 	

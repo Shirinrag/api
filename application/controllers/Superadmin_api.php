@@ -2593,6 +2593,39 @@ class Superadmin_api extends REST_Controller {
         }
         echo json_encode($response);   
     }
-
+    public function display_all_register_user_complaint_data_get()
+    {
+        $response = array('code' => - 1, 'status' => false, 'message' => '');
+        $validate = validateToken();
+        if ($validate) {
+                $this->load->model('superadmin_model');
+                $register_user_complaint_data = $this->superadmin_model->display_all_register_user_complaint();
+                $response['code'] = REST_Controller::HTTP_OK;
+                $response['status'] = true;
+                $response['message'] = 'success';
+                $response['register_user_complaint_data'] = $register_user_complaint_data;
+        } else {
+            $response['code'] = REST_Controller::HTTP_UNAUTHORIZED;
+            $response['message'] = 'Unauthorised';
+        }
+        echo json_encode($response);   
+    }
+    public function display_all_unregister_user_complaint_data_get()
+    {
+        $response = array('code' => - 1, 'status' => false, 'message' => '');
+        $validate = validateToken();
+        if ($validate) {
+                $this->load->model('superadmin_model');
+                $unregister_user_complaint_data = $this->superadmin_model->display_all_unregister_user_complaint();
+                $response['code'] = REST_Controller::HTTP_OK;
+                $response['status'] = true;
+                $response['message'] = 'success';
+                $response['unregister_user_complaint_data'] = $unregister_user_complaint_data;
+        } else {
+            $response['code'] = REST_Controller::HTTP_UNAUTHORIZED;
+            $response['message'] = 'Unauthorised';
+        }
+        echo json_encode($response);   
+    }
     
 }
