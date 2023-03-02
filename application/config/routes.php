@@ -78,6 +78,7 @@ $route['get-extend-booking-price'] = 'user_api/get_extend_booking_price';
 $route['user-wallet-create-order'] = 'user_api/user_wallet_create_order';
 $route['check-payment-status-order-id'] = 'user_api/check_payment_status_order_id';
 $route['notification-before-half-hours'] = 'user_api/notification_before_half_hours';
+$route['push-notification-log'] = 'user_api/push_notification_log';
 // ============================= Verifier App API=====================================
 $route['login-verifier'] = 'verifier_api/login_verifier';
 $route['verify-booking'] = 'verifier_api/verify_booking';
@@ -122,6 +123,7 @@ $route['delete-user'] = 'superadmin_api/delete_user';
 $route['update-user-status'] = 'superadmin_api/update_user_status';
 // ================================= Booking History==================================
 $route['booking-history-data'] = 'superadmin_api/booking_history_data';
+$route['extend-booking-history-data'] = 'superadmin_api/extend_booking_history_data';
 // ========================= Add Place================================
 $route['add-place'] = 'superadmin_api/add_place';
 $route['display-all-parking-place-data'] = 'superadmin_api/display_all_parking_place_data';
@@ -202,6 +204,8 @@ $route['get-customer-support-details'] = 'superadmin_api/get_customer_support_de
 $route['add-complaint-details'] = 'superadmin_api/add_complaint_details';
 $route['display-all-register-user-complaint-data'] = 'superadmin_api/display_all_register_user_complaint_data';
 $route['display-all-unregister-user-complaint-data'] = 'superadmin_api/display_all_unregister_user_complaint_data';
+$route['update-register-user-complaint-details'] = 'superadmin_api/update_register_user_complaint_details';
+$route['update-un-register-user-complaint-details'] = 'superadmin_api/update_un_register_user_complaint_details';
 
 
 

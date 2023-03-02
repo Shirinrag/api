@@ -58,6 +58,8 @@ class Verifier_api extends REST_Controller {
                                     'status'=>1
                                 );
                                  $this->model->insertData('tbl_verifier_logged_in',$curl_data);
+                                 $place_id = $this->model->selectWhereData('tbl_duty_allocation',array('fk_verifier_id'=>$login_info['id']),array('fk_place_id'));
+                                 $login_info['place_id'] = $place_id;
 
                                 $response['code'] = REST_Controller::HTTP_OK;;
                                 $response['status'] = true;

@@ -608,23 +608,46 @@ class Superadmin_api extends REST_Controller {
         echo json_encode($response);
     }
 
-    public function booking_history_data_post($value='')
+    public function booking_history_data_get()
     {
        $response = array('code' => - 1, 'status' => false, 'message' => '');
         $validate = validateToken();
         if ($validate) {
-                $user_id = $this->input->post('user_id');
-                if(empty($user_id)){
-                    $response['message'] = "User Id is required";
-                    $response['code'] = 201;
-                }else{
-                    $this->load->model('superadmin_model');
-                    $booking_history = $this->superadmin_model->booking_history_data();
-                        $response['code'] = REST_Controller::HTTP_OK;
-                        $response['status'] = true;
-                        $response['message'] = 'success';
-                        $response['booking_history_data'] = $booking_history;
+            $this->load->model('superadmin_model');
+            $booking_history = $this->superadmin_model->booking_history_data();
+            foreach ($booking_history as $booking_history_key => $booking_history_row) {
+                        $total_amount = $this->model->selectWhereData('tbl_payment',array('fk_booking_id'=>$booking_history_row['id']),array('total_amount'));
+                        $booking_history[$booking_history_key]['total_amount'] = $total_amount['total_amount'];
+                        $booking_status_id = $this->model->selectWhereData('tbl_booking_status',array('fk_booking_id'=>$booking_history_row['id'],'used_status'=>1),array('fk_status_id'));
+                        $booking_history[$booking_history_key]['fk_status_id'] = $booking_status_id['fk_status_id'];
+                        $booking_status = $this->model->selectWhereData('tbl_status_master',array('id'=>$booking_status_id['fk_status_id']),array('status'));
+                        $booking_history[$booking_history_key]['booking_status'] = $booking_status['status'];                        
                     }
+            $response['code'] = REST_Controller::HTTP_OK;
+            $response['status'] = true;
+            $response['message'] = 'success';
+            $response['booking_history_data'] = $booking_history;
+        }else {
+            $response['code'] = REST_Controller::HTTP_UNAUTHORIZED;
+            $response['message'] = 'Unauthorised';
+        }
+        echo json_encode($response);
+    }
+     public function extend_booking_history_data_get()
+    {
+        $response = array('code' => - 1, 'status' => false, 'message' => '');
+        $validate = validateToken();
+        if ($validate) {
+            $this->load->model('superadmin_model');
+            $extend_booking_history = $this->superadmin_model->extend_booking_history_data();
+            foreach ($extend_booking_history as $extend_booking_history_key => $extend_booking_history_row) {
+                        $total_amount = $this->model->selectWhereData('tbl_payment',array('fk_ext_booking_id'=>$extend_booking_history_row['id']),array('total_amount'));
+                        $extend_booking_history[$extend_booking_history_key]['total_amount'] = $total_amount['total_amount'];        
+                    }
+            $response['code'] = REST_Controller::HTTP_OK;
+            $response['status'] = true;
+            $response['message'] = 'success';
+            $response['extend_booking_history_data'] = $extend_booking_history;
         }else {
             $response['code'] = REST_Controller::HTTP_UNAUTHORIZED;
             $response['message'] = 'Unauthorised';
@@ -2626,6 +2649,85 @@ class Superadmin_api extends REST_Controller {
             $response['message'] = 'Unauthorised';
         }
         echo json_encode($response);   
+    }
+    public function update_register_user_complaint_details_post()
+    {
+        $response = array('code' => - 1, 'status' => false, 'message' => '');
+        $validate = validateToken();
+        if ($validate) {
+            $action_type = $this->input->post('action_type');
+            $customer_care_remark = $this->input->post('customer_care_remark');
+            $edit_id = $this->input->post('edit_id');
+            $complaint_status = $this->input->post('complaint_status');
+            if (empty($action_type)) {
+                $response['message'] = "Action Type is required";
+                $response['code']=201;
+            }else if (empty($customer_care_remark)) {
+                $response['message'] = "Customer Care is required";
+                $response['code']=201;
+            }else if (empty($complaint_status)) {
+                $response['message'] = "Complaint Status is required";
+                $response['code']=201;
+            }else if (empty($edit_id)) {
+                $response['message'] = "Id is required";
+                $response['code']=201;
+            }else{
+                $curl_data= array(
+                    'action_type' =>$action_type,
+                    'customer_care_remark' =>$customer_care_remark,
+                    'status' =>$complaint_status,
+                );
+                $this->model->updateData('tbl_user_complaint',$curl_data,array('id'=>$edit_id));
+                $response['code'] = REST_Controller::HTTP_OK;
+                $response['status'] = true;
+                $response['message'] = 'success';
+            }
+            
+        } else {
+            $response['code'] = REST_Controller::HTTP_UNAUTHORIZED;
+            $response['message'] = 'Unauthorised';
+        }
+        echo json_encode($response);   
+    }
+
+    public function update_un_register_user_complaint_details_post()
+    {
+        $response = array('code' => - 1, 'status' => false, 'message' => '');
+        $validate = validateToken();
+        if ($validate) {
+            $action_type = $this->input->post('action_type');
+            $customer_care_remark = $this->input->post('customer_care_remark');
+            $edit_id = $this->input->post('edit_id');
+            $complaint_status = $this->input->post('complaint_status');
+            if (empty($action_type)) {
+                $response['message'] = "Action Type is required";
+                $response['code']=201;
+            }else if (empty($customer_care_remark)) {
+                $response['message'] = "Customer Care is required";
+                $response['code']=201;
+            }else if (empty($complaint_status)) {
+                $response['message'] = "Complaint Status is required";
+                $response['code']=201;
+            }else if (empty($edit_id)) {
+                $response['message'] = "Id is required";
+                $response['code']=201;
+            }else{
+                $curl_data= array(
+                    'action_type' =>$action_type,
+                    'customer_care_remark' =>$customer_care_remark,
+                    'status' =>$complaint_status,
+                );
+                $this->model->updateData('tbl_complaint',$curl_data,array('id'=>$edit_id));
+                $response['code'] = REST_Controller::HTTP_OK;
+                $response['status'] = true;
+                $response['message'] = 'success';
+            }
+            
+        } else {
+            $response['code'] = REST_Controller::HTTP_UNAUTHORIZED;
+            $response['message'] = 'Unauthorised';
+        }
+        echo json_encode($response);  
     }
     
 }

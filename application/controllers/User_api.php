@@ -360,6 +360,19 @@ class User_api extends REST_Controller {
 		    	}else{
 		    		$this->load->model('user_model');
 		    		$booking_history = $this->user_model->booking_history($user_id);
+		    		foreach ($booking_history as $booking_history_key => $booking_history_row) {
+		    			$total_amount = $this->model->selectWhereData('tbl_payment',array('fk_booking_id'=>$booking_history_row['id']),array('total_amount'));
+		    			$booking_history[$booking_history_key]['total_amount'] = $total_amount['total_amount'];
+		    			$booking_status_id = $this->model->selectWhereData('tbl_booking_status',array('fk_booking_id'=>$booking_history_row['id'],'used_status'=>1),array('fk_status_id'));
+		    			$booking_history[$booking_history_key]['fk_status_id'] = $booking_status_id['fk_status_id'];
+		    			$booking_status = $this->model->selectWhereData('tbl_status_master',array('id'=>$booking_status_id['fk_status_id']),array('status'));
+		    			$booking_history[$booking_history_key]['booking_status'] = $booking_status['status'];
+		    			$fk_verifier_id = $this->model->selectWhereData('tbl_booking_verify',array('fk_booking_id'=>$booking_history_row['id']),array('fk_verifier_id'));
+		    			$verifier_contact_no = $this->model->selectWhereData('pa_users',array('id'=>$fk_verifier_id),array('phoneNo'));
+		    			$booking_history[$booking_history_key]['verifier_contact_no'] = $verifier_contact_no['phoneNo'];
+		    			$extend_booking = $this->user_model->extend_booking($booking_history_row['id']);
+		    			$booking_history[$booking_history_key]['booking_status'] = $extend_booking;
+		    		}
 		    		$issue_type = $this->model->selectWhereData('tbl_issue_type',array('status'=>1),array('id','issue_type'),false);
 					$response['code'] = REST_Controller::HTTP_OK;
                     $response['status'] = true;
@@ -1312,5 +1325,28 @@ class User_api extends REST_Controller {
         }
         echo json_encode($response);  
     }
+    public function push_notification_log_post()
+    {
+    	$response = array('code' => - 1, 'status' => false, 'message' => '');
+        $validate = validateToken();
+        if ($validate) {
+        	$user_id = $this->input->post('user_id');
+        	if(empty($user_id)){
+        		$response['message'] = "User Id is required";
+        		$response['code'] = 201;
+        	}else{
+        		$push_notification_data = $this->model->selectWhereData('tbl_push_notification_log',array('fk_user_id'=>$user_id),array('title','message','created_at'),false,array('id','DESC'));
+        		$response['code'] = REST_Controller::HTTP_OK;
+    			$response['status'] = true;
+    			$response['message'] = 'success'; 
+    			$response['push_notification_data'] = $push_notification_data; 
+        	}  
+        } else {
+            $response['code'] = REST_Controller::HTTP_UNAUTHORIZED;
+            $response['message'] = 'Unauthorised';
+        }
+        echo json_encode($response); 
+    }
+    
    
 }

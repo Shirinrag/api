@@ -31,6 +31,13 @@ class Pushnotifications {
         $url = 'https://fcm.googleapis.com/fcm/send';	
  		$message = array('body' => $data['message'],'title' =>$data['title'] ,'message' =>  $data['message'], 'content_available' => 1,'is_background' =>  false,'image'=>@$data['image']);
         $arrayToSend = array('to' => $reg_ids, 'notification' => $message,'data'=>$message,'priority'=>'high');
+
+        $curl_data = array(
+        	'fk_user_id'=>$user_id,
+        	'title'=>$data['title'],
+        	'message'=>$data['message']
+        );
+        $this->CI->model->insertData('tbl_push_notification_log',$curl_data);
 //  		$json = json_encode($arrayToSend,JSON_FORCE_OBJECT);
 //  		print_r($json);
         $headers = array (
