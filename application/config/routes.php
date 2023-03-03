@@ -92,8 +92,11 @@ $route['check-out-booking'] = 'verifier_api/check_out_booking';
 $route['booking-details'] = 'verifier_api/booking_details';
 $route['verifier-extend-place-booking'] = 'verifier_api/verifier_extend_place_booking';
 $route['booking-confirmation'] = 'verifier_api/booking_confirmation';
-$route['slot_status-details'] = 'verifier_api/slot_status_details';
-$route['slot_issue'] = 'verifier_api/slot_issue';
+$route['slot-status-details'] = 'verifier_api/slot_status_details';
+$route['slot-issue'] = 'verifier_api/slot_issue';
+$route['duty-allocated-details'] = 'verifier_api/duty_allocated_details';
+
+
 // =============Super Admin API=============================
 $route['loggedin-data'] = 'common/login_data';
 $route['get-all-user-type'] = 'common/get_all_user_type';

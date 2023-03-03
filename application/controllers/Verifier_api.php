@@ -84,10 +84,8 @@ class Verifier_api extends REST_Controller {
     {
         $response = array('code' => - 1, 'status' => false, 'message' => '');
         $validate = validateToken();
-        if ($validate) {
-            
-            $fk_verifier_id = $this->input->post('fk_verifier_id');
-           
+        if ($validate) {            
+            $fk_verifier_id = $this->input->post('fk_verifier_id');           
             if(empty($fk_verifier_id)){
                 $response['message']= "Verifier Id is required";
                 $response['code'] = 201;
@@ -117,7 +115,6 @@ class Verifier_api extends REST_Controller {
             $verifier_id = $this->input->post('verifier_id');
             $booking_type = $this->input->post('booking_type');
             $verify_status = $this->input->post('verify_status');
-
             if(empty($booking_id)){
                 $response['message'] = "Booking Id is required";
                 $response['code']= 201;
@@ -138,7 +135,6 @@ class Verifier_api extends REST_Controller {
                     'verify_status' => $verify_status,
                  );
                  $this->model->insertData('tbl_booking_verify',$curl_data);
-
                  $booking_details = $this->model->selectWhereData('tbl_booking',array('id'=>$booking_id),array('booking_id','fk_user_id'));
                  $check_in_booking = array(
                     'fk_booking_id'=> $booking_id,
@@ -147,12 +143,10 @@ class Verifier_api extends REST_Controller {
                     'fk_booking_check_type' => 1
                  );
                  $this->model->insertData('tbl_booking_check_in_out',$check_in_booking);
-                 
                  $this->model->updateData('tbl_booking',array('fk_verify_booking_status'=>1),array('id'=>$booking_id));
                  $response['code'] = REST_Controller::HTTP_OK;
                  $response['status'] = true;
                  $response['message'] = "Your Booking'". $booking_details['booking_id'] ."' is successfully verified by our Guid. '.'🚗😃 ";
-
                 $this->load->model('pushnotification_model');
                 $this->pushnotification_model->verify_booking($booking_details['fk_user_id'],$booking_details['booking_id']);
             }
@@ -174,7 +168,6 @@ class Verifier_api extends REST_Controller {
             $complaint_text = $this->input->post('complaint_text');
             $issue_image = $this->input->post('issue_image');
             $fk_issue_type_id = $this->input->post('fk_issue_type_id');
-
             if(empty($verifier_id)){
                 $response['message'] = "Verifier Id is required";
                 $response['code'] = 201;
@@ -720,7 +713,31 @@ class Verifier_api extends REST_Controller {
         }
         echo json_encode($response);
     }
-
+    public function duty_allocated_details_post()
+    {
+        $response = array('code' => - 1, 'status' => false, 'message' => '');
+        $validate = validateToken();
+        if ($validate) {
+            $id = $this->input->post('id');             
+            if(empty($id)){
+                $response['message'] = "Id is required";
+                $response['code'] = 201;
+            }else{
+                $current_date = date('d/m/Y');
+                $duty_allocated_data = $this->model->selectWhereData('tbl_duty_allocation',array('date'=>$current_date,'fk_verifier_id'=>$id),array('fk_place_id'));
+                $place_details = $this->model->selectWhereData('tbl_parking_place',array('id'=>$duty_allocation_data['fk_place_id']),array('id','place_name','address'));
+            
+                $response['code'] = REST_Controller::HTTP_OK;
+                $response['status'] = true;
+                $response['message'] = 'success';
+                $response['duty_allocated_place_details'] = $place_details;
+            }
+        }else{
+             $response['code'] = REST_Controller::HTTP_UNAUTHORIZED;
+             $response['message'] = 'Unauthorised';
+        }
+        echo json_encode($response);   
+    }
 
 
    

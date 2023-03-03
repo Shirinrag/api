@@ -92,7 +92,6 @@ class Superadmin_api extends REST_Controller {
                     $response['code'] = 201;
                 }else{
                     $user_type = $this->model->selectWhereData('tbl_user_type',array('id'=>$id),array('*'));
-
                     $response['code'] = REST_Controller::HTTP_OK;
                     $response['status'] = true;
                     $response['message'] = 'success';
@@ -122,7 +121,7 @@ class Superadmin_api extends REST_Controller {
                     if($check_user_type_count > 0){
                         $response['code'] = 201;
                         $response['status'] = false;
-                        $response['message'] = 'Role Already exist.';                              
+                        $response['message'] = 'Role Already exist.';        
                     }else{
                         $curl_data = array(
                             'user_type' =>$user_type,
@@ -242,8 +241,7 @@ class Superadmin_api extends REST_Controller {
                         $response['code'] = 201;
                         $response['status'] = false;
                         $response['message'] = 'Username Already exist.'; 
-                        $response['error_status'] = 'username';       
-
+                        $response['error_status'] = 'username';      
                     }else{
                         $curl_data = array(
                             'firstName' =>$first_name,
@@ -294,7 +292,6 @@ class Superadmin_api extends REST_Controller {
                     $response['code'] = 201;
                 }else{
                     $admin = $this->model->selectWhereData('pa_users',array('id'=>$id),array('*'));
-
                     $response['code'] = REST_Controller::HTTP_OK;
                     $response['status'] = true;
                     $response['message'] = 'success';
@@ -346,7 +343,7 @@ class Superadmin_api extends REST_Controller {
                         $response['code'] = 201;
                         $response['status'] = false;
                         $response['message'] = 'Email Already exist.';
-                        $response['error_status'] = 'email';                              
+                        $response['error_status'] = 'email';                             
                     }else{
                         $curl_data = array(
                             'firstName' =>$first_name,
@@ -354,7 +351,6 @@ class Superadmin_api extends REST_Controller {
                             'phoneNo' =>$mobile_no,
                             'user_type' =>$user_type,
                             'email' =>$email
-                            // 'username' =>$username,
                         );
                         $this->model->updateData('pa_users',$curl_data,array('id'=>$id));
                         $response['code'] = REST_Controller::HTTP_OK;
@@ -428,15 +424,15 @@ class Superadmin_api extends REST_Controller {
                     if($check_email_count > 0){
                         $response['code'] = 201;
                         $response['status'] = false;
-                        $response['message'] = 'Email Already exist.';                              
+                        $response['message'] = 'Email Already exist.';    
                     }else if($check_mobile_no_count > 0){
                         $response['code'] = 201;
                         $response['status'] = false;
-                        $response['message'] = 'Mobile No Already exist.';                              
+                        $response['message'] = 'Mobile No Already exist.';         
                     }else if($check_user_name_count > 0){
                         $response['code'] = 201;
                         $response['status'] = false;
-                        $response['message'] = 'Username Already exist.';                              
+                        $response['message'] = 'Username Already exist.';                          
                     }else{
                         $user_type = $this->model->selectWhereData('tbl_user_type',array('user_type'=>"User"),array('id'));
                         $curl_data = array(
@@ -488,7 +484,6 @@ class Superadmin_api extends REST_Controller {
                     $response['code'] = 201;
                 }else{
                     $admin = $this->model->selectWhereData('pa_users',array('id'=>$id),array('*'));
-
                     $response['code'] = REST_Controller::HTTP_OK;
                     $response['status'] = true;
                     $response['message'] = 'success';
@@ -508,9 +503,7 @@ class Superadmin_api extends REST_Controller {
                 $user_type = $this->input->post('user_type');
                 $first_name = $this->input->post('first_name');
                 $last_name = $this->input->post('last_name');
-                // $email = $this->input->post('email');
                 $mobile_no = $this->input->post('mobile_no');
-                // $password = $this->input->post('password');
                 $username = $this->input->post('username');
                 $id = $this->input->post('id');
                 if(empty($first_name)){
@@ -534,11 +527,11 @@ class Superadmin_api extends REST_Controller {
                    if($check_mobile_no_count > 0){
                         $response['code'] = 201;
                         $response['status'] = false;
-                        $response['message'] = 'Mobile No Already exist.';                              
+                        $response['message'] = 'Mobile No Already exist.';
                     }else if($check_user_name_count > 0){
                         $response['code'] = 201;
                         $response['status'] = false;
-                        $response['message'] = 'Username Already exist.';                              
+                        $response['message'] = 'Username Already exist.';
                     }else{
                         $curl_data = array(
                             'firstName' =>$first_name,
@@ -682,6 +675,7 @@ class Superadmin_api extends REST_Controller {
                 $per_hour_charges = $this->input->post('per_hour_charges');
                 $fk_vehicle_type = $this->input->post('fk_vehicle_type');
                 $fk_vehicle_type = json_decode($fk_vehicle_type,true);
+                $total_place_count = $this->input->post('total_place_count');
                 if(empty($fk_vendor_id)){
                     $response['message'] = "First Name is required";
                     $response['code'] = 201;
@@ -716,12 +710,11 @@ class Superadmin_api extends REST_Controller {
                     $response['message'] = "Extension Price is required";
                     $response['code'] = 201;
                 }else{
-                    $check_place_count = $this->model->CountWhereRecord('tbl_parking_place', array('place_name'=>$place_name,'fk_place_status_id'=>$fk_place_status_id,'status'=>1));
-                   
+                    $check_place_count = $this->model->CountWhereRecord('tbl_parking_place', array('place_name'=>$place_name,'fk_place_status_id'=>$fk_place_status_id,'status'=>1));            
                     if($check_place_count > 0){
                         $response['code'] = 201;
                         $response['status'] = false;
-                        $response['message'] = 'Place Name Already exist.';                              
+                        $response['message'] = 'Place Name Already exist.';             
                     }else{
                         $curl_data = array(
                             'fk_vendor_id'=>$fk_vendor_id,
@@ -737,7 +730,8 @@ class Superadmin_api extends REST_Controller {
                             'fk_place_status_id'=>$fk_place_status_id,
                             'fk_parking_price_type'=>$fk_parking_price_type,
                             'ext_price'=>$ext_price,
-                            'per_hour_charges'=>$per_hour_charges
+                            'per_hour_charges'=>$per_hour_charges,
+                            'total_place_count'=>$total_place_count
                         );
                         $last_inserted_id = $this->model->insertData('tbl_parking_place',$curl_data); 
 
@@ -761,35 +755,9 @@ class Superadmin_api extends REST_Controller {
                                             'fk_place_id'=>$last_inserted_id,
                                             'fk_vehicle_type_id'=>$fk_vehicle_type_row
                                     );
-                                     $this->model->insertData('tbl_hours_price_slab',$insert_price_data);
-                                //  
-
-                                // foreach ($from_hours_1 as $from_hours_1_key => $from_hours_1_row) {
-                                //      $insert_price_data = array(
-                                //             'from_hours' =>$from_hours_1_row,
-                                //             'to_hours' =>@$to_hours_1[$from_hours_1_key],
-                                //             'cost' =>@$cost_1[$from_hours_1_key],
-                                //             'fk_place_id'=>$id,
-                                //             'fk_vehicle_type_id'=>$new_vehicle_info_row
-                                //     );
-                                //      $this->model->insertData('tbl_hours_price_slab',$insert_price_data);
-                                // }                              
-                            }
-                        }                                                     
-                        // if($from_hours!= "" && $to_hours !="" && !empty($price)){
-                        //     foreach ($from_hours as $from_hours_key => $from_hours_rows) {
-                        //          foreach($from_hours_rows as $from_hours_rows_key => $from_hours_rows_rows){
-                        //             $insert_price_data = array(
-                        //             // 'fk_place_id' =>$last_inserted_id,
-                        //             'from_hours' =>$from_hours_rows_rows,
-                        //             'to_hours' =>$to_hours[$from_hours_key][$from_hours_rows_key],
-                        //             'cost' =>$price[$from_hours_key][$from_hours_rows_key],
-                        //             'fk_vehicle_type_id'=>$from_hours_rows
-                        //         );
-                        //             echo '<pre>'; print_r($$from_hours); exit;
-                        //         // $this->model->insertData('tbl_hours_price_slab',$insert_price_data);  
-                        //         }                                     
-                        //     }
+                                     $this->model->insertData('tbl_hours_price_slab',$insert_price_data);                          
+                                }
+                            }                                                     
                         }
                         $prefix = $this->model->selectWhereData('tbl_states',array('id'=>$fk_state_id),array('prefix'));
                         for ($i=0; $i < $slots; $i++) { 
@@ -801,12 +769,9 @@ class Superadmin_api extends REST_Controller {
                                 $slot_name = $this->model->selectWhereData('tbl_slot_info',array('del_status'=>1),array('slot_name'),true,array('id','DESC'));
                                 $slot_name = $slot_name['slot_name'];
                             }  
-
                             $this->load->model('superadmin_model');
                             $slot_name1 = $prefix['prefix'] . "-" . $this->superadmin_model->uniqueSlotName($slot_name);
-                            
                                 $display_id = "P-" . ($i + 1);
-
                                 $insert_slot_info_data=array(
                                     'fk_place_id' =>$last_inserted_id,
                                     'slot_name' =>$slot_name1,
@@ -916,7 +881,6 @@ class Superadmin_api extends REST_Controller {
                 $fk_place_status_id = $this->input->post('fk_place_status_id');
                 $fk_parking_price_type = $this->input->post('fk_parking_price_type');
                 $ext_price = $this->input->post('ext_price');
-
                 $hour_price_slab_id = $this->input->post('hour_price_slab_id');
                 $hour_price_slab_id = json_decode($hour_price_slab_id,true);
                 $from_hours = $this->input->post('from_hours');
@@ -928,6 +892,7 @@ class Superadmin_api extends REST_Controller {
                 $fk_vehicle_type = $this->input->post('fk_vehicle_type');
                 $fk_vehicle_type = json_decode($fk_vehicle_type,true);
                 $per_hour_charges = $this->input->post('per_hour_charges');
+                $total_place_count = $this->input->post('total_place_count');
                 if(empty($fk_vendor_id)){
                     $response['message'] = "First Name is required";
                     $response['code'] = 201;
@@ -962,7 +927,7 @@ class Superadmin_api extends REST_Controller {
                     $response['message'] = "Extension Price is required";
                     $response['code'] = 201;
                 }else{
-                    $check_place_count = $this->model->CountWhereRecord('tbl_parking_place', array('place_name'=>$place_name,'fk_place_status_id'=>$fk_place_status_id,'id !='=> $id));                   
+                    $check_place_count = $this->model->CountWhereRecord('tbl_parking_place', array('place_name'=>$place_name,'fk_place_status_id'=>$fk_place_status_id,'id !='=> $id));                  
                     if($check_place_count > 0){
                         $response['code'] = 201;
                         $response['status'] = false;
@@ -983,13 +948,12 @@ class Superadmin_api extends REST_Controller {
                             'fk_place_status_id'=>$fk_place_status_id,
                             'fk_parking_price_type'=>$fk_parking_price_type,
                             'ext_price'=>$ext_price,
-                            'per_hour_charges'=>$per_hour_charges
+                            'per_hour_charges'=>$per_hour_charges,
+                            'total_place_count'=>$total_place_count
                         );
                         $this->model->updateData('tbl_parking_place',$curl_data,array('id'=>$id));
-
                         $previous_vehicle_type = $this->model->selectWhereData('tbl_parking_place_vehicle_type',array('fk_place_id'=>$id),array('GROUP_CONCAT(fk_vehicle_type_id) as fk_vehicle_type_id'),true,'','fk_place_id');
-                        $previous_vehicle_type_1 = explode(",",$previous_vehicle_type['fk_vehicle_type_id']);
-                        // $new_vehicle_info=[];
+                        $previous_vehicle_type_1 = explode(",",$previous_vehicle_type['fk_vehicle_type_id']);                       
                         $delete_vehicle_info=array_diff($previous_vehicle_type_1,$fk_vehicle_type);
                         $new_vehicle_info=array_diff($fk_vehicle_type,$previous_vehicle_type_1);
                         if (!empty($new_vehicle_info)) {
@@ -1076,28 +1040,7 @@ class Superadmin_api extends REST_Controller {
                                         );
                                         $this->model->insertData('tbl_slot_info',$insert_slot_info_data);  
                             }
-                        }
-                        // else{
-                        //     if($slots_data['slots'] > $slots){
-                        //        $this->load->model('superadmin_model');
-                        //        $active_count_slots = $this->superadmin_model->get_count_slot_id();
-                        //        echo '<pre>'; print_r($active_count_slots); 
-
-                        //        $final_count = $active_count_slots['total'] - $slots;
-                        //        echo '<pre>'; print_r($final_count); exit;
-                        //        $slots_id = $this->superadmin_model->get_slot_id($final_count);
-                        //        // print_r($slots_id);
-                        //        exit;
-                        //        // foreach ($slots_id as $slots_id_key => $slots_id_row) {
-                        //        //    $update_status = array(
-                        //        //          'del_status' => 0,
-                        //        //          'fk_machine_status'=>0
-                        //        //    );
-                        //        //      $this->model->updateData('tbl_slot_info',$update_status,array('id'=>$slots_id_row['id']));
-                        //        // }
-                        //     }
-                        // }
-                        
+                        }                        
                         $response['code'] = REST_Controller::HTTP_OK;
                         $response['status'] = true;
                         $response['message'] = 'Parking Places Updated Successfully';
@@ -1184,8 +1127,7 @@ class Superadmin_api extends REST_Controller {
                             $response['status'] = true;
                             $response['message'] = 'Device Inserted Successfully';
                         }
-                    }
-                    
+                    }                    
                 }
         }else {
             $response['code'] = REST_Controller::HTTP_UNAUTHORIZED;
@@ -1200,10 +1142,6 @@ class Superadmin_api extends REST_Controller {
         if ($validate) {
             $this->load->model('superadmin_model');
                 $device_data = $this->superadmin_model->display_all_device_data();
-                // foreach ($device_data as $device_data_key => $device_data_row) {
-                    
-                // }
-                // $device_data = $this->model->selectWhereData('tbl_device',array(),array('*','CONCAT(tbl_device.status,",",tbl_device.id) AS statusdata'),false,array('id',"desc"));
                 $response['code'] = REST_Controller::HTTP_OK;
                 $response['status'] = true;
                 $response['message'] = 'success';
@@ -1227,7 +1165,6 @@ class Superadmin_api extends REST_Controller {
                 }else{
                     $update_data = array('status' => $status);
                     $this->model->updateData('tbl_device',$update_data,array('id'=>$id));
-                    
                         $response['code'] = REST_Controller::HTTP_OK;
                         $response['status'] = true;
                         $response['message'] = 'Device Status Updated Successfully';
@@ -1252,7 +1189,7 @@ class Superadmin_api extends REST_Controller {
                     if($check_user_car_count > 0){
                         $response['code'] = 201;
                         $response['status'] = false;
-                        $response['message'] = 'Role Already exist.';                              
+                        $response['message'] = 'Role Already exist.';                      
                     }else{
                         $curl_data = array(
                             'bonus_amount' =>$bonus_amount,
@@ -1551,26 +1488,24 @@ class Superadmin_api extends REST_Controller {
             } else {
                 foreach($fk_machine_id as $fk_machine_id_key => $fk_machine_id_row){
                         $check_slot_info_count = $this->model->CountWhereRecord('tbl_slot_info', array('fk_machine_id'=>$fk_machine_id_row,'del_status'=>1,'id !='=>$slot_id[$fk_machine_id_key]));
-                        // echo '<pre>'; print_r($check_slot_info_count); 
                         if($check_slot_info_count > 0){
                             $response['code'] = 201;
                             $response['status'] = false;
                             $response['message'] = 'Device Id Already exist.';
                         }else{
-                                $update_data = array(
-                                    'fk_machine_id'=>$fk_machine_id_row,
-                                    'fk_machine_status'=>1
+                            $update_data = array(
+                                'fk_machine_id'=>$fk_machine_id_row,
+                                'fk_machine_status'=>1
+                            );
+                            $this->model->updateData('tbl_slot_info',$update_data, array('id'=>$slot_id[$fk_machine_id_key]));
+                            $insert_data=array(
+                                    'fk_parking_place_id' =>$edit_id,
+                                    'fk_device_id' => $fk_machine_id_row
                                 );
-                                $this->model->updateData('tbl_slot_info',$update_data, array('id'=>$slot_id[$fk_machine_id_key]));
-
-                                $insert_data=array(
-                                        'fk_parking_place_id' =>$edit_id,
-                                        'fk_device_id' => $fk_machine_id_row
-                                    );
-                                    $this->model->insertData('tbl_place_device_mapped',$insert_data);
-                                    $response['message'] = 'success';
-                                    $response['code'] = 200;
-                                    $response['status'] = true;
+                                $this->model->insertData('tbl_place_device_mapped',$insert_data);
+                                $response['message'] = 'success';
+                                $response['code'] = 200;
+                                $response['status'] = true;
                         }                    
                     }               
             }
@@ -1620,13 +1555,10 @@ class Superadmin_api extends REST_Controller {
                 $update_data = array(
                     'del_status'=>$status,
                 );
-
                 $this->model->updateData('tbl_slot_info',$update_data, array('id'=>$id));
-                $count = $this->model->CountWhereInRecord('tbl_slot_info',array('del_status'=>1,'fk_place_id'=>$place_id));
-                
+                $count = $this->model->CountWhereInRecord('tbl_slot_info',array('del_status'=>1,'fk_place_id'=>$place_id));                
                 $update_data=array('slots'=>$count);
                 $this->model->updateData('tbl_parking_place',$update_data,array('id'=>$place_id));
-
                 $response['message'] = 'Slot Deleted Successfully';
                 $response['code'] = 200;
                 $response['status'] = true;
@@ -1637,7 +1569,6 @@ class Superadmin_api extends REST_Controller {
         }
         echo json_encode($response);
     }
-
     public function dashboard_get()
     {
         $response = array('code' => - 1, 'status' => false, 'message' => '');
@@ -1645,11 +1576,15 @@ class Superadmin_api extends REST_Controller {
         if($validate){
             $total_user_count = $this->model->CountWhereInRecord('pa_users',array('isActive'=>1,'user_type'=>10));       
             $total_place_count = $this->model->CountWhereInRecord('tbl_parking_place',array('del_status'=>1));       
+            $total_booking_count = $this->model->CountWhereInRecord('tbl_booking',array());      
+            $total_download_count = $this->model->CountWhereInRecord('pa_users',array('isActive'=>1,'user_type'=>10));      
                 $response['message'] = 'success';
                 $response['code'] = 200;
                 $response['status'] = true;
                 $response['total_user_count'] = $total_user_count;
                 $response['total_place_count'] = $total_place_count;
+                $response['total_booking_count'] = $total_booking_count;
+                $response['total_download_count'] = $total_download_count;
         } else {
             $response['message'] = 'Invalid Request';
             $response['code'] = 204;
@@ -1683,7 +1618,6 @@ class Superadmin_api extends REST_Controller {
         if($validate){
             $fk_place_id = $this->input->post('fk_place_id');
             $fk_place_id = json_decode($fk_place_id);
-
             $fk_verifier_id=$this->input->post('fk_verifier_id');
             $fk_verifier_id = json_decode($fk_verifier_id);
             $date=$this->input->post('date');
@@ -1699,24 +1633,16 @@ class Superadmin_api extends REST_Controller {
                 $response['code'] = 201;
             } else {
                 foreach($fk_verifier_id as $fk_verifier_id_key => $fk_verifier_id_row){
-                    // $check_user_car_count = $this->model->CountWhereRecord('tbl_duty_allocation', array('fk_place_id' =>@$fk_place_id[$fk_verifier_id_key],'fk_verifier_id' => @$fk_verifier_id_row,,'date'=> @$date[$fk_verifier_id_key]));
-                    // if($check_user_car_count > 0){
-                    //     $response['code'] = 201;
-                    //     $response['status'] = false;
-                    //     $response['message'] = 'Duty Already Allocated.';                             
-                    // }else{
-                        $insert_data=array(
-                            'fk_place_id' =>$fk_place_id[$fk_verifier_id_key],      
-                            'fk_verifier_id' => $fk_verifier_id_row,
-                            'date'=>$date[$fk_verifier_id_key]
-                        );
-                        $this->model->insertData('tbl_duty_allocation',$insert_data);
-                        $response['message'] = 'success';
-                        $response['code'] = 200;
-                        $response['status'] = true;   
-                    // }
-                }            
-                            
+                    $insert_data=array(
+                        'fk_place_id' =>$fk_place_id[$fk_verifier_id_key],      
+                        'fk_verifier_id' => $fk_verifier_id_row,
+                        'date'=>$date[$fk_verifier_id_key]
+                    );
+                    $this->model->insertData('tbl_duty_allocation',$insert_data);
+                    $response['message'] = 'success';
+                    $response['code'] = 200;
+                    $response['status'] = true;   
+                }               
             }
         } else {
             $response['message'] = 'Invalid Request';
@@ -1759,7 +1685,6 @@ class Superadmin_api extends REST_Controller {
         }
         echo json_encode($response);
     }
-
     public function delete_duty_allocation_post()
     {
         $response = array('code' => - 1, 'status' => false, 'message' => '');
@@ -1770,13 +1695,13 @@ class Superadmin_api extends REST_Controller {
                     $response['message'] = "Id is required";
                     $response['code'] = 201;
                 }else{
-                        $curl_data = array(
-                            'del_status' =>0,
-                        );
-                        $this->model->updateData('tbl_duty_allocation',$curl_data,array('id'=>$id));
-                        $response['code'] = REST_Controller::HTTP_OK;
-                        $response['status'] = true;
-                        $response['message'] = 'Duty Allocation Deleted Successfully';
+                    $curl_data = array(
+                        'del_status' =>0,
+                    );
+                    $this->model->updateData('tbl_duty_allocation',$curl_data,array('id'=>$id));
+                    $response['code'] = REST_Controller::HTTP_OK;
+                    $response['status'] = true;
+                    $response['message'] = 'Duty Allocation Deleted Successfully';
                 }
         }else {
             $response['code'] = REST_Controller::HTTP_UNAUTHORIZED;
@@ -1801,7 +1726,6 @@ class Superadmin_api extends REST_Controller {
                     $response['code'] = 201;
                 } else {
                          $check_blogs_count = $this->model->CountWhereRecord('tbl_blogs', array('title'=>$title,'del_status'=>1));
-                       
                         if($check_blogs_count > 0){
                             $response['code'] = 201;
                             $response['status'] = false;
@@ -1861,7 +1785,6 @@ class Superadmin_api extends REST_Controller {
                     $response['code'] = 201;
                 } else {
                          $check_blogs_count = $this->model->CountWhereRecord('tbl_blogs', array('title'=>$title,'del_status'=>1,'id !=' =>$id));
-                       
                         if($check_blogs_count > 0){
                             $response['code'] = 201;
                             $response['status'] = false;
@@ -1894,13 +1817,13 @@ class Superadmin_api extends REST_Controller {
                     $response['message'] = "Id is required";
                     $response['code'] = 201;
                 }else{
-                        $curl_data = array(
-                            'del_status' =>0,
-                        );
-                        $this->model->updateData('tbl_blogs',$curl_data,array('id'=>$id));
-                        $response['code'] = REST_Controller::HTTP_OK;
-                        $response['status'] = true;
-                        $response['message'] = 'Blogs Deleted Successfully';
+                    $curl_data = array(
+                        'del_status' =>0,
+                    );
+                    $this->model->updateData('tbl_blogs',$curl_data,array('id'=>$id));
+                    $response['code'] = REST_Controller::HTTP_OK;
+                    $response['status'] = true;
+                    $response['message'] = 'Blogs Deleted Successfully';
                 }
         }else {
             $response['code'] = REST_Controller::HTTP_UNAUTHORIZED;
@@ -1912,7 +1835,7 @@ class Superadmin_api extends REST_Controller {
 
     public function add_vehicle_type_post()
     {
-         $response = array('code' => - 1, 'status' => false, 'message' => '');
+        $response = array('code' => - 1, 'status' => false, 'message' => '');
         $validate = validateToken();
         if ($validate) {
                 $vehicle_type = $this->input->post('vehicle_type');
@@ -1924,7 +1847,7 @@ class Superadmin_api extends REST_Controller {
                     if($check_user_car_count > 0){
                         $response['code'] = 201;
                         $response['status'] = false;
-                        $response['message'] = 'Vehicle Type Already exist.';                              
+                        $response['message'] = 'Vehicle Type Already exist.';                
                     }else{
                         $curl_data = array(
                             'vehicle_type' =>$vehicle_type,
@@ -2270,13 +2193,6 @@ class Superadmin_api extends REST_Controller {
                 $response['code'] = 201;
             } else {
                 foreach($fk_pos_verifier_id as $fk_pos_verifier_id_key => $fk_pos_verifier_id_row){
-                   
-                    // $check_pos_device_count = $this->model->CountWhereRecord('tbl_pos_duty_allocation', array('fk_place_id' =>@$fk_place_id[$fk_pos_verifier_id_key],'fk_pos_verifier_id' => @$fk_pos_verifier_id_row,,'date'=> @$date[$fk_pos_verifier_id_key]));
-                    // if($check_pos_device_count > 0){
-                    //     $response['code'] = 201;
-                    //     $response['status'] = false;
-                    //     $response['message'] = 'Duty Already Allocated.';                             
-                    // }else{
                          $device_id = $this->model->selectWhereData('tbl_pos_device_map',array('fk_place_id'=>$fk_place_id[$fk_pos_verifier_id_key]),array('id'));
                         $insert_data=array(
                             'fk_place_id' =>$fk_place_id[$fk_pos_verifier_id_key],      
@@ -2288,7 +2204,6 @@ class Superadmin_api extends REST_Controller {
                         $response['message'] = 'success';
                         $response['code'] = 200;
                         $response['status'] = true;   
-                    // }
                 }                              
             }
         } else {
@@ -2356,7 +2271,7 @@ class Superadmin_api extends REST_Controller {
                         if($check_user_car_count > 0){
                             $response['code'] = 201;
                             $response['status'] = false;
-                            $response['message'] = 'POS Device Already exist.';                              
+                            $response['message'] = 'POS Device Already exist.';                     
                         }else{
                             $curl_data = array(
                                 'pos_device_id' =>$device_id_row,
@@ -2381,10 +2296,6 @@ class Superadmin_api extends REST_Controller {
         $validate = validateToken();
         if ($validate) {
             $this->load->model('superadmin_model');
-                // $device_data = $this->model->selectWhereData();
-                // foreach ($device_data as $device_data_key => $device_data_row) {
-                    
-                // }
                 $device_data = $this->model->selectWhereData('tbl_pos_device',array(),array('*','CONCAT(tbl_pos_device.status,",",tbl_pos_device.id) AS statusdata'),false,array('id',"desc"));
                 $response['code'] = REST_Controller::HTTP_OK;
                 $response['status'] = true;
@@ -2444,7 +2355,6 @@ class Superadmin_api extends REST_Controller {
         $response = array('code' => - 1, 'status' => false, 'message' => '');
         $validate = validateToken();
         if($validate){
-           
             $verifier_terms_n_condition = $this->model->selectWhereData('tbl_terms_condition',array('terms_type'=>2),array('*'));
             $response['message'] = 'success';
             $response['code'] = 200;
@@ -2721,8 +2631,7 @@ class Superadmin_api extends REST_Controller {
                 $response['code'] = REST_Controller::HTTP_OK;
                 $response['status'] = true;
                 $response['message'] = 'success';
-            }
-            
+            }            
         } else {
             $response['code'] = REST_Controller::HTTP_UNAUTHORIZED;
             $response['message'] = 'Unauthorised';
