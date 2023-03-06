@@ -676,6 +676,7 @@ class Superadmin_api extends REST_Controller {
                 $fk_vehicle_type = $this->input->post('fk_vehicle_type');
                 $fk_vehicle_type = json_decode($fk_vehicle_type,true);
                 $total_place_count = $this->input->post('total_place_count');
+                $referral_code = $this->input->post('referral_code');
                 if(empty($fk_vendor_id)){
                     $response['message'] = "First Name is required";
                     $response['code'] = 201;
@@ -710,11 +711,16 @@ class Superadmin_api extends REST_Controller {
                     $response['message'] = "Extension Price is required";
                     $response['code'] = 201;
                 }else{
-                    $check_place_count = $this->model->CountWhereRecord('tbl_parking_place', array('place_name'=>$place_name,'fk_place_status_id'=>$fk_place_status_id,'status'=>1));            
+                    $check_place_count = $this->model->CountWhereRecord('tbl_parking_place', array('place_name'=>$place_name,'fk_place_status_id'=>$fk_place_status_id,'status'=>1));  
+                    $check_referral_code_count = $this->model->CountWhereRecord('tbl_referral_code', array('referral_code'=>$referral_code,'status'=>1));          
                     if($check_place_count > 0){
                         $response['code'] = 201;
                         $response['status'] = false;
                         $response['message'] = 'Place Name Already exist.';             
+                    }else if($check_referral_code_count > 0){
+                        $response['code'] = 201;
+                        $response['status'] = false;
+                        $response['message'] = 'Referral Code Already Exist......!';                              
                     }else{
                         $curl_data = array(
                             'fk_vendor_id'=>$fk_vendor_id,
@@ -731,7 +737,8 @@ class Superadmin_api extends REST_Controller {
                             'fk_parking_price_type'=>$fk_parking_price_type,
                             'ext_price'=>$ext_price,
                             'per_hour_charges'=>$per_hour_charges,
-                            'total_place_count'=>$total_place_count
+                            'total_place_count'=>$total_place_count,
+                            'referral_code' =>$referral_code,
                         );
                         $last_inserted_id = $this->model->insertData('tbl_parking_place',$curl_data); 
 
@@ -740,8 +747,7 @@ class Superadmin_api extends REST_Controller {
                                 $insert_vehicle_type_data = array(
                                     'fk_place_id' =>$last_inserted_id,
                                     'fk_vehicle_type_id'=>$fk_vehicle_type_row
-                                );
-                                    
+                                );                                    
                                 $this->model->insertData('tbl_parking_place_vehicle_type',$insert_vehicle_type_data); 
                                 $from_hours_1 = @$from_hours[$fk_vehicle_type_row];
                                 $to_hours_1 = @$to_hours[$fk_vehicle_type_row];
@@ -828,15 +834,13 @@ class Superadmin_api extends REST_Controller {
                     $parking_place = $this->superadmin_model->get_parking_place_details_on_id($id);
                     $state_details = $this->model->selectWhereData('tbl_states',array('country_id'=>$parking_place['fk_country_id']),array('id','name'),false);
                     $city_details = $this->model->selectWhereData('tbl_cities',array('state_id'=>$parking_place['fk_state_id']),array('id','name'),false);
-
-                    // $hour_price_slab_on_place_id = $this->model->selectWhereData('tbl_hours_price_slab',array('fk_place_id'=>$id),array('*',"id as hour_price_slab_id"),false);
                      $hour_price_slab_on_place_id = $this->superadmin_model->get_hour_price_slab($id);
                     $slot_info_on_place_id = $this->model->selectWhereData('tbl_slot_info',array('fk_place_id'=>$id,'del_status'=>1),array('*',"id as slot_info_id",),false);
                     foreach ($slot_info_on_place_id as $slot_info_on_place_id_key => $slot_info_on_place_id_row) {
                         $device_data = $this->model->selectWhereData('tbl_device',array(),array('id','device_id'),false,array('id',"ASC"));
                         if(!empty($slot_info_on_place_id_row['fk_machine_id'])){
-                              $device_id = $this->model->selectWhereData('tbl_device',array('id'=>$slot_info_on_place_id_row['fk_machine_id']),array('device_id'));
-                              $slot_info_on_place_id[$slot_info_on_place_id_key]['device_id'] = $device_id['device_id'];
+                            $device_id = $this->model->selectWhereData('tbl_device',array('id'=>$slot_info_on_place_id_row['fk_machine_id']),array('device_id'));
+                            $slot_info_on_place_id[$slot_info_on_place_id_key]['device_id'] = $device_id['device_id'];
                         }
                     }
                     $parking_place_vehicle_type = $this->model->selectWhereData('tbl_parking_place_vehicle_type',array('fk_place_id'=>$id),array('*',"id as parking_place_vehicle_type_id"),false);
@@ -2006,7 +2010,7 @@ class Superadmin_api extends REST_Controller {
         }
         echo json_encode($response);
     }
-    public function add_pos_device_mapped_post()
+     public function add_pos_device_mapped_post()
     {
         $response = array('code' => - 1, 'status' => false, 'message' => '');
         $validate = validateToken();
@@ -2020,7 +2024,7 @@ class Superadmin_api extends REST_Controller {
                     $response['message'] = "Device id is required";
                     $response['code'] = 201;
                 }else{
-                    $check_pos_device_map_count = $this->model->CountWhereRecord('tbl_pos_device_map', array('fk_place_id'=>$fk_place_id,'status'=>1));
+                    $check_pos_device_map_count = $this->model->CountWhereRecord('tbl_pos_device_map', array('fk_place_id'=>$fk_place_id,'device_id'=>$device_id,'status'=>1));
                     if($check_pos_device_map_count > 0){
                         $response['code'] = 201;
                         $response['status'] = false;
@@ -2153,21 +2157,21 @@ class Superadmin_api extends REST_Controller {
 
       public function get_all_pos_verifier_get()
       {
-           $response = array('code' => - 1, 'status' => false, 'message' => '');
-        $validate = validateToken();
-        if($validate){
-                $place_list = $this->model->selectWhereData('tbl_parking_place',array('status'=>1),array('id','place_name'),false);
-                $pos_verifier_list = $this->model->selectWhereData('pa_users',array('isActive'=>1,'user_type'=>14),array('id','firstName','lastName'),false);
-                $response['message'] = 'success';
-                $response['code'] = 200;
-                $response['status'] = true;
-                $response['place_list'] = $place_list;
-                $response['pos_verifier_list'] = $pos_verifier_list;
-        } else {
-            $response['message'] = 'Invalid Request';
-            $response['code'] = 204;
-        }
-        echo json_encode($response);
+            $response = array('code' => - 1, 'status' => false, 'message' => '');
+            $validate = validateToken();
+            if($validate){
+                    $place_list = $this->model->selectWhereData('tbl_parking_place',array('status'=>1),array('id','place_name'),false);
+                    $pos_verifier_list = $this->model->selectWhereData('pa_users',array('isActive'=>1,'user_type'=>14),array('id','firstName','lastName'),false);
+                    $response['message'] = 'success';
+                    $response['code'] = 200;
+                    $response['status'] = true;
+                    $response['place_list'] = $place_list;
+                    $response['pos_verifier_list'] = $pos_verifier_list;
+            } else {
+                $response['message'] = 'Invalid Request';
+                $response['code'] = 204;
+            }
+            echo json_encode($response);
       }
 
       public function save_pos_verifier_duty_allocation_post()
@@ -2340,10 +2344,12 @@ class Superadmin_api extends REST_Controller {
         if($validate){
          
                 $user_terms_n_condition = $this->model->selectWhereData('tbl_terms_condition',array('terms_type'=>1),array('*'));
+                 $user_privacy_n_policy = $this->model->selectWhereData('tbl_privacy_policy',array('privacy_type'=>1),array('*'));
                 $response['message'] = 'success';
                 $response['code'] = 200;
                 $response['status'] = true;
                 $response['user_terms_n_condition'] = $user_terms_n_condition;
+                $response['user_privacy_n_policy'] = $user_privacy_n_policy;
         } else {
             $response['message'] = 'Invalid Request';
             $response['code'] = 204;
@@ -2638,5 +2644,243 @@ class Superadmin_api extends REST_Controller {
         }
         echo json_encode($response);  
     }
+
+     public function add_referral_code_post()
+    {
+        $response = array('code' => - 1, 'status' => false, 'message' => '');
+        $validate = validateToken();
+        if ($validate) {
+                $referral_code = $this->input->post('referral_code');
+                if(empty($referral_code)){
+                    $response['message'] = "Place Status is required";
+                    $response['code'] = 201;
+                }else{
+                    $check_user_car_count = $this->model->CountWhereRecord('tbl_referral_code', array('referral_code'=>$referral_code,'status'=>1));
+                    if($check_user_car_count > 0){
+                        $response['code'] = 201;
+                        $response['status'] = false;
+                        $response['message'] = 'Referral Code Already Exist......!';                              
+                    }else{
+                        $curl_data = array(
+                            'referral_code' =>$referral_code,
+                        );
+                        $this->model->insertData('tbl_referral_code',$curl_data);
+                        $response['code'] = REST_Controller::HTTP_OK;
+                        $response['status'] = true;
+                        $response['message'] = 'Place Status Inserted Successfully';
+                    }
+                }
+        }else {
+            $response['code'] = REST_Controller::HTTP_UNAUTHORIZED;
+            $response['message'] = 'Unauthorised';
+        }
+        echo json_encode($response);
+    }  
+    public function display_all_referral_code_get()
+    {
+        $response = array('code' => - 1, 'status' => false, 'message' => '');
+        $validate = validateToken();
+        if ($validate) {
+                $referral_code_data = $this->model->selectWhereData('tbl_referral_code',array('del_status'=>1),array('*','CONCAT(tbl_referral_code.status,",",tbl_referral_code.id) AS statusdata'),false,array('id',"desc"));
+                $response['code'] = REST_Controller::HTTP_OK;
+                $response['status'] = true;
+                $response['message'] = 'success';
+                $response['referral_code_data'] = $referral_code_data;
+        } else {
+            $response['code'] = REST_Controller::HTTP_UNAUTHORIZED;
+            $response['message'] = 'Unauthorised';
+        }
+        echo json_encode($response);
+    }
+     public function update_referral_code_status_post()
+    {
+         $response = array('code' => - 1, 'status' => false, 'message' => '');
+        $validate = validateToken();
+        if($validate){
+            $id = $this->input->post('id');
+            $status=$this->input->post('status');
+            if (empty($id)) {
+                $response['message'] = 'id is required';
+                $response['code'] = 201;
+            } else {
+                $update_data = array(
+                    'status'=>$status,
+                );
+                $this->model->updateData('tbl_referral_code',$update_data, array('id'=>$id));
+                $response['message'] = 'success';
+                $response['code'] = 200;
+                $response['status'] = true;
+            }
+        } else {
+            $response['message'] = 'Invalid Request';
+            $response['code'] = 204;
+        }
+        echo json_encode($response);
+    }
+    public function update_referral_code_data_post()
+    {
+         $response = array('code' => - 1, 'status' => false, 'message' => '');
+        $validate = validateToken();
+        if ($validate) {
+                $referral_code = $this->input->post('referral_code');
+                $id = $this->input->post('id');
+                if(empty($referral_code)){
+                    $response['message'] = "Place Status is required";
+                    $response['code'] = 201;
+                }else if(empty($id)){
+                    $response['message'] = "Id is required";
+                    $response['code'] = 201;
+                }else{
+                    $check_user_car_count = $this->model->CountWhereRecord('tbl_referral_code', array('referral_code'=>$referral_code,'status'=>1,'id !=' =>$id));
+                    if($check_user_car_count > 0){
+                        $response['code'] = 201;
+                        $response['status'] = false;
+                        $response['message'] = 'Referral Code Already exist.';                              
+                    }else{
+                        $curl_data = array(
+                            'referral_code' =>$referral_code,
+                        );
+                        $this->model->updateData('tbl_referral_code',$curl_data,array('id'=>$id));
+                        $response['code'] = REST_Controller::HTTP_OK;
+                        $response['status'] = true;
+                        $response['message'] = 'Referral Code Updated Successfully';
+                    }
+                }
+        }else {
+            $response['code'] = REST_Controller::HTTP_UNAUTHORIZED;
+            $response['message'] = 'Unauthorised';
+        }
+        echo json_encode($response);
+    } 
+    public function delete_referral_code_data_post()
+    {
+        $response = array('code' => - 1, 'status' => false, 'message' => '');
+        $validate = validateToken();
+        if ($validate) {
+                $id = $this->input->post('id');
+                if(empty($id)){
+                    $response['message'] = "Id is required";
+                    $response['code'] = 201;
+                }else{
+                        $curl_data = array(
+                            'del_status' =>0,
+                        );
+                        $this->model->updateData('tbl_referral_code',$curl_data,array('id'=>$id));
+                        $response['code'] = REST_Controller::HTTP_OK;
+                        $response['status'] = true;
+                        $response['message'] = 'Referral Code Deleted Successfully';
+                }
+        }else {
+            $response['code'] = REST_Controller::HTTP_UNAUTHORIZED;
+            $response['message'] = 'Unauthorised';
+        }
+        echo json_encode($response);
+    } 
+    public function user_privacy_n_policy_get()
+    {
+        $response = array('code' => - 1, 'status' => false, 'message' => '');
+        $validate = validateToken();
+        if($validate){
+                $user_privacy_n_policy = $this->model->selectWhereData('tbl_privacy_policy',array('privacy_type'=>1),array('*'));
+                $response['message'] = 'success';
+                $response['code'] = 200;
+                $response['status'] = true;
+                $response['user_privacy_n_policy'] = $user_privacy_n_policy;
+        } else {
+            $response['message'] = 'Invalid Request';
+            $response['code'] = 204;
+        }
+        echo json_encode($response);
+    }
+    public function update_privacy_n_policy_post()
+    {
+        $response = array('code' => - 1, 'status' => false, 'message' => '');
+        $validate = validateToken();
+        if($validate){
+                $id = $this->input->post('id');
+                $privacy_policy = $this->input->post('privacy_policy');
+                if(empty($id)){
+                    $response['message']= "Id is required";
+                    $response['code']=201;
+                }else if(empty($privacy_policy)){
+                    $response['message']= "Terms & Condition is required";
+                    $response['code']=201;
+                }else{
+                    $curl_data=array(
+                        'privacy_policy' => $privacy_policy
+                    );
+                    $this->model->updateData('tbl_privacy_policy',$curl_data,array('id'=>$id));
+                    $response['status'] = true;
+                    $response['code'] = 200;
+                    $response['message'] = 'Privacy & Policy Updated Successfully';
+                }
+                
+        } else {
+            $response['message'] = 'Invalid Request';
+            $response['code'] = 204;
+        }
+        echo json_encode($response);
+    }
+    // ============================== Vendor Mapped Place===================================
+
+    public function get_vendor_map_place_data_get()
+    {
+            $response = array('code' => - 1, 'status' => false, 'message' => '');
+            $validate = validateToken();
+            if($validate){
+                    $place_list = $this->model->selectWhereData('tbl_parking_place',array('status'=>1),array('id','place_name'),false);
+                    $vendor_list = $this->model->selectWhereData('pa_users',array('isActive'=>1,'user_type'=>5),array('id','firstName','lastName'),false);
+                    $response['message'] = 'success';
+                    $response['code'] = 200;
+                    $response['status'] = true;
+                    $response['place_list'] = $place_list;
+                    $response['vendor_list'] = $vendor_list;
+            } else {
+                $response['message'] = 'Invalid Request';
+                $response['code'] = 204;
+            }
+            echo json_encode($response);
+    }
+    public function save_vendor_map_place_data_post()
+    {
+        $response = array('code' => - 1, 'status' => false, 'message' => '');
+        $validate = validateToken();
+        if ($validate) {
+                $fk_vendor_id = $this->input->post('fk_vendor_id');
+                $fk_place_id = json_decode($this->input->post('fk_place_id'));
+                if(empty($fk_vendor_id)){
+                    $response['message'] = "Vendor Id is required";
+                    $response['code'] = 201;
+                }else if(empty($fk_place_id)){
+                    $response['message'] = "Vendor Id is required";
+                    $response['code'] = 201;
+                }else{
+                    foreach ($fk_place_id as $fk_place_id_key => $fk_place_id_row) {
+                            $check_mapped_vendor_count = $this->model->CountWhereRecord('tbl_vendor_map_place', array('fk_vendor_id'=>$fk_vendor_id,'fk_place_id'=>$fk_place_id_row,'status'=>1));
+                            if($check_mapped_vendor_count > 0){
+                                $response['code'] = 201;
+                                $response['status'] = false;
+                                $response['message'] = 'Mapping Already Exist......!';                             
+                            }else{
+                                $curl_data = array(
+                                    'fk_vendor_id' =>$fk_vendor_id,
+                                    'fk_place_id' =>$fk_place_id_row,
+                                );
+                                
+                            }
+                    }
+                    $this->model->insertData('tbl_vendor_map_place',$curl_data);
+                    $response['code'] = REST_Controller::HTTP_OK;
+                    $response['status'] = true;
+                    $response['message'] = 'Place Status Inserted Successfully';
+                   
+                }
+        }else {
+            $response['code'] = REST_Controller::HTTP_UNAUTHORIZED;
+            $response['message'] = 'Unauthorised';
+        }
+        echo json_encode($response);
+    }
+    
     
 }

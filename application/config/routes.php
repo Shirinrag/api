@@ -199,7 +199,9 @@ $route['display-all-pos-booking-data'] = 'superadmin_api/display_all_pos_booking
 $route['user-terms-n-condition'] = 'superadmin_api/user_terms_n_condition';
 $route['verifier-terms-n-condition'] = 'superadmin_api/verifier_terms_n_condition';
 $route['vendor-terms-n-condition'] = 'superadmin_api/vendor_terms_n_condition';
-$route['update-terms-n-condition'] = 'superadmin_api/update_terms_n_condition';
+$route['user-privacy-n-policy'] = 'superadmin_api/user_privacy_n_policy';
+$route['update-privacy-n-policy'] = 'superadmin_api/update_privacy_n_policy';
+
 // ==================================== Suggested Parking Place===========================
 $route['display-all-suggested-parking-place_data'] = 'superadmin_api/display_all_suggested_parking_place_data';
 // ======================================Customer Support=======================
@@ -209,7 +211,15 @@ $route['display-all-register-user-complaint-data'] = 'superadmin_api/display_all
 $route['display-all-unregister-user-complaint-data'] = 'superadmin_api/display_all_unregister_user_complaint_data';
 $route['update-register-user-complaint-details'] = 'superadmin_api/update_register_user_complaint_details';
 $route['update-un-register-user-complaint-details'] = 'superadmin_api/update_un_register_user_complaint_details';
-
+// ================================ Referral Code ===================================
+$route['add-referral-code'] = 'superadmin_api/add_referral_code';
+$route['display-all-referral-code'] = 'superadmin_api/display_all_referral_code';
+$route['update-referral-code-status'] = 'superadmin_api/update_referral_code_status';
+$route['update-referral-code-data'] = 'superadmin_api/update_referral_code_data';
+$route['delete-referral-code'] = 'superadmin_api/delete_referral_code_data';
+// ========================== Vendor Mapped Place ===========================
+$route['get-vendor-map-place-data'] = 'superadmin_api/get_vendor_map_place_data';
+$route['add-vendor-map-place-data'] = 'superadmin_api/save_vendor_map_place_data';
 
 
 

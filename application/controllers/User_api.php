@@ -42,7 +42,6 @@ class User_api extends REST_Controller {
 		    	$referral_code = $this->input->post('referral_code');
 		    	$device_type = $this->input->post('device_type');
 		    	$password = $this->input->post('password');
-
 		    	if(empty($first_name)){
 		    		$response['message'] = "First Name is required";
 		    		$response['code'] = 201;
