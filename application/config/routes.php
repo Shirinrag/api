@@ -219,9 +219,9 @@ $route['update-referral-code-data'] = 'superadmin_api/update_referral_code_data'
 $route['delete-referral-code'] = 'superadmin_api/delete_referral_code_data';
 // ========================== Vendor Mapped Place ===========================
 $route['get-vendor-map-place-data'] = 'superadmin_api/get_vendor_map_place_data';
-$route['add-vendor-map-place-data'] = 'superadmin_api/save_vendor_map_place_data';
-
-
+$route['add-vendor-mapped-place'] = 'superadmin_api/save_vendor_map_place_data';
+$route['display-all-vendor-map-place-data'] = 'superadmin_api/display_all_vendor_map_place_data';
+$route['get-vendor-map-place-data-on-id'] = 'superadmin_api/get_vendor_map_place_data_on_id';
 
 // ============================= POS API=====================================
 $route['register-pos-verifier'] = 'pos_api/register_pos_verifier';

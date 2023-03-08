@@ -5,7 +5,7 @@ require APPPATH . '/libraries/REST_Controller.php';
 
 class Superadmin_api extends REST_Controller {
 
-	public function __construct() {
+    public function __construct() {
         parent::__construct();
         header('Access-Control-Allow-Origin: *');
         header('Access-Control-Allow-Credentials: true');
@@ -25,7 +25,7 @@ class Superadmin_api extends REST_Controller {
     208 = Curl Failed
     209 = Curl UNAUTHORIZED
     */ 
-	public function index() {
+    public function index() {
         $response = array('status' => false, 'msg' => 'Oops! Please try again later.', 'code' => 200);
         echo json_encode($response);
     }
@@ -675,6 +675,8 @@ class Superadmin_api extends REST_Controller {
                 $per_hour_charges = $this->input->post('per_hour_charges');
                 $fk_vehicle_type = $this->input->post('fk_vehicle_type');
                 $fk_vehicle_type = json_decode($fk_vehicle_type,true);
+                $place_count = $this->input->post('place_count');
+                $reserved_place_count = $this->input->post('reserved_place_count');
                 $total_place_count = $this->input->post('total_place_count');
                 $referral_code = $this->input->post('referral_code');
                 if(empty($fk_vendor_id)){
@@ -737,6 +739,8 @@ class Superadmin_api extends REST_Controller {
                             'fk_parking_price_type'=>$fk_parking_price_type,
                             'ext_price'=>$ext_price,
                             'per_hour_charges'=>$per_hour_charges,
+                            'place_count'=>$place_count,
+                            'reserved_place_count'=>$reserved_place_count,
                             'total_place_count'=>$total_place_count,
                             'referral_code' =>$referral_code,
                         );
@@ -896,7 +900,11 @@ class Superadmin_api extends REST_Controller {
                 $fk_vehicle_type = $this->input->post('fk_vehicle_type');
                 $fk_vehicle_type = json_decode($fk_vehicle_type,true);
                 $per_hour_charges = $this->input->post('per_hour_charges');
+                $place_count = $this->input->post('place_count');
+                $reserved_place_count = $this->input->post('reserved_place_count');
                 $total_place_count = $this->input->post('total_place_count');
+                $referral_code = $this->input->post('referral_code');
+                
                 if(empty($fk_vendor_id)){
                     $response['message'] = "First Name is required";
                     $response['code'] = 201;
@@ -953,7 +961,10 @@ class Superadmin_api extends REST_Controller {
                             'fk_parking_price_type'=>$fk_parking_price_type,
                             'ext_price'=>$ext_price,
                             'per_hour_charges'=>$per_hour_charges,
-                            'total_place_count'=>$total_place_count
+                            'place_count'=>$place_count,
+                            'reserved_place_count'=>$reserved_place_count,
+                            'total_place_count'=>$total_place_count,
+                            'referral_code'=>$referral_code
                         );
                         $this->model->updateData('tbl_parking_place',$curl_data,array('id'=>$id));
                         $previous_vehicle_type = $this->model->selectWhereData('tbl_parking_place_vehicle_type',array('fk_place_id'=>$id),array('GROUP_CONCAT(fk_vehicle_type_id) as fk_vehicle_type_id'),true,'','fk_place_id');
@@ -2855,27 +2866,72 @@ class Superadmin_api extends REST_Controller {
                     $response['message'] = "Vendor Id is required";
                     $response['code'] = 201;
                 }else{
-                    foreach ($fk_place_id as $fk_place_id_key => $fk_place_id_row) {
-                            $check_mapped_vendor_count = $this->model->CountWhereRecord('tbl_vendor_map_place', array('fk_vendor_id'=>$fk_vendor_id,'fk_place_id'=>$fk_place_id_row,'status'=>1));
-                            if($check_mapped_vendor_count > 0){
-                                $response['code'] = 201;
-                                $response['status'] = false;
-                                $response['message'] = 'Mapping Already Exist......!';                             
-                            }else{
-                                $curl_data = array(
-                                    'fk_vendor_id' =>$fk_vendor_id,
-                                    'fk_place_id' =>$fk_place_id_row,
-                                );
-                                
-                            }
-                    }
-                    $this->model->insertData('tbl_vendor_map_place',$curl_data);
+                    $check_vendor_count = $this->model->CountWhereRecord('tbl_vendor', array('vendor_id'=>$fk_vendor_id));
+                    if($check_vendor_count > 0){
+                        $response['code'] = 201;
+                        $response['status'] = false;
+                        $response['message'] = 'Vendor Already Exist......!';                             
+                    }else{
+                        $insert_data = array(
+                            'vendor_id'=>$fk_vendor_id,
+                        );
+                        $last_inserted_id = $this->model->insertData('tbl_vendor',$insert_data);
+
+                        foreach ($fk_place_id as $fk_place_id_key => $fk_place_id_row) {
+                                $check_mapped_vendor_count = $this->model->CountWhereRecord('tbl_vendor_map_place', array('fk_place_id'=>$fk_place_id_row,'status'=>1));
+                                if($check_mapped_vendor_count > 0){
+                                    $response['code'] = 201;
+                                    $response['status'] = false;
+                                    $response['message'] = 'Mapping Already Exist......!';
+                                }else{
+                                    $curl_data = array(
+                                        'fk_vendor_id' =>$last_inserted_id,
+                                        'fk_place_id' =>$fk_place_id_row,
+                                    );
+                                      $this->model->insertData('tbl_vendor_map_place',$curl_data);            
+                                }
+                          }
+                    }                  
                     $response['code'] = REST_Controller::HTTP_OK;
                     $response['status'] = true;
                     $response['message'] = 'Place Status Inserted Successfully';
-                   
                 }
         }else {
+            $response['code'] = REST_Controller::HTTP_UNAUTHORIZED;
+            $response['message'] = 'Unauthorised';
+        }
+        echo json_encode($response);
+    }
+    public function display_all_vendor_map_place_data_get()
+    {
+        $response = array('code' => - 1, 'status' => false, 'message' => '');
+        $validate = validateToken();
+        if ($validate) {
+                $this->load->model('superadmin_model');
+                $vendor_map_data = $this->superadmin_model->display_all_vendor_map_place_data();
+                $response['code'] = REST_Controller::HTTP_OK;
+                $response['status'] = true;
+                $response['message'] = 'success';
+                $response['vendor_map_data'] = $vendor_map_data;
+        } else {
+            $response['code'] = REST_Controller::HTTP_UNAUTHORIZED;
+            $response['message'] = 'Unauthorised';
+        }
+        echo json_encode($response);
+    }
+    public function get_vendor_map_place_data_on_id_post()
+    {
+        $response = array('code' => - 1, 'status' => false, 'message' => '');
+        $validate = validateToken();
+        if ($validate) {
+                $id = $this->input->post('id');
+                $this->load->model('superadmin_model');
+                $vendor_map_data = $this->superadmin_model->get_vendor_map_place_data_on_id($id);
+                $response['code'] = REST_Controller::HTTP_OK;
+                $response['status'] = true;
+                $response['message'] = 'success';
+                $response['vendor_map_data'] = $vendor_map_data;
+        } else {
             $response['code'] = REST_Controller::HTTP_UNAUTHORIZED;
             $response['message'] = 'Unauthorised';
         }
