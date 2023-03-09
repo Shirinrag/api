@@ -79,6 +79,8 @@ $route['user-wallet-create-order'] = 'user_api/user_wallet_create_order';
 $route['check-payment-status-order-id'] = 'user_api/check_payment_status_order_id';
 $route['notification-before-half-hours'] = 'user_api/notification_before_half_hours';
 $route['push-notification-log'] = 'user_api/push_notification_log';
+$route['save-traffic-subscription'] = 'user_api/save_traffic_subscription';
+$route['traffic-details'] = 'user_api/traffic_details';
 // ============================= Verifier App API=====================================
 $route['login-verifier'] = 'verifier_api/login_verifier';
 $route['verify-booking'] = 'verifier_api/verify_booking';
@@ -95,8 +97,6 @@ $route['booking-confirmation'] = 'verifier_api/booking_confirmation';
 $route['slot-status-details'] = 'verifier_api/slot_status_details';
 $route['slot-issue'] = 'verifier_api/slot_issue';
 $route['duty-allocated-details'] = 'verifier_api/duty_allocated_details';
-
-
 // =============Super Admin API=============================
 $route['loggedin-data'] = 'common/login_data';
 $route['get-all-user-type'] = 'common/get_all_user_type';
@@ -222,6 +222,7 @@ $route['get-vendor-map-place-data'] = 'superadmin_api/get_vendor_map_place_data'
 $route['add-vendor-mapped-place'] = 'superadmin_api/save_vendor_map_place_data';
 $route['display-all-vendor-map-place-data'] = 'superadmin_api/display_all_vendor_map_place_data';
 $route['get-vendor-map-place-data-on-id'] = 'superadmin_api/get_vendor_map_place_data_on_id';
+$route['update-vendor-mapped-place'] = 'superadmin_api/update_vendor_mapped_place';
 
 // ============================= POS API=====================================
 $route['register-pos-verifier'] = 'pos_api/register_pos_verifier';
@@ -234,3 +235,8 @@ $route['logout-data'] = 'pos_api/logout';
 $route['pos-report-data'] = 'pos_api/pos_report_data';
 $route['reset-password'] = 'pos_api/reset_password';
 
+// ==================== Vendor API==========================================
+$route['vendor-registration'] = 'vendor_api/vendor_registration';
+$route['vendor-login-data'] = 'vendor_api/vendor_login_data';
+$route['vendor-place-list-data'] = 'vendor_api/vendor_place_list_data';
+$route['total-earning-place-wise'] = 'vendor_api/total_earning_place_wise';

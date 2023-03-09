@@ -238,5 +238,15 @@ class User_model extends CI_Model {
 		$query = $this->db->get();
       return $query->result_array();
 	}
+
+	public function traffice_details($user_id="")
+	{
+		$this->db->select('tbl_traffic_subscription.fk_city_id,tbl_cities.name');
+		$this->db->from('tbl_traffic_subscription');
+		$this->db->join('tbl_cities','tbl_traffic_subscription.fk_city_id=tbl_cities.id','left');
+		$this->db->where('tbl_traffic_subscription.fk_user_id',$user_id);
+		$query = $this->db->get();
+      return $query->result_array();
+	}
 	
 }

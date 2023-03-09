@@ -1323,6 +1323,60 @@ class User_api extends REST_Controller {
         }
         echo json_encode($response); 
     }
+    public function save_traffic_subscription_post()
+    {
+    		$response = array('code' => - 1, 'status' => false, 'message' => '');
+	    	$validate = validateToken();
+	        if ($validate) {
+		    	$user_id = $this->input->post('user_id');
+		    	$city_id = $this->input->post('city_id');
+		    	if(empty($user_id)){
+		    		$response['message'] = "User Id is required";
+		    		$response['code'] = 201;
+		    	}else if(empty($city_id)){
+		    		$response['message'] = "City Id is required";
+		    		$response['code'] = 201;
+		    	}else{
+		    		$curl_data = array(
+		    			'fk_user_id'=>$user_id,
+		    			'fk_city_id'=>$city_id
+		    		);		    		
+		    		$this->model->insertData('tbl_traffic_subscription',$curl_data);
+		    		$response['code'] = REST_Controller::HTTP_OK;
+	    			$response['status'] = true;
+	    			$response['message'] = 'success'; 
+		    	}
+		    }else{
+		    	$response['code'] = REST_Controller::HTTP_UNAUTHORIZED;
+	            $response['message'] = 'Unauthorised';
+		    }
+		    echo json_encode($response);
+    }
+    public function traffic_details_post()
+    {
+	 		$response = array('code' => - 1, 'status' => false, 'message' => '');
+	    	$validate = validateToken();
+	        if ($validate) {
+		    	$user_id = $this->input->post('user_id');
+		    	if(empty($user_id)){
+		    		$response['message'] = "User Id is required";
+		    		$response['code'] = 201;
+		    	}else{
+		    		$this->load->model('user_model');
+		    		$city_data = $this->model->selectWhereData('tbl_cities',array('status'=>1),array('id','name'),false);
+		    		$traffic_data = $this->user_model->traffice_details($user_id);
+		    		$response['code'] = REST_Controller::HTTP_OK;
+	    			$response['status'] = true;
+	    			$response['message'] = 'success'; 
+	    			$response['city_data'] = $city_data; 
+	    			$response['traffic_data'] = $traffic_data; 
+		    	}
+		    }else{
+		    	$response['code'] = REST_Controller::HTTP_UNAUTHORIZED;
+	            $response['message'] = 'Unauthorised';
+		    }
+		    echo json_encode($response);
+    }
     
    
 }

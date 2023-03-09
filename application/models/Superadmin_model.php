@@ -263,7 +263,7 @@ class Superadmin_model extends CI_Model {
 
     public function get_vendor_map_place_data_on_id($id='')
     {
-        $this->db->select('tbl_vendor.vendor_id,tbl_vendor.id as tbl_vendor_id,tbl_vendor_map_place.fk_vendor_id as fk_vendor_id,GROUP_CONCAT(tbl_vendor_map_place.id) as id,GROUP_CONCAT(tbl_vendor_map_place.fk_place_id) as fk_place_id,GROUP_CONCAT(tbl_parking_place.place_name SEPARATOR ";") as place_name,CONCAT(tbl_vendor_map_place.status,",",tbl_vendor_map_place.id) AS statusdata,pa_users.firstName,pa_users.lastName');
+        $this->db->select('tbl_vendor.vendor_id,tbl_vendor.id as tbl_vendor_id,tbl_vendor_map_place.fk_vendor_id as fk_vendor_id,GROUP_CONCAT(tbl_vendor_map_place.id) as id,GROUP_CONCAT(tbl_vendor_map_place.id) as tbl_vendor_map_place_id,GROUP_CONCAT(tbl_vendor_map_place.fk_place_id) as fk_place_id,GROUP_CONCAT(tbl_parking_place.place_name SEPARATOR ";") as place_name,CONCAT(tbl_vendor_map_place.status,",",tbl_vendor_map_place.id) AS statusdata,pa_users.firstName,pa_users.lastName');
         $this->db->from('tbl_vendor');
         $this->db->join('tbl_vendor_map_place','tbl_vendor_map_place.fk_vendor_id=tbl_vendor.id','left');
         $this->db->join('tbl_parking_place','tbl_vendor_map_place.fk_place_id=tbl_parking_place.id','left');

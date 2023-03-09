@@ -2927,11 +2927,79 @@ class Superadmin_api extends REST_Controller {
                 $id = $this->input->post('id');
                 $this->load->model('superadmin_model');
                 $vendor_map_data = $this->superadmin_model->get_vendor_map_place_data_on_id($id);
+                $selected_parking_place_id = $this->model->selectWhereData('tbl_vendor_map_place',array('fk_vendor_id'=>$id),array("GROUP_CONCAT(fk_place_id) as fk_place_id"),true,'','fk_vendor_id');
+                $place_list = $this->model->selectWhereData('tbl_parking_place',array('del_status'=>1,'status'=>1),array('id','place_name'),false);
                 $response['code'] = REST_Controller::HTTP_OK;
                 $response['status'] = true;
                 $response['message'] = 'success';
                 $response['vendor_map_data'] = $vendor_map_data;
+                $response['place_list'] = $place_list;
+                $response['selected_parking_place_id'] = $selected_parking_place_id;
         } else {
+            $response['code'] = REST_Controller::HTTP_UNAUTHORIZED;
+            $response['message'] = 'Unauthorised';
+        }
+        echo json_encode($response);
+    }
+    public function update_vendor_mapped_place_post()
+    {
+        $response = array('code' => - 1, 'status' => false, 'message' => '');
+        $validate = validateToken();
+        if ($validate) {
+                $id = $this->input->post('id');
+                $fk_vendor_id = $this->input->post('fk_vendor_id');
+                $fk_place_id = json_decode($this->input->post('fk_place_id'));
+                if(empty($fk_vendor_id)){
+                    $response['message'] = "Vendor Id is required";
+                    $response['code'] = 201;
+                }else if(empty($fk_place_id)){
+                    $response['message'] = "Place Id is required";
+                    $response['code'] = 201;
+                }else{
+                    $check_vendor_count = $this->model->CountWhereRecord('tbl_vendor', array('id !='=>$id,));
+                    if($check_vendor_count > 0){
+                        $response['code'] = 201;
+                        $response['status'] = false;
+                        $response['message'] = 'Vendor Already Exist......!';                             
+                    }else{
+                        $insert_data = array(
+                            'vendor_id'=>$fk_vendor_id,
+                        );
+                        $last_inserted_id = $this->model->updateData('tbl_vendor',$insert_data,array('id'=>$id));
+
+                        $previous_place_id = $this->model->selectWhereData('tbl_vendor_map_place',array('fk_vendor_id'=>$id),array('GROUP_CONCAT(fk_place_id) as fk_place_id'),true,'','fk_vendor_id');
+                        $previous_place_id_1 = explode(",",$previous_place_id['fk_place_id']);                       
+                        $delete_place_id_info=array_diff($previous_place_id_1,$fk_place_id);
+                        $new_place_id_info=array_diff($fk_place_id,$previous_place_id_1);
+                        if(!empty($new_place_id_info)){
+                                foreach ($new_place_id_info as $new_place_id_info_key => $new_place_id_info_row) {
+                                    $check_mapped_vendor_count = $this->model->CountWhereRecord('tbl_vendor_map_place', array('fk_place_id'=>$new_place_id_info_row,'status'=>1));
+                                    if($check_mapped_vendor_count > 0){
+                                        $response['code'] = 201;
+                                        $response['status'] = false;
+                                        $response['message'] = 'Mapping Already Exist......!';
+                                    }else{
+                                        $curl_data = array(
+                                            'fk_vendor_id' =>$last_inserted_id,
+                                            'fk_place_id' =>$new_place_id_info_row,
+                                        );
+                                          $this->model->insertData('tbl_vendor_map_place',$curl_data);            
+                                    }
+                              }  
+                        }
+
+                        if(!empty($delete_place_id_info)){
+                            foreach ($delete_place_id_info as $delete_place_id_info_key => $delete_place_id_info_row) {
+                                    $this->model->direct_delete('tbl_vendor_map_place',array('fk_vendor_id'=>$id,'fk_place_id'=>$delete_place_id_info_row));
+                            }
+                        }       
+                        $response['code'] = REST_Controller::HTTP_OK;
+                        $response['status'] = true;
+                        $response['message'] = 'Vendor Mapped with Place Updated Successfully';
+                    }
+            }    
+                    
+        }else {
             $response['code'] = REST_Controller::HTTP_UNAUTHORIZED;
             $response['message'] = 'Unauthorised';
         }
