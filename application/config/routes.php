@@ -239,4 +239,7 @@ $route['reset-password'] = 'pos_api/reset_password';
 $route['vendor-registration'] = 'vendor_api/vendor_registration';
 $route['vendor-login-data'] = 'vendor_api/vendor_login_data';
 $route['vendor-place-list-data'] = 'vendor_api/vendor_place_list_data';
-$route['total-earning-place-wise'] = 'vendor_api/total_earning_place_wise';
+$route['total-earning-data'] = 'vendor_api/total_earning_data';
+$route['vendor-booking-history'] = 'vendor_api/vendor_booking_history';
+// ==================================== Report API ====================================
+$route['user-report-data'] = 'report_api/user_report_data';

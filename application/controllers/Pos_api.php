@@ -213,11 +213,10 @@ class Pos_api extends REST_Controller {
                       "password" => $encryptedpassword
                     );
                     $login_info = $this->model->selectWhereData('pa_users',$login_credentials_data,'*');
-
-
                     $pos_device_id = $this->model->selectWhereData('tbl_pos_device',array('pos_device_id'=>$device_id),array('id'));
 
-                    $place_id = $this->model->selectWhereData('tbl_pos_duty_allocation',array('fk_device_id'=>$pos_device_id['id'],'date'=>date('d/m/Y')),array('fk_place_id'));                  
+                    $place_id = $this->model->selectWhereData('tbl_pos_duty_allocation',array('fk_device_id'=>$pos_device_id['id'],'date'=>date('d/m/Y')),array('fk_place_id'));    
+                    $place_details = $this->model->selectWhereData('tbl_parking_place',array('id'=>$place_id['fk_place_id']),array('place_name','address'));         
                     $verify_device_id = $this->model->CountWhereRecord('tbl_pos_verifier_logged_in', array('fk_pos_verifier_id'=>$login_info['id'],'fk_device_id !='=>$pos_device_id['id'],'status'=>1));            
                         if($verify_device_id > 0){
                             if($lang_id==1){
@@ -236,6 +235,8 @@ class Pos_api extends REST_Controller {
                                 );
                                  $this->model->insertData('tbl_pos_verifier_logged_in',$curl_data);
                                 $login_info['place_id']= @$place_id['fk_place_id'];
+                                $login_info['place_name']= @$place_details['place_name'];
+                                $login_info['place_address']= @$place_details['address'];
                                 
                                 $response['code'] = REST_Controller::HTTP_OK;;
                                 $response['status'] = true;

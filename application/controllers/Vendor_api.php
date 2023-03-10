@@ -150,24 +150,67 @@ class Vendor_api extends REST_Controller {
             }
             echo json_encode($response);
     }
-    public function total_earning_place_wise_post()
+    public function total_earning_data_post()
     {
             $response = array('code' => - 1, 'status' => false, 'message' => '');
             $validate = validateToken();
             if ($validate) {
-                $place_id = $this->input->post('place_id');
-                if(empty($place_id)){
-                    $response['message'] = "Place Id is required";
+                $from_date = $this->input->post('from_date');
+                $to_date = $this->input->post('to_date');
+                $vendor_id = $this->input->post('vendor_id');
+                if(empty($vendor_id)){
+                    $response['message'] = "Vendor Id is required";
+                    $response['code'] = 201;
+                }else if(empty($from_date)){
+                    $response['message'] = "From Date is required";
+                    $response['code'] = 201;
+                }else if(empty($to_date)){
+                    $response['message'] = "To Date is required";
                     $response['code'] = 201;
                 }else{
                    $this->load->model('vendor_model');
-                   $total_amount_data = $this->vendor_model->total_earning_place_wise($place_id);
-                   $total_amount = explode(',',$total_amount_data['total_amount']);
-                   $total_earning = array_sum($total_amount);
+                    $vendor_place_list = $this->vendor_model->get_vendor_place_list($vendor_id);
+                    foreach ($vendor_place_list as $vendor_place_list_key => $vendor_place_list_row) {
+                        $total_amount_data = $this->vendor_model->total_earning_data($from_date,$to_date,$vendor_place_list_row['fk_place_id']);
+                        $total_amount = explode(',',$total_amount_data['total_amount']);
+                        $total_earning = array_sum($total_amount);
+                        $vendor_place_list[$vendor_place_list_key]['total_earning'] = $total_earning;
+                    }
                    $response['code'] = REST_Controller::HTTP_OK;;
                    $response['status'] = true;
                    $response['message'] = 'success';
-                   $response['total_earning'] = $total_earning;
+                   $response['vendor_place_list'] = $vendor_place_list;
+                }
+            }else{
+                $response['code'] = REST_Controller::HTTP_UNAUTHORIZED;
+                $response['message'] = 'Unauthorised';
+            }
+            echo json_encode($response);
+    }
+    public function vendor_booking_history_post()
+    {
+            $response = array('code' => - 1, 'status' => false, 'message' => '');
+            $validate = validateToken();
+            if ($validate) {
+                $from_date = $this->input->post('from_date');
+                $to_date = $this->input->post('to_date');
+                $vendor_id = $this->input->post('vendor_id');
+                $place_id = $this->input->post('place_id');
+                if(empty($vendor_id)){
+                    $response['message'] = "Vendor Id is required";
+                    $response['code'] = 201;
+                }else{
+                   $this->load->model('vendor_model');                    
+                    $upcoming_booking_history = $this->vendor_model->upcoming_booking_history($vendor_id,$place_id);
+                    $today_booking_history = $this->vendor_model->today_booking_history($vendor_id,$place_id);
+                    $past_booking_history = $this->vendor_model->past_booking_history($vendor_id,$place_id,$from_date,$to_date);
+                    
+                   $response['code'] = REST_Controller::HTTP_OK;;
+                   $response['status'] = true;
+                   $response['message'] = 'success';
+                   $response['upcoming_booking_history'] = $upcoming_booking_history;
+                   $response['today_booking_history'] = $today_booking_history;
+                   $response['past_booking_history'] = $past_booking_history;
                 }
             }else{
                 $response['code'] = REST_Controller::HTTP_UNAUTHORIZED;
