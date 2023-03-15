@@ -343,7 +343,7 @@ class User_api extends REST_Controller {
         }
         echo json_encode($response);
     }
-    public function booking_history_post()
+   public function booking_history_post()
     {
     	$response = array('code' => - 1, 'status' => false, 'message' => '');
     	$validate = validateToken();
@@ -363,10 +363,10 @@ class User_api extends REST_Controller {
 		    			$booking_status = $this->model->selectWhereData('tbl_status_master',array('id'=>$booking_status_id['fk_status_id']),array('status'));
 		    			$booking_history[$booking_history_key]['booking_status'] = $booking_status['status'];
 		    			$fk_verifier_id = $this->model->selectWhereData('tbl_booking_verify',array('fk_booking_id'=>$booking_history_row['id']),array('fk_verifier_id'));
-		    			$verifier_contact_no = $this->model->selectWhereData('pa_users',array('id'=>$fk_verifier_id),array('phoneNo'));
+		    			$verifier_contact_no = $this->model->selectWhereData('pa_users',array('id'=>@$fk_verifier_id['fk_verifier_id']),array('phoneNo'));
 		    			$booking_history[$booking_history_key]['verifier_contact_no'] = $verifier_contact_no['phoneNo'];
 		    			$extend_booking = $this->user_model->extend_booking($booking_history_row['id']);
-		    			$booking_history[$booking_history_key]['booking_status'] = $extend_booking;
+		    			$booking_history[$booking_history_key]['extend_booking'] = $extend_booking;
 		    		}
 		    		$issue_type = $this->model->selectWhereData('tbl_issue_type',array('status'=>1),array('id','issue_type'),false);
 					$response['code'] = REST_Controller::HTTP_OK;
@@ -1370,6 +1370,35 @@ class User_api extends REST_Controller {
 	    			$response['message'] = 'success'; 
 	    			$response['city_data'] = $city_data; 
 	    			$response['traffic_data'] = $traffic_data; 
+		    	}
+		    }else{
+		    	$response['code'] = REST_Controller::HTTP_UNAUTHORIZED;
+	            $response['message'] = 'Unauthorised';
+		    }
+		    echo json_encode($response);
+    }
+    public function delete_unsubscribe_traffic_post()
+    {
+    		$response = array('code' => - 1, 'status' => false, 'message' => '');
+	    	$validate = validateToken();
+	        if ($validate) {
+		    	$user_id = $this->input->post('user_id');
+		    	$city_id = $this->input->post('city_id');
+		    	if(empty($user_id)){
+		    		$response['message'] = "User Id is required";
+		    		$response['code'] = 201;
+		    	}else if(empty($city_id)){
+		    		$response['message'] = "City Id is required";
+		    		$response['code'] = 201;
+		    	}else{
+		    		$curl_data = array(
+		    			'fk_user_id'=>$user_id,
+		    			'fk_city_id'=>$city_id
+		    		);		
+		    		$this->model->direct_delete('tbl_traffic_subscription',$curl_data);
+		    		$response['code'] = REST_Controller::HTTP_OK;
+	    			$response['status'] = true;
+	    			$response['message'] = 'success'; 
 		    	}
 		    }else{
 		    	$response['code'] = REST_Controller::HTTP_UNAUTHORIZED;

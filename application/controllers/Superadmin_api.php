@@ -1634,9 +1634,11 @@ class Superadmin_api extends REST_Controller {
             $fk_place_id = $this->input->post('fk_place_id');
             $fk_place_id = json_decode($fk_place_id);
             $fk_verifier_id=$this->input->post('fk_verifier_id');
-            $fk_verifier_id = json_decode($fk_verifier_id);
+            $fk_verifier_id = json_decode($fk_verifier_id);            
             $date=$this->input->post('date');
             $date = json_decode($date);
+             $duty_time=$this->input->post('duty_time');
+            $duty_time = json_decode($duty_time);
             if (empty($fk_place_id[0])) {
                 $response['message'] = 'Place is required';
                 $response['code'] = 201;
@@ -1646,12 +1648,16 @@ class Superadmin_api extends REST_Controller {
             }else if (empty($date[0])) {
                 $response['message'] = 'Date is required';
                 $response['code'] = 201;
+            }else if (empty($duty_time[0])) {
+                $response['message'] = 'Duty Time is required';
+                $response['code'] = 201;
             } else {
                 foreach($fk_verifier_id as $fk_verifier_id_key => $fk_verifier_id_row){
                     $insert_data=array(
                         'fk_place_id' =>$fk_place_id[$fk_verifier_id_key],      
                         'fk_verifier_id' => $fk_verifier_id_row,
-                        'date'=>$date[$fk_verifier_id_key]
+                        'date'=>$date[$fk_verifier_id_key],
+                        'duty_time'=>$duty_time[$fk_verifier_id_key],
                     );
                     $this->model->insertData('tbl_duty_allocation',$insert_data);
                     $response['message'] = 'success';
@@ -3005,5 +3011,21 @@ class Superadmin_api extends REST_Controller {
         }
         echo json_encode($response);
     }
-    
+    public function display_all_slot_complaint_data_get()
+    {
+        $response = array('code' => - 1, 'status' => false, 'message' => '');
+        $validate = validateToken();
+        if ($validate) {
+               $this->load->model('superadmin_model');
+                $slot_complaint_data = $this->superadmin_model->display_all_slot_complaint_data();
+                $response['code'] = REST_Controller::HTTP_OK;
+                $response['status'] = true;
+                $response['message'] = 'success';
+                $response['slot_complaint_data'] = $slot_complaint_data;
+        } else {
+            $response['code'] = REST_Controller::HTTP_UNAUTHORIZED;
+            $response['message'] = 'Unauthorised';
+        }
+        echo json_encode($response);
+    }
 }

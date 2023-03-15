@@ -694,7 +694,6 @@ class Verifier_api extends REST_Controller {
                         $curl_data = array(
                             'fk_verifier_id'=>$verifier_id,
                             'fk_place_id' =>$place_id,
-                            'fk_booking_id'=>$booking_id,
                             'fk_slot_id'=>$slot_id,
                             'complaint_text'=>$complaint_text,
                             'source'=>1,

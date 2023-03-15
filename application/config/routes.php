@@ -81,6 +81,7 @@ $route['notification-before-half-hours'] = 'user_api/notification_before_half_ho
 $route['push-notification-log'] = 'user_api/push_notification_log';
 $route['save-traffic-subscription'] = 'user_api/save_traffic_subscription';
 $route['traffic-details'] = 'user_api/traffic_details';
+$route['delete-unsubscribe-traffic'] = 'user_api/delete_unsubscribe_traffic';
 // ============================= Verifier App API=====================================
 $route['login-verifier'] = 'verifier_api/login_verifier';
 $route['verify-booking'] = 'verifier_api/verify_booking';
@@ -211,6 +212,9 @@ $route['display-all-register-user-complaint-data'] = 'superadmin_api/display_all
 $route['display-all-unregister-user-complaint-data'] = 'superadmin_api/display_all_unregister_user_complaint_data';
 $route['update-register-user-complaint-details'] = 'superadmin_api/update_register_user_complaint_details';
 $route['update-un-register-user-complaint-details'] = 'superadmin_api/update_un_register_user_complaint_details';
+$route['display-all-slot-complaint-data'] = 'superadmin_api/display_all_slot_complaint_data';
+
+
 // ================================ Referral Code ===================================
 $route['add-referral-code'] = 'superadmin_api/add_referral_code';
 $route['display-all-referral-code'] = 'superadmin_api/display_all_referral_code';

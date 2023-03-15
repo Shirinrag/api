@@ -38,18 +38,23 @@ class Report_api extends REST_Controller {
                 $from_date = $this->input->post('from_date');
                 $to_date = $this->input->post('to_date');
                    
-                    $this->load->model('report_model');
-                    $user_details = $this->report_model->display_all_user_data_report($from_date,$to_date);
-                    // echo '<pre>'; print_r($user_details); exit;
+                   $response = array('code' => - 1, 'status' => false, 'message' => '');
+                $this->load->model('user_report_model');
+                $user_details = $this->user_report_model->get_datatables($from_date,$to_date);
+                $count = $this->user_report_model->count_all($from_date,$to_date);
+                $count_filtered = $this->user_report_model->count_filtered($from_date,$to_date);             
 
-                    $response['code'] = REST_Controller::HTTP_OK;
-                    $response['status'] = true;
-                    $response['message'] = 'success';
-                    $response['user_details'] = $user_details;
-        }else {
-            $response['code'] = REST_Controller::HTTP_UNAUTHORIZED;
-            $response['message'] = 'Unauthorised';
-        }
-        echo json_encode($response);
+                $response['code'] = REST_Controller::HTTP_OK;
+                $response['status'] = true;
+                $response['message'] = 'success';
+                $response['user_details'] = $user_details;
+                $response['count'] = $count;
+                $response['count_filtered'] = $count_filtered;
+            } else {
+                $response['code'] = REST_Controller::HTTP_UNAUTHORIZED;
+                $response['message'] = 'Unauthorised';
+            }
+            echo json_encode($response);
+                    
     }
 }
