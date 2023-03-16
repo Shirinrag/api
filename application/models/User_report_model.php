@@ -9,7 +9,7 @@ class User_report_model extends CI_Model {
         $this->load->database();
     }
 
-    public function _get_datatables_query($from_date="",$to_date="")
+    public function _get_datatables_query($from_date="",$to_date="",$search="")
     {    
         $column_order = array('firstName','lastName','phoneNo','car_number');
         $column_search = array('firstName','lastName','phoneNo','car_number');
@@ -69,25 +69,25 @@ class User_report_model extends CI_Model {
         }
     }
  
-    function get_datatables($from_date="",$to_date="")
+    function get_datatables($from_date="",$to_date="",$search="")
     {
-        $this->_get_datatables_query($from_date,$to_date);
+        $this->_get_datatables_query($from_date,$to_date,$search);
        // if($_POST['length'] != -1)
        // $this->db->limit($_POST['length'],$_POST['start']);
         $query=$this->db->get();
         return $query->result_array();
     } 
 
-    function count_filtered($from_date="",$to_date="")
+    function count_filtered($from_date="",$to_date="",$search="")
     {
-        $this->_get_datatables_query($from_date,$to_date);
+        $this->_get_datatables_query($from_date,$to_date,$search);
 
         $query = $this->db->get();
 
         return $query->num_rows();
     } 
 
-    public function count_all($from_date="",$to_date="")
+    public function count_all($from_date="",$to_date="",$search="")
     {         
         $this->db->select('pa_users.*,tbl_user_car_details.car_number,CONCAT(pa_users.isActive,",",pa_users.id) AS statusdata');
         $this->db->from('pa_users');

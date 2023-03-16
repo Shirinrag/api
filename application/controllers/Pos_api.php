@@ -85,8 +85,8 @@ class Pos_api extends REST_Controller {
                         }
                         $response['error_status'] = 'username';       
                     }else{
-                        $verify_device_id = $this->model->CountWhereRecord('tbl_pos_device', array('pos_device_id'=>$device_id));
-                        if($verify_device_id > 0){
+                        // $verify_device_id = $this->model->CountWhereRecord('tbl_pos_device', array('pos_device_id'=>$device_id));
+                        // if($verify_device_id > 0){
                                 $is_signature_file = true;
                                 if (!empty($_FILES['pan_card']['name'])) {
                                     $filename = $_FILES['pan_card']['name'];
@@ -161,15 +161,15 @@ class Pos_api extends REST_Controller {
                                         }
                                         
                                 }
-                        }else{
-                            $response['code'] = 201;
-                            $response['status'] = false;
-                            if($lang_id==1){
-                                $response['message'] = 'Device Id does not exist';
-                            }else{
-                                $response['message'] = 'डिवाइस आईडी मेल नहीं खाती';
-                            }
-                        }
+                        // }else{
+                        //     $response['code'] = 201;
+                        //     $response['status'] = false;
+                        //     if($lang_id==1){
+                        //         $response['message'] = 'Device Id does not exist';
+                        //     }else{
+                        //         $response['message'] = 'डिवाइस आईडी मेल नहीं खाती';
+                        //     }
+                        // }
                     }
                 }
                         
@@ -179,7 +179,7 @@ class Pos_api extends REST_Controller {
         }
         echo json_encode($response);
     }
-   public function login_pos_verifier_post()
+    public function login_pos_verifier_post()
     {
             $response = array('code' => - 1, 'status' => false, 'message' => '');
             $username = $this->input->post('username');           
@@ -205,7 +205,7 @@ class Pos_api extends REST_Controller {
                 $response['code'] =201;
             }else {
                 $encryptedpassword = dec_enc('encrypt',$password);
-                $check_username_count = $this->model->CountWhereRecord('pa_users',array('username'=>$username));
+                $check_username_count = $this->model->CountWhereRecord('pa_users',array('username'=>$username,'isActive'=>1));
                 if($check_username_count > 0) {                    
 
                     $login_credentials_data = array(
@@ -213,11 +213,14 @@ class Pos_api extends REST_Controller {
                       "password" => $encryptedpassword
                     );
                     $login_info = $this->model->selectWhereData('pa_users',$login_credentials_data,'*');
-                    $pos_device_id = $this->model->selectWhereData('tbl_pos_device',array('pos_device_id'=>$device_id),array('id'));
-
-                    $place_id = $this->model->selectWhereData('tbl_pos_duty_allocation',array('fk_device_id'=>$pos_device_id['id'],'date'=>date('d/m/Y')),array('fk_place_id'));    
-                    $place_details = $this->model->selectWhereData('tbl_parking_place',array('id'=>$place_id['fk_place_id']),array('place_name','address'));         
-                    $verify_device_id = $this->model->CountWhereRecord('tbl_pos_verifier_logged_in', array('fk_pos_verifier_id'=>$login_info['id'],'fk_device_id !='=>$pos_device_id['id'],'status'=>1));            
+                    $this->load->model('pos_model');
+                    $get_details_on_pos_device_id = $this->pos_model->get_details_on_pos_device_id($device_id);
+                    // echo '<pre>'; print_r($get_details_on_pos_device_id); exit;
+                    // $pos_device_id = $this->model->selectWhereData('tbl_pos_device',array('pos_device_id'=>$device_id),array('id'));
+                    // $place_id = $this->model->selectWhereData('tbl_pos_device_map',array('device_id'=>$pos_device_id['id']),array('fk_place_id'));  
+                    // // $place_id = $this->model->selectWhereData('tbl_pos_duty_allocation',array('fk_device_id'=>$pos_device_id['id'],'date'=>date('d/m/Y')),array('fk_place_id'));    
+                    // $place_details = $this->model->selectWhereData('tbl_parking_place',array('id'=>$place_id['fk_place_id']),array('place_name','address'));        
+                    $verify_device_id = $this->model->CountWhereRecord('tbl_pos_verifier_logged_in', array('fk_pos_verifier_id'=>$login_info['id'],'fk_device_id !='=>$get_details_on_pos_device_id['pos_device_id'],'status'=>1));           
                         if($verify_device_id > 0){
                             if($lang_id==1){
                                 $response['message'] = "You are already logged in on another device. If you want to login from this device. please logout from another device";
@@ -227,17 +230,16 @@ class Pos_api extends REST_Controller {
                             $response['code']=201;
                         }else{
                             if(!empty($login_info)){
-
                                 $curl_data =array(
                                     'fk_pos_verifier_id' =>$login_info['id'],
                                     'fk_device_id'=>$pos_device_id['id'],
                                     'status'=>1
                                 );
-                                 $this->model->insertData('tbl_pos_verifier_logged_in',$curl_data);
-                                $login_info['place_id']= @$place_id['fk_place_id'];
-                                $login_info['place_name']= @$place_details['place_name'];
-                                $login_info['place_address']= @$place_details['address'];
-                                
+                                $this->model->insertData('tbl_pos_verifier_logged_in',$curl_data);
+                                $login_info['place_id']= @$get_details_on_pos_device_id['fk_place_id'];
+                                $login_info['place_name']= @$get_details_on_pos_device_id['place_name'];
+                                $login_info['place_address']= @$get_details_on_pos_device_id['address'];
+                                $login_info['company_name']= @$get_details_on_pos_device_id['company_name'];
                                 $response['code'] = REST_Controller::HTTP_OK;;
                                 $response['status'] = true;
                                 $response['message'] = 'success';

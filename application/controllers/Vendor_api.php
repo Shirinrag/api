@@ -115,13 +115,15 @@ class Vendor_api extends REST_Controller {
                             $response['data'] = $login_info;
                     } else {
                         $response['code'] = 201;
-                        $response['status'] = "wrong_password";
+                        $response['status'] = false;
+                        $response['error_status'] = "wrong_password";
                         $response['message'] = 'Incorrect Password';
                     }      
                 }  else {
                     $response['code'] = 201;
+                    $response['status'] = false;
                     $response['message'] = 'Incorrect Username';
-                    $response['status'] = "wrong_username";
+                    $response['error_status'] = "wrong_username";
                 }          
             } 
         echo json_encode($response);

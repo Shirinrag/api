@@ -37,24 +37,56 @@ class Report_api extends REST_Controller {
         if ($validate) {
                 $from_date = $this->input->post('from_date');
                 $to_date = $this->input->post('to_date');
-                   
-                   $response = array('code' => - 1, 'status' => false, 'message' => '');
-                $this->load->model('user_report_model');
-                $user_details = $this->user_report_model->get_datatables($from_date,$to_date);
-                $count = $this->user_report_model->count_all($from_date,$to_date);
-                $count_filtered = $this->user_report_model->count_filtered($from_date,$to_date);             
-
+                $this->load->model('report_model');
+                $user_details = $this->report_model->display_all_user_data_report($from_date,$to_date);  
                 $response['code'] = REST_Controller::HTTP_OK;
                 $response['status'] = true;
                 $response['message'] = 'success';
                 $response['user_details'] = $user_details;
-                $response['count'] = $count;
-                $response['count_filtered'] = $count_filtered;
+                // $response['count'] = $count;
+                // $response['count_filtered'] = $count_filtered;
             } else {
                 $response['code'] = REST_Controller::HTTP_UNAUTHORIZED;
                 $response['message'] = 'Unauthorised';
             }
-            echo json_encode($response);
-                    
+            echo json_encode($response);                   
+    }
+    public function bonus_report_data_post()
+    {
+       $response = array('code' => - 1, 'status' => false, 'message' => '');
+        $validate = validateToken();
+        if ($validate) {
+                $from_date = $this->input->post('from_date');
+                $to_date = $this->input->post('to_date');
+                $this->load->model('report_model');
+                $bonus_details = $this->report_model->display_all_bonus_data_report($from_date,$to_date);  
+                $response['code'] = REST_Controller::HTTP_OK;
+                $response['status'] = true;
+                $response['message'] = 'success';
+                $response['bonus_details'] = $bonus_details;
+            } else {
+                $response['code'] = REST_Controller::HTTP_UNAUTHORIZED;
+                $response['message'] = 'Unauthorised';
+            }
+            echo json_encode($response);  
+    }
+    public function user_wallet_report_data_post()
+    {
+       $response = array('code' => - 1, 'status' => false, 'message' => '');
+        $validate = validateToken();
+        if ($validate) {
+                $from_date = $this->input->post('from_date');
+                $to_date = $this->input->post('to_date');
+                $this->load->model('report_model');
+                $user_wallet_details = $this->report_model->display_all_user_wallet_data_report($from_date,$to_date);  
+                $response['code'] = REST_Controller::HTTP_OK;
+                $response['status'] = true;
+                $response['message'] = 'success';
+                $response['user_wallet_details'] = $user_wallet_details;
+            } else {
+                $response['code'] = REST_Controller::HTTP_UNAUTHORIZED;
+                $response['message'] = 'Unauthorised';
+            }
+            echo json_encode($response);  
     }
 }

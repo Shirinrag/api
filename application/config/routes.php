@@ -247,3 +247,5 @@ $route['total-earning-data'] = 'vendor_api/total_earning_data';
 $route['vendor-booking-history'] = 'vendor_api/vendor_booking_history';
 // ==================================== Report API ====================================
 $route['user-report-data'] = 'report_api/user_report_data';
+$route['bonus-report-data'] = 'report_api/bonus_report_data';
+$route['user-wallet-report-data'] = 'report_api/user_wallet_report_data';

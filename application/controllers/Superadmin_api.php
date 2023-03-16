@@ -202,6 +202,8 @@ class Superadmin_api extends REST_Controller {
                 $mobile_no = $this->input->post('mobile_no');
                 $password = $this->input->post('password');
                 $username = $this->input->post('username');
+                $company_name = $this->input->post('company_name');
+                $vendor_type = $this->input->post('vendor_type');
                 if(empty($first_name)){
                     $response['message'] = "First Name is required";
                     $response['code'] = 201;
@@ -251,6 +253,8 @@ class Superadmin_api extends REST_Controller {
                             'password' =>dec_enc('encrypt',$password),
                             'user_type' =>$user_type,
                             'username' =>$username,
+                            'company_name'=>$company_name,
+                            'vendor_type'=>$vendor_type,
                         );
                         $this->model->insertData('pa_users',$curl_data);
                         $response['code'] = REST_Controller::HTTP_OK;
@@ -314,6 +318,8 @@ class Superadmin_api extends REST_Controller {
                 $email = $this->input->post('email');
                 $mobile_no = $this->input->post('mobile_no');
                 $password = $this->input->post('password');
+                $company_name = $this->input->post('company_name');
+                $vendor_type = $this->input->post('vendor_type');
                 // $username = $this->input->post('username');
                 $id = $this->input->post('id');
                 if(empty($first_name)){
@@ -350,7 +356,9 @@ class Superadmin_api extends REST_Controller {
                             'lastName' =>$last_name,
                             'phoneNo' =>$mobile_no,
                             'user_type' =>$user_type,
-                            'email' =>$email
+                            'email' =>$email,
+                            'company_name'=>$company_name,
+                            'vendor_type'=>$vendor_type
                         );
                         $this->model->updateData('pa_users',$curl_data,array('id'=>$id));
                         $response['code'] = REST_Controller::HTTP_OK;
@@ -364,7 +372,7 @@ class Superadmin_api extends REST_Controller {
         }
         echo json_encode($response);
     }
-     public function delete_admin_post()
+    public function delete_admin_post()
     {
         $response = array('code' => - 1, 'status' => false, 'message' => '');
         $validate = validateToken();

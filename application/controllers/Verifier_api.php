@@ -4,7 +4,7 @@ ini_set("memory_limit", "-1");
 require APPPATH . '/libraries/REST_Controller.php';
 
 class Verifier_api extends REST_Controller {
-	public function __construct() {
+    public function __construct() {
         parent::__construct();
         header('Access-Control-Allow-Origin: *');
         header('Access-Control-Allow-Credentials: true');
@@ -24,13 +24,13 @@ class Verifier_api extends REST_Controller {
     208 = Curl Failed
     209 = Curl UNAUTHORIZED
     */ 
-	public function index() {
+    public function index() {
         $response = array('status' => false, 'msg' => 'Oops! Please try again later.', 'code' => 200);
         echo json_encode($response);
     }
     public function login_verifier_post()
     {
-        	$response = array('code' => - 1, 'status' => false, 'message' => '');
+            $response = array('code' => - 1, 'status' => false, 'message' => '');
             $username = $this->input->post('username');           
             $password = $this->input->post('password');           
             // $device_id = $this->input->post('device_id');
@@ -84,8 +84,10 @@ class Verifier_api extends REST_Controller {
     {
         $response = array('code' => - 1, 'status' => false, 'message' => '');
         $validate = validateToken();
-        if ($validate) {            
-            $fk_verifier_id = $this->input->post('fk_verifier_id');           
+        if ($validate) {
+            
+            $fk_verifier_id = $this->input->post('fk_verifier_id');
+           
             if(empty($fk_verifier_id)){
                 $response['message']= "Verifier Id is required";
                 $response['code'] = 201;
@@ -115,6 +117,7 @@ class Verifier_api extends REST_Controller {
             $verifier_id = $this->input->post('verifier_id');
             $booking_type = $this->input->post('booking_type');
             $verify_status = $this->input->post('verify_status');
+
             if(empty($booking_id)){
                 $response['message'] = "Booking Id is required";
                 $response['code']= 201;
@@ -135,6 +138,7 @@ class Verifier_api extends REST_Controller {
                     'verify_status' => $verify_status,
                  );
                  $this->model->insertData('tbl_booking_verify',$curl_data);
+
                  $booking_details = $this->model->selectWhereData('tbl_booking',array('id'=>$booking_id),array('booking_id','fk_user_id'));
                  $check_in_booking = array(
                     'fk_booking_id'=> $booking_id,
@@ -143,10 +147,12 @@ class Verifier_api extends REST_Controller {
                     'fk_booking_check_type' => 1
                  );
                  $this->model->insertData('tbl_booking_check_in_out',$check_in_booking);
+                 
                  $this->model->updateData('tbl_booking',array('fk_verify_booking_status'=>1),array('id'=>$booking_id));
                  $response['code'] = REST_Controller::HTTP_OK;
                  $response['status'] = true;
                  $response['message'] = "Your Booking'". $booking_details['booking_id'] ."' is successfully verified by our Guid. '.'🚗😃 ";
+
                 $this->load->model('pushnotification_model');
                 $this->pushnotification_model->verify_booking($booking_details['fk_user_id'],$booking_details['booking_id']);
             }
@@ -168,6 +174,7 @@ class Verifier_api extends REST_Controller {
             $complaint_text = $this->input->post('complaint_text');
             $issue_image = $this->input->post('issue_image');
             $fk_issue_type_id = $this->input->post('fk_issue_type_id');
+
             if(empty($verifier_id)){
                 $response['message'] = "Verifier Id is required";
                 $response['code'] = 201;
@@ -272,8 +279,8 @@ class Verifier_api extends REST_Controller {
             }else{
                 $this->load->model('user_model');
                 $booking_details = $this->user_model->booking_details_on_id($id);
-
-
+                $booking_details['extend_booking'] = $this->user_model->extend_booking($id);
+                
                 $response['code'] = REST_Controller::HTTP_OK;
                 $response['status'] = true;
                 $response['message'] = 'success';
@@ -373,21 +380,24 @@ class Verifier_api extends REST_Controller {
 
                     $booking_id = $booking_details['booking_id'];
 
-                    $vehicle_type_id = $this->model->selectWhereData('tbl_user_car_details',array('id'=>$booking_details['fk_car_id']),array('fk_vehicle_type_id'));
+                    $vehicle_type_id = $this->model->selectWhereData('tbl_user_car_details',array('id'=>$booking_details['fk_car_id']),array('fk_vehicle_type_id'));     
+                    // echo '<pre>'; print_r($vehicle_type_id); exit;                   
                     $cost = $this->user_model->get_rate($no_of_hours,$vehicle_type_id['fk_vehicle_type_id'],$place_id);
+                    // echo '<pre>'; print_r($cost); exit;
                     $ext_per_hour = $this->model->selectWhereData('tbl_parking_place',array('id'=>$place_id),array('ext_price','per_hour_charges'));
-
                     if(!empty($ext_per_hour['per_hour_charges'])){
                         $new_cost = $no_of_hours * $ext_per_hour['per_hour_charges'];
                     }else{
                         $new_cost = $cost['cost'] + (($cost['cost'] * $ext_per_hour['ext_price']) / 100);
-                    }           
+                    }       
+                    // echo '      
                     
-                    $user_wallet_data = $this->model->selectWhereData('tbl_user_wallet',array('fk_user_id'=>$fk_user_id),array('amount'));
-                    if($user_wallet_data['amount'] < $new_cost){
-                        $reserve_from_time= date('H:i:s',strtotime($from_time .'+0 minutes'));
+                    $user_wallet_data = $this->model->selectWhereData('tbl_user_wallet',array('fk_user_id'=>$user_id),array('amount'));
+                    // echo '<pre>'; print_r($user_wallet_data); exit;
+                    if($new_cost < $user_wallet_data['amount']){
+                       $reserve_from_time= date('H:i:s',strtotime($from_time .'+0 minutes'));
                         $reserve_to_time= date('H:i:s',strtotime($to_time . ' +0 minutes'));
-                        $last_ext_booking = $this->user_model->get_last_ext_booking_id();
+                        $last_ext_booking = $this->user_model->get_last_ext_booking_id($id);
                         if(empty($last_ext_booking)){
                             $new_ext_booking  = 'EXT' . '1';
                         }else{
@@ -398,7 +408,7 @@ class Verifier_api extends REST_Controller {
                         $curl_data = array(
                             'fk_booking_id' => $id,
                             'fk_place_id' => $place_id,
-                            'fk_user_id' => $fk_user_id,
+                            'fk_user_id' => $user_id,
                             'booking_ext_replace' => $new_ext_booking,
                             'booking_from_date' => $from_date,
                             'booking_to_date' => $to_date,
@@ -412,7 +422,7 @@ class Verifier_api extends REST_Controller {
                         $payment_data = array(
                             'fk_booking_id'=>$id,
                             'fk_ext_booking_id'=>$last_inserted_id,
-                            'fk_user_id'=>$fk_user_id,
+                            'fk_user_id'=>$user_id,
                             'amount'=>$cost['cost'],
                             'charges'=>(($cost['cost'] * $ext_per_hour['ext_price']) / 100),
                             'total_amount'=>$new_cost,
@@ -424,10 +434,10 @@ class Verifier_api extends REST_Controller {
                         $this->model->updateData('tbl_extension_booking',$update_payment_id,array('id'=>$last_inserted_id));
 
                         $deactive_used_status = array('used_status'=>0);
-                        $this->model->updateData('tbl_user_wallet_history',$deactive_used_status,array('fk_user_id'=>$fk_user_id));
+                        $this->model->updateData('tbl_user_wallet_history',$deactive_used_status,array('fk_user_id'=>$user_id));
 
                         $insert_user_wallet_history = array(
-                            'fk_user_id'=>$fk_user_id,
+                            'fk_user_id'=>$user_id,
                             'deduct_amount'=>$new_cost,
                             'total_amount'=>$user_wallet_data['amount'] - $new_cost,
                             'fk_payment_type_id'=>3
@@ -437,7 +447,7 @@ class Verifier_api extends REST_Controller {
                         $update_wallet_data = array(
                             'amount'=>$user_wallet_data['amount'] - $new_cost,
                         );
-                        $this->model->updateData('tbl_user_wallet',$update_wallet_data,array('fk_user_id'=>$fk_user_id));
+                        $this->model->updateData('tbl_user_wallet',$update_wallet_data,array('fk_user_id'=>$user_id));
                         $booking_status = array(
                             'fk_booking_id'=>$id,
                             'fk_status_id'=> 1,
@@ -694,6 +704,7 @@ class Verifier_api extends REST_Controller {
                         $curl_data = array(
                             'fk_verifier_id'=>$verifier_id,
                             'fk_place_id' =>$place_id,
+                            'fk_booking_id'=>$booking_id,
                             'fk_slot_id'=>$slot_id,
                             'complaint_text'=>$complaint_text,
                             'source'=>1,
@@ -737,7 +748,4 @@ class Verifier_api extends REST_Controller {
         }
         echo json_encode($response);   
     }
-
-
-   
 }

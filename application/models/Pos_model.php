@@ -35,5 +35,19 @@ class Pos_model extends CI_Model {
         $result = $query->result_array();
         return $result;
     }
+
+    public function get_details_on_pos_device_id($device_id='')
+    {
+         $this->db->select('tbl_pos_device.id as pos_device_id,tbl_pos_device_map.fk_place_id,tbl_parking_place.place_name,tbl_parking_place.id as place_id,tbl_parking_place.address,tbl_vendor_map_place.fk_vendor_id,tbl_vendor.vendor_id');
+         $this->db->from('tbl_pos_device');
+         $this->db->join('tbl_pos_device_map','tbl_pos_device_map.device_id=tbl_pos_device.id','left');
+         $this->db->join('tbl_parking_place','tbl_pos_device_map.fk_place_id=tbl_parking_place.id','left');
+         $this->db->join('tbl_vendor_map_place','tbl_vendor_map_place.fk_place_id=tbl_parking_place.id','left');
+         $this->db->join('tbl_vendor','tbl_vendor_map_place.fk_vendor_id=tbl_vendor.id','left');
+         $this->db->where('tbl_pos_device.pos_device_id',$device_id);
+         $query = $this->db->get();
+         $result = $query->row_array();
+         return $result;
+    }
 }
 	
