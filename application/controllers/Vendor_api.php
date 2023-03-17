@@ -57,10 +57,15 @@ class Vendor_api extends REST_Controller {
                     $response['code'] = 201;
                 }else{
                     $check_user_count = $this->model->CountWhereRecord('pa_users', array('phoneNo'=>$phone_no,'isActive'=>1,'user_type'=>5));
+                    $check_email_count = $this->model->CountWhereRecord('pa_users', array('email'=>$email,'isActive'=>1,'user_type'=>5));
                     if($check_user_count > 0){
                         $response['code'] = 201;
                         $response['status'] = false;
                         $response['message'] = 'Contact No is Already exist.';          
+                    }else if($check_email_count > 0){
+                        $response['code'] = 201;
+                        $response['status'] = false;
+                        $response['message'] = 'Email is Already exist.';          
                     }else{
                         $user_type = $this->model->selectWhereData('tbl_user_type',array('user_type'=>"Vendor"),array('id'));
                         $curl_data =  array(
@@ -72,7 +77,8 @@ class Vendor_api extends REST_Controller {
                             'device_id' =>$device_id,
                             'device_type' =>$device_type,
                             'notifn_topic' => $phone_no."PAUser",
-                            'user_type'=>$user_type['id']                                 
+                            'user_type'=>$user_type['id'],
+                            'password' =>dec_enc('encrypt',$password),                                
                         );
                         $inserted_id = $this->model->insertData('pa_users',$curl_data);
                         $vendor_data = $this->model->selectWhereData('pa_users',array('id'=>$inserted_id),array('*'));
@@ -101,10 +107,10 @@ class Vendor_api extends REST_Controller {
                 $response['code'] = 201;
             } else {
                 $encryptedpassword = dec_enc('encrypt',$password);
-                $check_username_count = $this->model->CountWhereRecord('pa_users',array('username'=>$username));
+                $check_username_count = $this->model->CountWhereRecord('pa_users',array('email'=>$username));
                 if($check_username_count > 0) {       
                     $login_credentials_data = array(
-                      "username" => $username,
+                      "email" => $username,
                       "password" => $encryptedpassword
                     );
                     $login_info = $this->model->selectWhereData('pa_users',$login_credentials_data,'*');

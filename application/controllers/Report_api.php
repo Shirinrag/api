@@ -72,7 +72,7 @@ class Report_api extends REST_Controller {
     }
     public function user_wallet_report_data_post()
     {
-       $response = array('code' => - 1, 'status' => false, 'message' => '');
+        $response = array('code' => - 1, 'status' => false, 'message' => '');
         $validate = validateToken();
         if ($validate) {
                 $from_date = $this->input->post('from_date');
@@ -83,6 +83,51 @@ class Report_api extends REST_Controller {
                 $response['status'] = true;
                 $response['message'] = 'success';
                 $response['user_wallet_details'] = $user_wallet_details;
+            } else {
+                $response['code'] = REST_Controller::HTTP_UNAUTHORIZED;
+                $response['message'] = 'Unauthorised';
+            }
+            echo json_encode($response);  
+    }
+    public function get_all_data_report_get()
+    {
+        $response = array('code' => - 1, 'status' => false, 'message' => '');
+        $validate = validateToken();
+        if ($validate) {
+                $place_details = $this->model->selectWhereData('tbl_parking_place',array('status'=>1,'del_status'=>1),array('id','place_name'),false);
+                $verifier_details = $this->model->selectWhereData('pa_users',array('isActive'=>1,'user_type'=>3),array('id','firstName','lastName'),false);
+
+                $response['code'] = REST_Controller::HTTP_OK;
+                $response['status'] = true;
+                $response['message'] = 'success';
+                $response['place_details'] = $place_details;
+                $response['verifier_details'] = $verifier_details;
+               
+            } else {
+                $response['code'] = REST_Controller::HTTP_UNAUTHORIZED;
+                $response['message'] = 'Unauthorised';
+            }
+            echo json_encode($response); 
+    }
+    public function verifier_attendance_report_data_post()
+    {
+        $response = array('code' => - 1, 'status' => false, 'message' => '');
+        $validate = validateToken();
+        if ($validate) {
+                $from_date = $this->input->post('from_date');
+                $to_date = $this->input->post('to_date');
+                $fk_place_id = $this->input->post('fk_place_id');
+                $fk_verifier_id = $this->input->post('fk_verifier_id');
+                $this->load->model('report_model');
+                $verifier_attendance_details = $this->report_model->display_all_verifier_attendance_data_report($from_date,$to_date,$fk_verifier_id);  
+                foreach($verifier_attendance_details as $verifier_attendance_details_key => $verifier_attendance_details_row){
+                    $duty_allocation =$this->report_model->duty_allocation_data($verifier_attendance_details_row['fk_verifier_id'],$fk_place_id); 
+                    $verifier_attendance_details[$verifier_attendance_details_key]['place_name'] = $duty_allocation['place_name'];
+                }
+                $response['code'] = REST_Controller::HTTP_OK;
+                $response['status'] = true;
+                $response['message'] = 'success';
+                $response['verifier_attendance_details'] = $verifier_attendance_details;
             } else {
                 $response['code'] = REST_Controller::HTTP_UNAUTHORIZED;
                 $response['message'] = 'Unauthorised';
