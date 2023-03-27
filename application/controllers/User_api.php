@@ -76,13 +76,18 @@ class User_api extends REST_Controller {
             		if ($is_file) {
             				$check_user_count = $this->model->CountWhereRecord('pa_users', array('phoneNo'=>$phone_no,'isActive'=>1));
             				if($check_user_count > 0){
-
                     			$response['code'] = 201;
                     			$response['status'] = false;
-                    			$response['message'] = 'Contact No is Already exist.';            					
+                    			$response['message'] = 'Contact No is Already exist.';
             				}else{
-
             					$user_type = $this->model->selectWhereData('tbl_user_type',array('user_type'=>"User"),array('id'));
+            					$referral_code_id = $this->model->selectWhereData('tbl_referral_code',array('referral_code'=>$referral_code),array('id'));
+            					// if(empty($referral_code_id)){
+            					// 	$response['code'] = 201;
+            					// 	$response['message']= 'Referral Code not match';
+            					// }else{
+
+            					// }
             					$curl_data =  array(
             						'firstName' => $first_name,
             						'lastName' =>  $last_name,
@@ -90,7 +95,7 @@ class User_api extends REST_Controller {
             						'phoneNo' => $phone_no,
             						'address' => $address,
             						'image' => $profile_image,
-            						'referal_code' => $referral_code,
+            						'referal_code' => $referral_code_id,
             						'userName' => $first_name.$last_name,
             						'device_type' =>$device_type,
             						'notifn_topic' => $phone_no."PAUser",
@@ -680,7 +685,9 @@ class User_api extends REST_Controller {
 		    							
 		    							$this->load->model('pushnotification_model');
 				    					$data1 = $this->pushnotification_model->place_order_confirmation($fk_user_id,$new_booking_id,$cost['cost']);
-                                        // print_r($data1);die;
+				    					$verifier_id = $this->model->selectWhereData('tbl_duty_allocation',array('fk_place_id'=>$fk_place_id,'date'=>date('Y-m-d')),array('fk_verifier_id'));
+				    					$this->pushnotification_model->verifier_notify_booking($verifier_id['fk_verifier_id'],$new_booking_id);
+                                        
 		    							$response['code'] = REST_Controller::HTTP_OK;
 				                        $response['status'] = true;
 				    					$response['message'] = 'Parking Slot Booked Successfully ';

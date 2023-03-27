@@ -8,7 +8,7 @@ class Vendor_model extends CI_Model {
 	}
 	public function get_vendor_place_list($id='')
 	{
-		$this->db->select('tbl_vendor.vendor_id,tbl_vendor_map_place.fk_place_id,tbl_parking_place.place_name');
+		$this->db->select('tbl_vendor.vendor_id,tbl_vendor_map_place.fk_place_id,tbl_parking_place.place_name,tbl_parking_place.parking_place_type');
 		$this->db->from('tbl_vendor');
 		$this->db->join('tbl_vendor_map_place','tbl_vendor_map_place.fk_vendor_id=tbl_vendor.id','left');
 		$this->db->join('tbl_parking_place','tbl_vendor_map_place.fk_place_id=tbl_parking_place.id','left');

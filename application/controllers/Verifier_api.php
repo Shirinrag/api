@@ -59,7 +59,9 @@ class Verifier_api extends REST_Controller {
                                 );
                                  $this->model->insertData('tbl_verifier_logged_in',$curl_data);
                                  $place_id = $this->model->selectWhereData('tbl_duty_allocation',array('fk_verifier_id'=>$login_info['id']),array('fk_place_id'));
-                                 $login_info['place_id'] = $place_id;
+                                 $referral_code = $this->model->selectWhereData('tbl_parking_place',array('id'=>$place_id['fk_place_id']),array('referral_code'));
+                                 $login_info['place_id'] = $place_id['fk_place_id'];
+                                 $login_info['referral_code'] = $referral_code['referral_code'];
 
                                 $response['code'] = REST_Controller::HTTP_OK;;
                                 $response['status'] = true;
@@ -151,7 +153,7 @@ class Verifier_api extends REST_Controller {
                  $this->model->updateData('tbl_booking',array('fk_verify_booking_status'=>1),array('id'=>$booking_id));
                  $response['code'] = REST_Controller::HTTP_OK;
                  $response['status'] = true;
-                 $response['message'] = "Your Booking'". $booking_details['booking_id'] ."' is successfully verified by our Guid. '.'🚗😃 ";
+                 $response['message'] = "Your Booking'". $booking_details['booking_id'] ."' is successfully verified by our Guide. '.'🚗😃 ";
 
                 $this->load->model('pushnotification_model');
                 $this->pushnotification_model->verify_booking($booking_details['fk_user_id'],$booking_details['booking_id']);
@@ -247,6 +249,7 @@ class Verifier_api extends REST_Controller {
                 }else{
                         $this->load->model('user_model');
                         $ongoing_unverified_booking_list = $this->user_model->ongoing_unverified_booking_list($place_id);
+                        
                         $ongoing_verified_booking_list = $this->user_model->ongoing_verified_booking_list($place_id);
                         $complete_booking = $this->user_model->complete_booking_list($place_id);
                         $history_booking = $this->user_model->history_booking_list($place_id);
@@ -555,7 +558,17 @@ class Verifier_api extends REST_Controller {
                     'fk_booking_checkout_status'=>$checkout_status,
                     'check_out'=>date("Y-m-d H:i:s"),
                 );
-                $this->model->updateData('tbl_booking_check_in_out',$curl_data,array('fk_booking_id'=>$id));              
+                $this->model->updateData('tbl_booking_check_in_out',$curl_data,array('fk_booking_id'=>$id));  
+
+                $this->model->updateData('tbl_booking_status',array('used_status'=>0),array('fk_booking_id'=>$id));
+
+                $booking_status = array(
+                    'fk_booking_id'=>$id,
+                    'fk_status_id'=> 2,
+                    'used_status'=> 1,
+                );
+                $this->model->insertData('tbl_booking_status',$booking_status);
+
                 $response['code'] = REST_Controller::HTTP_OK;
                 $response['status'] = true;
                 $response['message'] = 'Checked Out Successfully';             

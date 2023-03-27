@@ -9,7 +9,7 @@ class Verifier_model extends CI_Model {
 
 	public function place_details($verifier_id="",$place_id="",$user_type="")
 	{
-        $current_date = date("d/m/Y");
+        $current_date = date("Y-m-d");
 		$this->db->select('tbl_parking_place.*,tbl_duty_allocation.date');
         $this->db->from('tbl_parking_place');
         $this->db->join('tbl_duty_allocation','tbl_duty_allocation.fk_place_id=tbl_parking_place.id','left');
@@ -27,7 +27,7 @@ class Verifier_model extends CI_Model {
 
     public function not_verified_booking_list($verifier_id="",$place_id="")
     {
-        $current_date = date("d/m/Y");
+        $current_date = date("Y-m-d");
         $this->db->select('tbl_booking.*,tbl_duty_allocation.date');
         $this->db->from('tbl_booking');
         $this->db->join('tbl_duty_allocation','tbl_duty_allocation.fk_place_id=tbl_booking.id','left');        

@@ -22,33 +22,15 @@ class User_model extends CI_Model {
 	}
 	public function extend_booking($fk_booking_id='')
 	{
-		$this->db->select('GROUP_CONCAT(tbl_extension_booking.booking_ext_replace) AS booking_ext_replace,GROUP_CONCAT(tbl_extension_booking.booking_from_date) as ext_booking_from_date,GROUP_CONCAT(tbl_extension_booking.booking_to_date) as ext_booking_to_date,GROUP_CONCAT(tbl_extension_booking.booking_from_time) as ext_booking_from_time,GROUP_CONCAT(tbl_extension_booking.booking_to_time) as ext_booking_to_time,');
+		$this->db->select('GROUP_CONCAT(tbl_extension_booking.booking_ext_replace) AS booking_ext_replace,GROUP_CONCAT(tbl_extension_booking.booking_from_date) as ext_booking_from_date,GROUP_CONCAT(tbl_extension_booking.booking_to_date) as ext_booking_to_date,GROUP_CONCAT(tbl_extension_booking.booking_from_time) as ext_booking_from_time,GROUP_CONCAT(tbl_extension_booking.booking_to_time) as ext_booking_to_time');
 		$this->db->from('tbl_extension_booking');
 		$this->db->where('fk_booking_id',$fk_booking_id);
 		$this->db->group_by('fk_booking_id');
 		$query = $this->db->get();
-      $result = $query->row_array();
-       return $result;
+        $result = $query->row_array();
+        return $result;
 	}
-	// public function booking_details_on_id($booking_id='')
-	// {
-	// 	$this->db->select('tbl_booking.*,tbl_extension_booking.booking_ext_replace,tbl_extension_booking.booking_from_date as ext_booking_from_date,tbl_extension_booking.booking_to_date as ext_booking_to_date,tbl_extension_booking.booking_from_time as ext_booking_from_time,tbl_extension_booking.booking_to_time as ext_booking_to_time,tbl_extension_booking.reserve_from_time as ext_reserve_from_time,tbl_extension_booking.reserve_to_time as ext_reserve_to_time,tbl_booking_status.fk_status_id,pa_users.firstName,pa_users.lastName,pa_users.phoneNo,tbl_status_master.status as booking_status,tbl_user_car_details.car_number,tbl_parking_place.place_name,tbl_parking_place.address,tbl_parking_place.pincode,tbl_states.name as state_name,tbl_cities.name as city_name,tbl_booking_verify.verify_status');
-	// 	$this->db->from('tbl_booking');
-	// 	$this->db->join('tbl_extension_booking','tbl_extension_booking.fk_booking_id=tbl_booking.id','left');
-	// 	$this->db->join('tbl_booking_status','tbl_booking_status.fk_booking_id=tbl_booking.id','left');
-	// 	$this->db->join('tbl_status_master','tbl_booking_status.fk_status_id=tbl_status_master.id','left');
-	// 	$this->db->join('pa_users','tbl_booking.fk_user_id=pa_users.id','left');
-	// 	$this->db->join('tbl_user_car_details','tbl_booking.fk_car_id=tbl_user_car_details.id','left');
-	// 	$this->db->join('tbl_parking_place','tbl_booking.fk_place_id=tbl_parking_place.id','left');
-	// 	$this->db->join('tbl_states','tbl_parking_place.fk_state_id=tbl_states.id','left');
-	// 	$this->db->join('tbl_cities','tbl_parking_place.fk_city_id=tbl_cities.id','left');
-	// 	$this->db->join('tbl_booking_verify','tbl_booking_verify.fk_booking_id=tbl_booking.id','left');
-	// 	$this->db->where('tbl_booking.id',$booking_id);
-	// 	$query = $this->db->get();
-   //      $result = $query->row_array();
-   //      return $result;
-	// }
-	public function booking_details_on_id($booking_id='')
+    public function booking_details_on_id($booking_id='')
 	{
 		$this->db->select('tbl_booking.*,tbl_booking_status.fk_status_id,pa_users.firstName,pa_users.lastName,pa_users.phoneNo,tbl_status_master.status as booking_status,tbl_user_car_details.car_number,tbl_parking_place.place_name,tbl_parking_place.address,tbl_parking_place.pincode,tbl_states.name as state_name,tbl_cities.name as city_name,tbl_booking_verify.verify_status');
 // 		,GROUP_CONCAT(DISTINCT(tbl_extension_booking.booking_ext_replace)) as booking_ext_replace,GROUP_CONCAT(DISTINCT(tbl_extension_booking.booking_from_date)) as ext_booking_from_date,GROUP_CONCAT(DISTINCT(tbl_extension_booking.booking_to_date)) as ext_booking_to_date,GROUP_CONCAT(DISTINCT(tbl_extension_booking.booking_from_time)) as ext_booking_from_time,GROUP_CONCAT(DISTINCT(tbl_extension_booking.booking_to_time)) as ext_booking_to_time,GROUP_CONCAT(DISTINCT(tbl_extension_booking.reserve_from_time)) as ext_reserve_from_time,GROUP_CONCAT(DISTINCT(tbl_extension_booking.reserve_to_time)) as ext_reserve_to_time,
@@ -185,27 +167,33 @@ class User_model extends CI_Model {
 
 	public function ongoing_unverified_booking_list($place_id='')
 	{
-		$this->db->select('tbl_booking.id,tbl_booking.booking_id,tbl_booking.booking_from_date,tbl_booking.booking_to_date,tbl_booking.booking_from_time,tbl_booking.booking_to_time,tbl_booking.total_hours,tbl_user_car_details.car_number,tbl_status_master.status,tbl_booking_status.fk_status_id');
+		$this->db->select('tbl_booking.id,tbl_booking.booking_id,tbl_booking.booking_from_date,tbl_booking.booking_to_date,tbl_booking.booking_from_time,tbl_booking.booking_to_time,tbl_booking.total_hours,tbl_user_car_details.car_number,tbl_status_master.status,tbl_booking_status.fk_status_id,tbl_slot_info.display_id');		
 		$this->db->from('tbl_booking');
 		$this->db->join('tbl_user_car_details','tbl_booking.fk_car_id=tbl_user_car_details.id','left');
 		$this->db->join('tbl_booking_status','tbl_booking_status.fk_booking_id=tbl_booking.id','left');
 		$this->db->join('tbl_status_master','tbl_booking_status.fk_status_id=tbl_status_master.id','left');
+		$this->db->join('tbl_slot_info','tbl_booking.fk_slot_id=tbl_slot_info.id','left');
 		$this->db->where('tbl_booking.fk_place_id',$place_id);
+		$this->db->where('tbl_booking.fk_verify_booking_status',0);
 		$this->db->where('tbl_status_master.id',1);
+		$this->db->group_by('tbl_booking.id');
 		$query = $this->db->get();
       return $query->result_array();
 
 	}
 	public function ongoing_verified_booking_list($place_id='')
 	{
-		$this->db->select('tbl_booking.id,tbl_booking.booking_id,tbl_booking.booking_from_date,tbl_booking.booking_to_date,tbl_booking.booking_from_time,tbl_booking.booking_to_time,tbl_booking.total_hours,tbl_user_car_details.car_number,tbl_status_master.status,tbl_booking_status.fk_status_id,tbl_booking_verify.verify_status');
+		$this->db->select('tbl_booking.id,tbl_booking.booking_id,tbl_booking.booking_from_date,tbl_booking.booking_to_date,tbl_booking.booking_from_time,tbl_booking.booking_to_time,tbl_booking.total_hours,tbl_user_car_details.car_number,tbl_status_master.status,tbl_booking_status.fk_status_id,tbl_booking_verify.verify_status,tbl_slot_info.display_id');
 		$this->db->from('tbl_booking');
 		$this->db->join('tbl_user_car_details','tbl_booking.fk_car_id=tbl_user_car_details.id','left');
 		$this->db->join('tbl_booking_status','tbl_booking_status.fk_booking_id=tbl_booking.id','left');
 		$this->db->join('tbl_status_master','tbl_booking_status.fk_status_id=tbl_status_master.id','left');
 		$this->db->join('tbl_booking_verify','tbl_booking_verify.fk_booking_id=tbl_booking.id','left');
+		$this->db->join('tbl_slot_info','tbl_booking.fk_slot_id=tbl_slot_info.id','left');
 		$this->db->where('tbl_booking.fk_place_id',$place_id);
+		$this->db->where('tbl_booking_verify.verify_status',1);
 		$this->db->where('tbl_status_master.id',1);
+		$this->db->group_by('tbl_booking.id');
 		$query = $this->db->get();
       return $query->result_array();
 
@@ -220,6 +208,7 @@ class User_model extends CI_Model {
 		$this->db->join('tbl_status_master','tbl_booking_status.fk_status_id=tbl_status_master.id','left');	
 		$this->db->where('tbl_booking.fk_place_id',$place_id);
 		$this->db->where('tbl_status_master.id',2);
+		$this->db->group_by('tbl_booking.id');
 		$query = $this->db->get();
       return $query->result_array();
 	}
@@ -259,8 +248,7 @@ class User_model extends CI_Model {
 		$query = $this->db->get();
       return $query->result_array();
 	}
-
-	public function traffice_details($user_id="")
+    public function traffice_details($user_id="")
 	{
 		$this->db->select('tbl_traffic_subscription.fk_city_id,tbl_cities.name');
 		$this->db->from('tbl_traffic_subscription');
@@ -269,5 +257,4 @@ class User_model extends CI_Model {
 		$query = $this->db->get();
       return $query->result_array();
 	}
-	
 }

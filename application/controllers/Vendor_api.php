@@ -146,6 +146,15 @@ class Vendor_api extends REST_Controller {
                 }else{
                    $this->load->model('vendor_model');
                    $vendor_place_list = $this->vendor_model->get_vendor_place_list($id);
+                   foreach ($vendor_place_list as $vendor_place_list_key => $vendor_place_list_row) {
+                       if ($vendor_place_list_row['parking_place_type']==1) {
+                           $vendor_place_list[$vendor_place_list_key]['place_type'] = "Slot Place";
+                       } else if ($vendor_place_list_row['parking_place_type']==2) {
+                           $vendor_place_list[$vendor_place_list_key]['place_type'] = "POS Place";
+                       }else if ($vendor_place_list_row['parking_place_type']==3) {
+                           $vendor_place_list[$vendor_place_list_key]['place_type'] = "Both";
+                       }                       
+                   }
                    $response['code'] = REST_Controller::HTTP_OK;;
                     $response['status'] = true;
                     $response['message'] = 'success';
@@ -183,6 +192,14 @@ class Vendor_api extends REST_Controller {
                         $total_amount = explode(',',$total_amount_data['total_amount']);
                         $total_earning = array_sum($total_amount);
                         $vendor_place_list[$vendor_place_list_key]['total_earning'] = $total_earning;
+                       if ($vendor_place_list_row['parking_place_type']==1) {
+                           $vendor_place_list[$vendor_place_list_key]['place_type'] = "Slot Place";
+                       } else if ($vendor_place_list_row['parking_place_type']==2) {
+                           $vendor_place_list[$vendor_place_list_key]['place_type'] = "POS Place";
+                       }else if ($vendor_place_list_row['parking_place_type']==3) {
+                           $vendor_place_list[$vendor_place_list_key]['place_type'] = "Both";
+                       }                       
+                
                     }
                    $response['code'] = REST_Controller::HTTP_OK;;
                    $response['status'] = true;

@@ -251,3 +251,5 @@ $route['bonus-report-data'] = 'report_api/bonus_report_data';
 $route['user-wallet-report-data'] = 'report_api/user_wallet_report_data';
 $route['verifier-attendance-report-data'] = 'report_api/verifier_attendance_report_data';
 $route['get-all-data-report'] = 'report_api/get_all_data_report';
+$route['user-transcation-report-data'] = 'report_api/user_transcation_report_data';
+$route['booking-report-data'] = 'report_api/booking_report_data';

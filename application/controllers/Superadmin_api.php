@@ -203,7 +203,7 @@ class Superadmin_api extends REST_Controller {
                 $password = $this->input->post('password');
                 $username = $this->input->post('username');
                 $company_name = $this->input->post('company_name');
-                $vendor_type = $this->input->post('vendor_type');
+                // $vendor_type = $this->input->post('vendor_type');
                 if(empty($first_name)){
                     $response['message'] = "First Name is required";
                     $response['code'] = 201;
@@ -254,7 +254,7 @@ class Superadmin_api extends REST_Controller {
                             'user_type' =>$user_type,
                             'username' =>$username,
                             'company_name'=>$company_name,
-                            'vendor_type'=>$vendor_type,
+                            // 'vendor_type'=>$vendor_type,
                         );
                         $this->model->insertData('pa_users',$curl_data);
                         $response['code'] = REST_Controller::HTTP_OK;
@@ -319,7 +319,7 @@ class Superadmin_api extends REST_Controller {
                 $mobile_no = $this->input->post('mobile_no');
                 $password = $this->input->post('password');
                 $company_name = $this->input->post('company_name');
-                $vendor_type = $this->input->post('vendor_type');
+                // $vendor_type = $this->input->post('vendor_type');
                 // $username = $this->input->post('username');
                 $id = $this->input->post('id');
                 if(empty($first_name)){
@@ -339,7 +339,8 @@ class Superadmin_api extends REST_Controller {
                     $response['code'] = 201;
                 }else{
                     $check_mobile_no_count = $this->model->CountWhereRecord('pa_users', array('phoneNo'=>$mobile_no,'del_status'=>1,'id !=' => $id));
-                    $check_email_count = $this->model->CountWhereRecord('pa_users', array('email'=>$email,'del_status'=>1,'id !=' => $id));
+                    $check_email_count = $this->model->CountWhereRecord('pa_users', array('email'=>$email,'del_status'=>1,'id !='=>$id));
+                    // echo '<pre>'; print_r($id); exit;
                    if($check_mobile_no_count > 0){
                         $response['code'] = 201;
                         $response['status'] = false;
@@ -358,7 +359,7 @@ class Superadmin_api extends REST_Controller {
                             'user_type' =>$user_type,
                             'email' =>$email,
                             'company_name'=>$company_name,
-                            'vendor_type'=>$vendor_type
+                            // 'vendor_type'=>$vendor_type
                         );
                         $this->model->updateData('pa_users',$curl_data,array('id'=>$id));
                         $response['code'] = REST_Controller::HTTP_OK;
@@ -687,6 +688,7 @@ class Superadmin_api extends REST_Controller {
                 $reserved_place_count = $this->input->post('reserved_place_count');
                 $total_place_count = $this->input->post('total_place_count');
                 $referral_code = $this->input->post('referral_code');
+                $place_type = $this->input->post('place_type');
                 if(empty($fk_vendor_id)){
                     $response['message'] = "First Name is required";
                     $response['code'] = 201;
@@ -751,6 +753,7 @@ class Superadmin_api extends REST_Controller {
                             'reserved_place_count'=>$reserved_place_count,
                             'total_place_count'=>$total_place_count,
                             'referral_code' =>$referral_code,
+                            'parking_place_type' =>$place_type,
                         );
                         $last_inserted_id = $this->model->insertData('tbl_parking_place',$curl_data); 
 
@@ -912,6 +915,7 @@ class Superadmin_api extends REST_Controller {
                 $reserved_place_count = $this->input->post('reserved_place_count');
                 $total_place_count = $this->input->post('total_place_count');
                 $referral_code = $this->input->post('referral_code');
+                $place_type = $this->input->post('place_type');
                 
                 if(empty($fk_vendor_id)){
                     $response['message'] = "First Name is required";
@@ -972,7 +976,8 @@ class Superadmin_api extends REST_Controller {
                             'place_count'=>$place_count,
                             'reserved_place_count'=>$reserved_place_count,
                             'total_place_count'=>$total_place_count,
-                            'referral_code'=>$referral_code
+                            'referral_code'=>$referral_code,
+                            'parking_place_type' =>$place_type,
                         );
                         $this->model->updateData('tbl_parking_place',$curl_data,array('id'=>$id));
                         $previous_vehicle_type = $this->model->selectWhereData('tbl_parking_place_vehicle_type',array('fk_place_id'=>$id),array('GROUP_CONCAT(fk_vehicle_type_id) as fk_vehicle_type_id'),true,'','fk_place_id');

@@ -134,4 +134,50 @@ class Report_api extends REST_Controller {
             }
             echo json_encode($response);  
     }
+    public function user_transcation_report_data_post()
+    {
+        $response = array('code' => - 1, 'status' => false, 'message' => '');
+        $validate = validateToken();
+        if ($validate) {
+                $from_date = $this->input->post('from_date');
+                $to_date = $this->input->post('to_date');
+                $this->load->model('report_model');
+                $user_transcation_details = $this->report_model->display_all_user_transcation_report_data($from_date,$to_date);  
+                $response['code'] = REST_Controller::HTTP_OK;
+                $response['status'] = true;
+                $response['message'] = 'success';
+                $response['user_transcation_details'] = $user_transcation_details;
+            } else {
+                $response['code'] = REST_Controller::HTTP_UNAUTHORIZED;
+                $response['message'] = 'Unauthorised';
+            }
+            echo json_encode($response);                   
+    }
+    public function booking_report_data_post()
+    {
+        $response = array('code' => - 1, 'status' => false, 'message' => '');
+        $validate = validateToken();
+        if ($validate) {
+                $from_date = $this->input->post('from_date');
+                $to_date = $this->input->post('to_date');
+                $this->load->model('report_model');
+                $booking_reports = $this->report_model->display_all_booking_report_data($from_date,$to_date);  
+                 foreach ($booking_reports as $booking_reports_key => $booking_reports_row) {
+                        $total_amount = $this->model->selectWhereData('tbl_payment',array('fk_booking_id'=>$booking_reports_row['id']),array('total_amount'));
+                        $booking_reports[$booking_reports_key]['total_amount'] = $total_amount['total_amount'];
+                        $booking_status_id = $this->model->selectWhereData('tbl_booking_status',array('fk_booking_id'=>$booking_reports_row['id'],'used_status'=>1),array('fk_status_id'));
+                        $booking_reports[$booking_reports_key]['fk_status_id'] = $booking_status_id['fk_status_id'];
+                        $booking_status = $this->model->selectWhereData('tbl_status_master',array('id'=>$booking_status_id['fk_status_id']),array('status'));
+                        $booking_reports[$booking_reports_key]['booking_status'] = $booking_status['status'];                        
+                    }
+                $response['code'] = REST_Controller::HTTP_OK;
+                $response['status'] = true;
+                $response['message'] = 'success';
+                $response['booking_reports'] = $booking_reports;
+        } else {
+            $response['code'] = REST_Controller::HTTP_UNAUTHORIZED;
+            $response['message'] = 'Unauthorised';
+        }
+        echo json_encode($response);    
+    }
 }

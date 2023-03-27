@@ -37,3 +37,8 @@ ALTER TABLE `tbl_pos_booking` ADD `book_status` INT NULL DEFAULT NULL COMMENT '1
 --19/01/2023
 
 ALTER TABLE `tbl_sensor` CHANGE `sensor_time` `sensor_time` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP;
+
+
+
+ALTER TABLE `tbl_parking_place` ADD `parking_place_type` INT NULL DEFAULT NULL COMMENT ' 1: Normal Vendor 2: POS Vendor 3: Both' AFTER `fk_city_id`;
+ALTER TABLE `tbl_parking_place` ADD `parking_place_type` INT NULL DEFAULT NULL COMMENT ' 1: Normal Vendor 2: POS Vendor 3: Both' AFTER `fk_city_id`;
