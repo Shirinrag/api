@@ -282,8 +282,7 @@ class Verifier_api extends REST_Controller {
             }else{
                 $this->load->model('user_model');
                 $booking_details = $this->user_model->booking_details_on_id($id);
-                $booking_details['extend_booking'] = $this->user_model->extend_booking($id);
-                
+                $booking_details['extend_booking'] = $this->user_model->extend_booking($id);                
                 $response['code'] = REST_Controller::HTTP_OK;
                 $response['status'] = true;
                 $response['message'] = 'success';

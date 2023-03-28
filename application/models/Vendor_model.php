@@ -19,13 +19,13 @@ class Vendor_model extends CI_Model {
 	}
 	public function total_earning_data($from_date="",$to_date="",$place_id='')
 	{
-		$this->db->select('tbl_booking.fk_place_id,GROUP_CONCAT(tbl_payment.total_amount) as total_amount');
-		$this->db->from('tbl_booking');
-		$this->db->join('tbl_payment','tbl_payment.fk_booking_id=tbl_booking.id','left');
-		$this->db->where('tbl_booking.booking_from_date',$from_date);
-		$this->db->where('tbl_booking.booking_to_date',$to_date);
-		$this->db->where('tbl_booking.fk_place_id',$place_id);
-		$this->db->group_by('tbl_payment.total_amount');
+		$this->db->select('tbl_pos_booking.fk_place_id,GROUP_CONCAT(tbl_pos_booking.price) as total_amount');
+		$this->db->from('tbl_pos_booking');
+// 		$this->db->join('tbl_payment','tbl_payment.fk_booking_id=tbl_booking.id','left');
+		$this->db->where('tbl_pos_booking.from_date',$from_date);
+		$this->db->where('tbl_pos_booking.to_date',$to_date);
+		$this->db->where('tbl_pos_booking.fk_place_id',$place_id);
+		$this->db->group_by('tbl_pos_booking.fk_place_id');
 		$query = $this->db->get();
         $result = $query->row_array();
         return $result;

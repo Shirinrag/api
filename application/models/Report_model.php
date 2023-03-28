@@ -135,7 +135,7 @@ class Report_model extends CI_Model {
         $result = $query->result_array();
         return $result;
     }
-    public function display_all_booking_report_data()
+    public function display_all_booking_report_data($from_date="",$to_date="")
     {
         $this->db->select('tbl_booking.*,pa_users.firstName,pa_users.lastName,tbl_user_car_details.car_number,tbl_parking_place.place_name,tbl_parking_place.address,tbl_parking_place.pincode,tbl_states.name as state_name,tbl_cities.name as city_name,tbl_parking_place.latitude,tbl_parking_place.longitude,tbl_slot_info.display_id');
         $this->db->from('tbl_booking');
