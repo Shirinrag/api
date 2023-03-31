@@ -689,6 +689,10 @@ class Superadmin_api extends REST_Controller {
                 $total_place_count = $this->input->post('total_place_count');
                 $referral_code = $this->input->post('referral_code');
                 $place_type = $this->input->post('place_type');
+                $no_of_days = $this->input->post('no_of_days');
+                $no_of_days = json_decode($no_of_days,true);                
+                $cost = $this->input->post('cost');
+                $cost = json_decode($cost,true);    
                 if(empty($fk_vendor_id)){
                     $response['message'] = "First Name is required";
                     $response['code'] = 201;
@@ -767,16 +771,29 @@ class Superadmin_api extends REST_Controller {
                                 $from_hours_1 = @$from_hours[$fk_vehicle_type_row];
                                 $to_hours_1 = @$to_hours[$fk_vehicle_type_row];
                                 $cost_1 = @$price[$fk_vehicle_type_row];
+                                $no_of_days_1 = @$no_of_days[$fk_vehicle_type_row];
+                                $cost_11 = @$cost[$fk_vehicle_type_row];
                                
                                 foreach ($from_hours_1 as $from_hours_1_key => $from_hours_1_row) {
                                      $insert_price_data = array(
-                                            'from_hours' =>$from_hours_1_row,
-                                            'to_hours' =>@$to_hours_1[$from_hours_1_key],
-                                            'cost' =>@$cost_1[$from_hours_1_key],
-                                            'fk_place_id'=>$last_inserted_id,
-                                            'fk_vehicle_type_id'=>$fk_vehicle_type_row
+                                        'from_hours' =>$from_hours_1_row,
+                                        'to_hours' =>@$to_hours_1[$from_hours_1_key],
+                                        'cost' =>@$cost_1[$from_hours_1_key],
+                                        'fk_place_id'=>$last_inserted_id,
+                                        'fk_vehicle_type_id'=>$fk_vehicle_type_row
                                     );
-                                     $this->model->insertData('tbl_hours_price_slab',$insert_price_data);                          
+                                    $this->model->insertData('tbl_hours_price_slab',$insert_price_data);     
+                                }
+                                if(!empty($no_of_days_1[0])){
+                                    foreach ($no_of_days_1 as $no_of_days_1_key => $no_of_days_1_row) {
+                                            $insert_monthly_price_data = array(
+                                                'fk_place_id'=>$last_inserted_id,
+                                                'fk_vehicle_type_id'=>$fk_vehicle_type_row,
+                                                'no_of_days'=>$no_of_days_1_row,
+                                                'cost'=>$cost_11[$no_of_days_1_key]
+                                            );
+                                            $this->model->insertData('tbl_pass_price_slab',$insert_monthly_price_data);
+                                    }
                                 }
                             }                                                     
                         }
@@ -850,6 +867,7 @@ class Superadmin_api extends REST_Controller {
                     $state_details = $this->model->selectWhereData('tbl_states',array('country_id'=>$parking_place['fk_country_id']),array('id','name'),false);
                     $city_details = $this->model->selectWhereData('tbl_cities',array('state_id'=>$parking_place['fk_state_id']),array('id','name'),false);
                      $hour_price_slab_on_place_id = $this->superadmin_model->get_hour_price_slab($id);
+                     $monthly_price_slab_on_place_id = $this->superadmin_model->get_monthly_price_slab($id);
                     $slot_info_on_place_id = $this->model->selectWhereData('tbl_slot_info',array('fk_place_id'=>$id,'del_status'=>1),array('*',"id as slot_info_id",),false);
                     foreach ($slot_info_on_place_id as $slot_info_on_place_id_key => $slot_info_on_place_id_row) {
                         $device_data = $this->model->selectWhereData('tbl_device',array(),array('id','device_id'),false,array('id',"ASC"));
@@ -866,6 +884,7 @@ class Superadmin_api extends REST_Controller {
                     $response['message'] = 'success';
                     $response['parking_place_data'] = $parking_place;
                     $response['hour_price_slab'] = $hour_price_slab_on_place_id;
+                    $response['monthly_price_slab'] = $monthly_price_slab_on_place_id;
                     $response['slot_info'] = $slot_info_on_place_id;
                     $response['state_details'] = $state_details;
                     $response['city_details'] = $city_details;
@@ -1047,7 +1066,6 @@ class Superadmin_api extends REST_Controller {
                         $prefix = $this->model->selectWhereData('tbl_states',array('id'=>$fk_state_id),array('prefix'));
                        
                         if($slots_data['slots'] < $slots){   
-
                             for ($i=$slots_data['slots']; $i < $slots; $i++) {
                                     $this->load->model('superadmin_model');
                                     $count = $this->superadmin_model->get_count_slot_name($prefix['prefix']);
@@ -1056,10 +1074,9 @@ class Superadmin_api extends REST_Controller {
                                     }else{
                                         $slot_name = $this->model->selectWhereData('tbl_slot_info',array('del_status'=>1),array('slot_name'),true,array('id','DESC'));
                                         $slot_name = $slot_name['slot_name'];
-                                    }  
-
+                                    }
                                     $this->load->model('superadmin_model');
-                                    $slot_name1 = $prefix['prefix'] . "-" . $this->superadmin_model->uniqueSlotName($slot_name);                                   
+                                    $slot_name1 = $prefix['prefix'] . "-" . $this->superadmin_model->uniqueSlotName($slot_name); 
                                         $display_id = "P-" . ($i + 1);
                                         $insert_slot_info_data=array(
                                             'fk_place_id' =>$id,

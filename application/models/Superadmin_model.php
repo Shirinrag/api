@@ -271,5 +271,17 @@ class Superadmin_model extends CI_Model {
         $result = $query->row_array();
         return $result;
     }
+    public function get_monthly_price_slab($id='')
+    {
+        $this->db->simple_query('SET SESSION group_concat_max_len=15000');
+        $this->db->select('GROUP_CONCAT(tbl_pass_price_slab.id) as id,GROUP_CONCAT(tbl_pass_price_slab.no_of_days) as no_of_days,GROUP_CONCAT(tbl_pass_price_slab.cost) as cost,tbl_pass_price_slab.fk_vehicle_type_id,tbl_vehicle_type.vehicle_type');
+       $this->db->from('tbl_pass_price_slab');
+       $this->db->join('tbl_vehicle_type','tbl_pass_price_slab.fk_vehicle_type_id=tbl_vehicle_type.id','left');
+       $this->db->where('tbl_pass_price_slab.fk_place_id',$id);
+       $this->db->group_by('tbl_pass_price_slab.fk_vehicle_type_id');
+        $query = $this->db->get();
+        $result = $query->result_array();
+        return $result;
+    }
 }
 	
