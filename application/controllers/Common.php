@@ -167,6 +167,7 @@ class Common extends REST_Controller {
             $price_type = $this->model->selectWhereData('tbl_parking_price_type',array('status'=>1),array('id','price_type'),false);
             $vendor = $this->model->selectWhereData('pa_users',array('isActive'=>1,'del_status'=>1,'user_type'=>5),array('id','firstName','lastName'),false);
             $vehicle_data = $this->model->selectWhereData('tbl_vehicle_type',array('del_status'=>1,'status'=>1),array('id','vehicle_type'),false);
+            $pass_days_data = $this->model->selectWhereData('tbl_pass_days',array('status'=>1),array('id','no_of_days'),false,array('sequence','ASC'));
             $response['code'] = REST_Controller::HTTP_OK;
             $response['status'] = true;
             $response['message'] = 'success';
@@ -175,6 +176,7 @@ class Common extends REST_Controller {
             $response['price_type'] = $price_type;
             $response['vendor'] = $vendor;
             $response['vehicle_data'] = $vehicle_data;
+            $response['pass_days_data'] = $pass_days_data;
         }else {
             $response['code'] = REST_Controller::HTTP_UNAUTHORIZED;
             $response['message'] = 'Unauthorised';

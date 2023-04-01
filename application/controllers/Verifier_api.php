@@ -760,4 +760,22 @@ class Verifier_api extends REST_Controller {
         }
         echo json_encode($response);   
     }
+
+    public function get_all_place_list_get()
+    {
+        $response = array('code' => - 1, 'status' => false, 'message' => '');
+        $validate = validateToken();
+        if ($validate) {           
+            $this->load->model('verifier_model');
+            $place_data = $this->verifier_model->place_data();
+            $response['code'] = REST_Controller::HTTP_OK;
+            $response['status'] = true;
+            $response['message'] = 'success';
+            $response['place_data'] = $place_data;
+        }else{
+             $response['code'] = REST_Controller::HTTP_UNAUTHORIZED;
+             $response['message'] = 'Unauthorised';
+        }
+        echo json_encode($response);   
+    }
 }

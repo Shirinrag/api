@@ -98,6 +98,7 @@ $route['booking-confirmation'] = 'verifier_api/booking_confirmation';
 $route['slot-status-details'] = 'verifier_api/slot_status_details';
 $route['slot-issue'] = 'verifier_api/slot_issue';
 $route['duty-allocated-details'] = 'verifier_api/duty_allocated_details';
+$route['get-all-place-list'] = 'verifier_api/get_all_place_list';
 // =============Super Admin API=============================
 $route['loggedin-data'] = 'common/login_data';
 $route['get-all-user-type'] = 'common/get_all_user_type';
@@ -213,8 +214,6 @@ $route['display-all-unregister-user-complaint-data'] = 'superadmin_api/display_a
 $route['update-register-user-complaint-details'] = 'superadmin_api/update_register_user_complaint_details';
 $route['update-un-register-user-complaint-details'] = 'superadmin_api/update_un_register_user_complaint_details';
 $route['display-all-slot-complaint-data'] = 'superadmin_api/display_all_slot_complaint_data';
-
-
 // ================================ Referral Code ===================================
 $route['add-referral-code'] = 'superadmin_api/add_referral_code';
 $route['display-all-referral-code'] = 'superadmin_api/display_all_referral_code';

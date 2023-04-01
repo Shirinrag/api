@@ -879,6 +879,7 @@ class Superadmin_api extends REST_Controller {
                     $parking_place_vehicle_type = $this->model->selectWhereData('tbl_parking_place_vehicle_type',array('fk_place_id'=>$id),array('*',"id as parking_place_vehicle_type_id"),false);
                     $selected_parking_place_vehicle_type = $this->model->selectWhereData('tbl_parking_place_vehicle_type',array('fk_place_id'=>$id),array("GROUP_CONCAT(fk_vehicle_type_id) as fk_vehicle_type_id"),true,'','fk_place_id');
                     $vehicle_type = $this->model->selectWhereData('tbl_vehicle_type',array('del_status'=>1,'status'=>1),array('id','vehicle_type'),false);
+                    $pass_days_data = $this->model->selectWhereData('tbl_pass_days',array('status'=>1),array('id','no_of_days'),false,array('sequence','ASC'));
                     $response['code'] = REST_Controller::HTTP_OK;
                     $response['status'] = true;
                     $response['message'] = 'success';
@@ -892,6 +893,7 @@ class Superadmin_api extends REST_Controller {
                     $response['parking_place_vehicle_type'] = $parking_place_vehicle_type;
                     $response['selected_parking_place_vehicle_type'] = $selected_parking_place_vehicle_type;
                     $response['vehicle_type'] = $vehicle_type;
+                    $response['pass_days_data'] = $pass_days_data;
                 }
         }else {
             $response['code'] = REST_Controller::HTTP_UNAUTHORIZED;
@@ -2027,10 +2029,13 @@ class Superadmin_api extends REST_Controller {
                     $response['code'] = 201;
                 }else{
                         $vehicle_data = $this->model->selectWhereData('tbl_vehicle_type',array('id'=>$id),array('id','vehicle_type'));
+                        $pass_days_data = $this->model->selectWhereData('tbl_pass_days',array('status'=>1),array('id','no_of_days'),false,array('sequence','ASC'));
+
                         $response['code'] = REST_Controller::HTTP_OK;
                         $response['status'] = true;
                         $response['message'] = 'success';
                         $response['vehicle_data'] = $vehicle_data;
+                        $response['pass_days_data'] = $pass_days_data;
                 }
         }else {
             $response['code'] = REST_Controller::HTTP_UNAUTHORIZED;
