@@ -937,6 +937,12 @@ class Superadmin_api extends REST_Controller {
                 $total_place_count = $this->input->post('total_place_count');
                 $referral_code = $this->input->post('referral_code');
                 $place_type = $this->input->post('place_type');
+                $monthly_price_slab_id = $this->input->post('monthly_price_slab_id');
+                $monthly_price_slab_id = json_decode($monthly_price_slab_id,true);
+                $no_of_days = $this->input->post('no_of_days');
+                $no_of_days = json_decode($no_of_days,true);
+                $cost = $this->input->post('cost');
+                $cost = json_decode($cost,true);
                 
                 if(empty($fk_vendor_id)){
                     $response['message'] = "First Name is required";
@@ -1024,7 +1030,19 @@ class Superadmin_api extends REST_Controller {
                                             'fk_vehicle_type_id'=>$new_vehicle_info_row
                                     );
                                      $this->model->insertData('tbl_hours_price_slab',$insert_price_data);
-                                }                              
+                                }        
+
+                                $no_of_days_1 = @$no_of_days[$new_vehicle_info_row];
+                                $cost_11 = @$cost[$new_vehicle_info_row];
+                                foreach ($no_of_days_1 as $no_of_days_1_key => $no_of_days_1_row) {
+                                     $insert_monthly_pass_price_data = array(
+                                            'no_of_days' =>$no_of_days_1_row,
+                                            'cost' =>@$cost_11[$no_of_days_1_key],
+                                            'fk_place_id'=>$id,
+                                            'fk_vehicle_type_id'=>$new_vehicle_info_row
+                                    );
+                                     $this->model->insertData('tbl_pass_price_slab',$insert_monthly_pass_price_data);
+                                }                       
                                unset($fk_vehicle_type,$new_vehicle_info_key);
                            }
                         }                     
@@ -1055,7 +1073,31 @@ class Superadmin_api extends REST_Controller {
                                     );
                                      $this->model->insertData('tbl_hours_price_slab',$insert_price_data);
                                     }                                 
-                                }                                
+                                }
+
+                                $no_of_days_1 = @$no_of_days[$fk_vehicle_type_row];
+                                $cost_11 = @$cost[$fk_vehicle_type_row];
+                                // echo '<pre>'; print_r($$no_of_days); exit;
+                                foreach ($no_of_days_1 as $no_of_days_1_key => $no_of_days_1_row) {
+                                    $pass_id = $monthly_price_slab_id[$fk_vehicle_type_row][$no_of_days_1_key];
+                                    // echo '<pre>'; print_r($no_of_days_1_row); exit;
+                                    if(!empty($pass_id)){
+                                        $update_monthly_price_slab = array(
+                                            'no_of_days' =>$no_of_days_1_row,
+                                            'cost' =>@$cost_11[$no_of_days_1_key],
+                                        );
+                                        $this->model->updateData('tbl_pass_price_slab',$update_monthly_price_slab,array('id'=>$pass_id));
+                                    }else{
+                                        $insert_monthly_pass_price_data = array(
+                                            'no_of_days' =>$no_of_days_1_row,
+                                            'cost' =>@$cost_11[$no_of_days_1_key],
+                                            'fk_place_id'=>$id,
+                                            'fk_vehicle_type_id'=>$fk_vehicle_type_row                                
+                                        );
+                                        // echo '<pre>'; print_r($insert_monthly_pass_price_data); exit;
+                                        $this->model->insertData('tbl_pass_price_slab',$insert_monthly_pass_price_data);
+                                    }
+                                }                                      
                            }                         
                         }
                         if(!empty($delete_vehicle_info)){
