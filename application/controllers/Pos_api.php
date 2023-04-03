@@ -297,6 +297,10 @@ class Pos_api extends REST_Controller {
                 $three_wheller_price_slab = $this->model->selectWhereData('tbl_hours_price_slab',array('fk_place_id'=>$fk_place_id,'fk_vehicle_type_id'=>2,'del_status'=>1),array('*'),false);
                 $four_wheller_price_slab = $this->model->selectWhereData('tbl_hours_price_slab',array('fk_place_id'=>$fk_place_id,'fk_vehicle_type_id'=>3,'del_status'=>1),array('*'),false);
                 $truck_van_wheller_price_slab = $this->model->selectWhereData('tbl_hours_price_slab',array('fk_place_id'=>$fk_place_id,'fk_vehicle_type_id'=>4,'del_status'=>1),array('*'),false);
+                $two_wheller_monthly_price_slab = $this->model->selectWhereData('tbl_pass_price_slab',array('fk_place_id'=>$fk_place_id,'fk_vehicle_type_id'=>1),array('*'),false);
+                $three_wheller_monthly_price_slab = $this->model->selectWhereData('tbl_pass_price_slab',array('fk_place_id'=>$fk_place_id,'fk_vehicle_type_id'=>2),array('*'),false);
+                $four_wheller_monthly_price_slab = $this->model->selectWhereData('tbl_pass_price_slab',array('fk_place_id'=>$fk_place_id,'fk_vehicle_type_id'=>3),array('*'),false);
+                $heavy_wheller_monthly_price_slab = $this->model->selectWhereData('tbl_pass_price_slab',array('fk_place_id'=>$fk_place_id,'fk_vehicle_type_id'=>4),array('*'),false);
                 $response['code'] = REST_Controller::HTTP_OK;
                 $response['status'] = true;
                 $response['message'] = 'success';
@@ -311,6 +315,18 @@ class Pos_api extends REST_Controller {
                 }
                 if(!empty($truck_van_wheller_price_slab)){
                        $response['truck_van_wheller_price_slab'] = $truck_van_wheller_price_slab;
+                }
+                if(!empty($two_wheller_monthly_price_slab)){
+                       $response['two_wheller_monthly_price_slab'] = $two_wheller_monthly_price_slab;
+                }
+                if(!empty($three_wheller_monthly_price_slab)){
+                       $response['three_wheller_monthly_price_slab'] = $three_wheller_monthly_price_slab;
+                }
+                if(!empty($four_wheller_monthly_price_slab)){
+                       $response['four_wheller_monthly_price_slab'] = $four_wheller_monthly_price_slab;
+                }
+                if(!empty($heavy_wheller_monthly_price_slab)){
+                       $response['heavy_wheller_monthly_price_slab'] = $heavy_wheller_monthly_price_slab;
                 }
             }           
         }else {

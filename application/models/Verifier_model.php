@@ -48,7 +48,7 @@ class Verifier_model extends CI_Model {
         $this->db->join('tbl_parking_place_status','tbl_parking_place.fk_place_status_id=tbl_parking_place_status.id','left');
         $this->db->join('tbl_countries','tbl_parking_place.fk_country_id=tbl_countries.id','left');
         $this->db->join('tbl_states','tbl_parking_place.fk_state_id=tbl_states.id','left');
-        $this->db->join('tbl_slot_info','tbl_slot_info.fk_place_id=tbl_parking_place.id','left');
+        // $this->db->join('tbl_slot_info','tbl_slot_info.fk_place_id=tbl_parking_place.id','left');
         $this->db->join('tbl_cities','tbl_parking_place.fk_city_id=tbl_cities.id','left');
         $this->db->where('tbl_parking_place.fk_place_status_id',1);
         // $this->db->where('tbl_slot_info.fk_machine_id !=',"");
