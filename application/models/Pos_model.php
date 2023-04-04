@@ -49,5 +49,51 @@ class Pos_model extends CI_Model {
          $result = $query->row_array();
          return $result;
     }
+    public function two_wheller_monthly_price_slab($id='')
+    {
+       $this->db->select('tbl_pass_price_slab.*,tbl_pass_days.no_of_days,tbl_pass_days.id as no_of_days_id');
+         $this->db->from('tbl_pass_price_slab');
+         $this->db->join('tbl_pass_days','tbl_pass_price_slab.no_of_days=tbl_pass_days.id','left');
+         $this->db->where('tbl_pass_price_slab.fk_place_id',$id);
+         $this->db->where('tbl_pass_price_slab.fk_vehicle_type_id',1);
+         $query = $this->db->get();
+         $result = $query->result_array();
+         return $result;
+    }
+    public function three_wheller_monthly_price_slab($id='')
+    {
+       $this->db->select('tbl_pass_price_slab.*,tbl_pass_days.no_of_days,tbl_pass_days.id as no_of_days_id');
+         $this->db->from('tbl_pass_price_slab');
+         $this->db->join('tbl_pass_days','tbl_pass_price_slab.no_of_days=tbl_pass_days.id','left');
+         $this->db->where('tbl_pass_price_slab.fk_place_id',$id);
+         $this->db->where('tbl_pass_price_slab.fk_vehicle_type_id',2);
+
+         $query = $this->db->get();
+         $result = $query->result_array();
+         return $result;
+    }
+    public function four_wheller_monthly_price_slab($id='')
+    {
+       $this->db->select('tbl_pass_price_slab.*,tbl_pass_days.no_of_days,tbl_pass_days.id as no_of_days_id');
+         $this->db->from('tbl_pass_price_slab');
+         $this->db->join('tbl_pass_days','tbl_pass_price_slab.no_of_days=tbl_pass_days.id','left');
+         $this->db->where('tbl_pass_price_slab.fk_place_id',$id);
+         $this->db->where('tbl_pass_price_slab.fk_vehicle_type_id',3);
+
+         $query = $this->db->get();
+         $result = $query->result_array();
+         return $result;
+    }
+    public function heavy_wheller_monthly_price_slab($id='')
+    {
+       $this->db->select('tbl_pass_price_slab.*,tbl_pass_days.no_of_days,tbl_pass_days.id as no_of_days_id');
+         $this->db->from('tbl_pass_price_slab');
+         $this->db->join('tbl_pass_days','tbl_pass_price_slab.no_of_days=tbl_pass_days.id','left');
+         $this->db->where('tbl_pass_price_slab.fk_place_id',$id);
+         $this->db->where('tbl_pass_price_slab.fk_vehicle_type_id',4);
+         $query = $this->db->get();
+         $result = $query->result_array();
+         return $result;
+    }
 }
 	

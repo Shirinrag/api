@@ -42,3 +42,6 @@ ALTER TABLE `tbl_sensor` CHANGE `sensor_time` `sensor_time` DATETIME NOT NULL DE
 
 ALTER TABLE `tbl_parking_place` ADD `parking_place_type` INT NULL DEFAULT NULL COMMENT ' 1: Normal Vendor 2: POS Vendor 3: Both' AFTER `fk_city_id`;
 ALTER TABLE `tbl_parking_place` ADD `parking_place_type` INT NULL DEFAULT NULL COMMENT ' 1: Normal Vendor 2: POS Vendor 3: Both' AFTER `fk_city_id`;
+
+
+ALTER TABLE `tbl_user_pass_details` CHANGE `from_date` `from_date` DATE NULL DEFAULT NULL, CHANGE `to_date` `to_date` DATE NULL DEFAULT NULL;

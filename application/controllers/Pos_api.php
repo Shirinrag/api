@@ -297,10 +297,11 @@ class Pos_api extends REST_Controller {
                 $three_wheller_price_slab = $this->model->selectWhereData('tbl_hours_price_slab',array('fk_place_id'=>$fk_place_id,'fk_vehicle_type_id'=>2,'del_status'=>1),array('*'),false);
                 $four_wheller_price_slab = $this->model->selectWhereData('tbl_hours_price_slab',array('fk_place_id'=>$fk_place_id,'fk_vehicle_type_id'=>3,'del_status'=>1),array('*'),false);
                 $truck_van_wheller_price_slab = $this->model->selectWhereData('tbl_hours_price_slab',array('fk_place_id'=>$fk_place_id,'fk_vehicle_type_id'=>4,'del_status'=>1),array('*'),false);
-                $two_wheller_monthly_price_slab = $this->model->selectWhereData('tbl_pass_price_slab',array('fk_place_id'=>$fk_place_id,'fk_vehicle_type_id'=>1),array('*'),false);
-                $three_wheller_monthly_price_slab = $this->model->selectWhereData('tbl_pass_price_slab',array('fk_place_id'=>$fk_place_id,'fk_vehicle_type_id'=>2),array('*'),false);
-                $four_wheller_monthly_price_slab = $this->model->selectWhereData('tbl_pass_price_slab',array('fk_place_id'=>$fk_place_id,'fk_vehicle_type_id'=>3),array('*'),false);
-                $heavy_wheller_monthly_price_slab = $this->model->selectWhereData('tbl_pass_price_slab',array('fk_place_id'=>$fk_place_id,'fk_vehicle_type_id'=>4),array('*'),false);
+                $this->load->model('pos_model');
+                $two_wheller_monthly_price_slab = $this->pos_model->two_wheller_monthly_price_slab($fk_place_id);
+                $three_wheller_monthly_price_slab = $this->pos_model->three_wheller_monthly_price_slab($fk_place_id);;
+                $four_wheller_monthly_price_slab = $this->pos_model->four_wheller_monthly_price_slab($fk_place_id);;
+                $heavy_wheller_monthly_price_slab = $this->pos_model->heavy_wheller_monthly_price_slab($fk_place_id);;
                 $response['code'] = REST_Controller::HTTP_OK;
                 $response['status'] = true;
                 $response['message'] = 'success';

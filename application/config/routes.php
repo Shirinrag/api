@@ -99,6 +99,9 @@ $route['slot-status-details'] = 'verifier_api/slot_status_details';
 $route['slot-issue'] = 'verifier_api/slot_issue';
 $route['duty-allocated-details'] = 'verifier_api/duty_allocated_details';
 $route['get-all-place-list'] = 'verifier_api/get_all_place_list';
+$route['nfc-device-mapped-with-user'] = 'verifier_api/nfc_device_mapped_with_user';
+$route['renewal-user-pass'] = 'verifier_api/renewal_user_pass';
+
 // =============Super Admin API=============================
 $route['loggedin-data'] = 'common/login_data';
 $route['get-all-user-type'] = 'common/get_all_user_type';
@@ -251,4 +254,9 @@ $route['user-wallet-report-data'] = 'report_api/user_wallet_report_data';
 $route['verifier-attendance-report-data'] = 'report_api/verifier_attendance_report_data';
 $route['get-all-data-report'] = 'report_api/get_all_data_report';
 $route['user-transcation-report-data'] = 'report_api/user_transcation_report_data';
-$route['booking-report-data'] = 'report_api/booking_report_data';
+$route['booking-report-data'] = 'report_api/booking_report_data'; 
+// ============================ NFC Device=====================================
+$route['add-nfc-device'] = 'superadmin_api/add_nfc_device';
+$route['display-all-nfc-device-data'] = 'superadmin_api/display_all_nfc_device_data';
+$route['update-nfc-device-status'] = 'superadmin_api/update_nfc_device_status';
+

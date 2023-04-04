@@ -3105,4 +3105,78 @@ class Superadmin_api extends REST_Controller {
         }
         echo json_encode($response);
     }
+
+    public function add_nfc_device_post()
+    {
+        $response = array('code' => - 1, 'status' => false, 'message' => '');
+        $validate = validateToken();
+        if ($validate) {
+                $device_id = $this->input->post('device_id');
+                if(empty($device_id)){
+                    $response['message'] = "Device Id is required";
+                    $response['code'] = 201;
+                }else{                   
+                    $check_nfc_device_count = $this->model->CountWhereRecord('tbl_nfc_device', array('nfc_device_id'=>$device_id_row,'status'=>1));
+                    if($check_nfc_device_count > 0){
+                        $response['code'] = 201;
+                        $response['status'] = false;
+                        $response['message'] = 'NFC Device Already exist.';                     
+                    }else{
+                        $curl_data = array(
+                            'nfc_device_id' =>$device_id,
+                        );
+                        $this->model->insertData('tbl_nfc_device',$curl_data);
+                        $response['code'] = REST_Controller::HTTP_OK;
+                        $response['status'] = true;
+                        $response['message'] = 'NFC Device Inserted Successfully';
+                    }                    
+                }
+        }else {
+            $response['code'] = REST_Controller::HTTP_UNAUTHORIZED;
+            $response['message'] = 'Unauthorised';
+        }
+        echo json_encode($response);
+    }
+     public function display_all_nfc_device_data_get()
+    {
+        $response = array('code' => - 1, 'status' => false, 'message' => '');
+        $validate = validateToken();
+        if ($validate) {
+            $this->load->model('superadmin_model');
+                $device_data = $this->model->selectWhereData('tbl_nfc_device',array(),array('*','CONCAT(tbl_nfc_device.status,",",tbl_nfc_device.id) AS statusdata'),false,array('id',"desc"));
+                $response['code'] = REST_Controller::HTTP_OK;
+                $response['status'] = true;
+                $response['message'] = 'success';
+                $response['device_data'] = $device_data;
+        } else {
+            $response['code'] = REST_Controller::HTTP_UNAUTHORIZED;
+            $response['message'] = 'Unauthorised';
+        }
+        echo json_encode($response);   
+    }
+    public function update_nfc_device_status()
+    {
+        $response = array('code' => - 1, 'status' => false, 'message' => '');
+        $validate = validateToken();
+        if($validate){
+            $id = $this->input->post('id');
+            $status=$this->input->post('status');
+            if (empty($id)) {
+                $response['message'] = 'id is required';
+                $response['code'] = 201;
+            } else {
+                $update_data = array(
+                    'status'=>$status,
+                );
+                $this->model->updateData('tbl_nfc_device',$update_data, array('id'=>$id));
+                $response['message'] = 'success';
+                $response['code'] = 200;
+                $response['status'] = true;
+            }
+        } else {
+            $response['message'] = 'Invalid Request';
+            $response['code'] = 204;
+        }
+        echo json_encode($response);
+    }
 }

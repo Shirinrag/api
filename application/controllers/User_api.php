@@ -1433,4 +1433,5 @@ class User_api extends REST_Controller {
 		    }
 		    echo json_encode($response);
     }
+   
 }
