@@ -777,7 +777,7 @@ class Verifier_api extends REST_Controller {
         echo json_encode($response);   
     }
 
-     public function nfc_device_mapped_with_user_post()
+    public function nfc_device_mapped_with_user_post()
     {
             $response = array('code' => - 1, 'status' => false, 'message' => '');
             $validate = validateToken();
@@ -799,23 +799,31 @@ class Verifier_api extends REST_Controller {
                     $response['message'] = "No of Dayss is required";
                     $response['code'] = 201;
                 }else{
-                    $nfc_device = $this->model->selectWhereData('tbl_nfc_device',array('nfc_device_id'=>$nfc_device_id),array('id'));
-                    $no_of_days_1 = $this->model->selectWhereData('tbl_pass_days',array('id'=>$no_of_days),array('no_of_days'));
-                    $from_date = date('Y-m-d');
-                    $to_date = Date('Y-m-d', strtotime($from_date.'+'.$no_of_days_1['no_of_days']));
-                    $curl_data = array(
-                        'fk_place_id'=>$place_id,
-                        'fk_nfc_device_id'=>$nfc_device['id'],
-                        'fk_no_of_days'=>$no_of_days,
-                        'phone_no'=>$phone_no,
-                        'from_date'=> date('Y-m-d'),
-                        'to_date'=>$to_date,
-                        'used_status'=>1,
-                    );      
-                    $this->model->insertData('tbl_user_pass_details',$curl_data);
-                    $response['code'] = REST_Controller::HTTP_OK;
-                    $response['status'] = true;
-                    $response['message'] = 'success'; 
+                        $nfc_device = $this->model->selectWhereData('tbl_nfc_device',array('nfc_device_id'=>$nfc_device_id),array('id'));
+                        $pass_previous_details = $this->model->selectWhereData('tbl_user_pass_details',array('fk_nfc_device_id'=>$nfc_device['id'],'used_status'=>1),array('*'));
+                        $no_of_days_1 = $this->model->selectWhereData('tbl_pass_days',array('id'=>$no_of_days),array('no_of_days'));
+                        $from_date = date('Y-m-d');
+                        $to_date = Date('Y-m-d', strtotime($from_date.'+'.$no_of_days_1['no_of_days']));
+                        $check_user_count = $this->model->CountWhereRecord('tbl_user_pass_details', array('fk_nfc_device_id'=>$nfc_device['id'],'phone_no'=>$phone_no,'used_status'=>1));
+                        if($check_user_count > 0){
+                            $response['code'] = 201;
+                            $response['status'] = false;
+                            $response['message'] = 'User Already Exist......!';                             
+                        }else{
+                        $curl_data = array(
+                            'fk_place_id'=>$place_id,
+                            'fk_nfc_device_id'=>$nfc_device['id'],
+                            'fk_no_of_days'=>$no_of_days,
+                            'phone_no'=>$phone_no,
+                            'from_date'=> date('Y-m-d'),
+                            'to_date'=>$to_date,
+                            'used_status'=>1,
+                        );      
+                        $this->model->insertData('tbl_user_pass_details',$curl_data);
+                        $response['code'] = REST_Controller::HTTP_OK;
+                        $response['status'] = true;
+                        $response['message'] = 'Pass Renewal Done Successfully '; 
+                    }
                 }
             }else{
                 $response['code'] = REST_Controller::HTTP_UNAUTHORIZED;
@@ -843,16 +851,34 @@ class Verifier_api extends REST_Controller {
                     $no_of_days_1 = $this->model->selectWhereData('tbl_pass_days',array('id'=>$no_of_days),array('no_of_days'));
                     $from_date = date('Y-m-d', strtotime("+1 day", strtotime($pass_previous_details['to_date'])));
                     $to_date = Date('Y-m-d', strtotime($from_date.'+'.$no_of_days_1['no_of_days']));
-                    $curl_data = array(
-                        'fk_place_id'=>$pass_previous_details['fk_place_id'],
-                        'fk_nfc_device_id'=>$pass_previous_details['fk_nfc_device_id'],
-                        'fk_no_of_days'=>$no_of_days,
-                        'phone_no'=>$pass_previous_details['phone_no'],
-                        'from_date'=> date('yyyy-mm-dd'),
-                        'to_date'=>$to_date,
-                        'used_status'=>1,
-                    );      
-                    $this->model->insertData('tbl_user_pass_details',$curl_data);
+                    $current_date= date('Y-m-d');
+
+                    if($current_date > $pass_previous_details['to_date']){
+                        $update_data = array(
+                            'used_status'=>0,
+                        );
+                        $this->model->updateData('tbl_user_pass_details',$update_data,array('id'=>$pass_previous_details['id']));
+
+                        $response['code'] = 201;
+                        $response['status'] = false;
+                        $response['message'] = 'Your Pass has expired on "'.$pass_previous_details['to_date'].'". Kindly Generate New Pass'; 
+                    }else{
+                       $update_data = array(
+                        'used_status'=>0,);
+                        $this->model->updateData('tbl_user_pass_details',$update_data,array('id'=>$pass_previous_details['id']));
+                        $curl_data = array(
+                            'fk_place_id'=>$pass_previous_details['fk_place_id'],
+                            'fk_nfc_device_id'=>$pass_previous_details['fk_nfc_device_id'],
+                            'fk_no_of_days'=>$no_of_days,
+                            'phone_no'=>$pass_previous_details['phone_no'],
+                            'from_date'=> date('Y-m-d'),
+                            'to_date'=>$to_date,
+                            'used_status'=>1,
+                        );      
+                        $this->model->insertData('tbl_user_pass_details',$curl_data);  
+                    }
+
+                   
                     $response['code'] = REST_Controller::HTTP_OK;
                     $response['status'] = true;
                     $response['message'] = 'success'; 

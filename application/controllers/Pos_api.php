@@ -358,6 +358,7 @@ class Pos_api extends REST_Controller {
             $longitude = $this->input->post('longitude');
             $book_status = $this->input->post('book_status');
             $device_id = $this->input->post('device_id');
+            $nfc_device_id = $this->input->post('nfc_device_id');
             if(empty($fk_lang_id)){
                 $response['message'] ="Language Id is required";
                 $response['code'] =201;
@@ -412,32 +413,76 @@ class Pos_api extends REST_Controller {
                 $response['code'] =201;
             }else{
                 $pos_device_id = $this->model->selectWhereData('tbl_pos_device',array('pos_device_id'=>$device_id),array('id'));
-                $curl_data=array(
-                    'fk_place_id'=>$fk_place_id,
-                    'fk_verifier_id' =>$fk_verifier_id,
-                    'fk_vehicle_type_id'=>$fk_vehicle_type_id,
-                    'fk_device_id'=>$pos_device_id['id'],
-                    'fk_lang_id'=>$fk_lang_id,
-                    'car_no'=>$car_no,
-                    'phone_no'=>$phone_no,
-                    'from_date'=>$from_date,
-                    'to_date'=>$to_date,
-                    'from_time'=>$from_time,
-                    'to_time'=>$to_time,
-                    'total_hours'=>$total_hours,
-                    'price'=>$price,
-                    'latitude'=>$latitude,
-                    'longitude'=>$longitude,
-                    'book_status'=>$book_status,
-                );
-                $this->model->insertData('tbl_pos_booking',$curl_data);
-                $response['code'] = REST_Controller::HTTP_OK;
-                $response['status'] = true;
-                if($fk_lang_id==1){
-                    $response['message'] = 'Checked-in Successfully';
+                if(!empty($nfc_device_id)){
+                        $nfc_device = $this->model->selectWhereData('tbl_nfc_device',array('nfc_device_id'=>$nfc_device_id),array('id'));
+                        $pass_previous_details = $this->model->selectWhereData('tbl_user_pass_details',array('fk_nfc_device_id'=>$nfc_device['id'],'used_status'=>0),array('*'));
+                        $current_date= date('Y-m-d');
+
+                        if($current_date > $pass_previous_details['to_date']){
+                            $update_data = array(
+                                'used_status'=>0,
+                            );
+                            $this->model->updateData('tbl_user_pass_details',$update_data,array('id'=>$pass_previous_details['id']));
+
+                            $response['code'] = 201;
+                            $response['status'] = false;
+                            $response['message'] = 'Your Pass has expired on "'.$pass_previous_details['to_date'].'". Kindly Generate New Pass'; 
+                        }else{
+                                $curl_data=array(
+                                'fk_place_id'=>$fk_place_id,
+                                'fk_verifier_id' =>$fk_verifier_id,
+                                'fk_vehicle_type_id'=>$fk_vehicle_type_id,
+                                'fk_device_id'=>$pos_device_id['id'],
+                                'fk_lang_id'=>$fk_lang_id,
+                                'car_no'=>$car_no,
+                                'phone_no'=>$phone_no,
+                                'from_date'=>$from_date,
+                                'to_date'=>$to_date,
+                                'from_time'=>$from_time,
+                                'to_time'=>$to_time,
+                                'total_hours'=>$total_hours,
+                                'price'=>$price,
+                                'latitude'=>$latitude,
+                                'longitude'=>$longitude,
+                                'book_status'=>$book_status,
+                            );
+                            $this->model->insertData('tbl_pos_booking',$curl_data);
+                            $response['code'] = REST_Controller::HTTP_OK;
+                            $response['status'] = true;
+                            if($fk_lang_id==1){
+                                $response['message'] = 'Checked-in Successfully';
+                            }else{
+                                $response['message'] = 'चेक-इन सफलतापूर्वक';
+                            }
+                        }
                 }else{
-                    $response['message'] = 'चेक-इन सफलतापूर्वक';
-                }
+                        $curl_data=array(
+                            'fk_place_id'=>$fk_place_id,
+                            'fk_verifier_id' =>$fk_verifier_id,
+                            'fk_vehicle_type_id'=>$fk_vehicle_type_id,
+                            'fk_device_id'=>$pos_device_id['id'],
+                            'fk_lang_id'=>$fk_lang_id,
+                            'car_no'=>$car_no,
+                            'phone_no'=>$phone_no,
+                            'from_date'=>$from_date,
+                            'to_date'=>$to_date,
+                            'from_time'=>$from_time,
+                            'to_time'=>$to_time,
+                            'total_hours'=>$total_hours,
+                            'price'=>$price,
+                            'latitude'=>$latitude,
+                            'longitude'=>$longitude,
+                            'book_status'=>$book_status,
+                        );
+                        $this->model->insertData('tbl_pos_booking',$curl_data);
+                        $response['code'] = REST_Controller::HTTP_OK;
+                        $response['status'] = true;
+                        if($fk_lang_id==1){
+                            $response['message'] = 'Checked-in Successfully';
+                        }else{
+                            $response['message'] = 'चेक-इन सफलतापूर्वक';
+                        }
+                }                
             }
 
         }else {
@@ -468,6 +513,7 @@ class Pos_api extends REST_Controller {
             $book_status = $this->input->post('book_status');
             $device_id = $this->input->post('device_id');
             $payment_type = $this->input->post('payment_type');
+            $nfc_device_id = $this->input->post('nfc_device_id');
             if(empty($fk_lang_id)){
                 $response['message'] ="Language Id is required";
                 $response['code'] =201;
@@ -550,33 +596,78 @@ class Pos_api extends REST_Controller {
                 $response['code'] =201;
             }else{
                $pos_device_id = $this->model->selectWhereData('tbl_pos_device',array('pos_device_id'=>$device_id),array('id'));
-                $curl_data=array(
-                    'fk_place_id'=>$fk_place_id,
-                    'fk_verifier_id' =>$fk_verifier_id,
-                    'fk_vehicle_type_id'=>$fk_vehicle_type_id,
-                    'fk_device_id'=>$pos_device_id['id'],
-                    'fk_lang_id'=>$fk_lang_id,
-                    'car_no'=>$car_no,
-                    'phone_no'=>$phone_no,
-                    'from_date'=>$from_date,
-                    'to_date'=>$to_date,
-                    'from_time'=>$from_time,
-                    'to_time'=>$to_time,
-                    'total_hours'=>$total_hours,
-                    'price'=>$price,
-                    'latitude'=>$latitude,
-                    'longitude'=>$longitude,
-                    'book_status'=>$book_status,
-                    'payment_type'=>$payment_type
-                );
-                $this->model->insertData('tbl_pos_booking',$curl_data);
-                $response['code'] = REST_Controller::HTTP_OK;
-                $response['status'] = true;
-                if($fk_lang_id==1){
-                    $response['message'] = 'Checked-out Successfully';
-                }else{
-                    $response['message'] = 'चेक-आउट सफलतापूर्वक';
-                }
+               if(!empty($nfc_device_id)){
+                        $nfc_device = $this->model->selectWhereData('tbl_nfc_device',array('nfc_device_id'=>$nfc_device_id),array('id'));
+                        $pass_previous_details = $this->model->selectWhereData('tbl_user_pass_details',array('fk_nfc_device_id'=>$nfc_device['id'],'used_status'=>0),array('*'));
+                        $current_date= date('Y-m-d');
+
+                        if($current_date > $pass_previous_details['to_date']){
+                            $update_data = array(
+                                'used_status'=>0,
+                            );
+                            $this->model->updateData('tbl_user_pass_details',$update_data,array('id'=>$pass_previous_details['id']));
+
+                            $response['code'] = 201;
+                            $response['status'] = false;
+                            $response['message'] = 'Your Pass has expired on "'.$pass_previous_details['to_date'].'". Kindly Generate New Pass'; 
+                        }else{
+                            $curl_data=array(
+                                'fk_place_id'=>$fk_place_id,
+                                'fk_verifier_id' =>$fk_verifier_id,
+                                'fk_vehicle_type_id'=>$fk_vehicle_type_id,
+                                'fk_device_id'=>$pos_device_id['id'],
+                                'fk_lang_id'=>$fk_lang_id,
+                                'car_no'=>$car_no,
+                                'phone_no'=>$phone_no,
+                                'from_date'=>$from_date,
+                                'to_date'=>$to_date,
+                                'from_time'=>$from_time,
+                                'to_time'=>$to_time,
+                                'total_hours'=>$total_hours,
+                                'price'=>$price,
+                                'latitude'=>$latitude,
+                                'longitude'=>$longitude,
+                                'book_status'=>$book_status,
+                                'payment_type'=>$payment_type
+                            );
+                            $this->model->insertData('tbl_pos_booking',$curl_data);
+                            $response['code'] = REST_Controller::HTTP_OK;
+                            $response['status'] = true;
+                            if($fk_lang_id==1){
+                                $response['message'] = 'Checked-out Successfully';
+                            }else{
+                                $response['message'] = 'चेक-आउट सफलतापूर्वक';
+                            }
+                        }
+                    }else{
+                        $curl_data=array(
+                                'fk_place_id'=>$fk_place_id,
+                                'fk_verifier_id' =>$fk_verifier_id,
+                                'fk_vehicle_type_id'=>$fk_vehicle_type_id,
+                                'fk_device_id'=>$pos_device_id['id'],
+                                'fk_lang_id'=>$fk_lang_id,
+                                'car_no'=>$car_no,
+                                'phone_no'=>$phone_no,
+                                'from_date'=>$from_date,
+                                'to_date'=>$to_date,
+                                'from_time'=>$from_time,
+                                'to_time'=>$to_time,
+                                'total_hours'=>$total_hours,
+                                'price'=>$price,
+                                'latitude'=>$latitude,
+                                'longitude'=>$longitude,
+                                'book_status'=>$book_status,
+                                'payment_type'=>$payment_type
+                            );
+                            $this->model->insertData('tbl_pos_booking',$curl_data);
+                            $response['code'] = REST_Controller::HTTP_OK;
+                            $response['status'] = true;
+                            if($fk_lang_id==1){
+                                $response['message'] = 'Checked-out Successfully';
+                            }else{
+                                $response['message'] = 'चेक-आउट सफलतापूर्वक';
+                            }
+                    }
             }
 
         }else {
