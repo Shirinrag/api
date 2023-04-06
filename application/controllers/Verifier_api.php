@@ -786,6 +786,7 @@ class Verifier_api extends REST_Controller {
                 $nfc_device_id = $this->input->post('nfc_device_id');
                 $phone_no = $this->input->post('phone_no');
                 $no_of_days = $this->input->post('no_of_days');
+                $discount_price = $this->input->post('discount_price');
                 if(empty($place_id)){
                     $response['message'] = "Place Id is required";
                     $response['code'] = 201;
@@ -800,6 +801,7 @@ class Verifier_api extends REST_Controller {
                     $response['code'] = 201;
                 }else{
                         $nfc_device = $this->model->selectWhereData('tbl_nfc_device',array('nfc_device_id'=>$nfc_device_id),array('id'));
+                        $monthly_pass_details = $this->model->selectWhereData('tbl_pass_price_slab',array('no_of_days'=>$nfc_device['id'],'fk_place_id'=>$place_id),array('cost'));
                         $pass_previous_details = $this->model->selectWhereData('tbl_user_pass_details',array('fk_nfc_device_id'=>$nfc_device['id'],'used_status'=>1),array('*'));
                         $no_of_days_1 = $this->model->selectWhereData('tbl_pass_days',array('id'=>$no_of_days),array('no_of_days'));
                         $from_date = date('Y-m-d');
@@ -818,6 +820,9 @@ class Verifier_api extends REST_Controller {
                             'from_date'=> date('Y-m-d'),
                             'to_date'=>$to_date,
                             'used_status'=>1,
+                            'price'=>$monthly_pass_details['cost'],
+                            'discount_price'=>$discount_price,
+                            'total_price'=> $monthly_pass_details['cost'] - $discount_price
                         );      
                         $this->model->insertData('tbl_user_pass_details',$curl_data);
                         $response['code'] = REST_Controller::HTTP_OK;

@@ -359,6 +359,7 @@ class Pos_api extends REST_Controller {
             $book_status = $this->input->post('book_status');
             $device_id = $this->input->post('device_id');
             $nfc_device_id = $this->input->post('nfc_device_id');
+            $reason = $this->input->post('reason');
             if(empty($fk_lang_id)){
                 $response['message'] ="Language Id is required";
                 $response['code'] =201;
@@ -417,13 +418,11 @@ class Pos_api extends REST_Controller {
                         $nfc_device = $this->model->selectWhereData('tbl_nfc_device',array('nfc_device_id'=>$nfc_device_id),array('id'));
                         $pass_previous_details = $this->model->selectWhereData('tbl_user_pass_details',array('fk_nfc_device_id'=>$nfc_device['id'],'used_status'=>0),array('*'));
                         $current_date= date('Y-m-d');
-
                         if($current_date > $pass_previous_details['to_date']){
                             $update_data = array(
                                 'used_status'=>0,
                             );
                             $this->model->updateData('tbl_user_pass_details',$update_data,array('id'=>$pass_previous_details['id']));
-
                             $response['code'] = 201;
                             $response['status'] = false;
                             $response['message'] = 'Your Pass has expired on "'.$pass_previous_details['to_date'].'". Kindly Generate New Pass'; 
@@ -445,6 +444,7 @@ class Pos_api extends REST_Controller {
                                 'latitude'=>$latitude,
                                 'longitude'=>$longitude,
                                 'book_status'=>$book_status,
+                                'reason'=>$reason,
                             );
                             $this->model->insertData('tbl_pos_booking',$curl_data);
                             $response['code'] = REST_Controller::HTTP_OK;
