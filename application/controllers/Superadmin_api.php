@@ -3116,7 +3116,7 @@ class Superadmin_api extends REST_Controller {
                     $response['message'] = "Device Id is required";
                     $response['code'] = 201;
                 }else{                   
-                    $check_nfc_device_count = $this->model->CountWhereRecord('tbl_nfc_device', array('nfc_device_id'=>$device_id_row,'status'=>1));
+                    $check_nfc_device_count = $this->model->CountWhereRecord('tbl_nfc_device', array('nfc_device_id'=>$device_id,'status'=>1));
                     if($check_nfc_device_count > 0){
                         $response['code'] = 201;
                         $response['status'] = false;
@@ -3176,6 +3176,23 @@ class Superadmin_api extends REST_Controller {
         } else {
             $response['message'] = 'Invalid Request';
             $response['code'] = 204;
+        }
+        echo json_encode($response);
+    }
+    public function display_all_applied_for_vendor_data()
+    {
+        $response = array('code' => - 1, 'status' => false, 'message' => '');
+        $validate = validateToken();
+        if ($validate) {
+               $this->load->model('superadmin_model');
+                $admin_data = $this->superadmin_model->display_all_admin_data();
+                $response['code'] = REST_Controller::HTTP_OK;
+                $response['status'] = true;
+                $response['message'] = 'success';
+                $response['admin_data'] = $admin_data;
+        } else {
+            $response['code'] = REST_Controller::HTTP_UNAUTHORIZED;
+            $response['message'] = 'Unauthorised';
         }
         echo json_encode($response);
     }

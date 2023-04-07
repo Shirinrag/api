@@ -776,7 +776,65 @@ class Verifier_api extends REST_Controller {
         }
         echo json_encode($response);   
     }
-
+      // public function nfc_device_mapped_with_user_post()
+    // {
+    //         $response = array('code' => - 1, 'status' => false, 'message' => '');
+    //         $validate = validateToken();
+    //         if ($validate) {
+    //             $place_id = $this->input->post('place_id');
+    //             $nfc_device_id = $this->input->post('nfc_device_id');
+    //             $phone_no = $this->input->post('phone_no');
+    //             $no_of_days = $this->input->post('no_of_days');
+    //             $discount_price = $this->input->post('discount_price');
+    //             if(empty($place_id)){
+    //                 $response['message'] = "Place Id is required";
+    //                 $response['code'] = 201;
+    //             }else if(empty($nfc_device_id)){
+    //                 $response['message'] = "Nfc Device Id is required";
+    //                 $response['code'] = 201;
+    //             }else if(empty($phone_no)){
+    //                 $response['message'] = "Phone No is required";
+    //                 $response['code'] = 201;
+    //             }else if(empty($no_of_days)){
+    //                 $response['message'] = "No of Dayss is required";
+    //                 $response['code'] = 201;
+    //             }else{
+    //                     $nfc_device = $this->model->selectWhereData('tbl_nfc_device',array('nfc_device_id'=>$nfc_device_id),array('id'));
+    //                     $monthly_pass_details = $this->model->selectWhereData('tbl_pass_price_slab',array('no_of_days'=>$nfc_device['id'],'fk_place_id'=>$place_id),array('cost'));
+    //                     $pass_previous_details = $this->model->selectWhereData('tbl_user_pass_details',array('fk_nfc_device_id'=>$nfc_device['id'],'used_status'=>1),array('*'));
+    //                     $no_of_days_1 = $this->model->selectWhereData('tbl_pass_days',array('id'=>$no_of_days),array('no_of_days'));
+    //                     $from_date = date('Y-m-d');
+    //                     $to_date = Date('Y-m-d', strtotime($from_date.'+'.$no_of_days_1['no_of_days']));
+    //                     $check_user_count = $this->model->CountWhereRecord('tbl_user_pass_details', array('fk_nfc_device_id'=>$nfc_device['id'],'phone_no'=>$phone_no,'used_status'=>1));
+    //                     if($check_user_count > 0){
+    //                         $response['code'] = 201;
+    //                         $response['status'] = false;
+    //                         $response['message'] = 'User Already Exist......!';                             
+    //                     }else{
+    //                     $curl_data = array(
+    //                         'fk_place_id'=>$place_id,
+    //                         'fk_nfc_device_id'=>$nfc_device['id'],
+    //                         'fk_no_of_days'=>$no_of_days,
+    //                         'phone_no'=>$phone_no,
+    //                         'from_date'=> date('Y-m-d'),
+    //                         'to_date'=>$to_date,
+    //                         'used_status'=>1,
+    //                         'price'=>$monthly_pass_details['cost'],
+    //                         'discount_price'=>$discount_price,
+    //                         'total_price'=> $monthly_pass_details['cost'] - $discount_price
+    //                     );      
+    //                     $this->model->insertData('tbl_user_pass_details',$curl_data);
+    //                     $response['code'] = REST_Controller::HTTP_OK;
+    //                     $response['status'] = true;
+    //                     $response['message'] = 'Pass Renewal Done Successfully '; 
+    //                 }
+    //             }
+    //         }else{
+    //             $response['code'] = REST_Controller::HTTP_UNAUTHORIZED;
+    //             $response['message'] = 'Unauthorised';
+    //         }
+    //         echo json_encode($response);
+    // }
     public function nfc_device_mapped_with_user_post()
     {
             $response = array('code' => - 1, 'status' => false, 'message' => '');
@@ -787,6 +845,7 @@ class Verifier_api extends REST_Controller {
                 $phone_no = $this->input->post('phone_no');
                 $no_of_days = $this->input->post('no_of_days');
                 $discount_price = $this->input->post('discount_price');
+                $fk_vehicle_type_id = $this->input->post('fk_vehicle_type_id');
                 if(empty($place_id)){
                     $response['message'] = "Place Id is required";
                     $response['code'] = 201;
@@ -800,35 +859,88 @@ class Verifier_api extends REST_Controller {
                     $response['message'] = "No of Dayss is required";
                     $response['code'] = 201;
                 }else{
+                    $check_nfc_device_count = $this->model->CountWhereRecord('tbl_nfc_device', array('nfc_device_id'=>$nfc_device_id,'status'=>1));
+                    if($check_nfc_device_count > 0){
+                        $response['code'] = 201;
+                        $response['status'] = false;
+                        $response['message'] = 'NFC Device Already exist.';  
                         $nfc_device = $this->model->selectWhereData('tbl_nfc_device',array('nfc_device_id'=>$nfc_device_id),array('id'));
-                        $monthly_pass_details = $this->model->selectWhereData('tbl_pass_price_slab',array('no_of_days'=>$nfc_device['id'],'fk_place_id'=>$place_id),array('cost'));
+                        $monthly_pass_details = $this->model->selectWhereData('tbl_pass_price_slab',array('no_of_days'=>$no_of_days,'fk_place_id'=>$place_id,'fk_vehicle_type_id'=>$fk_vehicle_type_id),array('cost'));
                         $pass_previous_details = $this->model->selectWhereData('tbl_user_pass_details',array('fk_nfc_device_id'=>$nfc_device['id'],'used_status'=>1),array('*'));
                         $no_of_days_1 = $this->model->selectWhereData('tbl_pass_days',array('id'=>$no_of_days),array('no_of_days'));
                         $from_date = date('Y-m-d');
                         $to_date = Date('Y-m-d', strtotime($from_date.'+'.$no_of_days_1['no_of_days']));
                         $check_user_count = $this->model->CountWhereRecord('tbl_user_pass_details', array('fk_nfc_device_id'=>$nfc_device['id'],'phone_no'=>$phone_no,'used_status'=>1));
                         if($check_user_count > 0){
+                            // $response['code'] = 201;
+                            // $response['status'] = false;
+                            // $response['message'] = 'User Already Exist......!';
+                            $current_date = date('Y-m-d');
+                            if($current_date < $pass_previous_details['to_date']){
+                                $response['code'] = 201;
+                                $response['status'] = false;
+                                $response['message'] = 'Your Pass will be expired on "'.$pass_previous_details['to_date'].'". Kindly Generate New Pass before the date';
+                            }else if($current_date >=$pass_previous_details['to_date']){
+                                    $update_data = array(
+                                        'used_status'=>0,
+                                    );
+                                    $this->model->updateData('tbl_user_pass_details',$update_data,array('id'=>$pass_previous_details['id']));
+                                    $curl_data = array(
+                                        'fk_place_id'=>$place_id,
+                                        'fk_nfc_device_id'=>$nfc_device['id'],
+                                        'fk_no_of_days'=>$no_of_days,
+                                        'phone_no'=>$phone_no,
+                                        'from_date'=> date('Y-m-d'),
+                                        'to_date'=>$to_date,
+                                        'used_status'=>1,
+                                        'price'=>$monthly_pass_details['cost'],
+                                        'discount_price'=>$discount_price,
+                                        'total_price'=> $monthly_pass_details['cost'] - $discount_price
+                                    );      
+                                    $this->model->insertData('tbl_user_pass_details',$curl_data);
+                                    $response['code'] = REST_Controller::HTTP_OK;
+                                    $response['status'] = true;
+                                    $response['message'] = 'Pass Generated Successfully '; 
+                            }else{
+                                $response['code'] = 201;
+                                $response['status'] = false;
+                                $response['message'] = 'Your Pass has expired on "'.$pass_previous_details['to_date'].'". Kindly Generate New Pass'; 
+                            }
+                        }       
+                    }else{
+                        $curl_data = array(
+                            'nfc_device_id' =>$nfc_device_id,
+                        );
+                        $last_inserted_id = $this->model->insertData('tbl_nfc_device',$curl_data);
+                        $monthly_pass_details = $this->model->selectWhereData('tbl_pass_price_slab',array('no_of_days'=>$no_of_days,'fk_place_id'=>$place_id,'fk_vehicle_type_id'=>$fk_vehicle_type_id),array('cost'));
+                        $pass_previous_details = $this->model->selectWhereData('tbl_user_pass_details',array('fk_nfc_device_id'=>$last_inserted_id,'used_status'=>1),array('*'));
+                        $no_of_days_1 = $this->model->selectWhereData('tbl_pass_days',array('id'=>$no_of_days),array('no_of_days'));
+                        $from_date = date('Y-m-d');
+                        $to_date = Date('Y-m-d', strtotime($from_date.'+'.$no_of_days_1['no_of_days']));
+                        $check_user_count = $this->model->CountWhereRecord('tbl_user_pass_details', array('fk_nfc_device_id'=>$last_inserted_id,'phone_no'=>$phone_no,'used_status'=>1));
+                        if($check_user_count > 0){
                             $response['code'] = 201;
                             $response['status'] = false;
-                            $response['message'] = 'User Already Exist......!';                             
+                            $response['message'] = 'User Already Exist......!';
                         }else{
-                        $curl_data = array(
-                            'fk_place_id'=>$place_id,
-                            'fk_nfc_device_id'=>$nfc_device['id'],
-                            'fk_no_of_days'=>$no_of_days,
-                            'phone_no'=>$phone_no,
-                            'from_date'=> date('Y-m-d'),
-                            'to_date'=>$to_date,
-                            'used_status'=>1,
-                            'price'=>$monthly_pass_details['cost'],
-                            'discount_price'=>$discount_price,
-                            'total_price'=> $monthly_pass_details['cost'] - $discount_price
-                        );      
-                        $this->model->insertData('tbl_user_pass_details',$curl_data);
-                        $response['code'] = REST_Controller::HTTP_OK;
-                        $response['status'] = true;
-                        $response['message'] = 'Pass Renewal Done Successfully '; 
-                    }
+                            $curl_data = array(
+                                'fk_place_id'=>$place_id,
+                                'fk_nfc_device_id'=>$last_inserted_id,
+                                'fk_no_of_days'=>$no_of_days,
+                                'phone_no'=>$phone_no,
+                                'from_date'=> date('Y-m-d'),
+                                'to_date'=>$to_date,
+                                'used_status'=>1,
+                                'price'=>$monthly_pass_details['cost'],
+                                'discount_price'=>$discount_price,
+                                'total_price'=> $monthly_pass_details['cost'] - $discount_price
+                            );      
+                            $this->model->insertData('tbl_user_pass_details',$curl_data);
+                            $response['code'] = REST_Controller::HTTP_OK;
+                            $response['status'] = true;
+                            $response['message'] = 'Pass Generated Successfully '; 
+                        }
+                    }    
                 }
             }else{
                 $response['code'] = REST_Controller::HTTP_UNAUTHORIZED;
@@ -843,6 +955,8 @@ class Verifier_api extends REST_Controller {
             if ($validate) {
                 $nfc_device_id = $this->input->post('nfc_device_id');
                 $no_of_days = $this->input->post('no_of_days');
+                $fk_vehicle_type_id = $this->input->post('fk_vehicle_type_id');
+                $discount_price = $this->input->post('discount_price');
                 if(empty($nfc_device_id)){
                     $response['message'] = "Nfc Device Id is required";
                     $response['code'] = 201;
@@ -850,9 +964,9 @@ class Verifier_api extends REST_Controller {
                     $response['message'] = "No of Dayss is required";
                     $response['code'] = 201;
                 }else{
-
                     $nfc_device = $this->model->selectWhereData('tbl_nfc_device',array('nfc_device_id'=>$nfc_device_id),array('id'));
                     $pass_previous_details = $this->model->selectWhereData('tbl_user_pass_details',array('fk_nfc_device_id'=>$nfc_device['id'],'used_status'=>1),array('*'));
+                    $monthly_pass_details = $this->model->selectWhereData('tbl_pass_price_slab',array('no_of_days'=>$no_of_days,'fk_place_id'=>$pass_previous_details['fk_place_id'],'fk_vehicle_type_id'=>$fk_vehicle_type_id),array('cost'));
                     $no_of_days_1 = $this->model->selectWhereData('tbl_pass_days',array('id'=>$no_of_days),array('no_of_days'));
                     $from_date = date('Y-m-d', strtotime("+1 day", strtotime($pass_previous_details['to_date'])));
                     $to_date = Date('Y-m-d', strtotime($from_date.'+'.$no_of_days_1['no_of_days']));
@@ -879,6 +993,9 @@ class Verifier_api extends REST_Controller {
                             'from_date'=> date('Y-m-d'),
                             'to_date'=>$to_date,
                             'used_status'=>1,
+                            'price'=>$monthly_pass_details['cost'],
+                            'discount_price'=>$discount_price,
+                            'total_price'=> $monthly_pass_details['cost'] - $discount_price
                         );      
                         $this->model->insertData('tbl_user_pass_details',$curl_data);  
                     }
@@ -894,4 +1011,9 @@ class Verifier_api extends REST_Controller {
             }
             echo json_encode($response);
     }
+    public function get_details_on_nfc_card()
+    {
+        // code...
+    }
+
 }

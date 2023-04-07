@@ -26,3 +26,37 @@ function generatePassword() {
     // $pass = encrypt($password);
     return $password;
 }
+
+function generate_varchar_string($strength = '') {
+        $input = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
+        $input_length = strlen($input);
+        $random_string = '';
+        for($i = 0; $i < $strength; $i++) {
+        $random_character = $input[mt_rand(0, $input_length - 1)];
+        $random_string .= $random_character;
+        }
+        return $random_string;
+}
+function generate_request_id($tbl_name='',$column_name='')
+    {
+        $CI = get_instance();
+        $varchar = generate_varchar_string(2);
+        $rand = mt_rand(1000000, 9999999);
+        $randTemp = $varchar.$rand;
+        $isUnique = true;
+        do {
+            if(empty($tbl_name)){
+                $tbl_name = 'tbl_user_pass_details';
+            }
+            if(empty($column_name)){
+                $column_name = 'ref_request_id';
+            }
+            $result = $CI->db->get_where($tbl_name, array($column_name => $randTemp));
+            if ($result->num_rows() > 0) {
+                $isUnique = false;
+            } else {
+                $isUnique = true;
+            }
+        } while ($isUnique == false);
+        return $randTemp;
+    }

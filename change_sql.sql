@@ -47,3 +47,4 @@ ALTER TABLE `tbl_parking_place` ADD `parking_place_type` INT NULL DEFAULT NULL C
 ALTER TABLE `tbl_user_pass_details` CHANGE `from_date` `from_date` DATE NULL DEFAULT NULL, CHANGE `to_date` `to_date` DATE NULL DEFAULT NULL;
 
 ALTER TABLE `tbl_user_pass_details` ADD `price` DOUBLE NULL DEFAULT NULL AFTER `to_date`, ADD `discount_price` DOUBLE NULL DEFAULT NULL AFTER `price`, ADD `total_price` DOUBLE NULL DEFAULT NULL AFTER `discount_price`;
+ALTER TABLE `tbl_user_pass_details` CHANGE `fk_nfc_device_id` `nfc_device_id` VARCHAR(100) NULL DEFAULT NULL;
