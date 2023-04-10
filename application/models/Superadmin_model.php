@@ -283,5 +283,18 @@ class Superadmin_model extends CI_Model {
         $result = $query->result_array();
         return $result;
     }
+
+    public function display_all_user_pass_details()
+    {
+        $this->db->select('tbl_user_pass_details.*,tbl_parking_place.place_name,tbl_nfc_device.nfc_device_id,tbl_pass_days.no_of_days');
+        $this->db->from('tbl_user_pass_details');
+        $this->db->join('tbl_parking_place','tbl_user_pass_details.fk_place_id=tbl_parking_place.id','left');
+        $this->db->join('tbl_nfc_device','tbl_user_pass_details.fk_nfc_device_id=tbl_nfc_device.id','left');
+        $this->db->join('tbl_pass_days','tbl_user_pass_details.fk_no_of_days=tbl_pass_days.id','left');
+        $this->db->order_by('tbl_user_pass_details.id','DESC');
+        $query = $this->db->get();
+        $result = $query->result_array();
+        return $result;
+    }
 }
 	

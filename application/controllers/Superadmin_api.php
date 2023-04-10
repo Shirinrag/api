@@ -3179,17 +3179,34 @@ class Superadmin_api extends REST_Controller {
         }
         echo json_encode($response);
     }
-    public function display_all_applied_for_vendor_data()
+    public function display_all_applied_for_vendor_data_get()
     {
         $response = array('code' => - 1, 'status' => false, 'message' => '');
         $validate = validateToken();
         if ($validate) {
                $this->load->model('superadmin_model');
-                $admin_data = $this->superadmin_model->display_all_admin_data();
+                $applied_for_vendor_data = $this->model->selectWhereData('tbl_apply_for_vendor',array(),array('*'),false);
                 $response['code'] = REST_Controller::HTTP_OK;
                 $response['status'] = true;
                 $response['message'] = 'success';
-                $response['admin_data'] = $admin_data;
+                $response['applied_for_vendor_data'] = $applied_for_vendor_data;
+        } else {
+            $response['code'] = REST_Controller::HTTP_UNAUTHORIZED;
+            $response['message'] = 'Unauthorised';
+        }
+        echo json_encode($response);
+    }
+    public function display_all_user_pass_details_get()
+    {
+        $response = array('code' => - 1, 'status' => false, 'message' => '');
+        $validate = validateToken();
+        if ($validate) {
+               $this->load->model('superadmin_model');
+                $user_pass_details = $this->superadmin_model->display_all_user_pass_details();
+                $response['code'] = REST_Controller::HTTP_OK;
+                $response['status'] = true;
+                $response['message'] = 'success';
+                $response['user_pass_details'] = $user_pass_details;
         } else {
             $response['code'] = REST_Controller::HTTP_UNAUTHORIZED;
             $response['message'] = 'Unauthorised';

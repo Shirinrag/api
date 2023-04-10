@@ -231,6 +231,8 @@ $route['get-vendor-map-place-data-on-id'] = 'superadmin_api/get_vendor_map_place
 $route['update-vendor-mapped-place'] = 'superadmin_api/update_vendor_mapped_place';
 // ============================ Applied for Vendor=====================================
 $route['display-all-applied-for-vendor-data'] = 'superadmin_api/display_all_applied_for_vendor_data';
+// ========================== User Pass Details=================================
+$route['display-all-user-pass-details'] = 'superadmin_api/display_all_user_pass_details';
 // ============================= POS API=====================================
 $route['register-pos-verifier'] = 'pos_api/register_pos_verifier';
 $route['login-pos-verifier'] = 'pos_api/login_pos_verifier';

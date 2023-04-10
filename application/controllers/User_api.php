@@ -982,12 +982,11 @@ class User_api extends REST_Controller {
             				'longitude'=>$longitude,
             				'image'=>$place_image
             			);
-            			$this->model->insertData('tbl_place_suggestion',$curl_data);		    		
+            			$this->model->insertData('tbl_place_suggestion',$curl_data);
 	                    $response['code'] = REST_Controller::HTTP_OK;
 	                    $response['status'] = true;
 						$response['message'] = 'Place Inserted Successfully';
 					}
-                   
     			}
 		}else {
             $response['code'] = REST_Controller::HTTP_UNAUTHORIZED;
