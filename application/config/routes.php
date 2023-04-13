@@ -243,6 +243,7 @@ $route['check-out-data'] = 'pos_api/check_out';
 $route['logout-data'] = 'pos_api/logout';
 $route['pos-report-data'] = 'pos_api/pos_report_data';
 $route['reset-password'] = 'pos_api/reset_password';
+$route['user-pass-details-on-nfc-card-post']='pos_api/user_pass_details_on_nfc_card_post';
 
 // ==================== Vendor API==========================================
 $route['vendor-registration'] = 'vendor_api/vendor_registration';
@@ -262,4 +263,3 @@ $route['booking-report-data'] = 'report_api/booking_report_data';
 $route['add-nfc-device'] = 'superadmin_api/add_nfc_device';
 $route['display-all-nfc-device-data'] = 'superadmin_api/display_all_nfc_device_data';
 $route['update-nfc-device-status'] = 'superadmin_api/update_nfc_device_status';
-

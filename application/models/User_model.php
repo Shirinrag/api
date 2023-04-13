@@ -22,10 +22,11 @@ class User_model extends CI_Model {
 	}
 	public function extend_booking($fk_booking_id='')
 	{
-		$this->db->select('GROUP_CONCAT(tbl_extension_booking.booking_ext_replace) AS booking_ext_replace,GROUP_CONCAT(tbl_extension_booking.booking_from_date) as ext_booking_from_date,GROUP_CONCAT(tbl_extension_booking.booking_to_date) as ext_booking_to_date,GROUP_CONCAT(tbl_extension_booking.booking_from_time) as ext_booking_from_time,GROUP_CONCAT(tbl_extension_booking.booking_to_time) as ext_booking_to_time');
+		$this->db->select('GROUP_CONCAT(tbl_extension_booking.booking_ext_replace) AS booking_ext_replace,GROUP_CONCAT(tbl_extension_booking.booking_from_date) as ext_booking_from_date,GROUP_CONCAT(tbl_extension_booking.booking_to_date) as ext_booking_to_date,GROUP_CONCAT(tbl_extension_booking.booking_from_time) as ext_booking_from_time,GROUP_CONCAT(tbl_extension_booking.booking_to_time) as ext_booking_to_time,GROUP_CONCAT(tbl_payment.total_amount)');
 		$this->db->from('tbl_extension_booking');
-		$this->db->where('fk_booking_id',$fk_booking_id);
-		$this->db->group_by('fk_booking_id');
+		$this->db->join('tbl_payment','tbl_payment.fk_ext_booking_id=tbl_extension_booking.id','left');
+		$this->db->where('tbl_extension_booking.fk_booking_id',$fk_booking_id);
+		$this->db->group_by('tbl_extension_booking.fk_booking_id');
 		$query = $this->db->get();
         $result = $query->row_array();
         return $result;

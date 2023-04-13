@@ -416,18 +416,11 @@ class Pos_api extends REST_Controller {
                 $pos_device_id = $this->model->selectWhereData('tbl_pos_device',array('pos_device_id'=>$device_id),array('id'));
                 if(!empty($nfc_device_id)){
                         $nfc_device = $this->model->selectWhereData('tbl_nfc_device',array('nfc_device_id'=>$nfc_device_id),array('id'));
-                        $pass_previous_details = $this->model->selectWhereData('tbl_user_pass_details',array('fk_nfc_device_id'=>$nfc_device['id'],'used_status'=>0),array('*'));
+                        $pass_previous_details = $this->model->selectWhereData('tbl_user_pass_details',array('fk_nfc_device_id'=>$nfc_device['id'],'used_status'=>1),array('*'));
                         $current_date= date('Y-m-d');
-                        if($current_date > $pass_previous_details['to_date']){
-                            $update_data = array(
-                                'used_status'=>0,
-                            );
-                            $this->model->updateData('tbl_user_pass_details',$update_data,array('id'=>$pass_previous_details['id']));
-                            $response['code'] = 201;
-                            $response['status'] = false;
-                            $response['message'] = 'Your Pass has expired on "'.$pass_previous_details['to_date'].'". Kindly Generate New Pass'; 
-                        }else{
-                                $curl_data=array(
+
+                        if($pass_previous_details['to_date'] > $current_date){
+                            $curl_data=array(
                                 'fk_place_id'=>$fk_place_id,
                                 'fk_verifier_id' =>$fk_verifier_id,
                                 'fk_vehicle_type_id'=>$fk_vehicle_type_id,
@@ -454,6 +447,15 @@ class Pos_api extends REST_Controller {
                             }else{
                                 $response['message'] = 'चेक-इन सफलतापूर्वक';
                             }
+                        }else{
+                             $update_data = array(
+                                'used_status'=>0,
+                            );
+                            $this->model->updateData('tbl_user_pass_details',$update_data,array('id'=>$pass_previous_details['id']));
+
+                            $response['code'] = 201;
+                            $response['status'] = false;
+                            $response['message'] = 'Your Pass has expired on "'.$pass_previous_details['to_date'].'". Kindly Generate New Pass'; 
                         }
                 }else{
                         $curl_data=array(
@@ -776,6 +778,38 @@ class Pos_api extends REST_Controller {
                 }else{
                     $response['message'] = 'पासवर्ड सफलतापूर्वक अद्यतन';
                 }
+            }
+        }else{
+            $response['code'] = REST_Controller::HTTP_UNAUTHORIZED;
+            $response['message'] = 'Unauthorised';
+        }
+        echo json_encode($response);
+    }
+    public function user_pass_details_on_nfc_card_post()
+    {
+        $response = array('code' => - 1, 'status' => false, 'message' => '');
+        $validate = validateToken();
+        if ($validate) {            
+            $nfc_device_id = $this->input->post('nfc_device');
+            
+            if(empty($nfc_device_id)){
+                $response['message']= "NFC device is required";
+                $response['code'] = 201;
+            }else{                  
+                    $nfc_device = $this->model->selectWhereData('tbl_nfc_device',array('nfc_device_id'=>$nfc_device_id),array('id'));
+                    if(!empty($nfc_device['id'])){
+                        $pass_details = $this->model->selectWhereData('tbl_user_pass_details',array('fk_nfc_device_id'=>$nfc_device['id'],'used_status'=>1),array('*'));
+                        $response['code'] = REST_Controller::HTTP_OK;
+                        $response['status'] = true;
+                        $response['pass_details'] = $pass_details;
+                    }else{
+                        $response['code'] = 201;
+                        $response['status'] = false;
+                        $response['message'] = "No Data Found";
+                        $response['pass_details'] = [];
+                    }
+                    
+                
             }
         }else{
             $response['code'] = REST_Controller::HTTP_UNAUTHORIZED;

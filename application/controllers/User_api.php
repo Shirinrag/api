@@ -154,7 +154,7 @@ class User_api extends REST_Controller {
 				if($check_user_count == 0){
         			$response['code'] = 201;
         			$response['status'] = false;
-        			$response['message'] = 'Contact No does not exist.';            					
+        			$response['message'] = 'Contact No does not exist.';
 				}else{
 	        		$user_data = $this->model->selectWhereData('pa_users',array('phoneNo'=>$phone_no),array('*'));
 	        		$user_data['support_call'] = "+18008890180";
@@ -1003,6 +1003,7 @@ class User_api extends REST_Controller {
 		    	$fk_place_id = $this->input->post('fk_place_id');
 		    	$topic = $this->input->post('topic');
 		    	$description = $this->input->post('description');
+		    	$booking_id = $this->input->post('booking_id');
 		    	if(empty($fk_user_id)){
 		    		$response['message'] = "User Id is required";
 		    		$response['code'] = 201;
