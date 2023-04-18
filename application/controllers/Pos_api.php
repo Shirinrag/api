@@ -437,7 +437,7 @@ class Pos_api extends REST_Controller {
                                 'latitude'=>$latitude,
                                 'longitude'=>$longitude,
                                 'book_status'=>$book_status,
-                                'reason'=>$reason,
+                                 'reason'=>$reason,
                             );
                             $this->model->insertData('tbl_pos_booking',$curl_data);
                             $response['code'] = REST_Controller::HTTP_OK;
@@ -475,6 +475,7 @@ class Pos_api extends REST_Controller {
                             'latitude'=>$latitude,
                             'longitude'=>$longitude,
                             'book_status'=>$book_status,
+                            'reason'=>$reason,
                         );
                         $this->model->insertData('tbl_pos_booking',$curl_data);
                         $response['code'] = REST_Controller::HTTP_OK;
@@ -516,6 +517,7 @@ class Pos_api extends REST_Controller {
             $device_id = $this->input->post('device_id');
             $payment_type = $this->input->post('payment_type');
             $nfc_device_id = $this->input->post('nfc_device_id');
+            $reason = $this->input->post('reason');
             if(empty($fk_lang_id)){
                 $response['message'] ="Language Id is required";
                 $response['code'] =201;
@@ -630,7 +632,8 @@ class Pos_api extends REST_Controller {
                                 'latitude'=>$latitude,
                                 'longitude'=>$longitude,
                                 'book_status'=>$book_status,
-                                'payment_type'=>$payment_type
+                                'payment_type'=>$payment_type,
+                                'reason'=>$reason,
                             );
                             $this->model->insertData('tbl_pos_booking',$curl_data);
                             $response['code'] = REST_Controller::HTTP_OK;
@@ -659,7 +662,8 @@ class Pos_api extends REST_Controller {
                                 'latitude'=>$latitude,
                                 'longitude'=>$longitude,
                                 'book_status'=>$book_status,
-                                'payment_type'=>$payment_type
+                                'payment_type'=>$payment_type,
+                                'reason'=>$reason,
                             );
                             $this->model->insertData('tbl_pos_booking',$curl_data);
                             $response['code'] = REST_Controller::HTTP_OK;

@@ -18,10 +18,12 @@ class Pushnotifications {
 	   // $reg_ids = [];
 		$device_key_info = $this->CI->model->selectWhereData('pa_users',array('id'=>$user_id),array('notifn_topic'));
 		$android_device_id = explode("(+91)",$device_key_info['notifn_topic']);
-	    	
+	    $topics ="/topics/";
+		// $ios_device_id = $device_key_
 		if(!empty($android_device_id[1])){
         // array_push($reg_ids,'/topics/'.$android_device_id[1]);
-            $reg_ids = '/topics/'.$android_device_id[1];
+            $reg_ids = "/topics/".$android_device_id[1];
+            // $reg_ids = '/topics/1234567890PAUser';
 		}
 	
 		// $ios_device_id = $device_key_info['ios_device_id'];
@@ -30,16 +32,9 @@ class Pushnotifications {
 		// }
         $url = 'https://fcm.googleapis.com/fcm/send';	
  		$message = array('body' => $data['message'],'title' =>$data['title'] ,'message' =>  $data['message'], 'content_available' => 1,'is_background' =>  false,'image'=>@$data['image']);
-        $arrayToSend = array('to' => $reg_ids, 'notification' => $message,'data'=>$message,'priority'=>'high');
-
-        $curl_data = array(
-        	'fk_user_id'=>$user_id,
-        	'title'=>$data['title'],
-        	'message'=>$data['message']
-        );
-        $this->CI->model->insertData('tbl_push_notification_log',$curl_data);
-//  		$json = json_encode($arrayToSend,JSON_FORCE_OBJECT);
-//  		print_r($json);
+        $arrayToSend = array('to' => str_replace(' ', '', $reg_ids), 'notification' => $message,'data'=>$message,'priority'=>'high');
+        // $json = json_encode($arrayToSend,JSON_FORCE_OBJECT);
+        // print_r($json);
         $headers = array (
             'Authorization: key=' . $this->API_ACCESS_KEY,
             'Content-Type: application/json'
@@ -48,12 +43,17 @@ class Pushnotifications {
             'registration_ids' => $reg_ids,
             'data' => $message,
         );
+         $curl_data = array(
+        	'fk_user_id'=>$user_id,
+        	'title'=>$data['title'],
+        	'message'=>$data['message']
+        );
+        $this->CI->model->insertData('tbl_push_notification_log',$curl_data);
         // 	$return_curl['curl_response'] = $this->useCurl($url, $headers, json_encode($arrayToSend,JSON_FORCE_OBJECT));
             $return_curl['curl_response'] = $this->useCurl($url, $headers, json_encode($arrayToSend));
         	$return_curl['registration_ids'] = $reg_ids;
         	$return_curl['arrayToSend'] = $arrayToSend;
-        // 	print_r($return_curl);die;
-        	return $return_curl;
+        	return $return_curl;                                                        
 	}
     
 	// Sends Push's toast notification for Windows Phone 8 users
@@ -130,6 +130,7 @@ class Pushnotifications {
 	        curl_setopt ($ch, CURLOPT_RETURNTRANSFER,true);
 	        curl_setopt ($ch, CURLOPT_POSTFIELDS, $fields);
         	$result = curl_exec ($ch );
+       
 	        if ($result === FALSE) {
 	            die('Curl failed: ' . curl_error($ch));
 	        }
