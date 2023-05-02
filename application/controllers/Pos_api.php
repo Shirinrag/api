@@ -742,11 +742,16 @@ class Pos_api extends REST_Controller {
                 }
                 $total_amount = $this->model->selectWhereData('tbl_pos_booking',array('book_status'=>2),array('SUM(price) as price'));
 
+                $new_pass_data = $this->pos_model->new_pass_data($place_id,$from_date,$to_date);
+                $renewal_pass_data = $this->pos_model->renewal_pass_data($place_id,$from_date,$to_date);
+
                 $response['code'] = REST_Controller::HTTP_OK;
                 $response['status'] = true;
                 $response['message'] = 'success';
                 $response['booking_data'] = $booking_data;
                 $response['total_amount'] = $total_amount;
+                $response['new_pass_data'] = $new_pass_data;
+                $response['renewal_pass_data'] = $renewal_pass_data;
             }
         }else{
             $response['code'] = REST_Controller::HTTP_UNAUTHORIZED;

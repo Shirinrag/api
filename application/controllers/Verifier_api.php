@@ -895,7 +895,8 @@ class Verifier_api extends REST_Controller {
                                         'used_status'=>1,
                                         'price'=>$monthly_pass_details['cost'],
                                         'discount_price'=>$discount_price,
-                                        'total_price'=> $monthly_pass_details['cost'] - $discount_price
+                                        'total_price'=> $monthly_pass_details['cost'] - $discount_price,
+                                        'status'=>'New'
                                     );      
                                     $this->model->insertData('tbl_user_pass_details',$curl_data);
                                     $response['code'] = REST_Controller::HTTP_OK;
@@ -933,7 +934,8 @@ class Verifier_api extends REST_Controller {
                                 'used_status'=>1,
                                 'price'=>$monthly_pass_details['cost'],
                                 'discount_price'=>$discount_price,
-                                'total_price'=> $monthly_pass_details['cost'] - $discount_price
+                                'total_price'=> $monthly_pass_details['cost'] - $discount_price,
+                                 'status'=>'New'
                             );      
                             $this->model->insertData('tbl_user_pass_details',$curl_data);
                             $response['code'] = REST_Controller::HTTP_OK;
@@ -995,7 +997,8 @@ class Verifier_api extends REST_Controller {
                             'used_status'=>1,
                             'price'=>$monthly_pass_details['cost'],
                             'discount_price'=>$discount_price,
-                            'total_price'=> $monthly_pass_details['cost'] - $discount_price
+                            'total_price'=> $monthly_pass_details['cost'] - $discount_price,
+                             'status'=>'Renewal'
                         );      
                         $this->model->insertData('tbl_user_pass_details',$curl_data);  
                     }

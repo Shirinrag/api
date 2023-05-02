@@ -95,5 +95,33 @@ class Pos_model extends CI_Model {
          $result = $query->result_array();
          return $result;
     }
+    public function new_pass_data($place_id="",$from_date="",$to_date="")
+    {
+       $this->db->select('tbl_user_pass_details.*,tbl_nfc_device.nfc_device_id');
+       $this->db->from('tbl_user_pass_details');
+       $this->db->join('tbl_nfc_device','tbl_user_pass_details.fk_nfc_device_id=tbl_nfc_device.id','left');
+       $this->db->where('tbl_user_pass_details.fk_place_id',$place_id);
+       $this->db->where('tbl_user_pass_details.from_date >=',$from_date);
+       $this->db->where('tbl_user_pass_details.from_date <=',$to_date);
+       $this->db->where('tbl_user_pass_details.status','New');
+       $this->db->order_by('tbl_user_pass_details.id','DESC');
+        $query = $this->db->get();
+        $result = $query->result_array();
+        return $result;
+    }
+    public function renewal_pass_data($place_id="",$from_date="",$to_date="")
+    {
+       $this->db->select('tbl_user_pass_details.*,tbl_nfc_device.nfc_device_id');
+       $this->db->from('tbl_user_pass_details');
+       $this->db->join('tbl_nfc_device','tbl_user_pass_details.fk_nfc_device_id=tbl_nfc_device.id','left');
+       $this->db->where('tbl_user_pass_details.fk_place_id',$place_id);
+       $this->db->where('tbl_user_pass_details.from_date >=',$from_date);
+       $this->db->where('tbl_user_pass_details.from_date <=',$to_date);
+       $this->db->where('tbl_user_pass_details.status','Renewal');
+       $this->db->order_by('tbl_user_pass_details.id','DESC');
+        $query = $this->db->get();
+        $result = $query->result_array();
+        return $result;
+    }
 }
 	
