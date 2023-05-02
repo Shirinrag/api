@@ -977,6 +977,7 @@ class Verifier_api extends REST_Controller {
                             'used_status'=>0,
                         );
                         $this->model->updateData('tbl_user_pass_details',$update_data,array('id'=>$pass_previous_details['id']));
+                        
                         $response['code'] = 201;
                         $response['status'] = false;
                         $response['message'] = 'Your Pass has expired on "'.$pass_previous_details['to_date'].'". Kindly Generate New Pass'; 

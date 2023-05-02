@@ -1017,11 +1017,13 @@ class User_api extends REST_Controller {
 		    		$response['message'] = "Description is required";
 		    		$response['code'] = 201;
 		    	}else{
+		    		$booking_id = $
 		    		$curl_data = array(
 		    			'fk_user_id' => $fk_user_id,
 		    			'fk_place_id' => $fk_place_id,
 		    			'topic' => $topic,
 		    			'description'=>$description,
+		    			'fk_booking_id'
 		    		);
 		    		$this->model->insertData('tbl_user_complaint',$curl_data);
                     $response['code'] = REST_Controller::HTTP_OK;
