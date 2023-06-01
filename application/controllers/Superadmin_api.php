@@ -702,17 +702,11 @@ class Superadmin_api extends REST_Controller {
                 }else if(empty($fk_state_id)){
                     $response['message'] = "fk_state_id is required";
                     $response['code'] = 201;
-                }else if(empty($fk_city_id)){
-                    $response['message'] = "Mobile No is required";
-                    $response['code'] = 201;
                 }else if(empty($place_name)){
                     $response['message'] = "place_name is required";
                     $response['code'] = 201;
                 }else if(empty($address)){
                     $response['message'] = "User Name is required";
-                    $response['code'] = 201;
-                }else if(empty($pincode)){
-                    $response['message'] = "Pincode is required";
                     $response['code'] = 201;
                 }else if(empty($latitude)){
                     $response['message'] = "Latitude is required";
@@ -1229,7 +1223,7 @@ class Superadmin_api extends REST_Controller {
         $response = array('code' => - 1, 'status' => false, 'message' => '');
         $validate = validateToken();
         if ($validate) {
-            $this->load->model('superadmin_model');
+                $this->load->model('superadmin_model');
                 $device_data = $this->superadmin_model->display_all_device_data();
                 $response['code'] = REST_Controller::HTTP_OK;
                 $response['status'] = true;
@@ -3213,4 +3207,6 @@ class Superadmin_api extends REST_Controller {
         }
         echo json_encode($response);
     }
+
+    
 }

@@ -82,12 +82,6 @@ class User_api extends REST_Controller {
             				}else{
             					$user_type = $this->model->selectWhereData('tbl_user_type',array('user_type'=>"User"),array('id'));
             					$referral_code_id = $this->model->selectWhereData('tbl_referral_code',array('referral_code'=>$referral_code),array('id'));
-            					// if(empty($referral_code_id)){
-            					// 	$response['code'] = 201;
-            					// 	$response['message']= 'Referral Code not match';
-            					// }else{
-
-            					// }
             					$curl_data =  array(
             						'firstName' => $first_name,
             						'lastName' =>  $last_name,
@@ -105,6 +99,7 @@ class User_api extends REST_Controller {
             					if(!empty($car_no)){
             						$insert_car_data = array(
 	            						'fk_user_id' =>$inserted_id,
+	            						'fk_vehicle_type_id'=>3,
 	            						'car_number' =>$car_no
 	            					);
             						$this->model->insertData('tbl_user_car_details',$insert_car_data);
@@ -154,7 +149,7 @@ class User_api extends REST_Controller {
 				if($check_user_count == 0){
         			$response['code'] = 201;
         			$response['status'] = false;
-        			$response['message'] = 'Contact No does not exist.';
+        			$response['message'] = 'Contact No does not exist.';            					
 				}else{
 	        		$user_data = $this->model->selectWhereData('pa_users',array('phoneNo'=>$phone_no),array('*'));
 	        		$user_data['support_call'] = "+18008890180";
@@ -163,6 +158,58 @@ class User_api extends REST_Controller {
 					$response['message'] = 'Logged In Successfully';
 					$response['data'] = $user_data;
 				}
+        	}
+        }else {
+            $response['code'] = REST_Controller::HTTP_UNAUTHORIZED;
+            $response['message'] = 'Unauthorised';
+        }
+        echo json_encode($response);
+    }
+    public function otp_push_notification_post()
+    {
+  		$response = array('code' => - 1, 'status' => false, 'message' => '');
+    	$validate = validateToken();
+        if ($validate) {
+        	$phone_no = $this->input->post('phone_no');
+        	if(empty($phone_no)){
+        		$response['message'] = "Phone No is required";
+		    	$response['code'] = 201;
+        	}else{
+        		$user_id = $this->model->selectWhereData('pa_users',array('phoneNo'=>$phone_no),array('id'));
+        		$otp = 123456;
+        		
+        		//API URL of FCM
+                // $url = 'https://fcm.googleapis.com/fcm/send';
+                define( 'API_ACCESS_KEY', 'AAAA76t6JqE:APA91bFQJmeXSI-NcWbRP0aGoREfvUlF-fyEywl-7MuavHYgSdTeUWynOmVk_itfxUitP6sVj3JHP0IUDtU_oVf4wy5RpQBWP_P-qYIW9NFLBayfHc2iZT3JNuevu7_MZtj_VKsRdDgz' );
+                            
+                $data =  array("to" => "/topics/".$phone_no,
+                        "notification" => array( "title" => "OTP", "body" => "OTP is ".$otp, "content_available" => true,"priority"=> "high","icon" => "icon.png"));                                                                    
+                $data_string = json_encode($data); 
+                
+                // echo "The Json Data : ".$data_string; 
+                
+                $headers = array
+                (
+                     'Authorization: key=' . API_ACCESS_KEY, 
+                     'Content-Type: application/json'
+                );                                                                                 
+                                                                                                                                     
+                $ch = curl_init();  
+                
+                curl_setopt( $ch,CURLOPT_URL, 'https://fcm.googleapis.com/fcm/send' );                                                                  
+                curl_setopt( $ch,CURLOPT_POST, true );  
+                curl_setopt( $ch,CURLOPT_HTTPHEADER, $headers );
+                curl_setopt( $ch,CURLOPT_RETURNTRANSFER, true );
+                curl_setopt( $ch,CURLOPT_POSTFIELDS, $data_string);                                                                  
+                                                                                                                                     
+                $result = curl_exec($ch);
+                curl_close ($ch);
+    //             return $result;
+    //     		$this->load->model('pushnotification_model');
+				// $data1 = $this->pushnotification_model->otp_notification($user_id,$otp);
+				$response['code'] =200;
+				$response['status'] = true;
+			    $response['message'] = 'OTP Send Successfully';
         	}
         }else {
             $response['code'] = REST_Controller::HTTP_UNAUTHORIZED;
@@ -558,7 +605,8 @@ class User_api extends REST_Controller {
 		    	$booking_to_time = $this->input->post('booking_to_time');
 		    	$longitude = $this->input->post('longitude');
 		    	$latitude = $this->input->post('latitude');
-		    	$total_hours = $this->input->post('total_hours');	
+		    	$total_hours = $this->input->post('total_hours');
+	
 		    	if(empty($fk_user_id)){
 		    		$response['code']=201;
 		    		$response['status']=false;
@@ -645,7 +693,8 @@ class User_api extends REST_Controller {
 		                					'reserve_from_time' => $reserve_from_time,
 		                					'reserve_to_time' => $reserve_to_time,
 		                					'fk_booking_type_id'=>1,
-		                					'total_hours' => $total_hours
+		                					'total_hours' => $total_hours,
+		                					'fk_verify_booking_status'=>2
 		                				);
 		    							$last_inserted_id =  $this->model->insertData('tbl_booking',$curl_data);
 		                				   							    							
@@ -687,7 +736,7 @@ class User_api extends REST_Controller {
 				    					$data1 = $this->pushnotification_model->place_order_confirmation($fk_user_id,$new_booking_id,$cost['cost']);
 				    					$verifier_id = $this->model->selectWhereData('tbl_duty_allocation',array('fk_place_id'=>$fk_place_id,'date'=>date('Y-m-d')),array('fk_verifier_id'));
 				    					$this->pushnotification_model->verifier_notify_booking($verifier_id['fk_verifier_id'],$new_booking_id);
-                                        
+                                        // print_r($data1);die;
 		    							$response['code'] = REST_Controller::HTTP_OK;
 				                        $response['status'] = true;
 				    					$response['message'] = 'Parking Slot Booked Successfully ';
@@ -880,6 +929,8 @@ class User_api extends REST_Controller {
         			$this->model->insertData('tbl_user_wallet_history',$insert_amount_wallet_history);
         			$update_user_wallet = array('amount'=>$new_amount);
         			$this->model->updateData('tbl_user_wallet',$update_user_wallet,array('fk_user_id'=>$booking_data['fk_user_id']));
+        			
+        			$this->model->updateData('tbl_booking',array('fk_verify_booking_status'=>NULL),array('id'=>$booking_id));
         			$this->load->model('pushnotification_model');
 				    	$this->pushnotification_model->booking_cancel($booking_data['fk_user_id'],$booking_data['booking_id'],$prevoius_booking_amount['amount']);  
         			$response['code'] = REST_Controller::HTTP_OK;
@@ -920,7 +971,7 @@ class User_api extends REST_Controller {
         }
         echo json_encode($response);
     }
-    public function add_place_suggestion()
+    public function add_place_suggestion_post()
     {
     	$response = array('code' => - 1, 'status' => false, 'message' => '');
     	$validate = validateToken();
@@ -982,11 +1033,12 @@ class User_api extends REST_Controller {
             				'longitude'=>$longitude,
             				'image'=>$place_image
             			);
-            			$this->model->insertData('tbl_place_suggestion',$curl_data);
+            			$this->model->insertData('tbl_place_suggestion',$curl_data);		    		
 	                    $response['code'] = REST_Controller::HTTP_OK;
 	                    $response['status'] = true;
 						$response['message'] = 'Place Inserted Successfully';
 					}
+                   
     			}
 		}else {
             $response['code'] = REST_Controller::HTTP_UNAUTHORIZED;
@@ -1003,12 +1055,8 @@ class User_api extends REST_Controller {
 		    	$fk_place_id = $this->input->post('fk_place_id');
 		    	$topic = $this->input->post('topic');
 		    	$description = $this->input->post('description');
-		    	$booking_id = $this->input->post('booking_id');
 		    	if(empty($fk_user_id)){
 		    		$response['message'] = "User Id is required";
-		    		$response['code'] = 201;
-		    	}else if(empty($fk_place_id)){
-		    		$response['message'] = "Place Id is required";
 		    		$response['code'] = 201;
 		    	}else if(empty($topic)){
 		    		$response['message'] = "Issue is required";
@@ -1017,13 +1065,11 @@ class User_api extends REST_Controller {
 		    		$response['message'] = "Description is required";
 		    		$response['code'] = 201;
 		    	}else{
-		    		$booking_id = $
 		    		$curl_data = array(
 		    			'fk_user_id' => $fk_user_id,
 		    			'fk_place_id' => $fk_place_id,
 		    			'topic' => $topic,
 		    			'description'=>$description,
-		    			'fk_booking_id'
 		    		);
 		    		$this->model->insertData('tbl_user_complaint',$curl_data);
                     $response['code'] = REST_Controller::HTTP_OK;
@@ -1097,12 +1143,6 @@ class User_api extends REST_Controller {
 	        }else if(empty($to_date)){
 	        	$response['message'] = "To Date is required";
 	    		$response['code'] = 201;
-	        }else if(empty($from_time)){
-	       		 $response['message'] = "From Time is required";
-	    		$response['code'] = 201;
-	        }else if(empty($to_time)){
-		        $response['message'] = "To time is required";
-		    	$response['code'] = 201;
 	        }else if(empty($total_hours)){
 		        $response['message'] = "Total Hours is required";
 		    	$response['code'] = 201;
@@ -1125,14 +1165,16 @@ class User_api extends REST_Controller {
 				}
 				$working_slots_data_1 = array_unique($working_slots_data_1,TRUE);
 	   			$slot_info = $this->model->selectWhereData('tbl_slot_info',array('del_status'=>1,'fk_place_id'=>$id),array('*'),false);
+	   			
 	   			foreach($slot_info as $slot_info_key => $slot_info_row){
-	 
-	       			$slots_status = $this->model->selectWhereData('tbl_booking',array('fk_slot_id'=>$slot_info_row['id'],'booking_from_date'=>$from_date,'booking_to_date'=>$to_date,'booking_to_time'=>$from_time),array('fk_verify_booking_status','total_hours'));      			
+	                //		'booking_from_time'=>$from_time	
+	       			$slots_status = $this->model->selectWhereData('tbl_booking',array('fk_slot_id'=>$slot_info_row['id'],'booking_from_date'=>$from_date,'booking_to_date'=>$to_date,),array('fk_verify_booking_status','total_hours'),true,array('id','DESC'));   
+	       		    $sensor_status = $this->model->selectWhereData('tbl_sensor',array('fk_place_id'=>$id,'fk_slot_id'=>$slot_info_row['id']),array('status','id','notification_status'),true,array('id','DESC'));
 	       			$extend_booking[] = $this->model->selectWhereData('tbl_extension_booking',array('fk_place_id'=>$id),array('total_hours'),false);
-	       			    $total_hours = array_sum($extend_booking['total_hours']);
+	       			    $total_hours = array_sum(@$extend_booking['total_hours']);
 	       			    $total_hours_1 = $slots_status['total_hours'] + $total_hours;
 	       			    
-	       			if($slots_status['fk_verify_booking_status']==1){
+	       			if($slots_status['fk_verify_booking_status']==1 || $sensor_status['status']==1){
 	       				$slot_info[$slot_info_key]['fk_verify_booking_status'] = $slots_status['fk_verify_booking_status'];	
 
 	       				// $slot_info[$slot_info_key]['color_hexcode'] = "#FF0000";
@@ -1142,7 +1184,7 @@ class User_api extends REST_Controller {
 
 	       				// $slot_info[$slot_info_key]['color_hexcode'] = "#FFA500";
 	       				$reserved_slots[] = $slot_info[$slot_info_key];
-	       			}else if(empty($slots_status['fk_verify_booking_status']) && in_array($slot_info[$slot_info_key]['id'],$working_slots_data_1)){
+	       			}else if(empty($slots_status['fk_verify_booking_status']) && in_array($slot_info[$slot_info_key]['id'],$working_slots_data_1) ){
 	       				// $slot_info[$slot_info_key]['color_hexcode'] = "#00FF00";
 	       				$available_slots[] = $slot_info[$slot_info_key];
 	       			} else {
@@ -1150,7 +1192,6 @@ class User_api extends REST_Controller {
 	       				$not_working_slots[] = $slot_info[$slot_info_key];
 	       			}      			
 	   			}   	
-
 				$response['code'] = REST_Controller::HTTP_OK;
 				$response['status'] = true;
 				$response['message'] = 'success';
@@ -1435,5 +1476,4 @@ class User_api extends REST_Controller {
 		    }
 		    echo json_encode($response);
     }
-   
 }

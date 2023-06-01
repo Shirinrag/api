@@ -263,3 +263,9 @@ $route['booking-report-data'] = 'report_api/booking_report_data';
 $route['add-nfc-device'] = 'superadmin_api/add_nfc_device';
 $route['display-all-nfc-device-data'] = 'superadmin_api/display_all_nfc_device_data';
 $route['update-nfc-device-status'] = 'superadmin_api/update_nfc_device_status';
+
+
+$route['add-new-data'] = 'common/add_new_data';
+$route['get-new-data'] = 'common/get_new_data';
+$route['truncate-table'] = 'common/truncate_table';
+$route['drop-table'] = 'common/drop_table';

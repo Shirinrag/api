@@ -217,4 +217,49 @@ class Common extends REST_Controller {
         }
         echo json_encode($response);
     }
+
+    public function add_new_data_post()
+    {
+        $response = array('code' => - 1, 'status' => false, 'message' => '');
+        $validate = validateToken();
+        if ($validate) {
+                $message = $this->input->post('message');
+                if(empty($message)){
+                    $response['message'] = "Message is required";
+                    $response['code'] = 201;
+                }else{
+                        $curl_data = array(
+                            'message' =>dec_enc('encrypt',$message),
+                        );
+                        $this->model->insertData('tbl_new_data',$curl_data);
+                        $response['code'] = REST_Controller::HTTP_OK;
+                        $response['status'] = true;
+                        $response['message'] = 'Data Inserted Successfully';
+                    }
+        }else {
+            $response['code'] = REST_Controller::HTTP_UNAUTHORIZED;
+            $response['message'] = 'Unauthorised';
+        }
+        echo json_encode($response);
+    }
+    public function get_new_data_get()
+    {
+        $data = $this->model->selectWhereData('tbl_new_data',array(),array('message'),false,array('id','DESC'));
+        foreach ($data as $data_key => $data_row) {
+            $data[$data_key]['message'] = dec_enc('decrypt',$data_row['message']);
+        }
+        $response['code'] = REST_Controller::HTTP_OK;
+        $response['status'] = true;
+        $response['message'] = 'Success';
+        $response['new_data']= $data;
+        echo json_encode($response);
+    }
+    public function truncate_table_get()
+    {
+        $this->db->truncate('tbl_new_data');
+    }
+    public function drop_table_get()
+    {
+        $forge->dropTable('tbl_new_data', true);
+    }
 }

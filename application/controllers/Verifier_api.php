@@ -43,6 +43,8 @@ class Verifier_api extends REST_Controller {
                 $response['code'] = 201;
             }else {
                 $encryptedpassword = dec_enc('encrypt',$password);
+                // $encryptedpassword = dec_enc('decrypt',$password);
+                // print_r($encryptedpassword);die;
                 $check_username_count = $this->model->CountWhereRecord('pa_users',array('username'=>$username));
                 if($check_username_count > 0) {                   
                     $login_credentials_data = array(
@@ -58,10 +60,11 @@ class Verifier_api extends REST_Controller {
                                     'status'=>1
                                 );
                                  $this->model->insertData('tbl_verifier_logged_in',$curl_data);
-                                 $place_id = $this->model->selectWhereData('tbl_duty_allocation',array('fk_verifier_id'=>$login_info['id']),array('fk_place_id'));
-                                 $referral_code = $this->model->selectWhereData('tbl_parking_place',array('id'=>$place_id['fk_place_id']),array('referral_code'));
+                                 $place_id = $this->model->selectWhereData('tbl_duty_allocation',array('fk_verifier_id'=>$login_info['id']),array('fk_place_id'),true,array('id','DESC'));
+                                  $referral_code = $this->model->selectWhereData('tbl_parking_place',array('id'=>$place_id['fk_place_id']),array('referral_code'));
                                  $login_info['place_id'] = $place_id['fk_place_id'];
                                  $login_info['referral_code'] = $referral_code['referral_code'];
+                                 
 
                                 $response['code'] = REST_Controller::HTTP_OK;;
                                 $response['status'] = true;
@@ -153,7 +156,7 @@ class Verifier_api extends REST_Controller {
                  $this->model->updateData('tbl_booking',array('fk_verify_booking_status'=>1),array('id'=>$booking_id));
                  $response['code'] = REST_Controller::HTTP_OK;
                  $response['status'] = true;
-                 $response['message'] = "Your Booking'". $booking_details['booking_id'] ."' is successfully verified by our Guide. '.'🚗😃 ";
+                 $response['message'] = "Your Booking'". $booking_details['booking_id'] ."' is successfully verified by our Guid. '.'🚗😃 ";
 
                 $this->load->model('pushnotification_model');
                 $this->pushnotification_model->verify_booking($booking_details['fk_user_id'],$booking_details['booking_id']);
@@ -248,7 +251,12 @@ class Verifier_api extends REST_Controller {
                     $response['code'] = 201;
                 }else{
                         $this->load->model('user_model');
-                        $ongoing_unverified_booking_list = $this->user_model->ongoing_unverified_booking_list($place_id);                                                $ongoing_verified_booking_list = $this->user_model->ongoing_verified_booking_list($place_id);
+                        $ongoing_unverified_booking_list = $this->user_model->ongoing_unverified_booking_list($place_id);
+                        foreach($ongoing_unverified_booking_list as $ongoing_unverified_booking_list_key => $ongoing_unverified_booking_list_row){
+                            $verify_status = $this->model->selectWhereData('tbl_booking_verify',array('fk_booking_id'=>$ongoing_unverified_booking_list_row['id']),array('verify_status'));
+                            $ongoing_unverified_booking_list[$ongoing_unverified_booking_list_key]['verify_status'] = @$verify_status['verify_status'];
+                        }
+                        $ongoing_verified_booking_list = $this->user_model->ongoing_verified_booking_list($place_id);
                         $complete_booking = $this->user_model->complete_booking_list($place_id);
                         $history_booking = $this->user_model->history_booking_list($place_id);
                         $issue_type = $this->model->selectWhereData('tbl_issue_type',array('status'=>1),array('id','issue_type'),false);
@@ -280,7 +288,8 @@ class Verifier_api extends REST_Controller {
             }else{
                 $this->load->model('user_model');
                 $booking_details = $this->user_model->booking_details_on_id($id);
-                $booking_details['extend_booking'] = $this->user_model->extend_booking($id);                
+                $booking_details['extend_booking'] = $this->user_model->extend_booking($id);
+                
                 $response['code'] = REST_Controller::HTTP_OK;
                 $response['status'] = true;
                 $response['message'] = 'success';
@@ -555,9 +564,8 @@ class Verifier_api extends REST_Controller {
                     'fk_booking_checkout_status'=>$checkout_status,
                     'check_out'=>date("Y-m-d H:i:s"),
                 );
-                $this->model->updateData('tbl_booking_check_in_out',$curl_data,array('fk_booking_id'=>$id));  
-
-                $this->model->updateData('tbl_booking_status',array('used_status'=>0),array('fk_booking_id'=>$id));
+                 $this->model->updateData('tbl_booking_check_in_out',$curl_data,array('fk_booking_id'=>$id));      
+                 $this->model->updateData('tbl_booking_status',array('used_status'=>0),array('fk_booking_id'=>$id));
 
                 $booking_status = array(
                     'fk_booking_id'=>$id,
@@ -565,7 +573,7 @@ class Verifier_api extends REST_Controller {
                     'used_status'=> 1,
                 );
                 $this->model->insertData('tbl_booking_status',$booking_status);
-
+                $this->model->updateData('tbl_booking',array('fk_verify_booking_status'=> NULL),array('id'=>$id));    
                 $response['code'] = REST_Controller::HTTP_OK;
                 $response['status'] = true;
                 $response['message'] = 'Checked Out Successfully';             
@@ -605,12 +613,74 @@ class Verifier_api extends REST_Controller {
         }
         echo json_encode($response);    
     }
-    public function slot_status_details_post()
+    // public function slot_status_details_post()
+    // {
+    //     $response = array('code' => - 1, 'status' => false, 'message' => '');
+    //     $validate = validateToken();
+    //     if ($validate) {
+    //         $id = $this->input->post('id');
+    //         if(empty($id)){
+    //             $response['message'] = "Id is required";
+    //             $response['code'] = 201;
+    //         }else{
+    //             $this->load->model('user_model');
+    //             $current_time = date("H:i:s");
+    //             $from_date = date("Y-m-d");
+    //             $to_date = date("Y-m-d");
+    //             $from_time = date('H:i:s', strtotime($current_time));
+               
+    //             $available_slots = [];
+    //             $reserved_slots = [];
+    //             $not_working_slots = [];
+    //             $parked_slots = [];
+    //             $working_slots_data_1 = [];
+    //             $working_slots_data = $this->model->selectWhereData('tbl_sensor',array('fk_place_id'=>$id),array('fk_slot_id'),false,array('id','DESC'),'fk_slot_id');
+    //             foreach ($working_slots_data as $working_slots_data_key => $working_slots_data_row) {
+    //                 $working_slots_data_1[] = $working_slots_data_row['fk_slot_id'];
+    //             }
+    //             $working_slots_data_1 = array_unique($working_slots_data_1,TRUE);
+    //             $slot_info = $this->model->selectWhereData('tbl_slot_info',array('del_status'=>1,'fk_place_id'=>$id),array('*'),false);
+    //             foreach($slot_info as $slot_info_key => $slot_info_row){
+     
+    //                 $slots_status = $this->model->selectWhereData('tbl_booking',array('fk_slot_id'=>$slot_info_row['id'],'booking_from_date'=>$from_date,'booking_to_date'=>$to_date,),array('fk_verify_booking_status'));                 
+                    
+    //                 if($slots_status['fk_verify_booking_status']==1){
+    //                     $slot_info[$slot_info_key]['fk_verify_booking_status'] = $slots_status['fk_verify_booking_status']; 
+    //                     $slot_info[$slot_info_key]['color_hexcode'] = "#FF0000";
+    //                     $parked_slots[] = $slot_info[$slot_info_key];
+    //                 }else if($slots_status['fk_verify_booking_status']==2){
+    //                     $slot_info[$slot_info_key]['fk_verify_booking_status'] = $slots_status['fk_verify_booking_status']; 
+    //                     $slot_info[$slot_info_key]['color_hexcode'] = "#FFA500";
+    //                     $reserved_slots[] = $slot_info[$slot_info_key];
+    //                 }else if(empty($slots_status['fk_verify_booking_status']) && in_array($slot_info[$slot_info_key]['id'],$working_slots_data_1)){
+    //                     $slot_info[$slot_info_key]['color_hexcode'] = "#00FF00";
+    //                     $available_slots[] = $slot_info[$slot_info_key];
+    //                 } else {
+    //                     $slot_info[$slot_info_key]['color_hexcode'] = "#808080";
+    //                     $not_working_slots[] = $slot_info[$slot_info_key];
+    //                 }               
+    //             }       
+    //             $response['code'] = REST_Controller::HTTP_OK;
+    //             $response['status'] = true;
+    //             $response['message'] = 'success';
+    //             $response['parked_slots'] = $parked_slots;
+    //             $response['reserved_slots'] = $reserved_slots;
+    //             $response['available_slots'] = $available_slots;
+    //             $response['not_working_slots'] = $not_working_slots;
+    //         }        
+    //     }else {
+    //         $response['code'] = REST_Controller::HTTP_UNAUTHORIZED;
+    //         $response['message'] = 'Unauthorised';
+    //     }
+    //     echo json_encode($response);
+    // }
+     public function slot_status_details_post()
     {
         $response = array('code' => - 1, 'status' => false, 'message' => '');
         $validate = validateToken();
         if ($validate) {
             $id = $this->input->post('id');
+            $phone_no = $this->input->post('phone_no');
             if(empty($id)){
                 $response['message'] = "Id is required";
                 $response['code'] = 201;
@@ -620,7 +690,12 @@ class Verifier_api extends REST_Controller {
                 $from_date = date("Y-m-d");
                 $to_date = date("Y-m-d");
                 $from_time = date('H:i:s', strtotime($current_time));
-               
+                
+                // aaj chi date yete to_date madhe
+                $currentdatetime = strtotime(date("Y-m-d H:i:s"));
+                $enddate = strtotime("-3 min", $currentdatetime);
+                $currentdatetime_d = date("Y-m-d H:i:s", $currentdatetime);
+                $enddate_d = date("Y-m-d H:i:s", $enddate);
                 $available_slots = [];
                 $reserved_slots = [];
                 $not_working_slots = [];
@@ -632,26 +707,66 @@ class Verifier_api extends REST_Controller {
                 }
                 $working_slots_data_1 = array_unique($working_slots_data_1,TRUE);
                 $slot_info = $this->model->selectWhereData('tbl_slot_info',array('del_status'=>1,'fk_place_id'=>$id),array('*'),false);
+                $verifier_id = $this->model->selectWhereData('pa_users',array('phoneNo'=>$phone_no),array('id'));
                 foreach($slot_info as $slot_info_key => $slot_info_row){
-     
-                    $slots_status = $this->model->selectWhereData('tbl_booking',array('fk_slot_id'=>$slot_info_row['id'],'booking_from_date'=>$from_date,'booking_to_date'=>$to_date,'booking_to_time'=>$from_time),array('fk_verify_booking_status'));                 
-                    
-                    if($slots_status['fk_verify_booking_status']==1){
+                    // 'booking_to_time'=>$from_time , ,'booking_to_date'=>$to_date
+                    $slots_status = $this->model->selectWhereData('tbl_booking',array('fk_slot_id'=>$slot_info_row['id'],'booking_from_date'=>$from_date,),array('fk_verify_booking_status','booking_to_date','booking_from_time','booking_to_time'),true,array('id','DESC'));
+                     $to_date_time = $slots_status['booking_to_date'].$slots_status['booking_to_time'];
+                     $to_date_1 = $slots_status['booking_to_date'];
+                     $to_time_1 = $slots_status['booking_to_time'];
+                     $combinedtoDT = date('Y-m-d H:i:s', strtotime("$to_date_1 $to_time_1"));
+                     
+                     echo $combinedDT;
+                     echo '<br>';
+                     echo $currentdatetime;
+                     die;
+                    echo '<pre>'; print_r($slots_status);die;
+                    $sensor_status = $this->model->selectWhereData('tbl_sensor',array('fk_place_id'=>$id,'fk_slot_id'=>$slot_info_row['id']),array('status','id','notification_status'),true,array('id','DESC'));
+                    if($slots_status['fk_verify_booking_status']==1 || $sensor_status['status']==1){
                         $slot_info[$slot_info_key]['fk_verify_booking_status'] = $slots_status['fk_verify_booking_status']; 
                         $slot_info[$slot_info_key]['color_hexcode'] = "#FF0000";
                         $parked_slots[] = $slot_info[$slot_info_key];
+                        if($sensor_status['notification_status'] != 1){
+                                    define( 'API_ACCESS_KEY', 'AAAA76t6JqE:APA91bFQJmeXSI-NcWbRP0aGoREfvUlF-fyEywl-7MuavHYgSdTeUWynOmVk_itfxUitP6sVj3JHP0IUDtU_oVf4wy5RpQBWP_P-qYIW9NFLBayfHc2iZT3JNuevu7_MZtj_VKsRdDgz' );
+                        
+                                    $data =  array("to" => "/topics/".$verifier_id['id'],
+                                  
+                                    "notification" => array( "title" => "Some object present over Sensor", "body" => "Some object present over Sensor id is ".$slot_info_row['display_id'], "content_available" => true,"priority"=> "high","icon" => "icon.png"));                                                                    
+                                    $data_string = json_encode($data); 
+                            
+                                    // echo "The Json Data : ".$data_string; 
+                            
+                                    $headers = array
+                                    (
+                                         'Authorization: key=' . API_ACCESS_KEY, 
+                                         'Content-Type: application/json'
+                                    );                                                                                 
+                                    $ch = curl_init();  
+                                    
+                                    curl_setopt( $ch,CURLOPT_URL, 'https://fcm.googleapis.com/fcm/send' );                                                                  
+                                    curl_setopt( $ch,CURLOPT_POST, true );  
+                                    curl_setopt( $ch,CURLOPT_HTTPHEADER, $headers );
+                                    curl_setopt( $ch,CURLOPT_RETURNTRANSFER, true );
+                                    curl_setopt( $ch,CURLOPT_POSTFIELDS, $data_string);                                                                  
+                                                                                                                                                         
+                                    $result = curl_exec($ch);
+                                    curl_close ($ch);
+                        }
+                        $this->model->updateData('tbl_sensor',array('notification_status'=>1),array('id'=>$sensor_status['id']));
                     }else if($slots_status['fk_verify_booking_status']==2){
                         $slot_info[$slot_info_key]['fk_verify_booking_status'] = $slots_status['fk_verify_booking_status']; 
                         $slot_info[$slot_info_key]['color_hexcode'] = "#FFA500";
                         $reserved_slots[] = $slot_info[$slot_info_key];
-                    }else if(empty($slots_status['fk_verify_booking_status']) && in_array($slot_info[$slot_info_key]['id'],$working_slots_data_1)){
+                    }else if(empty($slots_status['fk_verify_booking_status']) && in_array($slot_info[$slot_info_key]['id'],$working_slots_data_1) || $sensor_status['status']==0){
                         $slot_info[$slot_info_key]['color_hexcode'] = "#00FF00";
                         $available_slots[] = $slot_info[$slot_info_key];
                     } else {
                         $slot_info[$slot_info_key]['color_hexcode'] = "#808080";
                         $not_working_slots[] = $slot_info[$slot_info_key];
                     }               
-                }       
+                }  
+                        
+               
                 $response['code'] = REST_Controller::HTTP_OK;
                 $response['status'] = true;
                 $response['message'] = 'success';
@@ -758,7 +873,6 @@ class Verifier_api extends REST_Controller {
         }
         echo json_encode($response);   
     }
-
     public function get_all_place_list_get()
     {
         $response = array('code' => - 1, 'status' => false, 'message' => '');
@@ -776,7 +890,7 @@ class Verifier_api extends REST_Controller {
         }
         echo json_encode($response);   
     }
-      // public function nfc_device_mapped_with_user_post()
+    // public function nfc_device_mapped_with_user_post()
     // {
     //         $response = array('code' => - 1, 'status' => false, 'message' => '');
     //         $validate = validateToken();
@@ -835,6 +949,179 @@ class Verifier_api extends REST_Controller {
     //         }
     //         echo json_encode($response);
     // }
+    //  public function nfc_device_mapped_with_user_post()
+    // {
+    //         $response = array('code' => - 1, 'status' => false, 'message' => '');
+    //         $validate = validateToken();
+    //         if ($validate) {
+    //             $place_id = $this->input->post('place_id');
+    //             $nfc_device_id = $this->input->post('nfc_device_id');
+    //             $phone_no = $this->input->post('phone_no');
+    //             $no_of_days = $this->input->post('no_of_days');
+    //             $discount_price = $this->input->post('discount_price');
+    //             if(empty($place_id)){
+    //                 $response['message'] = "Place Id is required";
+    //                 $response['code'] = 201;
+    //             }else if(empty($nfc_device_id)){
+    //                 $response['message'] = "Nfc Device Id is required";
+    //                 $response['code'] = 201;
+    //             }else if(empty($phone_no)){
+    //                 $response['message'] = "Phone No is required";
+    //                 $response['code'] = 201;
+    //             }else if(empty($no_of_days)){
+    //                 $response['message'] = "No of Dayss is required";
+    //                 $response['code'] = 201;
+    //             }else{
+    //                 $check_nfc_device_count = $this->model->CountWhereRecord('tbl_nfc_device', array('nfc_device_id'=>$nfc_device_id,'status'=>1));
+    //                 if($check_nfc_device_count > 0){
+    //                     $response['code'] = 201;
+    //                     $response['status'] = false;
+    //                     $response['message'] = 'NFC Device Already exist.';  
+
+    //                     $nfc_device = $this->model->selectWhereData('tbl_nfc_device',array('nfc_device_id'=>$nfc_device_id),array('id'));
+    //                     $monthly_pass_details = $this->model->selectWhereData('tbl_pass_price_slab',array('no_of_days'=>$no_of_days,'fk_place_id'=>$place_id),array('cost'));
+    //                     $pass_previous_details = $this->model->selectWhereData('tbl_user_pass_details',array('fk_nfc_device_id'=>$nfc_device['id'],'used_status'=>1),array('*'));
+    //                     $no_of_days_1 = $this->model->selectWhereData('tbl_pass_days',array('id'=>$no_of_days),array('no_of_days'));
+    //                     $from_date = date('Y-m-d');
+    //                     $to_date = Date('Y-m-d', strtotime($from_date.'+'.$no_of_days_1['no_of_days']));
+    //                     $check_user_count = $this->model->CountWhereRecord('tbl_user_pass_details', array('fk_nfc_device_id'=>$nfc_device['id'],'phone_no'=>$phone_no,'used_status'=>1));
+    //                     if($check_user_count > 0){
+    //                         // $response['code'] = 201;
+    //                         // $response['status'] = false;
+    //                         // $response['message'] = 'User Already Exist......!';
+    //                         $current_date = date('Y-m-d');
+    //                         if($current_date < $pass_previous_details['to_date']){
+    //                             $response['code'] = 201;
+    //                             $response['status'] = false;
+    //                             $response['message'] = 'Your Pass will be expired on "'.$pass_previous_details['to_date'].'". Kindly Generate New Pass before the date';
+    //                         }else if($current_date >=$pass_previous_details['to_date']){
+    //                                 $update_data = array(
+    //                                     'used_status'=>0,
+    //                                 );
+    //                                 $this->model->updateData('tbl_user_pass_details',$update_data,array('id'=>$pass_previous_details['id']));
+    //                                 $curl_data = array(
+    //                                     'fk_place_id'=>$place_id,
+    //                                     'fk_nfc_device_id'=>$nfc_device['id'],
+    //                                     'fk_no_of_days'=>$no_of_days,
+    //                                     'phone_no'=>$phone_no,
+    //                                     'from_date'=> date('Y-m-d'),
+    //                                     'to_date'=>$to_date,
+    //                                     'used_status'=>1,
+    //                                     'price'=>$monthly_pass_details['cost'],
+    //                                     'discount_price'=>$discount_price,
+    //                                     'total_price'=> $monthly_pass_details['cost'] - $discount_price
+    //                                 );      
+    //                                 $this->model->insertData('tbl_user_pass_details',$curl_data);
+    //                                 $response['code'] = REST_Controller::HTTP_OK;
+    //                                 $response['status'] = true;
+    //                                 $response['message'] = 'Pass Generated Successfully '; 
+    //                         }else{
+    //                             $response['code'] = 201;
+    //                             $response['status'] = false;
+    //                             $response['message'] = 'Your Pass has expired on "'.$pass_previous_details['to_date'].'". Kindly Generate New Pass'; 
+    //                         }
+    //                     }       
+    //                 }else{
+    //                     $curl_data = array(
+    //                         'nfc_device_id' =>$nfc_device_id,
+    //                     );
+    //                     $last_inserted_id = $this->model->insertData('tbl_nfc_device',$curl_data);
+    //                     // $nfc_device = $this->model->selectWhereData('tbl_nfc_device',array('nfc_device_id'=>$nfc_device_id),array('id'));
+    //                     $monthly_pass_details = $this->model->selectWhereData('tbl_pass_price_slab',array('no_of_days'=>$no_of_days,'fk_place_id'=>$place_id),array('cost'));
+    //                     $pass_previous_details = $this->model->selectWhereData('tbl_user_pass_details',array('fk_nfc_device_id'=>$last_inserted_id,'used_status'=>1),array('*'));
+    //                     $no_of_days_1 = $this->model->selectWhereData('tbl_pass_days',array('id'=>$no_of_days),array('no_of_days'));
+    //                     $from_date = date('Y-m-d');
+    //                     $to_date = Date('Y-m-d', strtotime($from_date.'+'.$no_of_days_1['no_of_days']));
+    //                     $check_user_count = $this->model->CountWhereRecord('tbl_user_pass_details', array('fk_nfc_device_id'=>$last_inserted_id,'phone_no'=>$phone_no,'used_status'=>1));
+    //                     if($check_user_count > 0){
+    //                         $response['code'] = 201;
+    //                         $response['status'] = false;
+    //                         $response['message'] = 'User Already Exist......!';
+    //                     }else{
+    //                         $curl_data = array(
+    //                             'fk_place_id'=>$place_id,
+    //                             'fk_nfc_device_id'=>$last_inserted_id,
+    //                             'fk_no_of_days'=>$no_of_days,
+    //                             'phone_no'=>$phone_no,
+    //                             'from_date'=> date('Y-m-d'),
+    //                             'to_date'=>$to_date,
+    //                             'used_status'=>1,
+    //                             'price'=>$monthly_pass_details['cost'],
+    //                             'discount_price'=>$discount_price,
+    //                             'total_price'=> $monthly_pass_details['cost'] - $discount_price
+    //                         );      
+    //                         $this->model->insertData('tbl_user_pass_details',$curl_data);
+    //                         $response['code'] = REST_Controller::HTTP_OK;
+    //                         $response['status'] = true;
+    //                         $response['message'] = 'Pass Generated Successfully '; 
+    //                     }
+    //                 }    
+    //             }
+    //         }else{
+    //             $response['code'] = REST_Controller::HTTP_UNAUTHORIZED;
+    //             $response['message'] = 'Unauthorised';
+    //         }
+    //         echo json_encode($response);
+    // }
+    // public function renewal_user_pass_post()
+    // {
+    //         $response = array('code' => - 1, 'status' => false, 'message' => '');
+    //         $validate = validateToken();
+    //         if ($validate) {
+    //             $nfc_device_id = $this->input->post('nfc_device_id');
+    //             $no_of_days = $this->input->post('no_of_days');
+    //             if(empty($nfc_device_id)){
+    //                 $response['message'] = "Nfc Device Id is required";
+    //                 $response['code'] = 201;
+    //             }else if(empty($no_of_days)){
+    //                 $response['message'] = "No of Dayss is required";
+    //                 $response['code'] = 201;
+    //             }else{
+
+    //                 $nfc_device = $this->model->selectWhereData('tbl_nfc_device',array('nfc_device_id'=>$nfc_device_id),array('id'));
+    //                 $pass_previous_details = $this->model->selectWhereData('tbl_user_pass_details',array('fk_nfc_device_id'=>$nfc_device['id'],'used_status'=>1),array('*'));
+    //                 $no_of_days_1 = $this->model->selectWhereData('tbl_pass_days',array('id'=>$no_of_days),array('no_of_days'));
+    //                 $from_date = date('Y-m-d', strtotime("+1 day", strtotime($pass_previous_details['to_date'])));
+    //                 $to_date = Date('Y-m-d', strtotime($from_date.'+'.$no_of_days_1['no_of_days']));
+    //                 $current_date= date('Y-m-d');
+
+    //                 if($current_date > $pass_previous_details['to_date']){
+    //                     $update_data = array(
+    //                         'used_status'=>0,
+    //                     );
+    //                     $this->model->updateData('tbl_user_pass_details',$update_data,array('id'=>$pass_previous_details['id']));
+
+    //                     $response['code'] = 201;
+    //                     $response['status'] = false;
+    //                     $response['message'] = 'Your Pass has expired on "'.$pass_previous_details['to_date'].'". Kindly Generate New Pass'; 
+    //                 }else{
+    //                   $update_data = array(
+    //                     'used_status'=>0,);
+    //                     $this->model->updateData('tbl_user_pass_details',$update_data,array('id'=>$pass_previous_details['id']));
+    //                     $curl_data = array(
+    //                         'fk_place_id'=>$pass_previous_details['fk_place_id'],
+    //                         'fk_nfc_device_id'=>$pass_previous_details['fk_nfc_device_id'],
+    //                         'fk_no_of_days'=>$no_of_days,
+    //                         'phone_no'=>$pass_previous_details['phone_no'],
+    //                         'from_date'=> date('Y-m-d'),
+    //                         'to_date'=>$to_date,
+    //                         'used_status'=>1,
+    //                     );      
+    //                     $this->model->insertData('tbl_user_pass_details',$curl_data);  
+    //                 }
+
+                   
+    //                 $response['code'] = REST_Controller::HTTP_OK;
+    //                 $response['status'] = true;
+    //                 $response['message'] = 'Pass Renewal Done Successfully';
+    //             }
+    //         }else{
+    //             $response['code'] = REST_Controller::HTTP_UNAUTHORIZED;
+    //             $response['message'] = 'Unauthorised';
+    //         }
+    //         echo json_encode($response);
+    // }
+
     public function nfc_device_mapped_with_user_post()
     {
             $response = array('code' => - 1, 'status' => false, 'message' => '');
@@ -860,6 +1147,7 @@ class Verifier_api extends REST_Controller {
                     $response['code'] = 201;
                 }else{
                     $check_nfc_device_count = $this->model->CountWhereRecord('tbl_nfc_device', array('nfc_device_id'=>$nfc_device_id,'status'=>1));
+                    
                     if($check_nfc_device_count > 0){
                         $response['code'] = 201;
                         $response['status'] = false;
@@ -896,7 +1184,7 @@ class Verifier_api extends REST_Controller {
                                         'price'=>$monthly_pass_details['cost'],
                                         'discount_price'=>$discount_price,
                                         'total_price'=> $monthly_pass_details['cost'] - $discount_price,
-                                        'status'=>'New'
+                                        'status'=>'Renewal'
                                     );      
                                     $this->model->insertData('tbl_user_pass_details',$curl_data);
                                     $response['code'] = REST_Controller::HTTP_OK;
@@ -913,6 +1201,7 @@ class Verifier_api extends REST_Controller {
                             'nfc_device_id' =>$nfc_device_id,
                         );
                         $last_inserted_id = $this->model->insertData('tbl_nfc_device',$curl_data);
+                        // $nfc_device = $this->model->selectWhereData('tbl_nfc_device',array('nfc_device_id'=>$nfc_device_id),array('id'));
                         $monthly_pass_details = $this->model->selectWhereData('tbl_pass_price_slab',array('no_of_days'=>$no_of_days,'fk_place_id'=>$place_id,'fk_vehicle_type_id'=>$fk_vehicle_type_id),array('cost'));
                         $pass_previous_details = $this->model->selectWhereData('tbl_user_pass_details',array('fk_nfc_device_id'=>$last_inserted_id,'used_status'=>1),array('*'));
                         $no_of_days_1 = $this->model->selectWhereData('tbl_pass_days',array('id'=>$no_of_days),array('no_of_days'));
@@ -979,7 +1268,7 @@ class Verifier_api extends REST_Controller {
                             'used_status'=>0,
                         );
                         $this->model->updateData('tbl_user_pass_details',$update_data,array('id'=>$pass_previous_details['id']));
-                        
+
                         $response['code'] = 201;
                         $response['status'] = false;
                         $response['message'] = 'Your Pass has expired on "'.$pass_previous_details['to_date'].'". Kindly Generate New Pass'; 
@@ -1002,8 +1291,6 @@ class Verifier_api extends REST_Controller {
                         );      
                         $this->model->insertData('tbl_user_pass_details',$curl_data);  
                     }
-
-                   
                     $response['code'] = REST_Controller::HTTP_OK;
                     $response['status'] = true;
                     $response['message'] = 'success'; 
@@ -1014,9 +1301,7 @@ class Verifier_api extends REST_Controller {
             }
             echo json_encode($response);
     }
-    public function get_details_on_nfc_card()
-    {
-        // code...
-    }
-
+    
+    
+   
 }

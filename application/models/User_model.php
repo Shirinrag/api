@@ -175,7 +175,7 @@ class User_model extends CI_Model {
 		$this->db->join('tbl_status_master','tbl_booking_status.fk_status_id=tbl_status_master.id','left');
 		$this->db->join('tbl_slot_info','tbl_booking.fk_slot_id=tbl_slot_info.id','left');
 		$this->db->where('tbl_booking.fk_place_id',$place_id);
-		$this->db->where('tbl_booking.fk_verify_booking_status',0);
+		$this->db->where('tbl_booking.fk_verify_booking_status',2);
 		$this->db->where('tbl_status_master.id',1);
 		$this->db->group_by('tbl_booking.id');
 		$query = $this->db->get();

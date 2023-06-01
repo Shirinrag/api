@@ -124,4 +124,18 @@ class Pushnotification_model extends CI_Model {
             return true;
         }
     }
+    public function otp_notification($user_id='',$otp='')
+    {
+        if (!empty($user_id)) {
+            $notification_template_info = $this->model->selectwhereData('tbl_push_notification_messages',array('id'=>10,'del_status'=>'1'),array('title','message','image_path'));
+            $dynamic_data = array("{otp}"); 
+            $dynamic_value = array($otp);
+            $notification_data_post['title']=$notification_template_info['title']; 
+            $notification_data_post['message']=str_replace($dynamic_data,$dynamic_value,$notification_template_info['message']);
+            $this->pushnotifications->android($user_id,$notification_data_post);
+            return true;
+        } else {
+            return true;
+        }
+    }
 }
