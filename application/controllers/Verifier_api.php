@@ -715,7 +715,12 @@ class Verifier_api extends REST_Controller {
                      $to_date_1 = $slots_status['booking_to_date'];
                      $to_time_1 = $slots_status['booking_to_time'];
                      $combinedtoDT = date('Y-m-d H:i:s', strtotime("$to_date_1 $to_time_1"));
-                     
+                     $from_date_1 = $slots_status['booking_to_date'];
+                     $from_time_1 = $slots_status['booking_to_time'];
+                     $combinedFromDT = date('Y-m-d H:i:s', strtotime("$to_date_1 $to_time_1"));
+                     if(strtotime()){
+
+                     }
                      echo $combinedDT;
                      echo '<br>';
                      echo $currentdatetime;
