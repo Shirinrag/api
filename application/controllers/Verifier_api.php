@@ -1138,6 +1138,8 @@ class Verifier_api extends REST_Controller {
                 $no_of_days = $this->input->post('no_of_days');
                 $discount_price = $this->input->post('discount_price');
                 $fk_vehicle_type_id = $this->input->post('fk_vehicle_type_id');
+                $car_no = $this->input->post('car_no');
+                $car_no = json_decode($car_no);
                 if(empty($place_id)){
                     $response['message'] = "Place Id is required";
                     $response['code'] = 201;
@@ -1229,7 +1231,8 @@ class Verifier_api extends REST_Controller {
                                 'price'=>$monthly_pass_details['cost'],
                                 'discount_price'=>$discount_price,
                                 'total_price'=> $monthly_pass_details['cost'] - $discount_price,
-                                 'status'=>'New'
+                                 'status'=>'New',
+                                 'car_no'=>implode(",",$car_no)
                             );      
                             $this->model->insertData('tbl_user_pass_details',$curl_data);
                             $response['code'] = REST_Controller::HTTP_OK;

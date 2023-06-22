@@ -10,9 +10,7 @@ class Database_migration_api extends REST_Controller {
         header('Access-Control-Allow-Credentials: true');
         header('Access-Control-Allow-Headers: Content-Type');
         header('Content-Type: text/html; charset=utf-8');
-        header('Content-Type: application/json; charset=utf-8'); 
-        $this->load->database('parking_adda', TRUE);
-        
+        header('Content-Type: application/json; charset=utf-8');         
     }
    /*200 = OK
     201 = Bad Request (Required param is missing)
@@ -32,13 +30,162 @@ class Database_migration_api extends REST_Controller {
 
     public function get_all_user_get()
     {           
-            $this->load->model('database_migration_model');
-            $users_data = $this->database_migration_model->get_all_users();
-            echo '<pre>'; print_r($users_data); exit;
+            // $this->load->model('database_migration_model');
+            $users_data = $this->model->selectWhereData('ci_users',array(),array('*'),false);
+
+            foreach ($users_data as $users_data_key => $users_data_row) {
+               
+                $user_wallet_data = $this->model->selectWhereData('ci_wallet_user',array('user_id'=>$users_data_row['id']),array('amount'));         
+                
+                $insert_user_data = array(
+                    'userName'=> $users_data_row['username'],
+                    'firstName'=> $users_data_row['firstname'],
+                    'lastName'=> $users_data_row['lastname'],
+                    'email'=> $users_data_row['email'],
+                    'phoneNo'=> $users_data_row['mobile_no'],
+                    'address'=> $users_data_row['address'],
+                    'user_type'=> 10,
+                    'isVerified'=> $users_data_row['is_verify'],
+                    'referal_code'=> $users_data_row['referal_code'],
+                    'device_id'=> $users_data_row['device_id'],
+                    'notifn_topic'=> $users_data_row['notifn_topic'],
+                    'terms_condition'=> $users_data_row['terms_condition'],
+                );
+                $inserted_id = $this->model->insertData('pa_users',$insert_user_data);
+                $insert_user_wallet_data = array(
+                    'fk_user_id'=> $inserted_id,
+                    'amount' =>$user_wallet_data['amount']
+                );
+                $this->model->insertData('tbl_user_wallet',$insert_user_wallet_data);
+            }
             $response['code'] = REST_Controller::HTTP_OK;
             $response['status'] = true;
             $response['message'] = 'success';
-            $response['user_type_data'] = $user_type;
+            // $response['user_type_data'] = $user_type;
+            echo json_encode($response);
+    }
+
+    public function add_car_details_get()
+    {
+        $users_data = $this->model->selectWhereData('ci_users',array(),array('username','id','mobile_no'),false);
+
+            foreach ($users_data as $users_data_key => $users_data_row) {
+                $users_data_1 = $this->model->selectWhereData('pa_users',array('userName'=>$users_data_row['username']),array('phoneNo','id'));
+                $user_car_data = $this->model->selectWhereData('ci_car_details',array('user_id'=>$users_data_row['id']),array('car_number','is_deleted'));
+                $status ="";
+                if($user_car_data['is_deleted']== 0){
+                    $status = 1;
+                }else{
+                    $status = 0;
+                }
+                if($users_data_row['mobile_no'] == $users_data_1['phoneNo']){
+                    if(!empty($user_car_data['car_number'])){
+                         $insert_car_details = array(
+                            'fk_user_id'=> $users_data_1['id'],
+                            'car_number'=>$user_car_data['car_number'],
+                            'status'=>$status
+                        ); 
+                         $this->model->insertData('tbl_user_car_details',$insert_car_details);
+                    }
+                }
+            }
+            $response['code'] = REST_Controller::HTTP_OK;
+            $response['status'] = true;
+            $response['message'] = 'success';
+            // $response['user_type_data'] = $user_type;
+            echo json_encode($response);
+    }
+
+    public function migrate_all_user_wallet_history_get()
+    {
+          $total_amount ='';
+          $add_amount= '';
+            
+          $user_wallet_history = $this->model->selectWhereData('ci_wallet_history',array(),array('*'),false);
+          
+            foreach ($user_wallet_history as $user_wallet_history_key => $user_wallet_history_row) {
+
+                if($user_wallet_history_row['status'] == 1){
+                    $add_amount = $user_wallet_history_row['amount'];
+                 }else if($user_wallet_history_row['status'] == 2){
+                    $deduct_amount = $user_wallet_history_row['amount'];
+                 }
+
+
+                $users_data = $this->model->selectWhereData('ci_users',array('id'=>$user_wallet_history_row['user_id']),array('username'));               
+
+                $new_user_details = $this->model->selectWhereData('pa_users',array('userName'=>$users_data['username']),array('id'));
+
+                $last_wallet_data = $this->model->selectWhereData('tbl_user_wallet_history',array('used_status'=>1,'fk_user_id'=>$new_user_details['id']),array('total_amount','id'));
+
+                 if(empty($last_wallet_data['total_amount'])){
+                    $total_amount = $add_amount;
+                 }else{
+                    $total_amount = $last_wallet_data['total_amount'] - $deduct_amount;
+                 }
+
+                 $this->model->updateData('tbl_user_wallet_history',array('used_status'=> 0),array('id'=>$last_wallet_data['id']));
+                 if(!empty($new_user_details['id'])){
+                    if($user_wallet_history_row['status'] == 1){
+                    $curl_data = array(
+                        'fk_user_id'=>$new_user_details['id'],
+                        'add_amount'=>$add_amount,
+                        // 'deduct_amount'=>$deduct_amount,
+                        'total_amount'=>$total_amount,
+                        'transac_id'=>$user_wallet_history_row['transac_id'],
+                        'created_at'=>$user_wallet_history_row['onCreated'],
+                        'updated_at'=>$user_wallet_history_row['onUpdated'],
+                    );
+                 }else if($user_wallet_history_row['status'] == 2){
+                   $curl_data = array(
+                        'fk_user_id'=>$new_user_details['id'],
+                        // 'add_amount'=>$add_amount,
+                        'deduct_amount'=>$deduct_amount,
+                        'total_amount'=>$total_amount,
+                        'transac_id'=>$user_wallet_history_row['transac_id'],
+                        'created_at'=>$user_wallet_history_row['onCreated'],
+                        'updated_at'=>$user_wallet_history_row['onUpdated'],
+                    );
+                 }
+                    
+                    $this->model->insertData('tbl_user_wallet_history',$curl_data);
+                 }
+                                
+            }
+            // die;
+            $response['code'] = REST_Controller::HTTP_OK;
+            $response['status'] = true;
+            $response['message'] = 'success';
+            // $response['user_type_data'] = $user_type;
+            echo json_encode($response);
+    }
+
+    public function migrate_sensor_data_get()
+    {
+            $sensor_data = $this->model->selectWhereData('mpc_sensor',array(),array('*'),false);
+            foreach ($sensor_data as $sensor_data_key => $sensor_data_row) {
+
+                $place_name = $this->model->selectWhereData('ci_parking_places',array('id'=>$sensor_data_row['place_id']),array('placename'));
+
+                $new_place_details_id = $this->model->selectWhereData('tbl_parking_place',array('place_name'=>$place_name['placename']),array('id'));  
+                $slot_id = $this->model->selectWhereData('tbl_slot_info',array('fk_place_id'=>$new_place_details_id['id']),array('id'));
+                if(!empty($sensor_data_row['place_id'])){
+                    $insert_sensor_data = array(
+                        'fk_place_id'=>$sensor_data_row['place_id'],
+                        'fk_slot_id'=> $sensor_data_row['slot_id'],
+                        'sensor_time'=>$sensor_data_row['sensor_time'],
+                        'battery_voltage'=>$sensor_data_row['battery_voltage'],
+                        'status'=>$sensor_data_row['status'],
+                        'created_at'=>$sensor_data_row['created_date'],
+                        'updated_at'=>$sensor_data_row['updated_date'],
+                    );
+                    $this->model->insertData('tbl_sensor',$insert_sensor_data);
+                }                
+            }
+            $response['code'] = REST_Controller::HTTP_OK;
+            $response['status'] = true;
+            $response['message'] = 'success';
+            // $response['user_type_data'] = $user_type;
             echo json_encode($response);
     }
 }
