@@ -808,6 +808,8 @@ class Pos_api extends REST_Controller {
                     $nfc_device = $this->model->selectWhereData('tbl_nfc_device',array('nfc_device_id'=>$nfc_device_id),array('id'));
                     if(!empty($nfc_device['id'])){
                         $pass_details = $this->model->selectWhereData('tbl_user_pass_details',array('fk_nfc_device_id'=>$nfc_device['id'],'used_status'=>1),array('*'));
+                        $car_no = explode(",",$pass_details['car_no']);
+                        $pass_details['car_no']=$car_no;
                         $response['code'] = REST_Controller::HTTP_OK;
                         $response['status'] = true;
                         $response['pass_details'] = $pass_details;

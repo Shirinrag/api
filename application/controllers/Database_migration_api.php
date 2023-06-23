@@ -188,4 +188,62 @@ class Database_migration_api extends REST_Controller {
             // $response['user_type_data'] = $user_type;
             echo json_encode($response);
     }
+
+    public function migrate_admin_data_get()
+    {
+        $admin_data = $this->model->selectWhereData('ci_admin',array('admin_role_id'=>12),array('*'),false);
+            // echo '<pre>'; print_r($admin_data); exit;
+            foreach ($admin_data as $admin_data_key => $admin_data_row) {
+                $insert_user_data = array(
+                    'userName'=> $admin_data_row['username'],
+                    'firstName'=> $admin_data_row['firstname'],
+                    'lastName'=> $admin_data_row['lastname'],
+                    'email'=> $admin_data_row['email'],
+                    'phoneNo'=> $admin_data_row['mobile_no'],
+                    'user_type'=> 12,
+                    'password'=> dec_enc('encrypt',"Password1"),
+                    'isVerified'=> $admin_data_row['is_verify'],
+                    'device_id'=> $admin_data_row['device_id'],
+                    'notifn_topic'=> $admin_data_row['notifn_topic'],
+                    'created_at'=> $admin_data_row['created_at'],
+                    'updated_at'=> $admin_data_row['updated_at'],
+                );
+                $inserted_id = $this->model->insertData('pa_users',$insert_user_data);
+            }
+            $response['code'] = REST_Controller::HTTP_OK;
+            $response['status'] = true;
+            $response['message'] = 'success';
+            // $response['user_type_data'] = $user_type;
+            echo json_encode($response);
+    }
+
+    public function transcation_history_get()
+    {
+        $transcation_history = $this->model->selectWhereData('ci_transaction_history',array(),array('*'),false);
+        // echo '<pre>'; print_r($transcation_history); exit;
+        foreach ($transcation_history as $transcation_history_key => $transcation_history_row) {
+            $users_data = $this->model->selectWhereData('ci_users',array('id'=>$transcation_history_row['user_id']),array('username'));
+              $new_users_data = $this->model->selectWhereData('ci_users',array('userName'=>$users_data['username']),array('id'));
+// echo '<pre>'; print_r($new_users_data);
+              if(!empty($new_users_data['id'])){
+                    $insert_data= array(
+                        'fk_user_id'=>$new_users_data['id'],
+                        'order_id'=>$transcation_history_row['order_id'],
+                        'payment_id'=>$transcation_history_row['payment_id'],
+                        'amount'=>$transcation_history_row['amount'],
+                        'payment_status'=>$transcation_history_row['status'],
+                        'created_at'=>$transcation_history_row['on_created'],
+                        'updated_at'=>$transcation_history_row['on_updated'],
+                      );
+
+                      $this->model->insertData('tbl_transcation',$insert_data);
+              }
+              
+        }
+         $response['code'] = REST_Controller::HTTP_OK;
+            $response['status'] = true;
+            $response['message'] = 'success';
+            // $response['user_type_data'] = $user_type;
+            echo json_encode($response);
+    }
 }
