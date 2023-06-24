@@ -224,7 +224,7 @@ class Database_migration_api extends REST_Controller {
         foreach ($transcation_history as $transcation_history_key => $transcation_history_row) {
             $users_data = $this->model->selectWhereData('ci_users',array('id'=>$transcation_history_row['user_id']),array('username'));
               $new_users_data = $this->model->selectWhereData('ci_users',array('userName'=>$users_data['username']),array('id'));
-// echo '<pre>'; print_r($new_users_data);
+                // echo '<pre>'; print_r($new_users_data);
               if(!empty($new_users_data['id'])){
                     $insert_data= array(
                         'fk_user_id'=>$new_users_data['id'],
@@ -237,13 +237,58 @@ class Database_migration_api extends REST_Controller {
                       );
 
                       $this->model->insertData('tbl_transcation',$insert_data);
-              }
-              
+              }              
         }
          $response['code'] = REST_Controller::HTTP_OK;
             $response['status'] = true;
             $response['message'] = 'success';
             // $response['user_type_data'] = $user_type;
             echo json_encode($response);
+    }
+
+    public function migrate_booking_data_get()
+    {
+            $booking_data = $this->model->selectWhereData('ci_booking',array(),array('*'),false);
+            foreach ($booking_data as $booking_data_key => $booking_data_row) {
+                 $booking_check = $this->model->selectWhereData('ci_booking_check',array('booking_id'=>$booking_data_row['id']),array('*'));
+                 $booking_verify = $this->model->selectWhereData('ci_booking_verify',array('booking_id'=>$booking_data_row['id']),array('*'));
+
+                 $username = $this->model->selectWhereData('ci_users',array('id'=>$booking_data_row['user_id']),array('username'));
+
+                  $new_users_data = $this->model->selectWhereData('ci_users',array('userName'=>$username['username']),array('id'));
+
+                  $car_id = $this->model->selectWhereData('tbl_user_car_details',array('fk_user_id',$new_users_data['id']),array('id'));
+
+                   $slot_id = $this->model->selectWhereData('tbl_slot_info',array('fk_place_id'=>$booking_data_row['place_id']),array('id'));
+
+                    if($booking_data_row['booking_type']==0){
+                        $booking_type = 1;
+                    }else if($booking_data_row['booking_type']==1){
+                        $booking_type = 2;
+                    }else{
+                        $booking_type = 3;
+                    }
+
+                  $insert_booking_data = array(
+                        'booking_id' =>$booking_data_row['unique_booking_id'],
+                        'fk_user_id' =>$new_users_data['id'],
+                        'fk_car_id' =>$car_id['id'],
+                        'fk_place_id' =>$booking_data_row['place_id'],
+                        'fk_slot_id' =>$slot_id['id'],
+                        'fk_booking_type_id' =>$booking_type,
+                        'booking_from_date' =>$booking_data_row['booking_from_date'],
+                        'booking_to_date' =>$booking_data_row['booking_to_date'],
+                        'booking_from_time' =>$booking_data_row['from_time'],
+                        'booking_to_time' =>$booking_data_row['to_time'],
+                        'reserve_from_time' =>$booking_data_row['reserve_from_time'],
+                        'reserve_to_time' =>$booking_data_row['reserve_to_time'],
+                        'booking_to_date' =>$booking_data_row['booking_to_date'],
+                        'booking_to_date' =>$booking_data_row['booking_to_date'],
+                        'booking_to_date' =>$booking_data_row['booking_to_date'],
+                        'booking_to_date' =>$booking_data_row['booking_to_date'],
+
+                  );          
+
+            }
     }
 }

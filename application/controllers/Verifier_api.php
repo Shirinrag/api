@@ -1140,6 +1140,7 @@ class Verifier_api extends REST_Controller {
                 $fk_vehicle_type_id = $this->input->post('fk_vehicle_type_id');
                 $car_no = $this->input->post('car_no');
                 $car_no = json_decode($car_no);
+                $from_date = $this->input->post('from_date');
                 if(empty($place_id)){
                     $response['message'] = "Place Id is required";
                     $response['code'] = 201;
@@ -1150,7 +1151,10 @@ class Verifier_api extends REST_Controller {
                     $response['message'] = "Phone No is required";
                     $response['code'] = 201;
                 }else if(empty($no_of_days)){
-                    $response['message'] = "No of Dayss is required";
+                    $response['message'] = "No of Days is required";
+                    $response['code'] = 201;
+                }else if(empty($from_date)){
+                    $response['message'] = "From Date is required";
                     $response['code'] = 201;
                 }else{
                     $check_nfc_device_count = $this->model->CountWhereRecord('tbl_nfc_device', array('nfc_device_id'=>$nfc_device_id,'status'=>1));
@@ -1163,7 +1167,7 @@ class Verifier_api extends REST_Controller {
                         $monthly_pass_details = $this->model->selectWhereData('tbl_pass_price_slab',array('no_of_days'=>$no_of_days,'fk_place_id'=>$place_id,'fk_vehicle_type_id'=>$fk_vehicle_type_id),array('cost'));
                         $pass_previous_details = $this->model->selectWhereData('tbl_user_pass_details',array('fk_nfc_device_id'=>$nfc_device['id'],'used_status'=>1),array('*'));
                         $no_of_days_1 = $this->model->selectWhereData('tbl_pass_days',array('id'=>$no_of_days),array('no_of_days'));
-                        $from_date = date('Y-m-d');
+                        // $from_date = date('Y-m-d');
                         $to_date = Date('Y-m-d', strtotime($from_date.'+'.$no_of_days_1['no_of_days']));
                         $check_user_count = $this->model->CountWhereRecord('tbl_user_pass_details', array('fk_nfc_device_id'=>$nfc_device['id'],'phone_no'=>$phone_no,'used_status'=>1));
                         if($check_user_count > 0){
@@ -1185,7 +1189,7 @@ class Verifier_api extends REST_Controller {
                                         'fk_nfc_device_id'=>$nfc_device['id'],
                                         'fk_no_of_days'=>$no_of_days,
                                         'phone_no'=>$phone_no,
-                                        'from_date'=> date('Y-m-d'),
+                                        'from_date'=> $from_date,
                                         'to_date'=>$to_date,
                                         'used_status'=>1,
                                         'price'=>$monthly_pass_details['cost'],
@@ -1225,7 +1229,7 @@ class Verifier_api extends REST_Controller {
                                 'fk_nfc_device_id'=>$last_inserted_id,
                                 'fk_no_of_days'=>$no_of_days,
                                 'phone_no'=>$phone_no,
-                                'from_date'=> date('Y-m-d'),
+                                'from_date'=> $from_date,
                                 'to_date'=>$to_date,
                                 'used_status'=>1,
                                 'price'=>$monthly_pass_details['cost'],
