@@ -248,7 +248,11 @@ class Database_migration_api extends REST_Controller {
 
     public function migrate_booking_data_get()
     {
-            $booking_data = $this->model->selectWhereData('ci_booking',array(),array('*'),false);
+            $this->load->model('database_migration_model');
+            $booking_data = $this->database_migration_model->booking_data();
+
+            // $booking_data = $this->model->selectWhereData('ci_booking',array(),array('*'),false);
+            echo '<pre>'; print_r($booking_data); exit;
             foreach ($booking_data as $booking_data_key => $booking_data_row) {
                  $booking_check = $this->model->selectWhereData('ci_booking_check',array('booking_id'=>$booking_data_row['id']),array('*'));
                  $booking_verify = $this->model->selectWhereData('ci_booking_verify',array('booking_id'=>$booking_data_row['id']),array('*'));
@@ -268,26 +272,35 @@ class Database_migration_api extends REST_Controller {
                     }else{
                         $booking_type = 3;
                     }
+                    $time1 = strtotime($booking_data_row['from_time']);
+                    $time2 = strtotime($booking_data_row['to_time']);
+                    $difference = round(abs($time2 - $time1) / 3600,2);
 
-                  $insert_booking_data = array(
-                        'booking_id' =>$booking_data_row['unique_booking_id'],
-                        'fk_user_id' =>$new_users_data['id'],
-                        'fk_car_id' =>$car_id['id'],
-                        'fk_place_id' =>$booking_data_row['place_id'],
-                        'fk_slot_id' =>$slot_id['id'],
-                        'fk_booking_type_id' =>$booking_type,
-                        'booking_from_date' =>$booking_data_row['booking_from_date'],
-                        'booking_to_date' =>$booking_data_row['booking_to_date'],
-                        'booking_from_time' =>$booking_data_row['from_time'],
-                        'booking_to_time' =>$booking_data_row['to_time'],
-                        'reserve_from_time' =>$booking_data_row['reserve_from_time'],
-                        'reserve_to_time' =>$booking_data_row['reserve_to_time'],
-                        'booking_to_date' =>$booking_data_row['booking_to_date'],
-                        'booking_to_date' =>$booking_data_row['booking_to_date'],
-                        'booking_to_date' =>$booking_data_row['booking_to_date'],
-                        'booking_to_date' =>$booking_data_row['booking_to_date'],
+                    if(empty($booking_data_row['book_ext'])){
+                        $insert_booking_data = array(
+                            'booking_id' =>$booking_data_row['unique_booking_id'],
+                            'fk_user_id' =>$new_users_data['id'],
+                            'fk_car_id' =>$car_id['id'],
+                            'fk_place_id' =>$booking_data_row['place_id'],
+                            'fk_slot_id' =>$slot_id['id'],
+                            'fk_booking_type_id' =>$booking_type,
+                            'booking_from_date' =>$booking_data_row['booking_from_date'],
+                            'booking_to_date' =>$booking_data_row['booking_to_date'],
+                            'booking_from_time' =>$booking_data_row['from_time'],
+                            'booking_to_time' =>$booking_data_row['to_time'],
+                            'reserve_from_time' =>$booking_data_row['reserve_from_time'],
+                            'reserve_to_time' =>$booking_data_row['reserve_to_time'],
+                            'total_hours' =>$difference,
+                        );  
+                        $inserted_id = $this->model->insertData('tbl_booking',$insert_booking_data); 
+                    }
+                    $booking_id = $this->model->selectWhereData('tbl_booking',array('booking_id'=>$booking_data_row['unique_booking_id']),array('id'));
 
-                  );          
+                    if(!empty($booking_data_row['book_ext'])){
+                        
+                    }
+
+
 
             }
     }

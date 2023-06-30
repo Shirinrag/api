@@ -15,6 +15,16 @@ class Database_migration_model extends CI_Model {
 	//  	 $query = $this->DB2->get();
     //     $result = $query->result_array();
     //     return $result;
-	//  }                         
+	//  }    
+
+	public function booking_data()
+	 {
+	 		$this->db->select('*');
+	 		$this->db->from('ci_booking');
+	 		$this->db->limit('10');
+	 		$query = $this->db->get();
+        	$result = $query->result_array();
+        	return $result;
+	 }                     
 }
 ?>
