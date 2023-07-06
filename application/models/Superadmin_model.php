@@ -30,6 +30,7 @@ class Superadmin_model extends CI_Model {
         $this->db->join('tbl_states','tbl_parking_place.fk_state_id=tbl_states.id','left');
         $this->db->join('tbl_cities','tbl_parking_place.fk_city_id=tbl_cities.id','left');
         $this->db->join('tbl_slot_info','tbl_booking.fk_slot_id=tbl_slot_info.id','left');
+        $this->db->order_by('tbl_booking.id','DESC');
         // $this->db->where('tbl_booking.fk_user_id',$user_id);
         $query = $this->db->get();
         $result = $query->result_array();
@@ -41,6 +42,7 @@ class Superadmin_model extends CI_Model {
        $this->db->select('tbl_extension_booking.id,tbl_extension_booking.booking_ext_replace,tbl_extension_booking.booking_from_date as ext_booking_from_date,tbl_extension_booking.booking_to_date as ext_booking_to_date,tbl_extension_booking.booking_from_time as ext_booking_from_time,tbl_extension_booking.booking_to_time as ext_booking_to_time,tbl_booking.booking_id');
         $this->db->from('tbl_extension_booking');
         $this->db->join('tbl_booking','tbl_extension_booking.fk_booking_id=tbl_booking.id','left');
+        $this->db->order_by('tbl_extension_booking.id','DESC');
         $query = $this->db->get();
         $result = $query->result_array();
         return $result;

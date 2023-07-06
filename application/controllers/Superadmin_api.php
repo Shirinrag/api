@@ -932,11 +932,12 @@ class Superadmin_api extends REST_Controller {
                 $referral_code = $this->input->post('referral_code');
                 $place_type = $this->input->post('place_type');
                 $monthly_price_slab_id = $this->input->post('monthly_price_slab_id');
-                $monthly_price_slab_id = json_decode($monthly_price_slab_id,true);
+                $monthly_price_slab_id = json_decode(@$monthly_price_slab_id,true);
                 $no_of_days = $this->input->post('no_of_days');
                 $no_of_days = json_decode($no_of_days,true);
                 $cost = $this->input->post('cost');
                 $cost = json_decode($cost,true);
+                $price_image = $this->input->post('price_image');
                 
                 if(empty($fk_vendor_id)){
                     $response['message'] = "First Name is required";
@@ -999,6 +1000,7 @@ class Superadmin_api extends REST_Controller {
                             'total_place_count'=>$total_place_count,
                             'referral_code'=>$referral_code,
                             'parking_place_type' =>$place_type,
+                            'price_image'=>$price_image
                         );
                         $this->model->updateData('tbl_parking_place',$curl_data,array('id'=>$id));
                         $previous_vehicle_type = $this->model->selectWhereData('tbl_parking_place_vehicle_type',array('fk_place_id'=>$id),array('GROUP_CONCAT(fk_vehicle_type_id) as fk_vehicle_type_id'),true,'','fk_place_id');
@@ -1073,7 +1075,7 @@ class Superadmin_api extends REST_Controller {
                                 $cost_11 = @$cost[$fk_vehicle_type_row];
                                 // echo '<pre>'; print_r($$no_of_days); exit;
                                 foreach ($no_of_days_1 as $no_of_days_1_key => $no_of_days_1_row) {
-                                    $pass_id = $monthly_price_slab_id[$fk_vehicle_type_row][$no_of_days_1_key];
+                                    $pass_id = @$monthly_price_slab_id[$fk_vehicle_type_row][$no_of_days_1_key];
                                     // echo '<pre>'; print_r($no_of_days_1_row); exit;
                                     if(!empty($pass_id)){
                                         $update_monthly_price_slab = array(

@@ -252,7 +252,7 @@ class Database_migration_api extends REST_Controller {
             $booking_data = $this->database_migration_model->booking_data();
 
             // $booking_data = $this->model->selectWhereData('ci_booking',array(),array('*'),false);
-            echo '<pre>'; print_r($booking_data); exit;
+            // echo '<pre>'; print_r($booking_data); exit;
             foreach ($booking_data as $booking_data_key => $booking_data_row) {
                  $booking_check = $this->model->selectWhereData('ci_booking_check',array('booking_id'=>$booking_data_row['id']),array('*'));
                  $booking_verify = $this->model->selectWhereData('ci_booking_verify',array('booking_id'=>$booking_data_row['id']),array('*'));
@@ -291,17 +291,248 @@ class Database_migration_api extends REST_Controller {
                             'reserve_from_time' =>$booking_data_row['reserve_from_time'],
                             'reserve_to_time' =>$booking_data_row['reserve_to_time'],
                             'total_hours' =>$difference,
+                            'created_at'=>$booking_data_row['created_date'],
+                            'updated_at'=>$booking_data_row['updated_date']
                         );  
                         $inserted_id = $this->model->insertData('tbl_booking',$insert_booking_data); 
+
+                        $payment_data_insert = array(
+                            'fk_booking_id'=>$inserted_id,
+                            'fk_user_id'=>$new_users_data['id'],
+                            'amount'=>$booking_data_row['originalCost'],
+                            'total_amount'=>$booking_data_row['originalCost'],
+                             'created_at'=>$booking_data_row['created_date'],
+                            'updated_at'=>$booking_data_row['updated_date']
+                        );
+                        $this->model->insertData('tbl_payment',$payment_data_insert);
+
+                        if($booking_data_row['booking_status']==0){
+                            $status=1;
+                        }else if($booking_data_row['booking_status']==1){
+                            $status=2;
+                        }else if($booking_data_row['booking_status']==2){
+                            $status=3;
+                        }else if($booking_data_row['booking_status']==3){
+                            $status=4;
+                        }else if($booking_data_row['booking_status']==4){
+                            $status=5;
+                        }
+                        $this->model->updateData('tbl_booking_status',array('used_status'=>0),array('fk_booking_id'=>$inserted_id));
+                        $booking_status = array(
+                            'fk_booking_id'=>$inserted_id,
+                            'fk_status_id'=>$status,
+                            'used_status'=>1,
+                        ); 
+                        $this->model->insertData('tbl_booking_status',$booking_status);
                     }
                     $booking_id = $this->model->selectWhereData('tbl_booking',array('booking_id'=>$booking_data_row['unique_booking_id']),array('id'));
 
                     if(!empty($booking_data_row['book_ext'])){
-                        
+                        $extension_booking_insert_data = array(
+                            'fk_booking_id' =>$booking_id['id'],
+                            'fk_user_id' =>$new_users_data['id'],
+                            'fk_place_id' =>$booking_data_row['place_id'],
+                            'booking_ext_replace'=> $booking_data_row['book_ext'],
+                            'booking_from_date' =>$booking_data_row['booking_from_date'],
+                            'booking_to_date' =>$booking_data_row['booking_to_date'],
+                            'booking_from_time' =>$booking_data_row['from_time'],
+                            'booking_to_time' =>$booking_data_row['to_time'],
+                            'reserve_from_time' =>$booking_data_row['reserve_from_time'],
+                            'reserve_to_time' =>$booking_data_row['reserve_to_time'],
+                            'total_hours' =>$difference,
+                             'created_at'=>$booking_data_row['created_date'],
+                            'updated_at'=>$booking_data_row['updated_date']
+                        );  
+                        $extension_booking_inserted_id = $this->model->insertData('tbl_extension_booking',$extension_booking_insert_data); 
+                        $extension_booking_payment_data_insert = array(
+                            'fk_booking_id'=>$booking_id['id'],
+                            'fk_ext_booking_id'=>$extension_booking_inserted_id,
+                            'fk_user_id'=>$new_users_data['id'],
+                            'amount'=>$booking_data_row['originalCost'],
+                            'total_amount'=>$booking_data_row['originalCost'],
+                             'created_at'=>$booking_data_row['created_date'],
+                            'updated_at'=>$booking_data_row['updated_date']
+                        );
+                        $this->model->insertData('tbl_payment',$extension_booking_payment_data_insert); 
+
+                         if($booking_data_row['booking_status']==0){
+                            $status=1;
+                        }else if($booking_data_row['booking_status']==1){
+                            $status=2;
+                        }else if($booking_data_row['booking_status']==2){
+                            $status=3;
+                        }else if($booking_data_row['booking_status']==3){
+                            $status=4;
+                        }else if($booking_data_row['booking_status']==4){
+                            $status=5;
+                        }
+                        $this->model->updateData('tbl_booking_status',array('used_status'=>0),array('fk_booking_id'=>$booking_id['id']));
+                        $booking_status = array(
+                            'fk_booking_id'=>$booking_id['id'],
+                            'fk_status_id'=>$status,
+                            'used_status'=>1,
+                        ); 
+                        $this->model->insertData('tbl_booking_status',$booking_status);
+                    }
+            }
+            $response['code'] = REST_Controller::HTTP_OK;
+            $response['status'] = true;
+            $response['message'] = 'success';
+            // $response['user_type_data'] = $user_type;
+            echo json_encode($response);
+    }
+
+    public function migrate_booking_verify_get()
+    {
+         $this->load->model('database_migration_model');
+            $booking_data = $this->database_migration_model->booking_data();
+            foreach ($booking_data as $booking_data_key => $booking_data_row) {
+                    $booking_verify_data = $this->model->selectWhereData('ci_booking_verify',array(),array('*'));
+
+                    $booking_id = $this->model->selectWhereData('tbl_booking',array('booking_id'=>$booking_data_row['unique_booking_id']),array('id'));
+
+                    $verifier_username = $this->model->selectWhereData('ci_admin',array('admin_id'=>$booking_verify_data['verifier_id']),array('username'));
+
+                    $verifier_id = $this->model->selectWhereData('pa_users',array('userName'=>$verifier_username['username'],'user_type'=>3),array('id'));
+
+                    if($booking_verify_data['booking_type']==0){
+                        $booking_type =1;
+                    }else{
+                         $booking_type =2;
+                    }
+                    if($booking_verify_data['booking_type']==0){
+                        $booking_type =1;
+                    }else{
+                         $booking_type =2;
+                    }
+                    $insert_verify_booking_data = array(
+                        'fk_booking_id'=>$booking_id['id'],
+                        'fk_verifier_id'=>$verifier_id['id'],
+                        'fk_booking_type_id'=>$booking_type,
+                        'verify_status'=>$booking_verify_data['verify_status'],
+                        'created_at'=>$booking_verify_data['onCreated'],
+                        'updated_at'=>$booking_verify_data['onUpdated'],
+                    );
+                    $this->model->insertData('tbl_booking_verify',$insert_verify_booking_data);
+            }
+            $response['code'] = REST_Controller::HTTP_OK;
+            $response['status'] = true;
+            $response['message'] = 'success';
+            // $response['user_type_data'] = $user_type;
+            echo json_encode($response);
+
+    }
+
+    public function migrate_booking_check_in_out_get()
+    {
+         $this->load->model('database_migration_model');
+            // $booking_data = $this->database_migration_model->booking_data();
+             $booking_check_in_out_data = $this->model->selectWhereData('ci_booking_check',array(),array('*'),false);
+            foreach ($booking_check_in_out_data as $booking_check_in_out_data_key => $booking_check_in_out_data_row) {
+                    // $booking_check_in_out_data = $this->model->selectWhereData('ci_booking_check',array(),array('*'));
+                $booking_data = $this->model->selectWhereData('ci_booking',array('id'=>$booking_check_in_out_data_row['booking_id']),array('*'));
+
+                    $booking_id = $this->model->selectWhereData('tbl_booking',array('booking_id'=>$booking_data['unique_booking_id']),array('id'));
+
+                    $verifier_username = $this->model->selectWhereData('ci_admin',array('admin_id'=>$booking_check_in_out_data_row['verifier_id']),array('username'));
+
+                    $verifier_id = $this->model->selectWhereData('pa_users',array('userName'=>$verifier_username['username'],'user_type'=>3),array('id'));
+
+                    if($booking_check_in_out_data_row['check_type']==0){
+                        $check_type =1;
+                    }else if($booking_check_in_out_data_row['check_type']==1){
+                         $check_type =2;
+                    }elseif($booking_check_in_out_data_row['check_type']==2){
+                            $check_type =3;
+                    }
+                    if($booking_check_in_out_data_row['checkout_stat']==0){
+                        $checkout_status =1;
+                    }elseif($booking_check_in_out_data_row['checkout_stat']==1){
+                         $checkout_status =2;
+                    }elseif($booking_check_in_out_data_row['checkout_stat']==2){
+                         $checkout_status =3;
+                    }elseif($booking_check_in_out_data_row['checkout_stat']==3){
+                         $checkout_status =4;
+                    }
+                    $insert_check_in_out_booking_data = array(
+                        'fk_booking_id'=>$booking_id['id'],
+                        'fk_verifier_id'=>$verifier_id['id'],
+                        'check_in'=>$booking_check_in_out_data_row['check_in'],
+                        'check_out'=>$booking_check_in_out_data_row['check_out'],
+                        'fk_booking_check_type'=>$check_type,
+                        'fk_booking_checkout_status'=>$checkout_status,
+                     
+                        'created_at'=>$booking_check_in_out_data_row['created_at'],
+                        'updated_at'=>$booking_check_in_out_data_row['updated_at'],
+                    );
+                    $this->model->insertData('tbl_booking_check_in_out',$insert_check_in_out_booking_data);
+            }
+            $response['code'] = REST_Controller::HTTP_OK;
+            $response['status'] = true;
+            $response['message'] = 'success';
+            echo json_encode($response);
+        }
+
+        public function migrate_verifier_logged_in_get()
+        {          
+             $verifier_login_data = $this->model->selectWhereData('tbl_verifier_login',array(),array('*'),false);
+                foreach ($verifier_login_data as $verifier_login_data_key => $verifier_login_data_row) {                
+
+                    $verifier_username = $this->model->selectWhereData('ci_admin',array('admin_id'=>$verifier_login_data_row['verifier_id']),array('username'));
+
+                    $verifier_id = $this->model->selectWhereData('pa_users',array('userName'=>$verifier_username['username'],'user_type'=>3),array('id'));
+
+                    if($verifier_login_data_row['status']==0){
+                        $status = 1;
+                    }else{
+                        $status = 2;
                     }
 
-
-
+                    $insert_verifier_logged_in_data = array(
+                        'fk_verifier_id'=>$verifier_id['id'],
+                        'login_time'=>$verifier_login_data_row['login_time'],
+                        'logout_time'=>$verifier_login_data_row['logout_time'],
+                        'status'=>$status,
+                     
+                        'created_at'=>$verifier_login_data_row['created_at'],
+                        'updated_at'=>$verifier_login_data_row['created_at'],
+                    );
+                    $this->model->insertData('tbl_verifier_logged_in',$insert_verifier_logged_in_data);
             }
-    }
+            $response['code'] = REST_Controller::HTTP_OK;
+            $response['status'] = true;
+            $response['message'] = 'success';
+            echo json_encode($response);
+        }
+
+        public function migrate_verifier_duty_get()
+        {
+            $verifier_duty_data = $this->model->selectWhereData('tbl_verifier_place',array(),array('*'),false);
+                foreach ($verifier_duty_data as $verifier_duty_data_key => $verifier_duty_data_row) {                
+
+                    $verifier_username = $this->model->selectWhereData('ci_admin',array('admin_id'=>$verifier_duty_data_row['verifier_id']),array('username'));
+
+                    $verifier_id = $this->model->selectWhereData('pa_users',array('userName'=>$verifier_username['username'],'user_type'=>3),array('id'));
+                    if(!empty($verifier_duty_data_row['duty_date'])){
+                        if(!empty($verifier_id['id']))
+                        {
+
+                                 $insert_verifier_logged_in_data = array(
+                                        'fk_verifier_id'=>$verifier_id['id'],
+                                        'fk_place_id'=>$verifier_duty_data_row['place_id'],
+                                        'date'=>$verifier_duty_data_row['duty_date'],
+                                        'created_at'=>$verifier_duty_data_row['onCreated'],
+                                        'updated_at'=>$verifier_duty_data_row['updatedDate'],
+                                    );
+                                    $this->model->insertData('tbl_duty_allocation',$insert_verifier_logged_in_data);
+                                        }
+
+                    }
+                    
+            }
+            $response['code'] = REST_Controller::HTTP_OK;
+            $response['status'] = true;
+            $response['message'] = 'success';
+            echo json_encode($response);
+        }
 }

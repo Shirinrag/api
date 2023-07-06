@@ -21,7 +21,7 @@ class Database_migration_model extends CI_Model {
 	 {
 	 		$this->db->select('*');
 	 		$this->db->from('ci_booking');
-	 		$this->db->limit('10');
+	 		// $this->db->limit('10');
 	 		$query = $this->db->get();
         	$result = $query->result_array();
         	return $result;
