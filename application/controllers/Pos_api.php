@@ -759,7 +759,6 @@ class Pos_api extends REST_Controller {
         }
         echo json_encode($response);
     }
-
     public function reset_password_post()
     {
         $response = array('code' => - 1, 'status' => false, 'message' => '');
@@ -823,6 +822,101 @@ class Pos_api extends REST_Controller {
                 
             }
         }else{
+            $response['code'] = REST_Controller::HTTP_UNAUTHORIZED;
+            $response['message'] = 'Unauthorised';
+        }
+        echo json_encode($response);
+    }
+
+    public function pos_booking_verify_post()
+    {
+        $response = array('code' => - 1, 'status' => false, 'message' => '');
+        $validate = validateToken();
+        if ($validate) {            
+            $id = $this->input->post('id');
+            $verifier_id = $this->input->post('verifier_id');
+            $verify_status = $this->input->post('verify_status');
+            
+            if(empty($id)){
+                $response['message']= "Id is required";
+                $response['code'] = 201;
+            }else if(empty($verifier_id)){
+                $response['message']= "Verifier Id is required";
+                $response['code'] = 201;
+            }else if(empty($verify_status)){
+                $response['message']= "Verifier Status is required";
+                $response['code'] = 201;
+            }else{          
+                    if($verify_status==true){
+                        $verify_status_1 = 1;
+                    }else{
+                        $verify_status_1 = 2;
+                    }
+                   $curl_data = array(
+                        'fk_booking_id'=>$id,
+                        'fk_verifier_id'=>$verifier_id,
+                        'verify_status'=>$verify_status,
+                   );
+
+                   $this->model->insertData('tbl_booking_verify',$curl_data);
+
+                   if($verify_status==true){
+                         $booking_status = array(
+                                'fk_booking_id'=>$id,
+                                'fk_status_id'=>1,
+                                'used_status'=>1
+                        );
+                        $this->model->insertData('tbl_booking_status',$booking_status);
+                        $booking_details = $this->model->selectWhereData('tbl_booking',array('id'=>$id),array('booking_id','fk_user_id'));
+                        $this->load->model('pushnotification_model');
+                        $this->pushnotification_model->booking_accepted($booking_details['fk_user_id'],$booking_details['booking_id']);
+                   }else{
+                        $booking_status = array(
+                                'fk_booking_id'=>$id,
+                                'fk_status_id'=>3,
+                                'used_status'=>1
+                        );
+                        $this->model->insertData('tbl_booking_status',$booking_status);
+                        $booking_details = $this->model->selectWhereData('tbl_booking',array('id'=>$id),array('booking_id','fk_user_id'));
+                        $this->load->model('pushnotification_model');
+                        $this->pushnotification_model->booking_rejected($booking_details['fk_user_id'],$booking_details['booking_id']);
+                   }          
+                $response['code'] = REST_Controller::HTTP_OK;
+                $response['status'] = true;
+                $response['message'] = "success";
+            }
+        }else{
+            $response['code'] = REST_Controller::HTTP_UNAUTHORIZED;
+            $response['message'] = 'Unauthorised';
+        }
+        echo json_encode($response);
+    }
+
+    public function pos_booking_list_post()
+    {
+       $response = array('code' => - 1, 'status' => false, 'message' => '');
+        $validate = validateToken();
+        if ($validate) {
+                $place_id = $this->input->post('place_id');
+                if(empty($place_id)){
+                    $response['message'] = "Place Id is required";
+                    $response['code'] = 201;
+                }else{
+                        $this->load->model('user_model');
+                        $ongoing_unverified_booking_list = $this->user_model->ongoing_unverified_pos_booking_list($place_id);
+                        
+                        $accepted_pos_booking_list = $this->user_model->accepted_pos_booking_list($place_id);
+                        $rejected_pos_booking = $this->user_model->rejected_pos_booking_list($place_id);
+                        // $history_booking = $this->user_model->history_booking_list($place_id);
+                        $response['code'] = REST_Controller::HTTP_OK;
+                        $response['status'] = true;
+                        $response['message'] = 'success';
+                        $response['ongoing_unverified_booking_list'] = $ongoing_unverified_booking_list;
+                        $response['accepted_pos_booking_list'] = $accepted_pos_booking_list;
+                        $response['rejected_pos_booking'] = $rejected_pos_booking;
+                        // $response['history_booking'] = $history_booking;           
+                }
+        }else {
             $response['code'] = REST_Controller::HTTP_UNAUTHORIZED;
             $response['message'] = 'Unauthorised';
         }

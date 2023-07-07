@@ -1476,4 +1476,133 @@ class User_api extends REST_Controller {
 		    }
 		    echo json_encode($response);
     }
+    public function place_pos_booking_post()
+    {
+        $response = array('code' => - 1, 'status' => false, 'message' => '');
+        $validate = validateToken();
+        if ($validate) {
+                $fk_user_id = $this->input->post('fk_user_id');
+                $fk_car_id = $this->input->post('fk_car_id');
+                $fk_place_id = $this->input->post('fk_place_id');
+                $booking_from_date = $this->input->post('booking_from_date');
+                $booking_to_date = $this->input->post('booking_to_date');
+                $booking_from_time = $this->input->post('booking_from_time');
+                $booking_to_time = $this->input->post('booking_to_time');
+                $total_hours = $this->input->post('total_hours');
+    
+                if(empty($fk_user_id)){
+                    $response['code']=201;
+                    $response['status']=false;
+                    $response['message']= "User Id is required";
+                }else if(empty($fk_place_id)){
+                    $response['code']=201;
+                    $response['status']=false;
+                    $response['message']= "Place Id is required";
+                }else if(empty($booking_from_date)){
+                    $response['code']=201;
+                    $response['status']=false;
+                    $response['message']= "From Date is required";
+                }else if(empty($booking_to_date)){
+                    $response['code']=201;
+                    $response['status']=false;
+                    $response['message']= "To Date is required";
+                }else if(empty($booking_from_time)){
+                    $response['code']=201;
+                    $response['status']=false;
+                    $response['message']= "From time is required";
+                }else if(empty($booking_to_time)){
+                    $response['code']=201;
+                    $response['status']=false;
+                    $response['message']= "To time is required";
+                }else if(empty($total_hours)){
+                    $response['code']=201;
+                    $response['status']=false;
+                    $response['message']= "Total hours is required";
+                }else{  
+                    $this->load->model('user_model');
+                    
+                        $reserved_slot_info = $this->model->selectWhereData('tbl_booking', array('fk_slot_id'=>$fk_slot_id,'fk_place_id'=>$fk_place_id,'booking_from_date'=>$booking_from_date,'booking_to_date'=>$booking_to_date,'booking_from_time'=>$booking_from_time),array('booking_to_time'));
+
+                        if(@$booking_from_time > @$reserved_slot_info['booking_to_time']){
+                                $vehicle_type_id = $this->model->selectWhereData('tbl_user_car_details',array('id'=>$fk_car_id),array('fk_vehicle_type_id'));
+                            
+                                        $reserve_from_time= date('H:i:s',strtotime($booking_from_time .'-10 minutes'));         
+                                        $reserve_to_time= date('H:i:s',strtotime($booking_to_time . ' +0 minutes'));
+                                        $booking_data = $this->user_model->get_last_booking_id();
+                                        if(empty($booking_data)){
+                                            $new_booking_id  = 'PAB00000001';
+                                        }else{
+                                                $explode = explode("B",$booking_data['booking_id']);
+                                                $count = 8-strlen($explode[1]+1);
+                                                $bookingId_rep =$explode[1]+1;                                                                              
+                                                for($i=0;$i<$count;$i++){
+                                                    $bookingId_rep='0'.$bookingId_rep;
+                                                }
+                                                $new_booking_id = 'PAB'.$bookingId_rep;
+                                        }
+
+                                        $curl_data = array(
+                                            'booking_id'=> $new_booking_id,
+                                            'fk_user_id'=> $fk_user_id,
+                                            'fk_car_id'=> $fk_car_id,
+                                            'fk_place_id'=> $fk_place_id,
+                                            'booking_from_date' =>$booking_from_date,
+                                            'booking_to_date' => $booking_to_date,
+                                            'booking_from_time' => $booking_from_time,
+                                            'booking_to_time' => $booking_to_time,
+                                            'reserve_from_time' => $reserve_from_time,
+                                            'reserve_to_time' => $reserve_to_time,
+                                            'total_hours' => $total_hours,
+                                            'fk_verify_booking_status'=>2,
+                                            'booking_type'=>2,
+                                        );
+                                        $last_inserted_id =  $this->model->insertData('tbl_booking',$curl_data);
+
+                                        $verifier_id = $this->model->selectWhereData('tbl_pos_duty_allocation',array('fk_place_id'=>$fk_place_id,'date'=>date('Y-m-d')),array('fk_verifier_id'));
+                                        $this->pushnotification_model->verifier_notify_booking($verifier_id['fk_verifier_id'],$new_booking_id);
+
+                                        $response['code'] = REST_Controller::HTTP_OK;
+                                        $response['status'] = true;
+                                        $response['message'] = 'Booking Request Done Successfully ';                            
+                        }else{
+                            $response['message'] ="Already booked until the"." ".$reserved_slot_info['booking_to_time'];
+                            $response['code']=201;
+                        }
+            }
+        }else {
+            $response['code'] = REST_Controller::HTTP_UNAUTHORIZED;
+            $response['message'] = 'Unauthorised';
+        }
+        echo json_encode($response);
+    }
+
+    public function pos_checkout_post()
+    {
+        $response = array('code' => - 1, 'status' => false, 'message' => '');
+        $validate = validateToken();
+        if ($validate) {
+                $id = $this->input->post('id');
+                if(empty($id)){
+                    $response['message'] = "Id is required";
+                    $response['code'] = 201;
+                }else{
+                        $this->model->updateData('tbl_booking_status',array('used_status'=>0),array('fk_booking_id'=>$id));
+
+                        $curl_data= array(
+                            'fk_booking_id'=>$id,
+                            'fk_status_id'=>2
+                        );
+                        $this->model->insertData('tbl_booking_status',$curl_data);                        
+                        $response['code'] = REST_Controller::HTTP_OK;
+                        $response['status'] = true;
+                        $response['message'] = 'Checked Out Successfully';
+                                 
+                }
+        }else {
+            $response['code'] = REST_Controller::HTTP_UNAUTHORIZED;
+            $response['message'] = 'Unauthorised';
+        }
+        echo json_encode($response);
+    }
+
 }

@@ -138,4 +138,31 @@ class Pushnotification_model extends CI_Model {
             return true;
         }
     }
+
+     public function booking_accepted($user_id='',$order_id=''){
+        if (!empty($user_id)) {
+            $notification_template_info = $this->model->selectwhereData('tbl_push_notification_messages',array('id'=>11,'del_status'=>'1'),array('title','message','image_path'));
+            $dynamic_data = array("{order_id}"); 
+            $dynamic_value = array($order_id);
+            $notification_data_post['title']=$notification_template_info['title']; 
+            $notification_data_post['message']=str_replace($dynamic_data,$dynamic_value,$notification_template_info['message']);
+            $this->pushnotifications->android($user_id,$notification_data_post);
+            return true;
+        } else {
+            return true;
+        }
+    }
+    public function booking_rejected($user_id='',$order_id=''){
+        if (!empty($user_id)) {
+            $notification_template_info = $this->model->selectwhereData('tbl_push_notification_messages',array('id'=>12,'del_status'=>'1'),array('title','message','image_path'));
+            $dynamic_data = array("{order_id}"); 
+            $dynamic_value = array($order_id);
+            $notification_data_post['title']=$notification_template_info['title']; 
+            $notification_data_post['message']=str_replace($dynamic_data,$dynamic_value,$notification_template_info['message']);
+            $this->pushnotifications->android($user_id,$notification_data_post);
+            return true;
+        } else {
+            return true;
+        }
+    }
 }

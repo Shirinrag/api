@@ -156,7 +156,7 @@ class Verifier_api extends REST_Controller {
                  $this->model->updateData('tbl_booking',array('fk_verify_booking_status'=>1),array('id'=>$booking_id));
                  $response['code'] = REST_Controller::HTTP_OK;
                  $response['status'] = true;
-                 $response['message'] = "Your Booking'". $booking_details['booking_id'] ."' is successfully verified by our Guid. '.'🚗😃 ";
+                 $response['message'] = "Your Booking'". $booking_details['booking_id'] ."' is successfully verified by our Guide. '.'🚗😃 ";
 
                 $this->load->model('pushnotification_model');
                 $this->pushnotification_model->verify_booking($booking_details['fk_user_id'],$booking_details['booking_id']);
