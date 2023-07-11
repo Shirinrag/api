@@ -1195,7 +1195,8 @@ class Verifier_api extends REST_Controller {
                                         'price'=>$monthly_pass_details['cost'],
                                         'discount_price'=>$discount_price,
                                         'total_price'=> $monthly_pass_details['cost'] - $discount_price,
-                                        'status'=>'Renewal'
+                                        'status'=>'Renewal',
+                                        'car_no'=>$car_no
                                     );      
                                     $this->model->insertData('tbl_user_pass_details',$curl_data);
                                     $response['code'] = REST_Controller::HTTP_OK;

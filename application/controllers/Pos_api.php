@@ -360,6 +360,9 @@ class Pos_api extends REST_Controller {
             $device_id = $this->input->post('device_id');
             $nfc_device_id = $this->input->post('nfc_device_id');
             $reason = $this->input->post('reason');
+            $fk_booking_id = $this->input->post('fk_booking_id');
+            $fk_user_id = $this->input->post('fk_user_id');
+            $primary_key = $this->input->post('primary_key');
             if(empty($fk_lang_id)){
                 $response['message'] ="Language Id is required";
                 $response['code'] =201;
@@ -421,6 +424,8 @@ class Pos_api extends REST_Controller {
 
                         if($pass_previous_details['to_date'] > $current_date){
                             $curl_data=array(
+                                'fk_booking_id'=>$fk_booking_id,
+                                'fk_user_id'=>$fk_user_id,
                                 'fk_place_id'=>$fk_place_id,
                                 'fk_verifier_id' =>$fk_verifier_id,
                                 'fk_vehicle_type_id'=>$fk_vehicle_type_id,
@@ -437,7 +442,8 @@ class Pos_api extends REST_Controller {
                                 'latitude'=>$latitude,
                                 'longitude'=>$longitude,
                                 'book_status'=>$book_status,
-                                 'reason'=>$reason,
+                                'reason'=>$reason,
+                                'primary_key'=>$primary_key,
                             );
                             $this->model->insertData('tbl_pos_booking',$curl_data);
                             $response['code'] = REST_Controller::HTTP_OK;
@@ -459,6 +465,8 @@ class Pos_api extends REST_Controller {
                         }
                 }else{
                         $curl_data=array(
+                            'fk_booking_id'=>$fk_booking_id,
+                            'fk_user_id'=>$fk_user_id,
                             'fk_place_id'=>$fk_place_id,
                             'fk_verifier_id' =>$fk_verifier_id,
                             'fk_vehicle_type_id'=>$fk_vehicle_type_id,
@@ -476,6 +484,7 @@ class Pos_api extends REST_Controller {
                             'longitude'=>$longitude,
                             'book_status'=>$book_status,
                             'reason'=>$reason,
+                            'primary_key'=>$primary_key,
                         );
                         $this->model->insertData('tbl_pos_booking',$curl_data);
                         $response['code'] = REST_Controller::HTTP_OK;
@@ -499,6 +508,8 @@ class Pos_api extends REST_Controller {
         $response = array('code' => - 1, 'status' => false, 'message' => '');
         $validate = validateToken();
         if ($validate) {
+            $fk_booking_id = $this->input->post('fk_booking_id');
+            $fk_user_id = $this->input->post('fk_user_id');
             $fk_place_id = $this->input->post('fk_place_id');
             $fk_verifier_id = $this->input->post('fk_verifier_id');
             $fk_vehicle_type_id = $this->input->post('fk_vehicle_type_id');
@@ -518,6 +529,7 @@ class Pos_api extends REST_Controller {
             $payment_type = $this->input->post('payment_type');
             $nfc_device_id = $this->input->post('nfc_device_id');
             $reason = $this->input->post('reason');
+            $primary_key = $this->input->post('primary_key');
             if(empty($fk_lang_id)){
                 $response['message'] ="Language Id is required";
                 $response['code'] =201;
@@ -600,6 +612,9 @@ class Pos_api extends REST_Controller {
                 $response['code'] =201;
             }else{
                $pos_device_id = $this->model->selectWhereData('tbl_pos_device',array('pos_device_id'=>$device_id),array('id'));
+
+               $data = $this->model->selectWhereData('tbl_pos_booking',array('primary_key'=>$primary_key),array('fk_booking_id','fk_user_id'));
+
                if(!empty($nfc_device_id)){
                         $nfc_device = $this->model->selectWhereData('tbl_nfc_device',array('nfc_device_id'=>$nfc_device_id),array('id'));
                         $pass_previous_details = $this->model->selectWhereData('tbl_user_pass_details',array('fk_nfc_device_id'=>$nfc_device['id'],'used_status'=>0),array('*'));
@@ -615,7 +630,11 @@ class Pos_api extends REST_Controller {
                             $response['status'] = false;
                             $response['message'] = 'Your Pass has expired on "'.$pass_previous_details['to_date'].'". Kindly Generate New Pass'; 
                         }else{
+
+                            
                             $curl_data=array(
+                                'fk_booking_id'=>$data['fk_booking_id'],
+                                'fk_user_id'=>$data['fk_user_id'],
                                 'fk_place_id'=>$fk_place_id,
                                 'fk_verifier_id' =>$fk_verifier_id,
                                 'fk_vehicle_type_id'=>$fk_vehicle_type_id,
@@ -636,6 +655,15 @@ class Pos_api extends REST_Controller {
                                 'reason'=>$reason,
                             );
                             $this->model->insertData('tbl_pos_booking',$curl_data);
+                            if(!empty($fk_booking_id)){
+                                $this->model->updateData('tbl_booking_status',array('used_status'=>0),array('fk_booking_id'=>$fk_booking_id));
+                                $booking_status = array(
+                                    'fk_booking_id'=>$fk_booking_id,
+                                    'fk_status_id'=>2,
+                                    'used_status'=>1
+                                );
+                                $this->model->insertData('tbl_booking_status',$booking_status);
+                            }
                             $response['code'] = REST_Controller::HTTP_OK;
                             $response['status'] = true;
                             if($fk_lang_id==1){
@@ -646,6 +674,8 @@ class Pos_api extends REST_Controller {
                         }
                     }else{
                         $curl_data=array(
+                                'fk_booking_id'=>$data['fk_booking_id'],
+                                'fk_user_id'=>$data['fk_user_id'],
                                 'fk_place_id'=>$fk_place_id,
                                 'fk_verifier_id' =>$fk_verifier_id,
                                 'fk_vehicle_type_id'=>$fk_vehicle_type_id,
@@ -906,15 +936,27 @@ class Pos_api extends REST_Controller {
                         $ongoing_unverified_booking_list = $this->user_model->ongoing_unverified_pos_booking_list($place_id);
                         
                         $accepted_pos_booking_list = $this->user_model->accepted_pos_booking_list($place_id);
-                        $rejected_pos_booking = $this->user_model->rejected_pos_booking_list($place_id);
-                        // $history_booking = $this->user_model->history_booking_list($place_id);
+                        foreach($accepted_pos_booking_list as $accepted_pos_booking_list_key => $accepted_pos_booking_list_row){
+                            if($accepted_pos_booking_list_row['verify_status'] == 1){
+                                $accepted_pos_booking_list[$accepted_pos_booking_list_key]['color_code']= "#008000";
+                            }else{
+                                $accepted_pos_booking_list[$accepted_pos_booking_list_key]['color_code']= "#FF0000";
+                            }
+                        }
+                        
+                        // $rejected_pos_booking = $this->user_model->rejected_pos_booking_list($place_id);
+                        // foreach ($rejected_pos_booking as $rejected_pos_booking_key => $rejected_pos_booking_row) {
+                        //     $rejected_pos_booking[$rejected_pos_booking_key]['color_code'] = "#FF0000";
+                        // }
+                        
+                        $completed_booking_list = $this->user_model->completed_booking_list($place_id);
                         $response['code'] = REST_Controller::HTTP_OK;
                         $response['status'] = true;
                         $response['message'] = 'success';
                         $response['ongoing_unverified_booking_list'] = $ongoing_unverified_booking_list;
-                        $response['accepted_pos_booking_list'] = $accepted_pos_booking_list;
-                        $response['rejected_pos_booking'] = $rejected_pos_booking;
-                        // $response['history_booking'] = $history_booking;           
+                        $response['status'] = $accepted_pos_booking_list;
+                        // $response['rejected_pos_booking'] = $rejected_pos_booking;
+                        $response['completed_booking_list'] = $completed_booking_list;           
                 }
         }else {
             $response['code'] = REST_Controller::HTTP_UNAUTHORIZED;

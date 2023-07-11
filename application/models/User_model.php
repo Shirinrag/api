@@ -258,18 +258,20 @@ class User_model extends CI_Model {
       return $query->result_array();
 	}
 
-	public function ongoing_unverified_pos_booking_list($place_id="")
+		public function ongoing_unverified_pos_booking_list($place_id="")
 	{
-		$this->db->select('tbl_booking.id,tbl_booking.booking_id,tbl_booking.booking_from_date,tbl_booking.booking_to_date,tbl_booking.booking_from_time,tbl_booking.booking_to_time,tbl_booking.total_hours,tbl_user_car_details.car_number');
+		$this->db->select('tbl_booking.id,tbl_booking.fk_user_id,tbl_booking.booking_id,tbl_booking.booking_from_date,tbl_booking.booking_to_date,tbl_booking.booking_from_time,tbl_booking.booking_to_time,tbl_booking.total_hours,tbl_user_car_details.car_number');
 		$this->db->from('tbl_booking');
 		$this->db->join('tbl_user_car_details','tbl_booking.fk_car_id=tbl_user_car_details.id','left');
 		$this->db->where('tbl_booking.fk_place_id',$place_id);
+		$this->db->where('tbl_booking.fk_verify_booking_status',2);
+		$this->db->where('tbl_booking.booking_type',2);
 		$query = $this->db->get();
-      return $query->result_array();
+        return $query->result_array();
 	}
 	public function accepted_pos_booking_list($place_id='')
 	{
-		$this->db->select('tbl_booking.id,tbl_booking.booking_id,tbl_booking.booking_from_date,tbl_booking.booking_to_date,tbl_booking.booking_from_time,tbl_booking.booking_to_time,tbl_booking.total_hours,tbl_user_car_details.car_number,tbl_status_master.status,tbl_booking_status.fk_status_id,tbl_booking_verify.verify_status,tbl_slot_info.display_id');
+		$this->db->select('tbl_booking.id,tbl_booking.fk_user_id,tbl_booking.booking_id,tbl_booking.booking_from_date,tbl_booking.booking_to_date,tbl_booking.booking_from_time,tbl_booking.booking_to_time,tbl_booking.total_hours,tbl_user_car_details.car_number,tbl_status_master.status,tbl_booking_status.fk_status_id,tbl_booking_verify.verify_status,tbl_slot_info.display_id');
 		$this->db->from('tbl_booking');
 		$this->db->join('tbl_user_car_details','tbl_booking.fk_car_id=tbl_user_car_details.id','left');
 		$this->db->join('tbl_booking_status','tbl_booking_status.fk_booking_id=tbl_booking.id','left');
@@ -277,8 +279,17 @@ class User_model extends CI_Model {
 		$this->db->join('tbl_booking_verify','tbl_booking_verify.fk_booking_id=tbl_booking.id','left');
 		$this->db->join('tbl_slot_info','tbl_booking.fk_slot_id=tbl_slot_info.id','left');
 		$this->db->where('tbl_booking.fk_place_id',$place_id);
-		$this->db->where('tbl_booking_verify.verify_status',1);
-		$this->db->where('tbl_status_master.id',1);
+		$this->db->where('tbl_booking.booking_type',2);
+		$this->db->where('tbl_status_master.id !=',2);
+		$this->db->where('tbl_booking_status.used_status',1);
+// 		$this->db->where('tbl_booking.fk_verify_booking_status',1);
+// 		$this->db->where('tbl_booking_verify.verify_status',1);
+// 		$this->db->where('tbl_booking_verify.verify_status !=',2);
+// 		$this->db->where('tbl_status_master.id',1);
+// 		$this->db->where('tbl_booking_status.used_status',1);
+// 		$this->db->where('tbl_booking.fk_verify_booking_status !=',2);
+// 		$this->db->where('tbl_booking.fk_verify_booking_status !=',3);
+			
 		$this->db->group_by('tbl_booking.id');
 		$query = $this->db->get();
       return $query->result_array();
@@ -293,10 +304,43 @@ class User_model extends CI_Model {
 		$this->db->join('tbl_booking_verify','tbl_booking_verify.fk_booking_id=tbl_booking.id','left');
 		$this->db->join('tbl_slot_info','tbl_booking.fk_slot_id=tbl_slot_info.id','left');
 		$this->db->where('tbl_booking.fk_place_id',$place_id);
+		$this->db->where('tbl_booking.booking_type',2);
+		$this->db->where('tbl_booking.fk_verify_booking_status',3);
 		$this->db->where('tbl_booking_verify.verify_status',2);
 		$this->db->where('tbl_status_master.id',3);
+		
+		$this->db->where('tbl_booking_status.used_status',1);
+		$this->db->where('tbl_booking.fk_verify_booking_status !=',2);	
+		$this->db->where('tbl_booking.fk_verify_booking_status !=',1);
+	   // $this->db->where('tbl_booking.fk_verify_booking_status',3);
 		$this->db->group_by('tbl_booking.id');
 		$query = $this->db->get();
       return $query->result_array();
+	}
+	public function completed_booking_list($place_id='')
+	{
+			$this->db->select('tbl_booking.id,tbl_booking.fk_user_id,tbl_booking.booking_id,tbl_booking.booking_from_date,tbl_booking.booking_to_date,tbl_booking.booking_from_time,tbl_booking.booking_to_time,tbl_booking.total_hours,tbl_user_car_details.car_number,tbl_status_master.status,tbl_booking_status.fk_status_id,tbl_booking_verify.verify_status');
+		$this->db->from('tbl_booking');
+		$this->db->join('tbl_user_car_details','tbl_booking.fk_car_id=tbl_user_car_details.id','left');
+		$this->db->join('tbl_booking_status','tbl_booking_status.fk_booking_id=tbl_booking.id','left');
+		$this->db->join('tbl_status_master','tbl_booking_status.fk_status_id=tbl_status_master.id','left');
+		$this->db->join('tbl_booking_verify','tbl_booking_verify.fk_booking_id=tbl_booking.id','left');
+		
+		$this->db->where('tbl_booking.fk_place_id',$place_id);
+		$this->db->where('tbl_booking.booking_type',2);
+		// $this->db->where('tbl_booking.fk_verify_booking_status',1);
+		// $this->db->where('tbl_booking_verify.verify_status',1);
+		// $this->db->where('tbl_booking_verify.verify_status !=',2);
+		$this->db->where('tbl_status_master.id',2);
+		$this->db->where('tbl_booking_status.used_status',1);
+		// $this->db->where('tbl_booking_status.status',2);
+		// $this->db->where('tbl_booking.fk_verify_booking_status !=',2);
+		// $this->db->where('tbl_booking.fk_verify_booking_status !=',3);
+			
+		$this->db->group_by('tbl_booking.id');
+		$query = $this->db->get();
+      return $query->result_array();
+
+
 	}
 }

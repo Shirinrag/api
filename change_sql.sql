@@ -48,3 +48,6 @@ ALTER TABLE `tbl_user_pass_details` CHANGE `from_date` `from_date` DATE NULL DEF
 
 ALTER TABLE `tbl_user_pass_details` ADD `price` DOUBLE NULL DEFAULT NULL AFTER `to_date`, ADD `discount_price` DOUBLE NULL DEFAULT NULL AFTER `price`, ADD `total_price` DOUBLE NULL DEFAULT NULL AFTER `discount_price`;
 ALTER TABLE `tbl_user_pass_details` CHANGE `fk_nfc_device_id` `nfc_device_id` VARCHAR(100) NULL DEFAULT NULL;
+ALTER TABLE `tbl_pos_booking` ADD `fk_booking_id` INT NULL DEFAULT NULL AFTER `id`;
+ALTER TABLE `tbl_pos_booking` ADD `fk_user_id` INT NULL DEFAULT NULL AFTER `fk_booking_id`;
+ALTER TABLE `tbl_pos_booking` ADD `primary_key` LONGTEXT NULL DEFAULT NULL AFTER `book_status`;

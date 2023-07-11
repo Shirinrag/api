@@ -243,4 +243,30 @@ class Vendor_api extends REST_Controller {
             }
             echo json_encode($response);
     }
+    public function vendor_dashboard_count()
+    {
+        $response = array('code' => - 1, 'status' => false, 'message' => '');
+            $validate = validateToken();
+            if ($validate) {
+               
+                $place_id = $this->input->post('place_id');
+                if(empty($place_id)){
+                    $response['message'] = "Vendor Id is required";
+                    $response['code'] = 201;
+                }else{
+                   $accept_booking_count = $this->model->CountWhereRecord('tbl_booking',array('fk_place_id'=>$place_id,'fk_verify_booking_status'=>1),array(count('id')));
+                   $rejected_booking_count = $this->model->CountWhereRecord('tbl_booking',array('fk_place_id'=>$place_id,'fk_verify_booking_status'=>3),array(count('id')));
+                    
+                   $response['code'] = REST_Controller::HTTP_OK;;
+                   $response['status'] = true;
+                   $response['message'] = 'success';
+                   $response['accept_booking_count'] = $accept_booking_count;
+                   $response['rejected_booking_count'] = $rejected_booking_count;
+                }
+            }else{
+                $response['code'] = REST_Controller::HTTP_UNAUTHORIZED;
+                $response['message'] = 'Unauthorised';
+            }
+            echo json_encode($response);
+    }
 }

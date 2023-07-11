@@ -251,6 +251,7 @@ $route['vendor-login-data'] = 'vendor_api/vendor_login_data';
 $route['vendor-place-list-data'] = 'vendor_api/vendor_place_list_data';
 $route['total-earning-data'] = 'vendor_api/total_earning_data';
 $route['vendor-booking-history'] = 'vendor_api/vendor_booking_history';
+$route['vendor-dashboard-count'] = 'vendor_api/vendor_dashboard_count';
 // ==================================== Report API ====================================
 $route['user-report-data'] = 'report_api/user_report_data';
 $route['bonus-report-data'] = 'report_api/bonus_report_data';
