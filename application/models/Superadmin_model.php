@@ -298,5 +298,24 @@ class Superadmin_model extends CI_Model {
         $result = $query->result_array();
         return $result;
     }
+    public function get_details_on_car_no($car_no='')
+    {
+        $this->db->select('id,fk_user_id');
+        $this->db->from('tbl_user_car_details');
+        $this->db->like('car_number', $car_no);
+        $query = $this->db->get();
+        return $query->result_array();
+    }
+
+    public function get_booking_id($car_no='')
+    {
+        $this->db->select('tbl_booking.id,tbl_booking.fk_user_id,tbl_booking_status.fk_booking_id,tbl_pos_booking.id as pos_id');
+        $this->db->from('tbl_booking');
+        $this->db->join('tbl_booking_status','tbl_booking_status.fk_booking_id=tbl_booking.id','left');
+        $this->db->join('tbl_pos_booking','tbl_booking.fk_pos_booking_id=tbl_pos_booking.id','left');
+
+
+
+    }
 }
 	

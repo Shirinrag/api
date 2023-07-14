@@ -1558,8 +1558,8 @@ class User_api extends REST_Controller {
                                         );
                                         $last_inserted_id =  $this->model->insertData('tbl_booking',$curl_data);
 
-                                        $verifier_id = $this->model->selectWhereData('tbl_pos_duty_allocation',array('fk_place_id'=>$fk_place_id,'date'=>date('Y-m-d')),array('fk_verifier_id'));
-                                        $this->pushnotification_model->verifier_notify_booking($verifier_id['fk_verifier_id'],$new_booking_id);
+                                        $verifier_id = $this->model->selectWhereData('tbl_pos_duty_allocation',array('fk_place_id'=>$fk_place_id,'date'=>date('Y-m-d')),array('fk_pos_verifier_id'));
+                                        $this->pushnotification_model->verifier_notify_booking($verifier_id['fk_pos_verifier_id'],$new_booking_id);
 
                                         $response['code'] = REST_Controller::HTTP_OK;
                                         $response['status'] = true;

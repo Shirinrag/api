@@ -342,6 +342,8 @@ class Pos_api extends REST_Controller {
         $response = array('code' => - 1, 'status' => false, 'message' => '');
         $validate = validateToken();
         if ($validate) {
+            $fk_booking_id = $this->input->post('fk_booking_id');
+            $fk_user_id = $this->input->post('fk_user_id');
             $fk_place_id = $this->input->post('fk_place_id');
             $fk_verifier_id = $this->input->post('fk_verifier_id');
             $fk_vehicle_type_id = $this->input->post('fk_vehicle_type_id');
@@ -360,8 +362,6 @@ class Pos_api extends REST_Controller {
             $device_id = $this->input->post('device_id');
             $nfc_device_id = $this->input->post('nfc_device_id');
             $reason = $this->input->post('reason');
-            $fk_booking_id = $this->input->post('fk_booking_id');
-            $fk_user_id = $this->input->post('fk_user_id');
             $primary_key = $this->input->post('primary_key');
             if(empty($fk_lang_id)){
                 $response['message'] ="Language Id is required";
@@ -375,14 +375,16 @@ class Pos_api extends REST_Controller {
             }else if(empty($fk_vehicle_type_id)){
                 $response['message'] ="Vehicle Type Id is required";
                 $response['code'] =201;
-            }else if(empty($car_no)){
-                if($fk_lang_id ==1){
-                        $response['message'] ="Car No is required";
-                }else{
-                    $response['message'] ="कार नंबर आवश्यक है";
-                }
-                $response['code'] =201;
-            }else if(empty($from_date)){
+            }
+            // else if(empty($car_no)){
+            //     if($fk_lang_id ==1){
+            //             $response['message'] ="Car No is required";
+            //     }else{
+            //         $response['message'] ="कार नंबर आवश्यक है";
+            //     }
+            //     $response['code'] =201;
+            // }
+            else if(empty($from_date)){
                 if($fk_lang_id ==1){
                     $response['message'] ="From Date is required";
                 }else{
@@ -416,6 +418,7 @@ class Pos_api extends REST_Controller {
                 $response['message'] ="Device is required";
                 $response['code'] =201;
             }else{
+                $this->load->model('superadmin_model');
                 $pos_device_id = $this->model->selectWhereData('tbl_pos_device',array('pos_device_id'=>$device_id),array('id'));
                 if(!empty($nfc_device_id)){
                         $nfc_device = $this->model->selectWhereData('tbl_nfc_device',array('nfc_device_id'=>$nfc_device_id),array('id'));
@@ -445,7 +448,19 @@ class Pos_api extends REST_Controller {
                                 'reason'=>$reason,
                                 'primary_key'=>$primary_key,
                             );
-                            $this->model->insertData('tbl_pos_booking',$curl_data);
+                            // $last_inserted_id = $this->model->insertData('tbl_pos_booking',$curl_data);
+                            $car_id = $this->superadmin_model->get_details_on_car_no($car_no);
+                           
+                            foreach ($car_id as $car_id_key => $car_id_row) {
+                                $booking_data = $this->superadmin_model->get_booking_id($car_id_row['id']);
+
+                                // $this->model->selectWhereData('tbl_booking',array('fk_car_id'=>$car_id_row['id'],'fk_pos_booking_id'=>""),array('id','fk_user_id'),true,array('id','DESC'),true,array('id',"DESC"));
+                            }
+                           $update_data = array(
+                                    'fk_booking_id'=>$booking_data['id'],
+                                    'fk_user_id'=>$booking_data['fk_user_id'],
+                                );
+                            $this->model->updateData('tbl_pos_booking',$update_data,array('id'=>$last_inserted_id));
                             $response['code'] = REST_Controller::HTTP_OK;
                             $response['status'] = true;
                             if($fk_lang_id==1){
@@ -486,7 +501,30 @@ class Pos_api extends REST_Controller {
                             'reason'=>$reason,
                             'primary_key'=>$primary_key,
                         );
-                        $this->model->insertData('tbl_pos_booking',$curl_data);
+                        $last_inserted_id = $this->model->insertData('tbl_pos_booking',$curl_data);
+                      
+                        $car_id = $this->superadmin_model->get_details_on_car_no($car_no);
+                      
+                        $current_time = date('h:i:s');
+                     
+                        $booking_from_time= date('H:i:s',strtotime($current_time .'-30 minutes'));         
+                        $booking_to_time= date('H:i:s',strtotime($current_time . ' +30 minutes'));
+                        
+                        foreach ($car_id as $car_id_key => $car_id_row) {
+                            $booking_data = $this->model->selectWhereData('tbl_booking',array('fk_car_id'=>$car_id_row['id'],'booking_from_date'=>$from_date,'booking_from_time >='=>$booking_from_time,'booking_from_time <='=>$booking_to_time),array('id','fk_user_id'),true,array('booking_from_time','ASC'));
+                        }                         
+                        if(!empty($booking_data)){
+                            $update_data = array(
+                                'fk_booking_id'=>$booking_data['id'],
+                                'fk_user_id'=>$booking_data['fk_user_id'],
+                            );
+                            $this->model->updateData('tbl_pos_booking',$update_data,array('id'=>$last_inserted_id));
+
+                            $update_booking_data = array(
+                                'fk_pos_booking_check_in_id'=>$last_inserted_id,
+                            );
+                            $this->model->updateData('tbl_booking',$update_booking_data,array('id'=>$booking_data['id']));
+                        }
                         $response['code'] = REST_Controller::HTTP_OK;
                         $response['status'] = true;
                         if($fk_lang_id==1){
@@ -958,6 +996,30 @@ class Pos_api extends REST_Controller {
                         // $response['rejected_pos_booking'] = $rejected_pos_booking;
                         $response['completed_booking_list'] = $completed_booking_list;           
                 }
+        }else {
+            $response['code'] = REST_Controller::HTTP_UNAUTHORIZED;
+            $response['message'] = 'Unauthorised';
+        }
+        echo json_encode($response);
+    }
+
+    public function get_all_pos_checked_in_data_post()
+    {
+        $response = array('code' => - 1, 'status' => false, 'message' => '');
+        $validate = validateToken();
+        if ($validate) {
+             $place_id = $this->input->post('place_id');
+                if(empty($place_id)){
+                    $response['message'] = "Place Id is required";
+                    $response['code'] = 201;
+                }else{
+                    $this->load->model('user_model');
+                    $check_in_data = $this->model->selectWhereData('tbl_pos_booking',array('fk_place_id'=>$place_id,'book_status'=>1),array('*'),false);
+                    $response['code'] = REST_Controller::HTTP_OK;
+                    $response['status'] = true;
+                    $response['message'] = 'success';
+                    $response['checked_in_data']= $check_in_data;
+                }                                  
         }else {
             $response['code'] = REST_Controller::HTTP_UNAUTHORIZED;
             $response['message'] = 'Unauthorised';
