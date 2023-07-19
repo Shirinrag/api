@@ -27,7 +27,7 @@ class Pos_api extends REST_Controller {
         $response = array('status' => false, 'msg' => 'Oops! Please try again later.', 'code' => 200);
         echo json_encode($response);
     }
-    public function register_pos_verifier_post()
+     public function register_pos_verifier_post()
     {
         $response = array('code' => - 1, 'status' => false, 'message' => '');
         $validate = validateToken();
@@ -42,6 +42,8 @@ class Pos_api extends REST_Controller {
                 $lang_id = $this->input->post('lang_id');
                 $pan_card= $this->input->post('pan_card');
                  $aadhaar_card= $this->input->post('aadhaar_card');
+                 $business_registration_number = $this->input->post('business_registration_number');
+                 $business_registration_name= $this->input->post('business_registration_name');
                 if(empty($first_name)){
                     $response['message'] = "First Name is required";
                     $response['code'] = 201;
@@ -85,7 +87,7 @@ class Pos_api extends REST_Controller {
                         }
                         $response['error_status'] = 'username';       
                     }else{
-                        // $verify_device_id = $this->model->CountWhereRecord('tbl_pos_device', array('pos_device_id'=>$device_id));
+                        $verify_device_id = $this->model->CountWhereRecord('tbl_pos_device', array('pos_device_id'=>$device_id));
                         // if($verify_device_id > 0){
                                 $is_signature_file = true;
                                 if (!empty($_FILES['pan_card']['name'])) {
@@ -107,11 +109,12 @@ class Pos_api extends REST_Controller {
                                     } else {
                                         $pan_card = 'uploads/' . $test_image;
                                     }
-                                } else if (empty($image)) {
-                                    $is_signature_file = false;
-                                    $response['status'] = 'failure';
-                                    $response['error'] = array('image' => "Image required",);
                                 }
+                                // else if (empty($image)) {
+                                //     $is_signature_file = false;
+                                //     $response['status'] = 'failure';
+                                //     $response['error'] = array('image' => "Image required",);
+                                // }
                                 if (!empty($_FILES['aadhaar_card']['name'])) {
                                     $filename1 = $_FILES['aadhaar_card']['name'];
                                     $ext = pathinfo($filename1, PATHINFO_EXTENSION);
@@ -131,11 +134,13 @@ class Pos_api extends REST_Controller {
                                     } else {
                                         $aadhaar_card = 'uploads/' . $test_image1;
                                     }
-                                } else if (empty($image1)) {
-                                    $is_signature_file = false;
-                                    $response['status'] = 'failure';
-                                    $response['error'] = array('image' => "Image required",);
                                 }
+                                
+                                // else if (empty($image1)) {
+                                //     $is_signature_file = false;
+                                //     $response['status'] = 'failure';
+                                //     $response['error'] = array('image' => "Image required",);
+                                // }
                                 if ($is_signature_file) {
                                         $pos_device_id = $this->model->selectWhereData('tbl_pos_device',array('pos_device_id'=>$device_id),array('id'));
                                         $curl_data = array(
@@ -149,7 +154,9 @@ class Pos_api extends REST_Controller {
                                             'pan_card'=> $pan_card,
                                             'aadhaar_card' =>$aadhaar_card,
                                             'pos_device_id' => $pos_device_id['id'],
-                                            'isActive'=>0
+                                            'isActive'=>0,
+                                            'business_registration_name'=>$business_registration_name,
+                                            'business_registration_number' => $business_registration_number,
                                         );
                                         $this->model->insertData('pa_users',$curl_data);
                                         $response['code'] = REST_Controller::HTTP_OK;
@@ -336,7 +343,170 @@ class Pos_api extends REST_Controller {
         }
         echo json_encode($response);
     }
+    // Check in function for inside check-in button
+    //   public function check_in_post()
+    // {
+    //     $response = array('code' => - 1, 'status' => false, 'message' => '');
+    //     $validate = validateToken();
+    //     if ($validate) {
+    //         $fk_place_id = $this->input->post('fk_place_id');
+    //         $fk_verifier_id = $this->input->post('fk_verifier_id');
+    //         $fk_vehicle_type_id = $this->input->post('fk_vehicle_type_id');
+    //         $fk_lang_id = $this->input->post('fk_lang_id');
+    //         $car_no = $this->input->post('car_no');
+    //         $phone_no = $this->input->post('phone_no');
+    //         $from_date = $this->input->post('from_date');
+    //         $to_date = $this->input->post('to_date');
+    //         $from_time = $this->input->post('from_time');
+    //         $to_time = $this->input->post('to_time');
+    //         $total_hours = $this->input->post('total_hours');
+    //         $price = $this->input->post('price');
+    //         $latitude = $this->input->post('latitude');
+    //         $longitude = $this->input->post('longitude');
+    //         $book_status = $this->input->post('book_status');
+    //         $device_id = $this->input->post('device_id');
+    //         $nfc_device_id = $this->input->post('nfc_device_id');
+    //         $reason = $this->input->post('reason');
+    //         $fk_booking_id = $this->input->post('fk_booking_id');
+    //         $fk_user_id = $this->input->post('fk_user_id');
+    //         $primary_key = $this->input->post('primary_key');
+    //         $receipt_no = $this->input->post('receipt_no');
+    //         if(empty($fk_lang_id)){
+    //             $response['message'] ="Language Id is required";
+    //             $response['code'] =201;
+    //         }else if(empty($fk_place_id)){
+    //             $response['message'] ="Place Id is required";
+    //             $response['code'] =201;
+    //         }else if(empty($fk_verifier_id)){
+    //             $response['message'] ="Verifier Id is required";
+    //             $response['code'] =201;
+    //         }else if(empty($fk_vehicle_type_id)){
+    //             $response['message'] ="Vehicle Type Id is required";
+    //             $response['code'] =201;
+    //         }else if(empty($car_no)){
+    //             if($fk_lang_id ==1){
+    //                     $response['message'] ="Car No is required";
+    //             }else{
+    //                 $response['message'] ="कार नंबर आवश्यक है";
+    //             }
+    //             $response['code'] =201;
+    //         }else if(empty($from_date)){
+    //             if($fk_lang_id ==1){
+    //                 $response['message'] ="From Date is required";
+    //             }else{
+    //                 $response['message'] ="दिनांक से आवश्यक है";
+    //             }
+    //             $response['code'] =201;
+    //         }else if(empty($from_time)){
+    //             if($fk_lang_id ==1){
+    //                 $response['message'] ="From Time is required";
+    //             }else{
+    //                 $response['message'] ="समय से आवश्यक है";
+    //             }
+    //             $response['code'] =201;
+    //         }else if(empty($latitude)){
+    //             $response['message'] ="Latitude is required";
+    //             $response['code'] =201;
+    //         }else if(empty($longitude)){
+    //             $response['message'] ="Longitude is required";
+    //             $response['code'] =201;
+    //         }else if(empty($book_status)){
+    //             $response['message'] ="Check-in Status is required";
+    //             $response['code'] =201;
+    //         }else if(empty($device_id)){
+    //             $response['message'] ="Device is required";
+    //             $response['code'] =201;
+    //         }else{
+    //             $pos_device_id = $this->model->selectWhereData('tbl_pos_device',array('pos_device_id'=>$device_id),array('id'));
+    //             // print_r($_POST);die;
+    //             if(!empty($nfc_device_id)){
+    //                     $nfc_device = $this->model->selectWhereData('tbl_nfc_device',array('nfc_device_id'=>$nfc_device_id),array('id'));
+    //                     $pass_previous_details = $this->model->selectWhereData('tbl_user_pass_details',array('fk_nfc_device_id'=>$nfc_device['id'],'used_status'=>1),array('*'));
+    //                     $current_date= date('Y-m-d');
 
+    //                     if($pass_previous_details['to_date'] > $current_date){
+    //                         $curl_data=array(
+    //                             'fk_booking_id'=>$fk_booking_id,
+    //                             'fk_user_id'=>$fk_user_id,
+    //                             'fk_place_id'=>$fk_place_id,
+    //                             'fk_verifier_id' =>$fk_verifier_id,
+    //                             'fk_vehicle_type_id'=>$fk_vehicle_type_id,
+    //                             'fk_device_id'=>$pos_device_id['id'],
+    //                             'fk_lang_id'=>$fk_lang_id,
+    //                             'car_no'=>$car_no,
+    //                             'phone_no'=>$phone_no,
+    //                             'from_date'=>$from_date,
+    //                             'to_date'=>$to_date,
+    //                             'from_time'=>$from_time,
+    //                             'to_time'=>$to_time,
+    //                             'total_hours'=>$total_hours,
+    //                             'price'=>$price,
+    //                             'latitude'=>$latitude,
+    //                             'longitude'=>$longitude,
+    //                             'book_status'=>$book_status,
+    //                             'reason'=>$reason,
+    //                             'primary_key'=>$primary_key,
+    //                             'receipt_no'=>$receipt_no,
+    //                         );
+    //                         $this->model->insertData('tbl_pos_booking',$curl_data);
+    //                         $response['code'] = REST_Controller::HTTP_OK;
+    //                         $response['status'] = true;
+    //                         if($fk_lang_id==1){
+    //                             $response['message'] = 'Checked-in Successfully';
+    //                         }else{
+    //                             $response['message'] = 'चेक-इन सफलतापूर्वक';
+    //                         }
+    //                     }else{
+    //                          $update_data = array(
+    //                             'used_status'=>0,
+    //                         );
+    //                         $this->model->updateData('tbl_user_pass_details',$update_data,array('id'=>$pass_previous_details['id']));
+
+    //                         $response['code'] = 201;
+    //                         $response['status'] = false;
+    //                         $response['message'] = 'Your Pass has expired on "'.$pass_previous_details['to_date'].'". Kindly Generate New Pass'; 
+    //                     }
+    //             }else{
+    //                     $curl_data=array(
+    //                         'fk_booking_id'=>$fk_booking_id,
+    //                         'fk_user_id'=>$fk_user_id,
+    //                         'fk_place_id'=>$fk_place_id,
+    //                         'fk_verifier_id' =>$fk_verifier_id,
+    //                         'fk_vehicle_type_id'=>$fk_vehicle_type_id,
+    //                         'fk_device_id'=>$pos_device_id['id'],
+    //                         'fk_lang_id'=>$fk_lang_id,
+    //                         'car_no'=>$car_no,
+    //                         'phone_no'=>$phone_no,
+    //                         'from_date'=>$from_date,
+    //                         'to_date'=>$to_date,
+    //                         'from_time'=>$from_time,
+    //                         'to_time'=>$to_time,
+    //                         'total_hours'=>$total_hours,
+    //                         'price'=>$price,
+    //                         'latitude'=>$latitude,
+    //                         'longitude'=>$longitude,
+    //                         'book_status'=>$book_status,
+    //                         'reason'=>$reason,
+    //                         'primary_key'=>$primary_key,
+    //                         'receipt_no'=>$receipt_no,
+    //                     );
+    //                     $this->model->insertData('tbl_pos_booking',$curl_data);
+    //                     $response['code'] = REST_Controller::HTTP_OK;
+    //                     $response['status'] = true;
+    //                     if($fk_lang_id==1){
+    //                         $response['message'] = 'Checked-in Successfully';
+    //                     }else{
+    //                         $response['message'] = 'चेक-इन सफलतापूर्वक';
+    //                     }
+    //             }                
+    //         }
+
+    //     }else {
+    //         $response['code'] = REST_Controller::HTTP_UNAUTHORIZED;
+    //         $response['message'] = 'Unauthorised';
+    //     }
+    //     echo json_encode($response);
+    // } 
     public function check_in_post()
     {
         $response = array('code' => - 1, 'status' => false, 'message' => '');
@@ -363,6 +533,8 @@ class Pos_api extends REST_Controller {
             $nfc_device_id = $this->input->post('nfc_device_id');
             $reason = $this->input->post('reason');
             $primary_key = $this->input->post('primary_key');
+            $receipt_no = $this->input->post('receipt_no');
+
             if(empty($fk_lang_id)){
                 $response['message'] ="Language Id is required";
                 $response['code'] =201;
@@ -447,6 +619,7 @@ class Pos_api extends REST_Controller {
                                 'book_status'=>$book_status,
                                 'reason'=>$reason,
                                 'primary_key'=>$primary_key,
+                                'receipt_no'=>$receipt_no,
                             );
                             // $last_inserted_id = $this->model->insertData('tbl_pos_booking',$curl_data);
                             $car_id = $this->superadmin_model->get_details_on_car_no($car_no);
@@ -500,31 +673,33 @@ class Pos_api extends REST_Controller {
                             'book_status'=>$book_status,
                             'reason'=>$reason,
                             'primary_key'=>$primary_key,
+                            'receipt_no'=>$receipt_no
                         );
                         $last_inserted_id = $this->model->insertData('tbl_pos_booking',$curl_data);
                       
                         $car_id = $this->superadmin_model->get_details_on_car_no($car_no);
                       
-                        $current_time = date('h:i:s');
+                        $current_time = date('H:i:s');
                      
                         $booking_from_time= date('H:i:s',strtotime($current_time .'-30 minutes'));         
                         $booking_to_time= date('H:i:s',strtotime($current_time . ' +30 minutes'));
                         
                         foreach ($car_id as $car_id_key => $car_id_row) {
                             $booking_data = $this->model->selectWhereData('tbl_booking',array('fk_car_id'=>$car_id_row['id'],'booking_from_date'=>$from_date,'booking_from_time >='=>$booking_from_time,'booking_from_time <='=>$booking_to_time),array('id','fk_user_id'),true,array('booking_from_time','ASC'));
-                        }                         
-                        if(!empty($booking_data)){
-                            $update_data = array(
-                                'fk_booking_id'=>$booking_data['id'],
-                                'fk_user_id'=>$booking_data['fk_user_id'],
-                            );
-                            $this->model->updateData('tbl_pos_booking',$update_data,array('id'=>$last_inserted_id));
+                            if(!empty($booking_data)){
+                                $update_data = array(
+                                    'fk_booking_id'=>$booking_data['id'],
+                                    'fk_user_id'=>$booking_data['fk_user_id'],
+                                );
+                                $this->model->updateData('tbl_pos_booking',$update_data,array('id'=>$last_inserted_id));
 
-                            $update_booking_data = array(
-                                'fk_pos_booking_check_in_id'=>$last_inserted_id,
-                            );
-                            $this->model->updateData('tbl_booking',$update_booking_data,array('id'=>$booking_data['id']));
-                        }
+                                $update_booking_data = array(
+                                    'fk_pos_booking_check_in_id'=>$last_inserted_id,
+                                );
+                                $this->model->updateData('tbl_booking',$update_booking_data,array('id'=>$booking_data['id']));
+                            }
+                        }                         
+                        
                         $response['code'] = REST_Controller::HTTP_OK;
                         $response['status'] = true;
                         if($fk_lang_id==1){
@@ -876,6 +1051,10 @@ class Pos_api extends REST_Controller {
                     if(!empty($nfc_device['id'])){
                         $pass_details = $this->model->selectWhereData('tbl_user_pass_details',array('fk_nfc_device_id'=>$nfc_device['id'],'used_status'=>1),array('*'));
                         $car_no = explode(",",$pass_details['car_no']);
+                        // foreach ($car_no as $car_no_key => $car_no_row) {
+                        //     $car_details = $this->model->selectWhereData('tbl_user_car_details',array('car_number'=>$car_no_row),array('fk_vehicle_type_id','id'));
+                        //     // $c
+                        // }
                         $pass_details['car_no']=$car_no;
                         $response['code'] = REST_Controller::HTTP_OK;
                         $response['status'] = true;

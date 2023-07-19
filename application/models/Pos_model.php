@@ -45,6 +45,7 @@ class Pos_model extends CI_Model {
          $this->db->join('tbl_vendor_map_place','tbl_vendor_map_place.fk_place_id=tbl_parking_place.id','left');
          $this->db->join('tbl_vendor','tbl_vendor_map_place.fk_vendor_id=tbl_vendor.id','left');
          $this->db->where('tbl_pos_device.pos_device_id',$device_id);
+         $this->db->where('tbl_pos_device_map.del_status',1);
          $query = $this->db->get();
          $result = $query->row_array();
          return $result;
