@@ -274,3 +274,5 @@ $route['add-new-data'] = 'common/add_new_data';
 $route['get-new-data'] = 'common/get_new_data';
 $route['truncate-table'] = 'common/truncate_table';
 $route['drop-table'] = 'common/drop_table';
+$route['save-otp'] = 'pos_api/save_otp';
+$route['get-status-on-device-id-otp'] = 'pos_api/get_status_on_device_id_otp';

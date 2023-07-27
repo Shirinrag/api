@@ -2068,12 +2068,14 @@ class Superadmin_api extends REST_Controller {
                 }else{
                         $vehicle_data = $this->model->selectWhereData('tbl_vehicle_type',array('id'=>$id),array('id','vehicle_type'));
                         $pass_days_data = $this->model->selectWhereData('tbl_pass_days',array('status'=>1),array('id','no_of_days'),false,array('sequence','ASC'));
-
+                        $this->load->model('superadmin_model');
+                        $currency_data = $this->superadmin_model->get_currency_data();
                         $response['code'] = REST_Controller::HTTP_OK;
                         $response['status'] = true;
                         $response['message'] = 'success';
                         $response['vehicle_data'] = $vehicle_data;
                         $response['pass_days_data'] = $pass_days_data;
+                        $response['currency_data'] = $currency_data;
                 }
         }else {
             $response['code'] = REST_Controller::HTTP_UNAUTHORIZED;

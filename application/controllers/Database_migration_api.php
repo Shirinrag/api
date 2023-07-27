@@ -50,6 +50,8 @@ class Database_migration_api extends REST_Controller {
                     'device_id'=> $users_data_row['device_id'],
                     'notifn_topic'=> $users_data_row['notifn_topic'],
                     'terms_condition'=> $users_data_row['terms_condition'],
+                    'created_at'=>$users_data_row['created_at'],
+                    'updated_at'=>$users_data_row['updated_at']
                 );
                 $inserted_id = $this->model->insertData('pa_users',$insert_user_data);
                 $insert_user_wallet_data = array(
@@ -71,7 +73,7 @@ class Database_migration_api extends REST_Controller {
 
             foreach ($users_data as $users_data_key => $users_data_row) {
                 $users_data_1 = $this->model->selectWhereData('pa_users',array('userName'=>$users_data_row['username']),array('phoneNo','id'));
-                $user_car_data = $this->model->selectWhereData('ci_car_details',array('user_id'=>$users_data_row['id']),array('car_number','is_deleted'));
+                $user_car_data = $this->model->selectWhereData('ci_car_details',array('user_id'=>$users_data_row['id']),array('car_number','is_deleted','created_date','updated_date'));
                 $status ="";
                 if($user_car_data['is_deleted']== 0){
                     $status = 1;
@@ -83,7 +85,9 @@ class Database_migration_api extends REST_Controller {
                          $insert_car_details = array(
                             'fk_user_id'=> $users_data_1['id'],
                             'car_number'=>$user_car_data['car_number'],
-                            'status'=>$status
+                            'status'=>$status,
+                            'created_at'=>$user_car_data['created_date'],
+                            'updated_at'=>$user_car_data['updated_date'],
                         ); 
                          $this->model->insertData('tbl_user_car_details',$insert_car_details);
                     }

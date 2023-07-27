@@ -81,15 +81,15 @@ class User_api extends REST_Controller {
                     			$response['message'] = 'Contact No is Already exist.';
             				}else{
             					$user_type = $this->model->selectWhereData('tbl_user_type',array('user_type'=>"User"),array('id'));
-            					$referral_code_id = $this->model->selectWhereData('tbl_referral_code',array('referral_code'=>$referral_code),array('id'));
-            					$curl_data =  array(
+            					// $referral_code_id = $this->model->selectWhereData('tbl_parking_place',array('referral_code'=>$referral_code),array('id'));
+                                $curl_data =  array(
             						'firstName' => $first_name,
             						'lastName' =>  $last_name,
             						'email' => $email,
             						'phoneNo' => $phone_no,
             						'address' => $address,
             						'image' => $profile_image,
-            						'referal_code' => $referral_code_id,
+            						'referal_code' => $referral_code,
             						'userName' => $first_name.$last_name,
             						'device_type' =>$device_type,
             						'notifn_topic' => $phone_no."PAUser",

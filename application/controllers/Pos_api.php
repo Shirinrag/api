@@ -273,12 +273,17 @@ class Pos_api extends REST_Controller {
             } 
         echo json_encode($response);
     }
-    public function get_all_vehicle_type_get()
+    public function get_all_vehicle_type_post()
     {
         $response = array('code' => - 1, 'status' => false, 'message' => '');
         $validate = validateToken();
         if ($validate) {
-            $vehicle_type = $this->model->selectWhereData('tbl_vehicle_type',array('del_status'=>1,'status'=>1),array('id','vehicle_type'),false);
+
+            $place_id = $this->input->post('place_id');
+            $this->load->model('pos_model');
+            $vehicle_type = $this->pos_model->get_all_vehicle_type_on_place_id($place_id);
+
+             // $this->model->selectWhereData('tbl_vehicle_type',array('del_status'=>1,'status'=>1),array('id','vehicle_type'),false);
             // unset($vehicle_type[0]);
             // unset($vehicle_type[1]);
             // unset($vehicle_type[3]);
@@ -1341,5 +1346,63 @@ class Pos_api extends REST_Controller {
         }
         echo json_encode($response);
        
+    }
+    public function save_otp_post()
+    {
+        $response = array('code' => - 1, 'status' => false, 'message' => '');
+        $validate = validateToken();
+        if ($validate) {
+                $mobile_no = $this->input->post('mobile_no');
+                $otp = get_random_strings('tbl_pos_user_data','otp');
+
+                if(empty($mobile_no)){
+                    $response['code']=201;
+                    $response['message']= "Mobile No is required";
+                }else{
+
+                        $curl_data= array(
+                            'mobile_no'=>$mobile_no,
+                            'otp'=>$otp,
+                        );
+                        $this->model->insertData('tbl_pos_user_data',$curl_data);
+
+                        $sender = "https://2factor.in/API/V1/03045a6a-36f6-11ec-a13b-0200cd936042/SMS/" . $mobile_no . '/' . $otp;
+                        $ch = curl_init();
+                        curl_setopt($ch, CURLOPT_URL, $sender);
+                        curl_setopt($ch, CURLOPT_HEADER, 0);
+                        curl_exec($ch);
+                        curl_close($ch);
+                        $response['code'] = REST_Controller::HTTP_OK;
+                        $response['status'] = true;
+                        $response['message'] = 'success';
+                }
+        }else {
+            $response['code'] = REST_Controller::HTTP_UNAUTHORIZED;
+            $response['message'] = 'Unauthorised';
+        }
+        echo json_encode($response);
+    }
+    public function get_status_on_device_id_otp_post()
+    {
+        $otp = $this->input->post_get('otp');
+        $device_id = $this->input->post_get('device_id');
+        $this->load->model('pos_model');
+        $device_id_data = $this->pos_model->get_device_data($device_id);
+        $count_otp = $this->model->CountWhereRecord('tbl_pos_user_data',array('otp'=>$otp,));
+        if(!empty($device_id_data['id'])){
+            if($count_otp == 1){
+                $response['status']=1;
+                $response['message']="success";
+            }else{
+                $response['status']=0;
+                $response['message'] ="OTP Does not Match";
+            }
+        }else{
+                $response['status']=0;
+                $response['message'] ="Device Id Does not Match";
+            }
+
+        echo json_encode($response);
+
     }
 }

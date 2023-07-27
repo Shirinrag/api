@@ -124,5 +124,30 @@ class Pos_model extends CI_Model {
         $result = $query->result_array();
         return $result;
     }
+
+    public function get_device_data($device_id='')
+    {
+       $this->db->select('tbl_device.device_id,tbl_slot_info.id');
+       $this->db->from('tbl_device');
+       $this->db->join('tbl_slot_info','tbl_slot_info.fk_machine_id=tbl_device.id');
+       $this->db->where('tbl_device.device_id',$device_id);
+        $query = $this->db->get();
+        $result = $query->row_array();
+        return $result;
+    }
+
+    public function get_all_vehicle_type_on_place_id($place_id='')
+    {
+       $this->db->select('tbl_parking_place_vehicle_type.fk_vehicle_type_id,tbl_vehicle_type.id,tbl_vehicle_type.vehicle_type');
+       $this->db->from('tbl_parking_place_vehicle_type');
+       $this->db->join('tbl_vehicle_type','tbl_parking_place_vehicle_type.fk_vehicle_type_id=tbl_vehicle_type.id','left');
+       $this->db->where('tbl_parking_place_vehicle_type.fk_place_id',$place_id);
+       $this->db->order_by('tbl_vehicle_type.id',"ASC");
+        $query = $this->db->get();
+        $result = $query->result_array();
+        return $result;
+    }
+
+    
 }
 	

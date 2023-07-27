@@ -60,3 +60,19 @@ function generate_request_id($tbl_name='',$column_name='')
         } while ($isUnique == false);
         return $randTemp;
     }
+
+    function get_random_strings($tbl_name='',$column_name='') 
+    { 
+        $CI = get_instance();
+        $randTemp = mt_rand(1000, 9999);
+        $isUnique = true;
+        do {
+            $result = $CI->db->get_where($tbl_name, array($column_name => $randTemp));
+            if ($result->num_rows() > 0) {
+                $isUnique = false;
+            } else {
+                $isUnique = true;
+            }
+        } while ($isUnique == false);
+        return $randTemp;
+    }

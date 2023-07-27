@@ -11,7 +11,7 @@ class Superadmin_model extends CI_Model {
 	{
 		$this->db->select('pa_users.*,tbl_user_car_details.car_number,CONCAT(pa_users.isActive,",",pa_users.id) AS statusdata');
 		$this->db->from('pa_users');
-		$this->db->join('tbl_user_car_details','tbl_user_car_details.fk_user_id=pa_users.id','left');
+        $this->db->join('tbl_user_car_details','tbl_user_car_details.fk_user_id=pa_users.id','left');
 		$this->db->where('pa_users.user_type',10);
 		$this->db->where('pa_users.del_status',1);
 		$this->db->order_by('pa_users.id','DESC');
@@ -307,15 +307,22 @@ class Superadmin_model extends CI_Model {
         return $query->result_array();
     }
 
-    public function get_booking_id($car_no='')
+    // public function get_booking_id($car_no='')
+    // {
+    //     $this->db->select('tbl_booking.id,tbl_booking.fk_user_id,tbl_booking_status.fk_booking_id,tbl_pos_booking.id as pos_id');
+    //     $this->db->from('tbl_booking');
+    //     $this->db->join('tbl_booking_status','tbl_booking_status.fk_booking_id=tbl_booking.id','left');
+    //     $this->db->join('tbl_pos_booking','tbl_booking.fk_pos_booking_id=tbl_pos_booking.id','left');
+    // }
+
+    public function get_currency_data()
     {
-        $this->db->select('tbl_booking.id,tbl_booking.fk_user_id,tbl_booking_status.fk_booking_id,tbl_pos_booking.id as pos_id');
-        $this->db->from('tbl_booking');
-        $this->db->join('tbl_booking_status','tbl_booking_status.fk_booking_id=tbl_booking.id','left');
-        $this->db->join('tbl_pos_booking','tbl_booking.fk_pos_booking_id=tbl_pos_booking.id','left');
-
-
-
+        $currency_id = array('24', '70');
+        $this->db->select('id,currency_symbol');
+        $this->db->from('tbl_currency');
+        $this->db->where_in('id',$currency_id);
+        $query = $this->db->get();
+        return $query->result_array();
     }
 }
 	
