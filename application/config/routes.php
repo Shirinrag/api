@@ -276,3 +276,4 @@ $route['truncate-table'] = 'common/truncate_table';
 $route['drop-table'] = 'common/drop_table';
 $route['save-otp'] = 'pos_api/save_otp';
 $route['get-status-on-device-id-otp'] = 'pos_api/get_status_on_device_id_otp';
+$route['update-bluetooth-device-status'] = 'superadmin_api/update_bluetooth_device_status';
