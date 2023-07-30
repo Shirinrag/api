@@ -1352,6 +1352,7 @@ class Pos_api extends REST_Controller {
         $response = array('code' => - 1, 'status' => false, 'message' => '');
         $validate = validateToken();
         if ($validate) {
+                $booking_id = $this->input->post('booking_id');
                 $mobile_no = $this->input->post('mobile_no');
                 $otp = get_random_strings('tbl_pos_user_data','otp');
 
@@ -1360,11 +1361,17 @@ class Pos_api extends REST_Controller {
                     $response['message']= "Mobile No is required";
                 }else{
 
-                        $curl_data= array(
-                            'mobile_no'=>$mobile_no,
+                        // $curl_data= array(
+                        //     'mobile_no'=>$mobile_no,
+                        //     'otp'=>$otp,
+                        // );
+                        // $this->model->insertData('tbl_pos_user_data',$curl_data);
+
+                         $curl_data= array(
                             'otp'=>$otp,
                         );
-                        $this->model->insertData('tbl_pos_user_data',$curl_data);
+                        $this->model->updateData('tbl_booking',$curl_data,array('id'=>$booking_id));
+
 
                         $sender = "https://2factor.in/API/V1/03045a6a-36f6-11ec-a13b-0200cd936042/SMS/" . $mobile_no . '/' . $otp;
                         $ch = curl_init();
