@@ -52,3 +52,10 @@ ALTER TABLE `tbl_pos_booking` ADD `fk_booking_id` INT NULL DEFAULT NULL AFTER `i
 ALTER TABLE `tbl_pos_booking` ADD `fk_user_id` INT NULL DEFAULT NULL AFTER `fk_booking_id`;
 ALTER TABLE `tbl_pos_booking` ADD `primary_key` LONGTEXT NULL DEFAULT NULL AFTER `book_status`;
 ALTER TABLE `tbl_pos_booking` ADD `receipt_no` VARCHAR(100) NULL DEFAULT NULL AFTER `reason`;
+
+
+ALTER TABLE `tbl_slot_info` ADD `bluetooth_device_name` VARCHAR(100) NULL DEFAULT NULL AFTER `bluetooth_device_status`;
+ALTER TABLE `tbl_slot_info` ADD `service_key` LONGTEXT NULL DEFAULT NULL AFTER `bluetooth_device_name`;
+ALTER TABLE `tbl_hours_price_slab` ADD `currency` INT NULL DEFAULT NULL AFTER `cost`;
+ALTER TABLE `tbl_pass_price_slab` ADD `fk_currency_id` INT NULL DEFAULT NULL AFTER `cost`;
+ALTER TABLE `tbl_hours_price_slab` ADD INDEX(`fk_vehicle_type_id`, `fk_currency_id`);

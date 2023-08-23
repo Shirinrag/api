@@ -680,7 +680,9 @@ class Superadmin_api extends REST_Controller {
                 $to_hours = $this->input->post('to_hours');
                 $to_hours = json_decode($to_hours,true);                
                 $price = $this->input->post('price');
-                $price = json_decode($price,true);       
+                $price = json_decode($price,true);      
+                 $currency = $this->input->post('currency');
+                $currency = json_decode($currency,true);       
                 $per_hour_charges = $this->input->post('per_hour_charges');
                 $fk_vehicle_type = $this->input->post('fk_vehicle_type');
                 $fk_vehicle_type = json_decode($fk_vehicle_type,true);
@@ -692,7 +694,9 @@ class Superadmin_api extends REST_Controller {
                 $no_of_days = $this->input->post('no_of_days');
                 $no_of_days = json_decode($no_of_days,true);                
                 $cost = $this->input->post('cost');
-                $cost = json_decode($cost,true);    
+                $cost = json_decode($cost,true); 
+                $currencys = $this->input->post('currencys');
+                $currencys = json_decode($currencys,true);    
                 if(empty($fk_vendor_id)){
                     $response['message'] = "First Name is required";
                     $response['code'] = 201;
@@ -765,14 +769,17 @@ class Superadmin_api extends REST_Controller {
                                 $from_hours_1 = @$from_hours[$fk_vehicle_type_row];
                                 $to_hours_1 = @$to_hours[$fk_vehicle_type_row];
                                 $cost_1 = @$price[$fk_vehicle_type_row];
+                                $currency = @$currency[$fk_vehicle_type_row];
                                 $no_of_days_1 = @$no_of_days[$fk_vehicle_type_row];
                                 $cost_11 = @$cost[$fk_vehicle_type_row];
+                                $currencys = @$currencys[$fk_vehicle_type_row];
                                
                                 foreach ($from_hours_1 as $from_hours_1_key => $from_hours_1_row) {
                                      $insert_price_data = array(
                                         'from_hours' =>$from_hours_1_row,
                                         'to_hours' =>@$to_hours_1[$from_hours_1_key],
                                         'cost' =>@$cost_1[$from_hours_1_key],
+                                        'currency' =>@$currency[$from_hours_1_key],
                                         'fk_place_id'=>$last_inserted_id,
                                         'fk_vehicle_type_id'=>$fk_vehicle_type_row
                                     );
@@ -784,7 +791,8 @@ class Superadmin_api extends REST_Controller {
                                                 'fk_place_id'=>$last_inserted_id,
                                                 'fk_vehicle_type_id'=>$fk_vehicle_type_row,
                                                 'no_of_days'=>$no_of_days_1_row,
-                                                'cost'=>$cost_11[$no_of_days_1_key]
+                                                'cost'=>$cost_11[$no_of_days_1_key],
+                                                'currency'=>$currencys[$no_of_days_1_key]
                                             );
                                             $this->model->insertData('tbl_pass_price_slab',$insert_monthly_price_data);
                                     }
@@ -832,7 +840,6 @@ class Superadmin_api extends REST_Controller {
                 $count = $this->parking_place_model->count_all();
                 $count_filtered = $this->parking_place_model->count_filtered();
                 $place_status = $this->model->selectWhereData('tbl_parking_place_status',array('status'=>1),array('id','place_status'),false);
-
                 $response['code'] = REST_Controller::HTTP_OK;
                 $response['status'] = true;
                 $response['message'] = 'success';
@@ -1561,6 +1568,13 @@ class Superadmin_api extends REST_Controller {
             $fk_machine_id = json_decode($fk_machine_id);
             $slot_id=$this->input->post('slot_id');
             $slot_id = json_decode($slot_id);
+
+            $bluetooth_device_name=$this->input->post('bluetooth_device_name');
+            $bluetooth_device_name = json_decode($bluetooth_device_name);
+
+            $service_key=$this->input->post('service_key');
+            $service_key = json_decode($service_key);
+
             if (empty($edit_id)) {
                 $response['message'] = 'Id is required';
                 $response['code'] = 201;
@@ -1580,6 +1594,8 @@ class Superadmin_api extends REST_Controller {
                         }else{
                             $update_data = array(
                                 'fk_machine_id'=>$fk_machine_id_row,
+                                'bluetooth_device_name'=>$bluetooth_device_name[$fk_machine_id_key],
+                                'service_key'=>$service_key[$fk_machine_id_key],
                                 'fk_machine_status'=>1
                             );
                             $this->model->updateData('tbl_slot_info',$update_data, array('id'=>$slot_id[$fk_machine_id_key]));

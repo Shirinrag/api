@@ -44,5 +44,22 @@ function hits($link,$request,$token='',$type = 1)
         curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, true);
         return $ch;
     }
+
+       
+    function send_otp_hit($request){
+        $Base_API = 'https://2factor.in/API/V1/03045a6a-36f6-11ec-a13b-0200cd936042/SMS/';
+        $query = http_build_query($request);
+        $custom_type = 'GET';
+        $url = $Base_API. "/" . $request[0]."/".$request[1];
+        $header = array();
+        $ch = curl_init($url);
+        curl_setopt($ch, CURLOPT_HTTPHEADER, $header);
+        curl_setopt($ch, CURLOPT_CUSTOMREQUEST, $custom_type);
+        curl_setopt($ch,CURLOPT_POSTFIELDS,$request);
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+        $response1 = curl_exec($ch);
+        curl_close($ch);
+        return $response1;
+    }
 } 
 
