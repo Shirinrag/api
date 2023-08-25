@@ -276,7 +276,7 @@ class Superadmin_model extends CI_Model {
     public function get_monthly_price_slab($id='')
     {
         $this->db->simple_query('SET SESSION group_concat_max_len=15000');
-        $this->db->select('GROUP_CONCAT(tbl_pass_price_slab.id) as id,GROUP_CONCAT(tbl_pass_price_slab.no_of_days) as no_of_days,GROUP_CONCAT(tbl_pass_price_slab.cost) as cost,tbl_pass_price_slab.fk_vehicle_type_id,tbl_vehicle_type.vehicle_type');
+        $this->db->select('GROUP_CONCAT(tbl_pass_price_slab.id) as id,GROUP_CONCAT(tbl_pass_price_slab.no_of_days) as no_of_days,GROUP_CONCAT(tbl_pass_price_slab.cost) as cost,tbl_pass_price_slab.fk_vehicle_type_id,tbl_vehicle_type.vehicle_type,GROUP_CONCAT(tbl_pass_price_slab.fk_currency_id) as fk_currency_id');
        $this->db->from('tbl_pass_price_slab');
        $this->db->join('tbl_vehicle_type','tbl_pass_price_slab.fk_vehicle_type_id=tbl_vehicle_type.id','left');
        $this->db->where('tbl_pass_price_slab.fk_place_id',$id);
@@ -323,6 +323,55 @@ class Superadmin_model extends CI_Model {
         $this->db->where_in('id',$currency_id);
         $query = $this->db->get();
         return $query->result_array();
+    }
+
+    public function two_wheller_price_slab($place_id='')
+    {
+        $this->db->select('tbl_hours_price_slab.*,tbl_currency.currency_symbol');
+        $this->db->from('tbl_hours_price_slab');
+        $this->db->join('tbl_currency','tbl_hours_price_slab.fk_currency_id=tbl_currency.id','left');
+       $this->db->where('tbl_hours_price_slab.fk_place_id',$place_id);
+       $this->db->where('tbl_hours_price_slab.fk_vehicle_type_id',1);
+       $this->db->where('tbl_hours_price_slab.del_status',1);
+        $query = $this->db->get();
+        $result = $query->result_array();
+        return $result;
+    }
+    public function three_wheller_price_slab($place_id='')
+    {
+        $this->db->select('tbl_hours_price_slab.*,tbl_currency.currency_symbol');
+        $this->db->from('tbl_hours_price_slab');
+        $this->db->join('tbl_currency','tbl_hours_price_slab.fk_currency_id=tbl_currency.id','left');
+       $this->db->where('tbl_hours_price_slab.fk_place_id',$place_id);
+       $this->db->where('tbl_hours_price_slab.fk_vehicle_type_id',2);
+       $this->db->where('tbl_hours_price_slab.del_status',1);
+        $query = $this->db->get();
+        $result = $query->result_array();
+        return $result;
+    }
+    public function four_wheller_price_slab($place_id='')
+    {
+        $this->db->select('tbl_hours_price_slab.*,tbl_currency.currency_symbol');
+        $this->db->from('tbl_hours_price_slab');
+        $this->db->join('tbl_currency','tbl_hours_price_slab.fk_currency_id=tbl_currency.id','left');
+       $this->db->where('tbl_hours_price_slab.fk_place_id',$place_id);
+       $this->db->where('tbl_hours_price_slab.fk_vehicle_type_id',3);
+       $this->db->where('tbl_hours_price_slab.del_status',1);
+        $query = $this->db->get();
+        $result = $query->result_array();
+        return $result;
+    }
+    public function truck_van_wheller_price_slab($place_id='')
+    {
+        $this->db->select('tbl_hours_price_slab.*,tbl_currency.currency_symbol');
+        $this->db->from('tbl_hours_price_slab');
+        $this->db->join('tbl_currency','tbl_hours_price_slab.fk_currency_id=tbl_currency.id','left');
+       $this->db->where('tbl_hours_price_slab.fk_place_id',$place_id);
+       $this->db->where('tbl_hours_price_slab.fk_vehicle_type_id',4);
+       $this->db->where('tbl_hours_price_slab.del_status',1);
+        $query = $this->db->get();
+        $result = $query->result_array();
+        return $result;
     }
 }
 	

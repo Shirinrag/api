@@ -193,6 +193,7 @@ class User_model extends CI_Model {
 		$this->db->join('tbl_slot_info','tbl_booking.fk_slot_id=tbl_slot_info.id','left');
 		$this->db->where('tbl_booking.fk_place_id',$place_id);
 		$this->db->where('tbl_booking_verify.verify_status',1);
+		$this->db->where('tbl_booking.fk_verify_booking_status',1);
 		$this->db->where('tbl_status_master.id',1);
 		$this->db->group_by('tbl_booking.id');
 		$query = $this->db->get();
@@ -340,7 +341,17 @@ class User_model extends CI_Model {
 		$this->db->group_by('tbl_booking.id');
 		$query = $this->db->get();
       return $query->result_array();
+	}
 
-
+	public function hours_price_slab($place_id='')
+	{
+		$this->db->select('tbl_hours_price_slab.*,tbl_currency.currency_symbol');
+        $this->db->from('tbl_hours_price_slab');
+        $this->db->join('tbl_currency','tbl_hours_price_slab.fk_currency_id=tbl_currency.id','left');
+       $this->db->where('tbl_hours_price_slab.fk_place_id',$place_id);
+       $this->db->where('tbl_hours_price_slab.del_status',1);
+        $query = $this->db->get();
+        $result = $query->result_array();
+        return $result;
 	}
 }

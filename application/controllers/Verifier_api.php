@@ -314,10 +314,11 @@ class Verifier_api extends REST_Controller {
                 $response['message'] = "Place id is required";
                 $response['code'] = 201;
             }else{
-                $two_wheller_price_slab = $this->model->selectWhereData('tbl_hours_price_slab',array('fk_place_id'=>$fk_place_id,'fk_vehicle_type_id'=>1,'del_status'=>1),array('*'),false);
-                $three_wheller_price_slab = $this->model->selectWhereData('tbl_hours_price_slab',array('fk_place_id'=>$fk_place_id,'fk_vehicle_type_id'=>2,'del_status'=>1),array('*'),false);
-                $four_wheller_price_slab = $this->model->selectWhereData('tbl_hours_price_slab',array('fk_place_id'=>$fk_place_id,'fk_vehicle_type_id'=>3,'del_status'=>1),array('*'),false);
-                $truck_van_wheller_price_slab = $this->model->selectWhereData('tbl_hours_price_slab',array('fk_place_id'=>$fk_place_id,'fk_vehicle_type_id'=>4,'del_status'=>1),array('*'),false);
+                $this->load->model('superadmin_model');
+                $two_wheller_price_slab = $this->superadmin_model->two_wheller_price_slab($fk_place_id);
+                $three_wheller_price_slab = $this->superadmin_model->three_wheller_price_slab($fk_place_id);
+                $four_wheller_price_slab = $this->superadmin_model->four_wheller_price_slab($fk_place_id);
+                $truck_van_wheller_price_slab = $this->superadmin_model->truck_van_wheller_price_slab($fk_place_id);
 
                 $response['code'] = REST_Controller::HTTP_OK;
                 $response['status'] = true;

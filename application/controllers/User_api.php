@@ -530,7 +530,8 @@ class User_api extends REST_Controller {
         		$this->load->model('user_model');
 			    $place_details = $this->user_model->place_details_on_id($id);
 			    $slot_info = $this->model->selectWhereData('tbl_slot_info',array('del_status'=>1,'fk_place_id'=>$id),array('*'),false);
-			    $price_details = $this->model->selectWhereData('tbl_hours_price_slab',array('del_status'=>1,'fk_place_id'=>$id),array('*'),false);
+                $price_details = $this->user_model->hours_price_slab($id);
+			    // $price_details = $this->model->selectWhereData('tbl_hours_price_slab',array('del_status'=>1,'fk_place_id'=>$id),array('*'),false);
 				$response['code'] = REST_Controller::HTTP_OK;
 	            $response['status'] = true;
 				$response['message'] = 'success';

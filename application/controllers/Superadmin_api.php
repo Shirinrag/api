@@ -881,6 +881,8 @@ class Superadmin_api extends REST_Controller {
                     $selected_parking_place_vehicle_type = $this->model->selectWhereData('tbl_parking_place_vehicle_type',array('fk_place_id'=>$id),array("GROUP_CONCAT(fk_vehicle_type_id) as fk_vehicle_type_id"),true,'','fk_place_id');
                     $vehicle_type = $this->model->selectWhereData('tbl_vehicle_type',array('del_status'=>1,'status'=>1),array('id','vehicle_type'),false);
                     $pass_days_data = $this->model->selectWhereData('tbl_pass_days',array('status'=>1),array('id','no_of_days'),false,array('sequence','ASC'));
+                    $currency_data = $this->superadmin_model->get_currency_data();
+                    
                     $response['code'] = REST_Controller::HTTP_OK;
                     $response['status'] = true;
                     $response['message'] = 'success';
@@ -895,6 +897,7 @@ class Superadmin_api extends REST_Controller {
                     $response['selected_parking_place_vehicle_type'] = $selected_parking_place_vehicle_type;
                     $response['vehicle_type'] = $vehicle_type;
                     $response['pass_days_data'] = $pass_days_data;
+                    $response['currency_data'] = $currency_data;
                 }
         }else {
             $response['code'] = REST_Controller::HTTP_UNAUTHORIZED;
@@ -930,6 +933,8 @@ class Superadmin_api extends REST_Controller {
                 $to_hours = json_decode($to_hours,true);                
                 $price = $this->input->post('price');
                 $price = json_decode($price,true); 
+                $currency = $this->input->post('currency');
+                $currency = json_decode($currency,true); 
                 $fk_vehicle_type = $this->input->post('fk_vehicle_type');
                 $fk_vehicle_type = json_decode($fk_vehicle_type,true);
                 $per_hour_charges = $this->input->post('per_hour_charges');
@@ -944,6 +949,8 @@ class Superadmin_api extends REST_Controller {
                 $no_of_days = json_decode($no_of_days,true);
                 $cost = $this->input->post('cost');
                 $cost = json_decode($cost,true);
+                $currencys = $this->input->post('currencys');
+                $currencys = json_decode($currencys,true);
                 $price_image = $this->input->post('price_image');
                 
                 if(empty($fk_vendor_id)){
@@ -1024,23 +1031,27 @@ class Superadmin_api extends REST_Controller {
                                 $from_hours_1 = @$from_hours[$new_vehicle_info_row];
                                 $to_hours_1 = @$to_hours[$new_vehicle_info_row];
                                 $cost_1 = @$price[$new_vehicle_info_row];
+                                $currency_1 = @$currency[$new_vehicle_info_row];
+
                                 foreach ($from_hours_1 as $from_hours_1_key => $from_hours_1_row) {
                                      $insert_price_data = array(
                                             'from_hours' =>$from_hours_1_row,
                                             'to_hours' =>@$to_hours_1[$from_hours_1_key],
                                             'cost' =>@$cost_1[$from_hours_1_key],
+                                            'fk_currency_id' =>@$currency_1[$from_hours_1_key],
                                             'fk_place_id'=>$id,
                                             'fk_vehicle_type_id'=>$new_vehicle_info_row
                                     );
                                      $this->model->insertData('tbl_hours_price_slab',$insert_price_data);
-                                }        
-
+                                }
                                 $no_of_days_1 = @$no_of_days[$new_vehicle_info_row];
                                 $cost_11 = @$cost[$new_vehicle_info_row];
+                                $currencys_11 = @$currencys[$new_vehicle_info_row];
                                 foreach ($no_of_days_1 as $no_of_days_1_key => $no_of_days_1_row) {
                                      $insert_monthly_pass_price_data = array(
                                             'no_of_days' =>$no_of_days_1_row,
                                             'cost' =>@$cost_11[$no_of_days_1_key],
+                                            'fk_currency_id' =>@$currencys_11[$no_of_days_1_key],
                                             'fk_place_id'=>$id,
                                             'fk_vehicle_type_id'=>$new_vehicle_info_row
                                     );
@@ -1055,7 +1066,7 @@ class Superadmin_api extends REST_Controller {
                                 $from_hours_1 = @$from_hours[$fk_vehicle_type_row];
                                 $to_hours_1 = @$to_hours[$fk_vehicle_type_row];
                                 $cost_1 = @$price[$fk_vehicle_type_row];
-
+                                  $currency_1 = @$currency[$fk_vehicle_type_row];
                                 foreach ($from_hours_1 as $from_hours_1_key => $from_hours_1_row) {
                                     $slab_id = $hour_price_slab_id[$fk_vehicle_type_row][$from_hours_1_key];
                                     if(!empty($slab_id)){
@@ -1063,6 +1074,7 @@ class Superadmin_api extends REST_Controller {
                                             'from_hours' =>$from_hours_1_row,
                                             'to_hours' =>@$to_hours_1[$from_hours_1_key],
                                             'cost' =>@$cost_1[$from_hours_1_key],
+                                            'fk_currency_id' =>@$currency_1[$from_hours_1_key],
                                         );
                                         $this->model->updateData('tbl_hours_price_slab',$update_price_data,array('id'=>$slab_id));
                                     
@@ -1071,6 +1083,7 @@ class Superadmin_api extends REST_Controller {
                                             'from_hours' =>$from_hours_1_row,
                                             'to_hours' =>@$to_hours_1[$from_hours_1_key],
                                             'cost' =>@$cost_1[$from_hours_1_key],
+                                            'fk_currency_id' =>@$currency_1[$from_hours_1_key],
                                             'fk_place_id'=>$id,
                                             'fk_vehicle_type_id'=>$fk_vehicle_type_row
                                     );
@@ -1080,6 +1093,7 @@ class Superadmin_api extends REST_Controller {
 
                                 $no_of_days_1 = @$no_of_days[$fk_vehicle_type_row];
                                 $cost_11 = @$cost[$fk_vehicle_type_row];
+                                $currencys_11 = @$currencys[$fk_vehicle_type_row];
                                 // echo '<pre>'; print_r($$no_of_days); exit;
                                 foreach ($no_of_days_1 as $no_of_days_1_key => $no_of_days_1_row) {
                                     $pass_id = @$monthly_price_slab_id[$fk_vehicle_type_row][$no_of_days_1_key];
@@ -1088,12 +1102,14 @@ class Superadmin_api extends REST_Controller {
                                         $update_monthly_price_slab = array(
                                             'no_of_days' =>$no_of_days_1_row,
                                             'cost' =>@$cost_11[$no_of_days_1_key],
+                                            'fk_currency_id' =>@$currencys_11[$no_of_days_1_key],
                                         );
                                         $this->model->updateData('tbl_pass_price_slab',$update_monthly_price_slab,array('id'=>$pass_id));
                                     }else{
                                         $insert_monthly_pass_price_data = array(
                                             'no_of_days' =>$no_of_days_1_row,
                                             'cost' =>@$cost_11[$no_of_days_1_key],
+                                            'fk_currency_id' =>@$currencys_11[$no_of_days_1_key],
                                             'fk_place_id'=>$id,
                                             'fk_vehicle_type_id'=>$fk_vehicle_type_row                                
                                         );
