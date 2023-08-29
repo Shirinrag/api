@@ -1,6 +1,7 @@
 <?php
 defined('BASEPATH') OR exit('No direct script access allowed');
 ini_set("memory_limit", "-1");
+
 require APPPATH . '/libraries/REST_Controller.php';
 
 class Superadmin_api extends REST_Controller {
@@ -1691,10 +1692,13 @@ class Superadmin_api extends REST_Controller {
         $response = array('code' => - 1, 'status' => false, 'message' => '');
         $validate = validateToken();
         if($validate){
+            $this->load->model('superadmin_model');
             $total_user_count = $this->model->CountWhereInRecord('pa_users',array('isActive'=>1,'user_type'=>10));       
             $total_place_count = $this->model->CountWhereInRecord('tbl_parking_place',array('del_status'=>1));       
             $total_booking_count = $this->model->CountWhereInRecord('tbl_booking',array());      
-            $total_download_count = $this->model->CountWhereInRecord('pa_users',array('isActive'=>1,'user_type'=>10));      
+            $total_download_count = $this->model->CountWhereInRecord('pa_users',array('isActive'=>1,'user_type'=>10));    
+            $monthly_count_of_user = $this->superadmin_model->monthly_count_of_user();
+            // echo '<pre>'; print_r($monthly_count_of_user); exit;
                 $response['message'] = 'success';
                 $response['code'] = 200;
                 $response['status'] = true;
@@ -1702,6 +1706,7 @@ class Superadmin_api extends REST_Controller {
                 $response['total_place_count'] = $total_place_count;
                 $response['total_booking_count'] = $total_booking_count;
                 $response['total_download_count'] = $total_download_count;
+                $response['monthly_count_of_user'] = $monthly_count_of_user;
         } else {
             $response['message'] = 'Invalid Request';
             $response['code'] = 204;

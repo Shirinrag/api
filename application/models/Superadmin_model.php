@@ -373,5 +373,16 @@ class Superadmin_model extends CI_Model {
         $result = $query->result_array();
         return $result;
     }
+
+    public function monthly_count_of_user()
+    {
+       $this->db->select('COUNT(id) as total, EXTRACT(MONTH FROM created_at) as month ');
+        $this->db->from('pa_users');
+        $this->db->where('YEAR(created_at) = YEAR(NOW())');
+        $this->db->group_by('MONTH(created_at)');
+        $query = $this->db->get();
+        $result = $query->result_array();
+        return $result;
+    }
 }
 	

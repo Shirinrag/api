@@ -69,28 +69,30 @@ class Database_migration_api extends REST_Controller {
 
     public function add_car_details_get()
     {
-        $users_data = $this->model->selectWhereData('ci_users',array(),array('username','id','mobile_no'),false);
+        $users_data = $this->model->selectWhereData('ci_users',array(),array('username','id','mobile_no','created_at','updated_at'),false);
 
             foreach ($users_data as $users_data_key => $users_data_row) {
                 $users_data_1 = $this->model->selectWhereData('pa_users',array('userName'=>$users_data_row['username']),array('phoneNo','id'));
-                $user_car_data = $this->model->selectWhereData('ci_car_details',array('user_id'=>$users_data_row['id']),array('car_number','is_deleted','created_date','updated_date'));
-                $status ="";
-                if($user_car_data['is_deleted']== 0){
-                    $status = 1;
-                }else{
-                    $status = 0;
-                }
+                // $user_car_data = $this->model->selectWhereData('ci_car_details',array('user_id'=>$users_data_row['id']),array('car_number','is_deleted','created_date','updated_date'));
+                // $status ="";
+                // if($user_car_data['is_deleted']== 0){
+                //     $status = 1;
+                // }else{
+                //     $status = 0;
+                // }
                 if($users_data_row['mobile_no'] == $users_data_1['phoneNo']){
-                    if(!empty($user_car_data['car_number'])){
+                    // if(!empty($user_car_data['car_number'])){
                          $insert_car_details = array(
-                            'fk_user_id'=> $users_data_1['id'],
-                            'car_number'=>$user_car_data['car_number'],
-                            'status'=>$status,
-                            'created_at'=>$user_car_data['created_date'],
-                            'updated_at'=>$user_car_data['updated_date'],
+                            // 'fk_user_id'=> $users_data_1['id'],
+                            // 'car_number'=>$user_car_data['car_number'],
+                            // 'status'=>$status,
+                            'created_at'=>$users_data_row['created_at'],
+                            'updated_at'=>$users_data_row['updated_at'],
                         ); 
-                         $this->model->insertData('tbl_user_car_details',$insert_car_details);
-                    }
+                         // echo '<pre>'; print_r($insert_car_details); exit;
+                         $this->model->updateData('pa_users',$insert_car_details,array('id'=> $users_data_1['id']));
+                         // $this->model->insertData('tbl_user_car_details',$insert_car_details);
+                    // }
                 }
             }
             $response['code'] = REST_Controller::HTTP_OK;
