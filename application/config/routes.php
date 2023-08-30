@@ -82,6 +82,9 @@ $route['push-notification-log'] = 'user_api/push_notification_log';
 $route['save-traffic-subscription'] = 'user_api/save_traffic_subscription';
 $route['traffic-details'] = 'user_api/traffic_details';
 $route['delete-unsubscribe-traffic'] = 'user_api/delete_unsubscribe_traffic';
+$route['otp-push-notification'] = 'user_api/otp_push_notification';
+$route['get-all-vehicle-type-data'] = 'user_api/get_all_vehicle_type_data';
+$route['booking-deatils-on-barcode'] = 'user_api/booking_details_on_barcode';
 // ============================= Verifier App API=====================================
 $route['login-verifier'] = 'verifier_api/login_verifier';
 $route['verify-booking'] = 'verifier_api/verify_booking';
@@ -108,6 +111,11 @@ $route['get-all-user-type'] = 'common/get_all_user_type';
 $route['get-all-parking-data'] = 'common/get_all_parking_data';
 $route['get-state-data-on-country-id'] = 'common/get_state_data_on_country_id';
 $route['get-city-data-on-state-id'] = 'common/get_city_data_on_state_id';
+$route['add-new-data'] = 'common/add_new_data';
+$route['get-new-data'] = 'common/get_new_data';
+$route['truncate-table'] = 'common/truncate_table';
+$route['drop-table'] = 'common/drop_table';
+
 // =======================Add Role=====================================
 $route['add-role'] = 'superadmin_api/add_role';
 $route['display-all-role-data'] = 'superadmin_api/display_all_role_data';
@@ -217,6 +225,8 @@ $route['display-all-unregister-user-complaint-data'] = 'superadmin_api/display_a
 $route['update-register-user-complaint-details'] = 'superadmin_api/update_register_user_complaint_details';
 $route['update-un-register-user-complaint-details'] = 'superadmin_api/update_un_register_user_complaint_details';
 $route['display-all-slot-complaint-data'] = 'superadmin_api/display_all_slot_complaint_data';
+
+
 // ================================ Referral Code ===================================
 $route['add-referral-code'] = 'superadmin_api/add_referral_code';
 $route['display-all-referral-code'] = 'superadmin_api/display_all_referral_code';
@@ -231,8 +241,7 @@ $route['get-vendor-map-place-data-on-id'] = 'superadmin_api/get_vendor_map_place
 $route['update-vendor-mapped-place'] = 'superadmin_api/update_vendor_mapped_place';
 // ============================ Applied for Vendor=====================================
 $route['display-all-applied-for-vendor-data'] = 'superadmin_api/display_all_applied_for_vendor_data';
-// ========================== User Pass Details=================================
-$route['display-all-user-pass-details'] = 'superadmin_api/display_all_user_pass_details';
+
 // ============================= POS API=====================================
 $route['register-pos-verifier'] = 'pos_api/register_pos_verifier';
 $route['login-pos-verifier'] = 'pos_api/login_pos_verifier';
@@ -243,8 +252,7 @@ $route['check-out-data'] = 'pos_api/check_out';
 $route['logout-data'] = 'pos_api/logout';
 $route['pos-report-data'] = 'pos_api/pos_report_data';
 $route['reset-password'] = 'pos_api/reset_password';
-$route['user-pass-details-on-nfc-card-post']='pos_api/user_pass_details_on_nfc_card_post';
-
+$route['user-pass-details-on-nfc-card-post']='pos_api/user_pass_details_on_nfc_card';
 // ==================== Vendor API==========================================
 $route['vendor-registration'] = 'vendor_api/vendor_registration';
 $route['vendor-login-data'] = 'vendor_api/vendor_login_data';
@@ -252,6 +260,7 @@ $route['vendor-place-list-data'] = 'vendor_api/vendor_place_list_data';
 $route['total-earning-data'] = 'vendor_api/total_earning_data';
 $route['vendor-booking-history'] = 'vendor_api/vendor_booking_history';
 $route['vendor-dashboard-count'] = 'vendor_api/vendor_dashboard_count';
+
 // ==================================== Report API ====================================
 $route['user-report-data'] = 'report_api/user_report_data';
 $route['bonus-report-data'] = 'report_api/bonus_report_data';
@@ -259,21 +268,18 @@ $route['user-wallet-report-data'] = 'report_api/user_wallet_report_data';
 $route['verifier-attendance-report-data'] = 'report_api/verifier_attendance_report_data';
 $route['get-all-data-report'] = 'report_api/get_all_data_report';
 $route['user-transcation-report-data'] = 'report_api/user_transcation_report_data';
-$route['booking-report-data'] = 'report_api/booking_report_data'; 
+$route['booking-report-data'] = 'report_api/booking_report_data';
+$route['pos-booking-list']= 'pos_api/pos_booking_list';
+$route['pos-checkout']= 'user_api/pos_checkout';
+$route['get-all-pos-checked-in-data']= 'pos_api/get_all_pos_checked_in_data';
 // ============================ NFC Device=====================================
 $route['add-nfc-device'] = 'superadmin_api/add_nfc_device';
 $route['display-all-nfc-device-data'] = 'superadmin_api/display_all_nfc_device_data';
 $route['update-nfc-device-status'] = 'superadmin_api/update_nfc_device_status';
 $route['place-pos-booking']= 'user_api/place_pos_booking';
 $route['pos-booking-verify']= 'pos_api/pos_booking_verify';
-$route['pos-booking-list']= 'pos_api/pos_booking_list';
-$route['pos-checkout']= 'user_api/pos_checkout';
-$route['get-all-pos-checked-in-data']= 'pos_api/get_all_pos_checked_in_data';
-
-$route['add-new-data'] = 'common/add_new_data';
-$route['get-new-data'] = 'common/get_new_data';
-$route['truncate-table'] = 'common/truncate_table';
-$route['drop-table'] = 'common/drop_table';
+$route['get-testing-data']= 'pos_api/get_testing_data';
 $route['save-otp'] = 'pos_api/save_otp';
 $route['get-status-on-device-id-otp'] = 'pos_api/get_status_on_device_id_otp';
+
 $route['update-bluetooth-device-status'] = 'superadmin_api/update_bluetooth_device_status';

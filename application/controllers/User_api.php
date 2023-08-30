@@ -1613,5 +1613,30 @@ class User_api extends REST_Controller {
         }
         echo json_encode($response);
     }
+    public function booking_details_on_barcode_post()
+    {
+        $response = array('code' => - 1, 'status' => false, 'message' => '');
+        $validate = validateToken();
+        if ($validate) {
+                $booking_id = $this->input->post('booking_id');
+                if(empty($booking_id)){
+                    $response['message'] = "Booking Id is required";
+                    $response['code'] = 201;
+                }else{
+                    $this->load->model('user_model');
+                    $booking_details = $this->user_model->booking_details_on_barcode($booking_id);
+                    // $booking_details['extend_booking'] = $this->user_model->extend_booking($booking_id);
+                        $response['code'] = REST_Controller::HTTP_OK;
+                        $response['status'] = true;
+                        $response['message'] = 'success';
+                        $response['booking_details_data'] = $booking_details;
+                        
+                    }
+        }else {
+            $response['code'] = REST_Controller::HTTP_UNAUTHORIZED;
+            $response['message'] = 'Unauthorised';
+        }
+        echo json_encode($response);
+    }
 
 }
