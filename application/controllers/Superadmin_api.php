@@ -697,7 +697,8 @@ class Superadmin_api extends REST_Controller {
                 $cost = $this->input->post('cost');
                 $cost = json_decode($cost,true); 
                 $currencys = $this->input->post('currencys');
-                $currencys = json_decode($currencys,true);    
+                $currencys = json_decode($currencys,true);  
+                $place_image = $this->input->post('place_image');                  
                 if(empty($fk_vendor_id)){
                     $response['message'] = "First Name is required";
                     $response['code'] = 201;
@@ -757,6 +758,7 @@ class Superadmin_api extends REST_Controller {
                             'total_place_count'=>$total_place_count,
                             'referral_code' =>$referral_code,
                             'parking_place_type' =>$place_type,
+                            'place_image'=>$place_image
                         );
                         $last_inserted_id = $this->model->insertData('tbl_parking_place',$curl_data); 
 
@@ -953,6 +955,7 @@ class Superadmin_api extends REST_Controller {
                 $currencys = $this->input->post('currencys');
                 $currencys = json_decode($currencys,true);
                 $price_image = $this->input->post('price_image');
+                $place_image = $this->input->post('place_image');
                 
                 if(empty($fk_vendor_id)){
                     $response['message'] = "First Name is required";
@@ -1015,7 +1018,8 @@ class Superadmin_api extends REST_Controller {
                             'total_place_count'=>$total_place_count,
                             'referral_code'=>$referral_code,
                             'parking_place_type' =>$place_type,
-                            'price_image'=>$price_image
+                            'price_image'=>$price_image, 
+                            'place_image'=>$place_image
                         );
                         $this->model->updateData('tbl_parking_place',$curl_data,array('id'=>$id));
                         $previous_vehicle_type = $this->model->selectWhereData('tbl_parking_place_vehicle_type',array('fk_place_id'=>$id),array('GROUP_CONCAT(fk_vehicle_type_id) as fk_vehicle_type_id'),true,'','fk_place_id');
@@ -3272,6 +3276,10 @@ class Superadmin_api extends REST_Controller {
             $response['code'] = 204;
         }
         echo json_encode($response);
+    }
+    public function get_data_post($value='')
+    {
+        // code...
     }
     
 }

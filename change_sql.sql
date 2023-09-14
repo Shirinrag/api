@@ -59,3 +59,6 @@ ALTER TABLE `tbl_slot_info` ADD `service_key` LONGTEXT NULL DEFAULT NULL AFTER `
 ALTER TABLE `tbl_hours_price_slab` ADD `currency` INT NULL DEFAULT NULL AFTER `cost`;
 ALTER TABLE `tbl_pass_price_slab` ADD `fk_currency_id` INT NULL DEFAULT NULL AFTER `cost`;
 ALTER TABLE `tbl_hours_price_slab` ADD INDEX(`fk_vehicle_type_id`, `fk_currency_id`);
+
+
+ALTER TABLE `tbl_parking_place` ADD `place_image` LONGTEXT NULL DEFAULT NULL AFTER `price_image`;

@@ -85,6 +85,7 @@ $route['delete-unsubscribe-traffic'] = 'user_api/delete_unsubscribe_traffic';
 $route['otp-push-notification'] = 'user_api/otp_push_notification';
 $route['get-all-vehicle-type-data'] = 'user_api/get_all_vehicle_type_data';
 $route['booking-deatils-on-barcode'] = 'user_api/booking_details_on_barcode';
+$route['get-data-on-booking-id'] = 'user_api/get_data_on_booking_id';
 // ============================= Verifier App API=====================================
 $route['login-verifier'] = 'verifier_api/login_verifier';
 $route['verify-booking'] = 'verifier_api/verify_booking';

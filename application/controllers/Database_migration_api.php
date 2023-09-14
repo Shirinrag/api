@@ -541,4 +541,58 @@ class Database_migration_api extends REST_Controller {
             $response['message'] = 'success';
             echo json_encode($response);
         }
+
+
+     public function contact_no_update_get(){
+            
+            // $this->load->model('database_migration_model');
+            $users_data = $this->model->selectWhereData('pa_users',array('user_type'=>10),array('phoneNo','id'),false);
+
+//             $this->db->select('*');
+// $this->db->from('pa_users');
+// $where = "(pa_users.name LIKE '%$identity%')";
+// $this->db->where($where);
+
+// $query = $this->db->get();
+
+// return $query->result_array();
+
+
+            // foreach ($users_data as $users_data_key => $users_data_row) {              
+            //       $phone_no = explode('(+91)',$users_data_row['phoneNo']);
+
+            //       if(!empty($phone_no[0])){
+            //         // (+91) 9920309918
+            //         $curl_data = array('phoneNo'=>'(+91) '.$phone_no[0]);
+            //         $this->model->updateData('pa_users',$curl_data,array('id'=>$users_data_row['id']));
+            //             // echo '<pre>'; print_r($phone_no); 
+
+            //       }
+                
+                // $insert_user_data = array(
+                //     'userName'=> $users_data_row['username'],
+                //     'firstName'=> $users_data_row['firstname'],
+                //     'lastName'=> $users_data_row['lastname'],
+                //     'email'=> $users_data_row['email'],
+                //     'phoneNo'=> $users_data_row['mobile_no'],
+                //     'address'=> $users_data_row['address'],
+                //     'user_type'=> 10,
+                //     'isVerified'=> $users_data_row['is_verify'],
+                //     'referal_code'=> $users_data_row['referal_code'],
+                //     'device_id'=> $users_data_row['device_id'],
+                //     'notifn_topic'=> $users_data_row['notifn_topic'],
+                //     'terms_condition'=> $users_data_row['terms_condition'],
+                //     'created_at'=>$users_data_row['created_at'],
+                //     'updated_at'=>$users_data_row['updated_at']
+                // );
+                // $inserted_id = $this->model->insertData('pa_users',$insert_user_data);
+            
+            }
+            // die;
+            $response['code'] = REST_Controller::HTTP_OK;
+            $response['status'] = true;
+            $response['message'] = 'success';
+           
+            echo json_encode($response);
+    }
 }

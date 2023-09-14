@@ -59,7 +59,7 @@ class User_model extends CI_Model {
 		$this->db->join('tbl_countries','tbl_parking_place.fk_country_id=tbl_countries.id','left');
 		$this->db->join('tbl_states','tbl_parking_place.fk_state_id=tbl_states.id','left');
 		$this->db->join('tbl_cities','tbl_parking_place.fk_city_id=tbl_cities.id','left');
-		// $this->db->where('tbl_parking_place.fk_place_status_id',1);
+		$this->db->where('tbl_parking_place.fk_place_status_id !=',2);
 		$query = $this->db->get();
         $result = $query->result_array();
         return $result;
@@ -141,7 +141,7 @@ class User_model extends CI_Model {
 	}
 	public function get_rate($total_hours='',$fk_vehicle_type_id="",$fk_place_id="")
     {
-       	$this->db->select('cost');
+       	$this->db->select('cost,currency_symbol');
        	$this->db->from('tbl_hours_price_slab');
        	$this->db->where('fk_vehicle_type_id',$fk_vehicle_type_id);
        	$this->db->where('fk_place_id',$fk_place_id);
