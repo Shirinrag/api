@@ -141,7 +141,7 @@ class User_model extends CI_Model {
 	}
 	public function get_rate($total_hours='',$fk_vehicle_type_id="",$fk_place_id="")
     {
-       	$this->db->select('cost,currency_symbol');
+       	$this->db->select('cost,fk_currency_id');
        	$this->db->from('tbl_hours_price_slab');
        	$this->db->where('fk_vehicle_type_id',$fk_vehicle_type_id);
        	$this->db->where('fk_place_id',$fk_place_id);

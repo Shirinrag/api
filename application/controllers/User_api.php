@@ -1010,6 +1010,7 @@ class User_api extends REST_Controller {
             } else {
                 $this->load->model('user_model');
                 $cost = $this->user_model->get_rate($total_hours, $fk_vehicle_type_id, $id);
+                $currency_symbol = $this->model->selectWhereData('tbl_currency',array('id'=>$cost['fk_currency_id']),array('currency_symbol'));
                 $from_time = date('H:i:s', strtotime($from_time));
                 $to_time = date('H:i:s', strtotime($to_time));
                 $available_slots = [];
@@ -1055,6 +1056,7 @@ class User_api extends REST_Controller {
                         $slot_info[$slot_info_key]['color_hexcode'] = "#808080";
                     }
                 }
+                
                 $response['code'] = REST_Controller::HTTP_OK;
                 $response['status'] = true;
                 $response['message'] = 'success';
@@ -1063,7 +1065,7 @@ class User_api extends REST_Controller {
                 $response['available_slots'] = $available_slots;
                 $response['not_working_slots'] = $not_working_slots;
                 $response['total_hours'] = @$cost['total_hours_1'];
-                $response['price'] = number_format((float)$cost['cost'], 2, '.', '');
+                $response['price'] = $currency_symbol['currency_symbol']." ".number_format((float)$cost['cost'], 2, '.', '');
             }
         } else {
             $response['code'] = REST_Controller::HTTP_UNAUTHORIZED;
