@@ -7,11 +7,12 @@ class User_model extends CI_Model {
 
 	public function booking_history($user_id='')
 	{	
-		$this->db->select('tbl_booking.*,pa_users.firstName,pa_users.lastName,tbl_user_car_details.car_number,tbl_parking_place.place_name,tbl_parking_place.address,tbl_parking_place.pincode,tbl_states.name as state_name,tbl_cities.name as city_name,tbl_parking_place.latitude,tbl_parking_place.longitude,tbl_slot_info.display_id,tbl_slot_info.bluetooth_device_status');
+		$this->db->select('tbl_booking.*,pa_users.firstName,pa_users.lastName,tbl_user_car_details.car_number,tbl_parking_place.place_name,tbl_parking_place.address,tbl_parking_place.pincode,tbl_states.name as state_name,tbl_cities.name as city_name,tbl_parking_place.latitude,tbl_parking_place.longitude,tbl_slot_info.display_id,tbl_slot_info.bluetooth_device_status,tbl_parking_place_status.place_status,tbl_parking_place.fk_place_status_id');
 		$this->db->from('tbl_booking');
 		$this->db->join('pa_users','tbl_booking.fk_user_id=pa_users.id','left');
 		$this->db->join('tbl_user_car_details','tbl_booking.fk_car_id=tbl_user_car_details.id','left');
 		$this->db->join('tbl_parking_place','tbl_booking.fk_place_id=tbl_parking_place.id','left');
+		$this->db->join('tbl_parking_place_status','tbl_parking_place.fk_place_status_id=tbl_parking_place_status.id','left');
 		$this->db->join('tbl_states','tbl_parking_place.fk_state_id=tbl_states.id','left');
 		$this->db->join('tbl_cities','tbl_parking_place.fk_city_id=tbl_cities.id','left');
 		$this->db->join('tbl_slot_info','tbl_booking.fk_slot_id=tbl_slot_info.id','left');
@@ -367,6 +368,17 @@ class User_model extends CI_Model {
 		$this->db->join('tbl_cities','tbl_parking_place.fk_city_id=tbl_cities.id','left');
 		$this->db->join('tbl_booking_verify','tbl_booking_verify.fk_booking_id=tbl_booking.id','left');
 		$this->db->join('tbl_payment','tbl_payment.fk_booking_id=tbl_booking.id','left');
+		$this->db->where('tbl_booking.booking_id',$booking_id);
+		$query = $this->db->get();
+        $result = $query->row_array();
+        return $result;
+	}
+
+	public function get_car_no_on_booking_id($booking_id='')
+	{
+		$this->db->select('tbl_booking.is_scanned,tbl_user_car_details.car_number');
+		$this->db->from('tbl_booking');
+		$this->db->join('tbl_user_car_details','tbl_booking.fk_car_id=tbl_user_car_details.id','left');
 		$this->db->where('tbl_booking.booking_id',$booking_id);
 		$query = $this->db->get();
         $result = $query->row_array();

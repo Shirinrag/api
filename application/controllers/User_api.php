@@ -378,6 +378,7 @@ class User_api extends REST_Controller {
             } else {
                 $this->load->model('user_model');
                 $booking_history = $this->user_model->booking_history($user_id);
+
                 foreach ($booking_history as $booking_history_key => $booking_history_row) {
                     $total_amount = $this->model->selectWhereData('tbl_payment', array('fk_booking_id' => $booking_history_row['id']), array('total_amount'));
                     $booking_history[$booking_history_key]['total_amount'] = $total_amount['total_amount'];
@@ -390,6 +391,32 @@ class User_api extends REST_Controller {
                     $booking_history[$booking_history_key]['verifier_contact_no'] = $verifier_contact_no['phoneNo'];
                     $extend_booking = $this->user_model->extend_booking($booking_history_row['id']);
                     $booking_history[$booking_history_key]['extend_booking'] = $extend_booking;
+
+                    if ($booking_history_row['fk_place_status_id'] == 1) {
+                        $booking_history[$booking_history_key]['color'] = "#008000";
+                        $booking_history[$booking_history_key]['place_status_name'] = "Reservation Booking";
+                    } else if ($booking_history_row['fk_place_status_id'] == 3) {
+                        $booking_history[$booking_history_key]['color'] = "#008000";
+                        $booking_history[$booking_history_key]['place_status_name'] = "Pay on Site Place";
+                    } else if ($booking_history_row['fk_place_status_id'] == 4) {
+                        $booking_history[$booking_history_key]['color'] = "#808080";
+                        $booking_history[$booking_history_key]['place_status_name'] = "Other";
+                    } else if ($booking_history_row['fk_place_status_id'] == 5) {
+                        $booking_history[$booking_history_key]['color'] = "#EE82EE";
+                        $booking_history[$booking_history_key]['place_status_name'] = "Valet Place";
+                    } else if ($booking_history_row['fk_place_status_id'] == 5) {
+                        $booking_history[$booking_history_key]['color'] = "#800080";
+                        $booking_history[$booking_history_key]['place_status_name'] = "Valet Place";
+                    } else if ($booking_history_row['fk_place_status_id'] == 6) {
+                        $booking_history[$booking_history_key]['color'] = "#008000";
+                        $booking_history[$booking_history_key]['place_status_name'] = "Call To Confirm Booking(CTCB) Place";
+                    } else if ($booking_history_row['fk_place_status_id'] == 7) {
+                        $booking_history[$booking_history_key]['color'] = "#FF0000";
+                        $booking_history[$booking_history_key]['place_status_name'] = "Road Side Parking";
+                    } else if ($booking_history_row['fk_place_status_id'] == 8) {
+                        $booking_history[$booking_history_key]['color'] = "#0000FF";
+                        $booking_history[$booking_history_key]['place_status_name'] = "POS Parking";
+                    }
                 }
                 $issue_type = $this->model->selectWhereData('tbl_issue_type', array('status' => 1), array('id', 'issue_type'), false);
                 $response['code'] = REST_Controller::HTTP_OK;
@@ -1441,11 +1468,17 @@ class User_api extends REST_Controller {
                 $response['message'] = "Place Id is required";
                 $response['code'] = 201;
             } else {
+                $this->load->model('user_model');
                 $booking_count = $this->model->CountWhereRecord('tbl_booking', array('booking_id' => $booking_id, 'fk_place_id' => $place_id));
+                
                 if ($booking_count > 0) {
+                    $curl_data = array('is_scanned'=>1);
+                    $this->model->updateData('tbl_booking',$curl_data,array('booking_id' => $booking_id, 'fk_place_id' => $place_id));
+                    $booking_data = $this->user_model->get_car_no_on_booking_id($booking_id);
                     $response['code'] = REST_Controller::HTTP_OK;
                     $response['status'] = true;
                     $response['message'] = 'Yes';
+                    $response['car_number'] = $booking_data['car_number'];
                 } else {
                     $response['code'] = 201;
                     $response['status'] = false;
