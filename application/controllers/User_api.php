@@ -1470,8 +1470,12 @@ class User_api extends REST_Controller {
             } else {
                 $this->load->model('user_model');
                 $booking_count = $this->model->CountWhereRecord('tbl_booking', array('booking_id' => $booking_id, 'fk_place_id' => $place_id));
-                
-                if ($booking_count > 0) {
+                $barcode_scan_count = $this->model->CountWhereRecord('tbl_booking', array('booking_id' => $booking_id, 'fk_place_id' => $place_id,'is_scanned'=>1));
+                if($barcode_scan_count > 0){
+                    $response['code'] = 201;
+                    $response['status'] = false;
+                    $response['message'] = 'Barcode Already Scanned';
+                }else if ($booking_count > 0) {
                     $curl_data = array('is_scanned'=>1);
                     $this->model->updateData('tbl_booking',$curl_data,array('booking_id' => $booking_id, 'fk_place_id' => $place_id));
                     $booking_data = $this->user_model->get_car_no_on_booking_id($booking_id);

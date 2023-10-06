@@ -3277,9 +3277,37 @@ class Superadmin_api extends REST_Controller {
         }
         echo json_encode($response);
     }
-    public function get_data_post($value='')
+    public function save_contact_us_post()
     {
-        // code...
+        $name = $this->input->post('name');
+        $email = $this->input->post('email');
+        $subject = $this->input->post('subject');
+        $message = $this->input->post('message');
+        if(empty($name)){
+            $response['message']= "Name is required";
+            $response['code']=201;
+        }else if(empty($email)){
+            $response['message']= "Email is required";
+            $response['code']=201;
+        }else if(empty($subject)){
+            $response['message']= "Subject is required";
+            $response['code']=201;
+        }else if(empty($message)){
+            $response['message']= "Message is required";
+            $response['code']=201;
+        }else{
+            $curl_data=array(
+                'name' => $name,
+                'email' => $email,
+                'subject' => $subject,
+                'message' => $message,
+            );
+            $this->model->insertData('tbl_contact_us',$curl_data);
+            $response['status'] = true;
+            $response['code'] = 200;
+            $response['message'] = 'Data Submitted Successfully';
+        }
+        echo json_encode($response);
     }
     
 }
